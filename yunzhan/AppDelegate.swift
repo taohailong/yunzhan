@@ -17,7 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         
-        
+        UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
+//        application.statusBarStyle = UIStatusBarStyleLightContent
         if #available(iOS 8.0,*)
         {
 //           let action1 = UIMutableUserNotificationAction()
