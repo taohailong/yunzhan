@@ -251,8 +251,7 @@ class AdRootCollectionView: UICollectionReusableView {
             let tap = UITapGestureRecognizer(target: self, action: "imageTap:")
             image.addGestureRecognizer(tap)
             i = index
-        }
-        
+        }       
         scroll.contentSize = CGSizeMake(scroll.bounds.size.width * CGFloat(i+1), scroll.bounds.height)
     }
     
