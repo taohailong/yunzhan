@@ -9,12 +9,46 @@
 import UIKit
 class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UICollectionViewDataSource {
     
+    var userNet:NetWorkData!
     var net:NetWorkData!
     var pics:[PicData]!
     var news:[NewsData]!,exhibitor:[ExhibitorData]!,scheduler:[SchedulerData]!
     
     var collection:UICollectionView!
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.setNavgationBarAttribute(true)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.setNavgationBarAttribute(false)
+    }
+    
+    func setNavgationBarAttribute(change:Bool)
+    {
+        if change == true
+        {
+            self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
+            self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
+            let application = UIApplication.sharedApplication()
+            application.setStatusBarStyle(.LightContent, animated: true)
+        }
+        else
+        {
+            if self.navigationController?.viewControllers.count == 1
+            {
+                return
+            }
+            self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor()]
+            self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+            let application = UIApplication.sharedApplication()
+            application.setStatusBarStyle(.Default, animated: true)
+        }
+    }
         override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "首页"
@@ -23,13 +57,6 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         self.navigationController?.tabBarItem.image = UIImage(named: "root-1_selected")
         self.navigationController?.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
             
-        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
-        self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
-
-            
-       
-
         #if false
             print("ok le")
         #else
@@ -58,38 +85,66 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         collection.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         self.view.addSubview(collection)
             
+        collection.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(collection))
+            self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(collection))
             
+         self.fetchUserData()
          self.fetchData()
         // Do any additional setup after loading the view, typically from a nib.
     }
 
+    
+    func fetchUserData(){
+    
+        let user = UserData.shared
+        if user.token != nil
+        {
+            userNet = NetWorkData()
+            userNet.getUserInfo(user.token!) { (result, status) -> (Void) in
+                
+            }
+            userNet.start()
+        }
+     }
     
     func fetchData(){
     
         let loadView = THActivityView(activityViewWithSuperView: self.view)
         
         weak var wself = self
-        
-        
         net = NetWorkData()
         net.getRootData { (result, status) -> (Void) in
             
             loadView.removeFromSuperview()
+            if status == .NetWorkStatusError
+            {
+                 if result == nil
+                 {
+                    let errView = THActivityView(netErrorWithSuperView: wself!.view)
+                    weak var werr = errView
+                    errView.setErrorBk({ () -> Void in
+                        wself?.fetchData()
+                        werr?.removeFromSuperview()
+                    })
+                }
+                else
+                {
+                      if let warnStr = result as? String
+                      {
+                        let warnView = THActivityView(string: warnStr)
+                        warnView.show()
+                      }
+                }
+                 return
+            }
+            
             guard let data = result as? (pics:[PicData], news:[NewsData],exhibitor:[ExhibitorData],scheduler:[SchedulerData])
                 
                 else{
-                    switch status {
-                        
-                    case let .NetWorkStatusError(err):
-                        
-                    print(err)
-                        return
-                    case let .NetWorkStatusSucess(number):
-                        print(number)
-                        return
-                    }
-                    
-            }
+                                            return
+                }
+            
             wself?.pics = data.pics
             wself?.news = data.news
             wself?.exhibitor = data.exhibitor
@@ -133,22 +188,25 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             if news == nil{ return 0}
                 return news.count
         }
-//        return 10
+
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         
         if indexPath.section == 1
         {
-           return CGSizeMake((Profile.width()-2)/5, 60)
+            let lenth = (Profile.width()-2)/5
+           return CGSizeMake(lenth, lenth)
         }
         else if indexPath.section == 2
         {
-           return CGSizeMake(Profile.width(), 85)
+//            活动
+           return CGSizeMake(Profile.width(), 90)
         }
         else
         {
-             return CGSizeMake(Profile.width(), 70)
+//            新闻
+             return CGSizeMake(Profile.width(), 75)
         }
     }
 //    垂直间距
@@ -173,7 +231,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             
             let data = exhibitor[indexPath.row]
             cell.exhibitorID = data.id
-            cell.setImageUrl(data.iconUrl!)
+            cell.setImageUrl(data.iconUrl)
             cell.backgroundColor = UIColor.whiteColor()
             return cell
         }
@@ -202,7 +260,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         
           return CGSizeMake(Profile.width(),Profile.width()*0.4)
         }
-        return CGSizeMake(Profile.width(), 35)
+        return CGSizeMake(Profile.width(), 47)
     }
     
     
@@ -262,14 +320,28 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         if indexPath.section == 1
         {
             let data = exhibitor[indexPath.row]
-            
             let exView = ExhibitorController()
             exView.title = data.name
             exView.id = data.id
             exView.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(exView, animated: true)
         }
-        
+        else if indexPath.section == 2
+        {
+            let data = scheduler[indexPath.row]
+            let schedulerInfo = SchedulerInfoVC()
+            schedulerInfo.schedulerID = data.id
+            schedulerInfo.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(schedulerInfo, animated: true)
+        }
+        else
+        {
+            let link = news[indexPath.row]
+            let comment = CommonWebController(url:link.link)
+            comment.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(comment, animated: true)
+           
+        }
     }
     
     func collectionView(link: String, didSelectHeadView indexPath: NSIndexPath) {
@@ -283,6 +355,10 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
 //        return .LightContent
 //    }
     
+    deinit{
+      net = nil
+    }
+    
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -294,12 +370,19 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
 
 
 class CommonWebController:UIViewController {
-    
+    var webHtml:String?
     var webLink:String?
-    init(url:String){
+    init(url:String?){
        webLink = url
        super.init(nibName: nil, bundle: nil)
     }
+    
+    init(html:String?)
+    {
+       webHtml = html
+        super.init(nibName: nil, bundle: nil)
+    }
+    
     
     override func viewDidLoad() {
         
@@ -308,7 +391,15 @@ class CommonWebController:UIViewController {
         let web = UIWebView()
         web.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(web)
-        web.loadRequest( NSURLRequest(URL: NSURL(string: webLink!)!))
+        
+        if webLink != nil
+        {
+          web.loadRequest( NSURLRequest(URL: NSURL(string: webLink!)!))
+        }
+        if webHtml != nil
+        {
+          web.loadHTMLString(webHtml!, baseURL: nil)
+        }
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(web))
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(web))
     }

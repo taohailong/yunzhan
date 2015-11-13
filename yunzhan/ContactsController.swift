@@ -9,12 +9,13 @@
 import Foundation
 
 class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate {
-    
+    var net:NetWorkData!
     var prefixArr:[String]!
     var table :UITableView!
     var dataArr:[[PersonData]]!
     override func viewDidLoad() {
         
+        self.title = "我的联系人"
         table = UITableView(frame: CGRectZero, style: .Plain)
         table.delegate = self
         table.dataSource = self
@@ -23,6 +24,58 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         table.registerClass(ContactsPersonCell.self, forCellReuseIdentifier: "ContactsPersonCell")
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
+        self.fetchContactList()
+    }
+    
+    
+    func fetchContactList(){
+     
+        let loadView = THActivityView(activityViewWithSuperView: self.view)
+        weak var wself = self
+        net = NetWorkData()
+        net.myContactsList { (result, status) -> (Void) in
+        
+        loadView.removeFromSuperview()
+        if status == .NetWorkStatusError
+        {
+            if result == nil
+            {
+                let errView = THActivityView(netErrorWithSuperView: wself!.view)
+                weak var werr = errView
+                errView.setErrorBk({ () -> Void in
+                    wself?.fetchContactList()
+                    werr?.removeFromSuperview()
+                })
+            }
+            else
+            {
+                if let warnStr = result as? String
+                {
+                    let warnView = THActivityView(string: warnStr)
+                    warnView.show()
+                }
+            }
+            return
+        }
+
+        guard let list = result as? (prefixArr:[String],person :[[PersonData]])
+        else{
+                return
+            }
+        
+            if list.prefixArr.count == 0
+            {
+                let nodataV = THActivityView(emptyDataWarnViewWithString: "您还没有收藏活动", withImage: "noContactData", withSuperView: wself!.view)
+                nodataV.tag = 10
+                return
+            }
+
+            
+            wself?.prefixArr = list.prefixArr
+            wself?.dataArr = list.person
+            wself?.table.reloadData()
+        }
+        net.start()
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -38,11 +91,20 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         let arr = dataArr[section]
+        print(dataArr)
         return arr.count
     }
     
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 55
+    }
+    
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("ContactsPersonCell") as! ContactsPersonCell
+        let arr = dataArr[indexPath.section]
+        let p = arr[indexPath.row]
+        cell.fillData(p.title, name: p.name, phone: p.phone)
         return cell
     }
     
@@ -53,7 +115,7 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
     
         return prefixArr
-    }// return list of section titles to display in section index view (e.g. "ABCD...Z#")
+    }
     
     func tableView(tableView: UITableView, sectionForSectionIndexTitle title: String, atIndex index: Int) -> Int {
         
@@ -61,6 +123,44 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         return s!
     }
     
+    
+//    滑动删除 部分
+    
+    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+        return .Delete
+    }
+    
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        var subArr = dataArr[indexPath.section]
+        let p = subArr[indexPath.row]
+        weak var wself = self
+        let delectNet = NetWorkData()
+        delectNet.delectContact(p.exhibitorID!, personID: p.id!) { (result, status) -> (Void) in
+          
+            if status == .NetWorkStatusError
+            {
+               return
+            }
+            
+            let subA = wself?.dataArr[indexPath.section]
+            subArr.removeAtIndex(indexPath.row)
+            
+            wself?.dataArr.removeAtIndex(indexPath.section)
+            wself?.dataArr.insert(subA!, atIndex: indexPath.section)
+
+            wself?.table.reloadData()
+        }
+        delectNet.start()
+    }
 }
 
 
@@ -104,11 +204,11 @@ class ContactsPersonCell: UITableViewCell {
         phoneBt.setImage(UIImage(named: "exhibitorPhone"), forState: .Normal)
         phoneBt.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0)
         self.contentView.addSubview(phoneBt)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[nameL]-15-[phoneBt]", options: [], metrics: nil, views: ["phoneBt":phoneBt,"nameL":nameL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[nameL]-35-[phoneBt]", options: [], metrics: nil, views: ["phoneBt":phoneBt,"nameL":nameL]))
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(phoneBt, toItem: nameL))
     }
 
-    func fillData(title:String?,name:String?,phone:String?)
+    func fillData(title: String?,name: String? ,phone: String?)
     {
         titleL.text = title
         nameL.text =  name

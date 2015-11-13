@@ -6,3 +6,5 @@
 #import <AFNetworking/AFNetworking.h>
 #import "UIImageView+WebCache.h"
 #import "THActivityView.h"
+#import "LogInCell.h"
+#import "LogViewController.h"

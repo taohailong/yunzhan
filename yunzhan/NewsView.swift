@@ -12,6 +12,41 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
     var net:NetWorkData!
     var dataArr:[NewsData]!
     @IBOutlet weak var table: UITableView!
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.setNavgationBarAttribute(true)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.setNavgationBarAttribute(false)
+    }
+    
+    func setNavgationBarAttribute(change:Bool)
+    {
+        if change == true
+        {
+            self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
+            self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
+            let application = UIApplication.sharedApplication()
+            application.setStatusBarStyle(.LightContent, animated: true)
+        }
+        else
+        {
+            if self.navigationController?.viewControllers.count == 1
+            {
+                return
+            }
+            self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor()]
+            self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+            let application = UIApplication.sharedApplication()
+            application.setStatusBarStyle(.Default, animated: true)
+        }
+    }
+    
     override func viewDidLoad() {
         
          super.viewDidLoad()
@@ -28,12 +63,31 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
     
     func fetchData(){
     
+         let loadView = THActivityView(activityViewWithSuperView: self.view)
         weak var wself = self
         net = NetWorkData()
         net.getNewsList { (result, status) -> (Void) in
             
-            if status == NetStatus.NetWorkStatusError
+             loadView.removeFromSuperview()
+            if status == .NetWorkStatusError
             {
+                if result == nil
+                {
+                    let errView = THActivityView(netErrorWithSuperView: wself!.view)
+                    weak var werr = errView
+                    errView.setErrorBk({ () -> Void in
+                        wself?.fetchData()
+                        werr?.removeFromSuperview()
+                    })
+                }
+                else
+                {
+                    if let warnStr = result as? String
+                    {
+                        let warnView = THActivityView(string: warnStr)
+                        warnView.show()
+                    }
+                }
                 return
             }
             
@@ -118,7 +172,6 @@ class NewCell: UITableViewCell {
         self.contentView.addSubview(titleL)
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[contentImage]-20-[titleL]", options: [], metrics: nil, views: ["titleL":titleL,"contentImage":contentImage]))
         self.contentView.addConstraint(NSLayoutConstraint.layoutTopEqual(titleL, toItem: contentImage))
-        //        titleL.setContentHuggingPriority(UILayoutPriorityDefaultHigh, forAxis: UILayoutConstraintAxis.Horizontal)
         titleL.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: UILayoutConstraintAxis.Horizontal)
         
         
@@ -130,20 +183,18 @@ class NewCell: UITableViewCell {
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(contentL, toItem: titleL))
         //        self.contentView.addConstraint(NSLayoutConstraint(item: contentL, attribute: NSLayoutAttribute.Top, relatedBy: NSLayoutRelation.Equal, toItem: titleL, attribute: NSLayoutAttribute.Bottom, multiplier: 1.0, constant: 5))
         
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-5-[contentL]-5-|", options: [], metrics: nil, views: ["contentL":contentL,"titleL":titleL]))
+        //        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-5-[contentL]-5-|", options: [], metrics: nil, views: ["contentL":contentL,"titleL":titleL]))
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-7-[contentL]-5-|", aView: titleL, bView: contentL))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[contentL]-5-|", options: [], metrics: nil, views: ["contentL":contentL]))
-        
-
-        
         
         
         
         timeL.textColor = Profile.rgb(191, g: 191, b: 191)
-        timeL.font = Profile.font(11)
+        timeL.font = Profile.font(12)
         self.contentView.addSubview(timeL)
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(titleL, toItem: timeL))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[titleL]-(>=1)-[timeL]-15-|", options: [], metrics: nil, views: ["titleL":titleL,"timeL":timeL]))
-
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[titleL]-(>=3)-[timeL]-15-|", options: [], metrics: nil, views: ["titleL":titleL,"timeL":timeL]))
     }
 
     func fillData(newsData:NewsData)

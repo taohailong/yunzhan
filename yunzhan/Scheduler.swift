@@ -12,6 +12,43 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
     var dataArr:[[SchedulerData]]!
     var dateArr:[String]!
     var table:UITableView!
+    var searchArr:[SchedulerData]!
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.setNavgationBarAttribute(true)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.setNavgationBarAttribute(false)
+    }
+    
+    func setNavgationBarAttribute(change:Bool)
+    {
+        if change == true
+        {
+            self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
+            self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
+            let application = UIApplication.sharedApplication()
+            application.setStatusBarStyle(.LightContent, animated: true)
+        }
+        else
+        {
+            if self.navigationController?.viewControllers.count == 1
+            {
+                return
+            }
+            self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor()]
+            self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+            let application = UIApplication.sharedApplication()
+            application.setStatusBarStyle(.Default, animated: true)
+        }
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.tabBarItem.selectedImage = UIImage(named: "root-3_selected")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
@@ -26,14 +63,16 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         
         searchBar.delegate = self
         
-//        let searchC = UISearchDisplayController(searchBar: <#T##UISearchBar#>, contentsController: <#T##UIViewController#>)
         
         table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
         table.delegate = self
         table.dataSource = self
+        table.separatorStyle = .None
         table.tableHeaderView = searchBar
         table.translatesAutoresizingMaskIntoConstraints = false
+        table.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         table.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
+        table.registerClass(TableHeadView.self , forHeaderFooterViewReuseIdentifier: "TableHeadView")
         self.view.addSubview(table)
         
         table.registerClass(SchedulerCell.self , forCellReuseIdentifier: "SchedulerCell")
@@ -58,28 +97,40 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
     
     
     func fetchData(){
-
+       
+        let loadView = THActivityView(activityViewWithSuperView: self.view)
         weak var wself = self
         net = NetWorkData()
         net.getSchedulList { (result, status) -> (Void) in
             
-            if status == NetStatus.NetWorkStatusError
+            loadView.removeFromSuperview()
+            if status == .NetWorkStatusError
             {
-              return
+                if result == nil
+                {
+                    let errView = THActivityView(netErrorWithSuperView: wself!.view)
+                    weak var werr = errView
+                    errView.setErrorBk({ () -> Void in
+                        wself?.fetchData()
+                        werr?.removeFromSuperview()
+                    })
+                }
+                else
+                {
+                    if let warnStr = result as? String
+                    {
+                        let warnView = THActivityView(string: warnStr)
+                        warnView.show()
+                    }
+                }
+                return
             }
-            
             let tuple = result as! (schedulerList:[[SchedulerData]],dateArr:[String])
             wself?.dataArr = tuple.schedulerList
             wself?.dateArr = tuple.dateArr
             wself?.table.reloadData()
         }
         net.start()
-//        let a = SchedulerData(time: "20:00", date: "06/11", title: "爱玛电动车", introduce: "新品发布会", address: "五号展厅", id: "123456")
-//        
-//        let b = SchedulerData(time: "20:00", date: "06/11", title: "爱玛电动车", introduce: "新品发布会", address: "五号展厅", id: "123456")
-//        
-//        dataArr = [[a],[b]]
-      
     
     }
     
@@ -101,10 +152,24 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         return 75
     }
     
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let head = dateArr[section]
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        let headData = dateArr[section]
+        let head = tableView.dequeueReusableHeaderFooterViewWithIdentifier("TableHeadView") as! TableHeadView
+        let attribute = NSMutableAttributedString(string: headData, attributes: [NSFontAttributeName:Profile.font(15),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)])
+        head.contentView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        head.contentL.attributedText = attribute
         return head
     }
+    
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
+    
+//    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        let head = dateArr[section]
+//        return head
+//    }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
         let subArr = dataArr[indexPath.section]
@@ -115,6 +180,45 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         return cell
     }
     
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        let subArr = dataArr[indexPath.section]
+        
+        let data = subArr[indexPath.row]
+        let schedulerInfo = SchedulerInfoVC()
+        schedulerInfo.schedulerID = data.id
+        schedulerInfo.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(schedulerInfo, animated: true)
+    }
+    
+    func fetchSearchData(searchStr:String){
+        
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
+            
+            var allData = [SchedulerData]()
+            for subArr in self.dataArr
+            {
+                for temp in subArr
+                {
+                    allData.append(temp)
+                }
+            }
+            let predicate = NSPredicate(format: "self contains %@",searchStr)
+            
+            let search = allData.filter({ (t) -> Bool in
+                predicate.evaluateWithObject(t.title)
+            })
+            
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                
+                self.searchArr = search
+//                self.searchCV.searchResultsTableView.reloadData()
+            })
+        }
+    }
+
 }
 
 class SchedulerCell: UITableViewCell {
@@ -137,21 +241,24 @@ class SchedulerCell: UITableViewCell {
         typeL.translatesAutoresizingMaskIntoConstraints = false
     
         timeL = UILabel()
-//        timeL.font = Profile.font(10)
+        timeL.font = Profile.font(11)
         timeL.translatesAutoresizingMaskIntoConstraints = false
         
         dateL = UILabel()
+        dateL.font = Profile.font(10)
         dateL.translatesAutoresizingMaskIntoConstraints = false
         
         titleL = UILabel()
+        titleL.font = Profile.font(10)
         titleL.translatesAutoresizingMaskIntoConstraints = false
         
         introduce = UILabel()
+        introduce.font = Profile.font(10)
         introduce.translatesAutoresizingMaskIntoConstraints = false
         
         address = UILabel()
+        address.font = Profile.font(10)
         address.translatesAutoresizingMaskIntoConstraints = false
-        
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         
@@ -159,10 +266,15 @@ class SchedulerCell: UITableViewCell {
         timeL.font = Profile.font(15)
         self.contentView.addSubview(timeL)
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[timeL]", options: [], metrics: nil, views: ["timeL":timeL]))
-        //         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-15-[timeL]", options: [], metrics: nil, views: ["timeL":timeL]))
         self.contentView.addConstraint(NSLayoutConstraint(item: timeL, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: -15))
         
         
+        let upView = UIView()
+        upView.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(upView)
+        upView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-0-[upView]-0-|", aView: upView, bView: nil))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-74-[upView(0.5)]", options: [], metrics: nil, views: ["upView":upView,"timeL":timeL]))
         
         
         let spot = UIView()
@@ -173,7 +285,7 @@ class SchedulerCell: UITableViewCell {
         spot.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(spot)
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(spot, toItem: self.contentView))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[timeL]-15-[spot(8)]", options: [], metrics: nil, views: ["spot":spot,"timeL":timeL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-70-[spot(8)]", options: [], metrics: nil, views: ["spot":spot,"timeL":timeL]))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[spot(8)]", options: [], metrics: nil, views: ["spot":spot]))
         
         
@@ -188,7 +300,7 @@ class SchedulerCell: UITableViewCell {
         introduce.textColor = Profile.rgb(102, g: 102, b: 102)
         introduce.font = Profile.font(13)
         self.contentView.addSubview(introduce)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[timeL]-35-[introduce]-(>=2)-|", options: [], metrics: nil, views: ["introduce":introduce,"timeL":timeL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[timeL]-40-[introduce]-(>=2)-|", options: [], metrics: nil, views: ["introduce":introduce,"timeL":timeL]))
         
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(introduce, toItem: self.contentView))
         introduce.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: UILayoutConstraintAxis.Horizontal)
@@ -205,12 +317,6 @@ class SchedulerCell: UITableViewCell {
         self.contentView.addSubview(address)
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(address, toItem: introduce))
         self.contentView.addConstraint(NSLayoutConstraint(item: address, attribute: NSLayoutAttribute.Top, relatedBy: NSLayoutRelation.Equal, toItem: introduce, attribute: NSLayoutAttribute.Bottom, multiplier: 1.0, constant: 5))
-        
-        
-        self.contentView.addSubview(typeL)
-        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(typeL, toItem: titleL))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("[titleL]-10-[typeL]", options: [], metrics: nil, views: ["typeL":typeL,"titleL":titleL]))
-        
     }
     
     

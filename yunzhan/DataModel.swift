@@ -69,7 +69,9 @@ extension NewsData {
 
 class SchedulerData {
     
+    var company:String?
     var time:String,date:String,title:String,introduce:String?,address:String,type:Bool?,id:String
+    
     init(time:String,date:String,title:String,introduce:String?,address:String,id:String,type:Bool? = true)
     {
         self.time = time
@@ -87,7 +89,7 @@ extension SchedulerData{
 
     convenience init?(rootDic:[String:AnyObject])
     {
-        guard let name = rootDic["name"] as? String,let content = rootDic["content"] as? String,let address = rootDic["addr"] as? String ,let time = rootDic["start_time"] as? Int,let id = rootDic["id"] as? NSNumber
+        guard let name = rootDic["name"] as? String,let content = rootDic["intro"] as? String,let address = rootDic["addr"] as? String ,let time = rootDic["start_time"] as? Int,let id = rootDic["id"] as? NSNumber
             else { return nil }
      
         self.init(time: time.toTimeString("HH:mm"), date: time.toTimeString("MM/dd"), title: name, introduce: content, address: address, id: String(id))
@@ -119,7 +121,7 @@ extension ExhibitorData{
 
     convenience init(rootDic:[String:AnyObject]){
     
-       self.init(address: rootDic["addr"] as? String, id: String(rootDic["exhibition_id"]!), name: rootDic["name_zh"] as? String, iconUrl: rootDic["logo_url"] as? String, addressMap: rootDic["booth_url"] as? String, webLink: rootDic["website"] as? String)
+       self.init(address: rootDic["addr"] as? String, id: String(rootDic["id"]!), name: rootDic["name_zh"] as? String, iconUrl: rootDic["logo_url"] as? String, addressMap: rootDic["booth_url"] as? String, webLink: rootDic["website"] as? String)
     
     }
 }
@@ -132,7 +134,8 @@ class ProductData {
     let imageUrl:String?
     let productId:String?
     let name:String?
-    
+    var introduce:String?
+    var picArr:[PicData]?
     init(imageUrl:String?,id:String?,name:String?)
     {
       self.imageUrl = imageUrl
@@ -146,7 +149,8 @@ class PersonData {
     var name:String?
     var title:String?
     var phone:String?
-    
+    var id:String?
+    var exhibitorID:String?
     init(name:String?,title:String?,phone:String?)
     {
       self.name = name

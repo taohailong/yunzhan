@@ -142,6 +142,48 @@ extension Int {
         
         return string
     }
+    
+    func toWeekData() ->String
+    {
+//       let date = self.toTimeString("yyyy-MM-dd")
+//       let comps = NSDateComponents()
+//        
+//        let year = date.substringToIndex(date.startIndex.advancedBy(3))
+//        let rang = date.startIndex.advancedBy(4)...date.startIndex.advancedBy(5)
+//        let month = date.substringWithRange(rang)
+//        let day = date.substringFromIndex(date.startIndex.advancedBy(7))
+        
+         let date = NSDate(timeIntervalSince1970: Double(self/1000))
+        let gregorian = NSCalendar(calendarIdentifier: NSGregorianCalendar)
+        let weekDayCompon = gregorian?.components(.NSWeekdayCalendarUnit, fromDate: date)
+        
+        
+        var weekDay:String?
+        let week = weekDayCompon?.weekday
+        switch week! {
+        
+           case 2:
+            weekDay = "星期一"
+            
+           case 3:
+            weekDay = "星期二"
+
+          case 4:
+            weekDay = "星期三"
+ 
+          case 5:
+            weekDay = "星期四"
+          case 6:
+            weekDay = "星期五"
+
+          case 7:
+          weekDay = "星期六"
+
+        default:
+            weekDay = "星期日"
+        }
+      return weekDay!
+    }
 }
 
 
@@ -163,10 +205,15 @@ extension String {
         //        print(str)
     
         return str as String
-
     }
 
-    
+    func verifyIsMobilePhoneNu()->Bool
+    {
+       let match = "^1[0-9]{10}"
+       let predicate = NSPredicate(format: "SELF MATCHS %@", match)
+        
+        return predicate.evaluateWithObject(self)
+    }
     
 }
 

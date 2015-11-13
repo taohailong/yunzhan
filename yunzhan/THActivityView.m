@@ -199,9 +199,9 @@
     
     UILabel* nameL = [[UILabel alloc]init];
     nameL.translatesAutoresizingMaskIntoConstraints = NO;
-    nameL.text = @"加载失败了，点击重试一下";
-    nameL.font = [UIFont systemFontOfSize:16];;
-//    nameL.textColor = DEFAULTGRAYCOLO;
+    nameL.text = @"网络异常，点击重试一下";
+    nameL.font = [UIFont systemFontOfSize:15];;
+    nameL.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1];
     [self addSubview:nameL];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:nameL attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:image attribute:NSLayoutAttributeBottom multiplier:1.0 constant:10]];
     
@@ -213,7 +213,8 @@
     reloadBt.layer.masksToBounds = YES;
 //    reloadBt.layer.borderColor = DEFAULTNAVCOLOR.CGColor;
     reloadBt.layer.borderWidth = 1;
-//    [reloadBt setTitleColor:DEFAULTNAVCOLOR forState:UIControlStateNormal];
+    [reloadBt setTitleColor:[UIColor colorWithRed:253/255.0 green:45/255.0 blue:99/255.0 alpha:1] forState:UIControlStateNormal];
+    reloadBt.titleLabel.font = [UIFont systemFontOfSize:15];
     reloadBt.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:reloadBt];
     [reloadBt addTarget:self action:@selector(performReloadAction) forControlEvents:UIControlEventTouchUpInside];
@@ -279,14 +280,14 @@
 
 -(id)initWithString:(NSString*)str
 {
-    CGSize size = [str sizeWithFont:[UIFont boldSystemFontOfSize:15]];
+    CGSize size = [str sizeWithFont:[UIFont boldSystemFontOfSize:16]];
     
     if(size.width>[UIScreen mainScreen].bounds.size.width)
     {
         size.width = [UIScreen mainScreen].bounds.size.width;
     }
 
-    self = [super initWithFrame:CGRectMake(0, 0, size.width+15, 25)];
+    self = [super initWithFrame:CGRectMake(0, 0, size.width+25, 30)];
     if (self)
     {
         self.backgroundColor = [UIColor blackColor];

@@ -220,7 +220,9 @@ class NetWorkData {
                 guard let date = dic["date"] as? Int, let arr = dic["schedules"] as? [[String:AnyObject]]
                     else { return}
                 
-                schedulerDateArr.append(date.toTimeString("yy-MM-dd"))
+                let dateStr = date.toTimeString("yy-MM-dd")
+                let week = date.toWeekData()
+                schedulerDateArr.append("\(dateStr)  \(week)")
                 
                 var subArr = [SchedulerData]()
                     for s in arr
@@ -235,7 +237,6 @@ class NetWorkData {
             
             let tuple:(schedulerList:[[SchedulerData]],dateArr:[String]) = (schedulerList,schedulerDateArr)
             block(result:tuple , status: status)
-
         }
     }
     
@@ -290,17 +291,12 @@ class NetWorkData {
                 return
             }
             
-            guard let data = result as? [String:AnyObject],let list = data["data"] as? [String:AnyObject],let address = list["addr"] as? String,let mapUrl = list["booth_url"] as? String,let introduce = list["intro"] as? String,let iconUrl = list["logo_url"] as?String,let location = list["booth_name"] as? String,let company = list["name_zh"] as? String, let connectArr = list["contacts"] as? [[String:AnyObject]],let productArr = list["products"] as? [[String:AnyObject]] ,let mark = list["remark"] as? String  ,let web = list["website"] as?String ,let id = list["exhibition_id"] as? Int   else {
-                
-                print("okkkkk")
-                                return
-                            }
             
-//            guard let data = result as? [String:AnyObject],let list = data["data"] as? [String:AnyObject],let address = list["addr"] as? String,let mapUrl = list["booth_url"] as? String,let introduce = list["intro"] as? String,let iconUrl = list["logo_url"] as?String,let location = list["remark"] as? String,let company = list["name_zh"] as? String, let connectArr = list["contacts"] as? [[String:AnyObject]],let productArr = list["products"] as? [[String:AnyObject]] ,let introductArr = list["sceneUrls"] as? [[String:AnyObject]?] ,let id = list["exhibition_id"] as?String,let web = list["website"] as?String ,let mark = list["remark"] as? String else {
-//                return
-//            }
-//            
-//            
+            guard let data = result as? [String:AnyObject],let list = data["data"] as? [String:AnyObject],let address = list["addr"] as? String,let mapUrl = list["booth_url"] as? String,let introduce = list["intro"] as? String,let iconUrl = list["logo_url"] as?String,let location = list["booth_name"] as? String,let company = list["name_zh"] as? String, let connectArr = list["contacts"] as? [[String:AnyObject]],let productArr = list["products"] as? [[String:AnyObject]] ,let mark = list["remark"] as? String  ,let web = list["website"] as?String ,let id = list["id"] as? Int   else {
+                
+                        return
+                }
+            
             
             let exhibitor = ExhibitorData(address: address, id: String(id), name: company, iconUrl: iconUrl, addressMap: mapUrl, webLink: web)
             exhibitor.introduct = introduce
@@ -310,16 +306,17 @@ class NetWorkData {
             var personArr = [PersonData]()
             for dic in connectArr
             {
-                guard let name = dic["name"] as?String,let phone = dic["phone"] as? String,let title = dic["title"] as? String
-                    else {
-                  return
+//               print(dic)
+               
+               let person = PersonData(name: dic["name"] as?String, title: dic["title"] as? String, phone: dic["phone"] as? String)
+                if let id = dic["id"] as? Int
+                {
+                    person.id = String(id)
                 }
-               let person = PersonData(name: name, title: title, phone: phone)
                 personArr.append(person)
             }
             
-            
-            
+    
             
             var productBack = [ProductData]()
             
@@ -328,6 +325,16 @@ class NetWorkData {
                 let purl = dic["picUrls"] as![[String:String]]
                 
                let p = ProductData(imageUrl: purl[0]["url"], id: dic["id"] as? String, name: dic["name_zh"] as? String)
+                p.introduce = dic["intro"] as? String
+                
+                var picArr = [PicData]()
+               for t in purl
+               {
+                  let pic = PicData(id: nil, url: t["url"]!)
+                   picArr.append(pic)
+                }
+                p.picArr = picArr
+
                productBack.append(p)
             }
             
@@ -344,11 +351,6 @@ class NetWorkData {
                 }
             }
             
-            
-            
-            
-            
-            
             let tuple:(data:ExhibitorData,personArr:[PersonData],producArr:[ProductData],introduce:[PicData]) = (exhibitor,personArr,productBack,introductArrBack)
             
             block(result: tuple, status: status)
@@ -359,7 +361,405 @@ class NetWorkData {
     
     
     
+    func getSchedulerInfo(schedulerID:String,block:NetBlock) {
+        
+        let url = "http://\(Profile.domain)/api/app/schedule/detail?eid=1&sid=\(schedulerID)"
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                
+                block(result: result, status: status)
+                return
+            }
+            
+            guard let data = result as? [String:AnyObject],let list = data["data"] as? [String:AnyObject] else {
+                return
+            }
+//            print(list)
+            let startT = list["start_time"] as! Int
+            let endT = list["end_time"] as! Int
+            let scheduleData = SchedulerData(time: "\(startT.toTimeString("HH:mm"))-\(endT.toTimeString("HH:mm"))" , date: startT.toTimeString("yy-MM-dd"), title: (list["name"] as? String)!, introduce: nil, address: (list["addr"] as? String)!, id: String(list["id"]))
+        
+            scheduleData.company = list["sponsor"] as? String
+            scheduleData.type = Bool(list["stype"] as! Int)
+            
+            
+            var contacts = [PersonData]()
+            if let contactArr = list["contacts"] as? [[String:AnyObject]]
+            {
+                for dic in contactArr
+                {
+                   let p = PersonData(name: dic["name"] as? String, title: dic["title"] as? String , phone: dic["phone"] as? String)
+                    print(dic)
+                    
+                    if let exhibitorID = dic["exhibition_id"] as? Int
+                    {
+                      p.exhibitorID = String(exhibitorID)
+                    }
+                    
+                    if let id = dic["id"] as? Int
+                    {
+                        p.id = String(id)
+                    }
+
+                    contacts.append(p)
+                }
+            }
+            
+            
+            var guests = [PersonData]()
+            if let guestsArr = list["guests"] as? [[String:AnyObject]]
+            {
+                for dic in guestsArr
+                {
+                    let p = PersonData(name: dic["name"] as? String, title: dic["title"] as? String , phone: nil)
+                    guests.append(p)
+                }
+            }
+
+            
+            var contents = [String]()
+            
+            if let contentArr = list["items"] as? [[String:AnyObject]]
+            {
+                
+                for temp in contentArr
+                {
+                    let start = temp["start"] as? Int
+                    let end = temp["end"] as? Int
+                    let c = temp["text"] as? String
+                    if start != nil && end != nil && c != nil
+                    {
+                        contents.append("\(start!.toTimeString("HH:mm"))-\(end!.toTimeString("HH:mm"))\(c!)")
+                    }
+                   
+                }
+                
+            }
+            
+            let tuple:(scheduler:SchedulerData,contacts:[PersonData],guests:[PersonData],contents:[String])
+            = (scheduleData,contacts,guests,contents)
+            
+            block(result: tuple, status: status)
+            
+        }
+    }
     
+    
+    func getUserInfo(token:String,block:NetBlock)
+    {
+        let url = "http://\(Profile.domain)/api/app/user/relogin?chn=ios&token=\(token)&eid=1"
+        
+        weak var user = UserData.shared
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: status)
+                return
+            }
+            
+            guard let data = result as? [String:AnyObject],let list = data["data"] as? [String:AnyObject] else {
+                return
+            }
+            user!.title = list["title"] as? String
+            user!.name = list["name"] as? String
+            user!.phone = list["mobile"] as? String
+
+            block(result: nil, status: status)
+        }
+    }
+
+    
+    
+    func myContactsList(block:NetBlock){
+        
+        weak var user = UserData.shared
+        let url = "http://\(Profile.domain)/api/app/personal/listcontact?chn=ios&token=\(user!.token!)&eid=1"
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: status)
+                return
+            }
+            
+            guard let data = result as? [String:AnyObject],let list = data["data"] as? [[String:AnyObject]] else {
+                return
+            }
+            
+            var prefixArr = [String]()
+            var personArr = [[PersonData]]()
+            
+            for temp in list
+            {
+                var subArr:[PersonData]?
+                
+                let p = PersonData(name: temp["name"] as? String, title: temp["title"] as? String, phone: temp["phone"] as? String)
+                
+                if let exhibitorID = temp["exhibition_id"] as? Int
+                {
+                    p.exhibitorID = String(exhibitorID)
+                }
+                
+                if let id = temp["id"] as? Int
+                {
+                    p.id = String(id)
+                }
+
+                let first = temp["name_first"] as! String
+                if let index = prefixArr.indexOf(first)
+                {
+                    subArr = personArr[index]
+                    subArr?.append(p)
+                    personArr.removeAtIndex(index)
+                    personArr.insert(subArr!, atIndex: index)
+                }
+                else
+                {
+                    subArr = [PersonData]()
+                    subArr?.append(p)
+                    personArr.append(subArr!)
+                    prefixArr.append(first)
+                }
+            }
+            let tuple:(prefix:[String],data:[[PersonData]]) = (prefixArr,personArr)
+            block(result: tuple, status: status)
+        }
+    }
+    
+    func addContact(exhibitorID:String,personID:String,block:NetBlock)
+    {
+        weak var user = UserData.shared
+        let url = "http://\(Profile.domain)/api/app/personal/addcontact?chn=ios&token=\(user!.token!)&eid=1&bid=\(exhibitorID)&cid=\(personID)"
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: status)
+                return
+            }
+            
+            guard let data = result as? [String:AnyObject],let list = data["code"] as? Int,let msg = data["msg"] else {
+                return
+            }
+            block(result: msg, status: status)
+        }
+    
+    }
+    
+    
+    
+    func delectContact(exhibitorID:String,personID:String,block:NetBlock)
+    {
+        weak var user = UserData.shared
+        let url = "http://\(Profile.domain)/api/app/personal/delcontact?chn=ios&token=\(user!.token)&eid=1&bid=\(exhibitorID)&cid=\(personID)"
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: status)
+                return
+            }
+            
+            guard let data = result as? [String:AnyObject],let list = data["code"] as? Int,let msg = data["msg"] else {
+                return
+            }
+            block(result: msg, status: status)
+        }
+        
+    }
+
+    
+    
+    
+    func delectMyExhibitor(exhibitorID:String,block:NetBlock)
+    {
+        weak var user = UserData.shared
+        let url = "http://\(Profile.domain)/api/app/personal/delbuz?chn=ios&token=\(user!.token!)&eid=1&id=\(exhibitorID)"
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: status)
+                return
+            }
+            
+            guard let data = result as? [String:AnyObject],let list = data["code"] as? Int,let msg = data["msg"] else {
+                return
+            }
+            block(result: msg, status: status)
+        }
+        
+    }
+
+    
+    
+    func addMyExhibitor(exhibitorID:String,block:NetBlock)
+    {
+        weak var user = UserData.shared
+        let url = "http://\(Profile.domain)/api/app/personal/addbuz?chn=ios&token=\(user!.token!)&eid=1&bid=\(exhibitorID)"
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: status)
+                return
+            }
+            
+            guard let data = result as? [String:AnyObject],let list = data["code"] as? Int,let msg = data["msg"] else {
+                return
+            }
+            block(result: msg, status: status)
+        }
+    }
+
+    
+    func myFavoriteExhibitor(block:NetBlock){
+    
+        weak var user = UserData.shared
+        let url = "http://\(Profile.domain)/api/app/personal/listbuz?chn=ios&token=\(user!.token!)&eid=1"
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: status)
+                return
+            }
+            
+            guard let data = result as? [String:AnyObject],let list = data["data"] as? [[String:AnyObject]] else {
+                return
+            }
+            
+            var prefixArr = [String]()
+            var exhibitorArr = [[ExhibitorData]]()
+            
+            for temp in list
+            {
+                if let first = temp["name_first"] as? String
+                {
+                    
+                   let p = ExhibitorData(rootDic: temp)
+                    if let index = prefixArr.indexOf(first)
+                    {
+                        var subArr = exhibitorArr[index]
+                        subArr.append(p)
+                        exhibitorArr.append(subArr)
+                    }
+                    else
+                    {
+                        var subArr = [ExhibitorData]()
+                        subArr.append(p)
+                        exhibitorArr.append(subArr)
+                       prefixArr.append(first)
+                        
+                    }
+
+                }
+            }
+             let compound:(prefixArr:[String],list:[[ExhibitorData]]) = (prefixArr,exhibitorArr)
+            block(result: compound, status: status)
+        }
+    }
+    
+    
+    func addMyScheduler(schedulerID:String,block:NetBlock)
+    {
+        weak var user = UserData.shared
+        let url = "http://\(Profile.domain)/api/app/personal/addshedule?chn=ios&token=\(user!.token!)&eid=1&sid=\(schedulerID)"
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: status)
+                return
+            }
+            
+            guard let data = result as? [String:AnyObject],let list = data["code"] as? Int,let msg = data["msg"] else {
+                return
+            }
+            block(result: msg, status: status)
+        }
+    }
+
+    
+    
+    func delectMyScheduler(schedulerID:String,block:NetBlock)
+    {
+        weak var user = UserData.shared
+        let url = "http://\(Profile.domain)/api/app/personal/delshedule?chn=ios&token=\(user!.token!)&eid=1&id=\(schedulerID)"
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: status)
+                return
+            }
+            
+            guard let data = result as? [String:AnyObject],let list = data["code"] as? Int,let msg = data["msg"] else {
+                return
+            }
+            block(result: msg, status: status)
+        }
+    }
+
+    
+    
+    
+    func myFavoriteScheduler(block:NetBlock){
+        
+        weak var user = UserData.shared
+        let url = "http://\(Profile.domain)/api/app/personal/listshedule?chn=ios&token=\(user!.token!)&eid=1"
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: status)
+                return
+            }
+            
+            guard let data = result as? [String:AnyObject],let list = data["data"] as? [[String:AnyObject]] else {
+                return
+            }
+            
+            var schedulerList = [[SchedulerData]]()
+            var schedulerDateArr = [String]()
+            for dic in list
+            {
+                guard let date = dic["date"] as? Int, let arr = dic["schedules"] as? [[String:AnyObject]]
+                    else { return}
+                
+                schedulerDateArr.append(date.toTimeString("yy-MM-dd"))
+                
+                var subArr = [SchedulerData]()
+                for s in arr
+                {
+                    if let element = SchedulerData(rootDic:s)
+                    {
+                        subArr.append(element)
+                    }
+                }
+                schedulerList.append(subArr)
+            }
+            
+            let tuple:(schedulerList:[[SchedulerData]],dateArr:[String]) = (schedulerList,schedulerDateArr)
+            block(result:tuple , status: status)
+        }
+    }
+
+
     
     func getMethodRequest(url:String,completeBlock:NetBlock){
         
@@ -369,7 +769,7 @@ class NetWorkData {
 //            exit(0)
             return
         }
-        
+        print(url)
         net = AFHTTPRequestOperation(request: NSURLRequest(URL: NSURL(string: url)!))
         
         net.setCompletionBlockWithSuccess({ (operation:AFHTTPRequestOperation!, result:AnyObject!) -> Void in
@@ -382,7 +782,7 @@ class NetWorkData {
             }
             
             }) { ( operating:AFHTTPRequestOperation!, err:NSError!) -> Void in
-                completeBlock(result: "网络错误", status: .NetWorkStatusError)
+                completeBlock(result: nil, status: .NetWorkStatusError)
         }
         
     }

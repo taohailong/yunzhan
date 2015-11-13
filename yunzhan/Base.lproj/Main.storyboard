@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9059" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Df1-5m-kBG">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9060" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Df1-5m-kBG">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9051"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -139,7 +139,7 @@
         <!--News View Controller-->
         <scene sceneID="ZNj-Fh-Hqk">
             <objects>
-                <viewController id="nBR-oT-m59" customClass="NewsViewController" customModule="yunzhan" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="nBR-oT-m59" customClass="NewsViewController" customModule="yunzhan" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="P8Q-HQ-IpH"/>
                         <viewControllerLayoutGuide type="bottom" id="aBr-va-xFq"/>
@@ -149,11 +149,11 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="70" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="R5M-Hr-hKt">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="549"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="NewsCell" rowHeight="70" id="Zvx-2n-rzo" customClass="NewsCell" customModule="yunzhan" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="92" width="600" height="70"/>
+                                        <rect key="frame" x="0.0" y="28" width="600" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Zvx-2n-rzo" id="tel-gC-uou">
                                             <rect key="frame" x="0.0" y="0.0" width="600" height="70"/>
@@ -172,7 +172,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xas-GG-Z1x">
-                                                    <rect key="frame" x="85" y="36" width="42" height="21"/>
+                                                    <rect key="frame" x="85" y="35" width="42" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -212,10 +212,10 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="R5M-Hr-hKt" firstAttribute="top" secondItem="oQt-rF-Zja" secondAttribute="top" id="PdZ-3f-xQI"/>
                             <constraint firstItem="R5M-Hr-hKt" firstAttribute="leading" secondItem="oQt-rF-Zja" secondAttribute="leading" id="RZx-8k-H1J"/>
                             <constraint firstAttribute="trailing" secondItem="R5M-Hr-hKt" secondAttribute="trailing" id="ZoC-CM-2oe"/>
-                            <constraint firstItem="aBr-va-xFq" firstAttribute="top" secondItem="R5M-Hr-hKt" secondAttribute="bottom" constant="2" id="cuJ-Uy-hlB"/>
+                            <constraint firstItem="aBr-va-xFq" firstAttribute="top" secondItem="R5M-Hr-hKt" secondAttribute="bottom" id="cuJ-Uy-hlB"/>
+                            <constraint firstItem="R5M-Hr-hKt" firstAttribute="top" secondItem="P8Q-HQ-IpH" secondAttribute="bottom" id="kH1-F2-YP8"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="hxc-HN-0Qt"/>

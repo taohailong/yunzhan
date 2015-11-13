@@ -16,6 +16,41 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
     var searchArr:[ExhibitorData]?
     var searchCV:UISearchDisplayController!
     var prefixArr:[String]?
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.setNavgationBarAttribute(true)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.setNavgationBarAttribute(false)
+    }
+    
+    func setNavgationBarAttribute(change:Bool)
+    {
+        if change == true
+        {
+            self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
+            self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
+            let application = UIApplication.sharedApplication()
+            application.setStatusBarStyle(.LightContent, animated: true)
+        }
+        else
+        {
+            if self.navigationController?.viewControllers.count == 1
+            {
+                return
+            }
+            self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor()]
+            self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+            let application = UIApplication.sharedApplication()
+            application.setStatusBarStyle(.Default, animated: true)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -33,7 +68,7 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
         table.delegate = self
         table.dataSource = self
         table.translatesAutoresizingMaskIntoConstraints = false
-        
+        table.separatorColor = Profile.rgb(243, g: 243, b: 243)
         let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
         table.tableHeaderView = searchBar
         table.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
@@ -52,19 +87,33 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
     }
     
     func fetchExhibitorData(){
-    
-//        let a0:ExhibitorData = ExhibitorData(address: "address", id: "123", name: "aima", iconUrl: "http://h.hiphotos.baidu.com/image/h%3D200/sign=db9f2e15edf81a4c3932ebc9e72b6029/b8389b504fc2d56252994c8ce11190ef76c66c3a.jpg", addressMap: "ddd", webLink: "dddd")
-//        
-//        let a2 = ExhibitorData(address: "address", id: "123", name: "aima", iconUrl: "http://h.hiphotos.baidu.com/image/h%3D200/sign=db9f2e15edf81a4c3932ebc9e72b6029/b8389b504fc2d56252994c8ce11190ef76c66c3a.jpg", addressMap: "ddd", webLink: "dddd")
-//
-//        dataArr = [[a0],[a0,a2],[a0],[a2],[a2],[a2,a0],[a2],[a2,a0]]
+
+        let loadView = THActivityView(activityViewWithSuperView: self.view)
         weak var wself = self
         net = NetWorkData()
         net.getExhibitorList { (result, status) -> (Void) in
             
-            if status == NetStatus.NetWorkStatusError
+            loadView.removeFromSuperview()
+            if status == .NetWorkStatusError
             {
-            
+                if result == nil
+                {
+                    let errView = THActivityView(netErrorWithSuperView: wself!.view)
+                    weak var werr = errView
+                    errView.setErrorBk({ () -> Void in
+                        wself?.fetchExhibitorData()
+                        werr?.removeFromSuperview()
+                    })
+                }
+                else
+                {
+                    if let warnStr = result as? String
+                    {
+                        let warnView = THActivityView(string: warnStr)
+                        warnView.show()
+                    }
+                }
+                return
             }
             
             guard let list = result as? (prefixArr:[String],list:[[ExhibitorData]])
@@ -124,7 +173,6 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-
         let cell = table.dequeueReusableCellWithIdentifier("ExhibitorCell") as! ExhibitorCell
         
         var cellData:ExhibitorData!
@@ -141,11 +189,11 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
         cell.fillData(cellData)
         
         return cell
-        
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
         var cellData:ExhibitorData!
         if tableView != table
         {
@@ -168,23 +216,16 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
     
     func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
         
-        
         return prefixArr
-//        return ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#"]
-//     return ["\u{1F50D}","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#"]
     }// return list of section titles to display in section index view (e.g. "ABCD...Z#")
    
     func tableView(tableView: UITableView, sectionForSectionIndexTitle title: String, atIndex index: Int) -> Int {
         
-//        let arr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#"]
         let s = prefixArr!.indexOf(title)
        return s!
     
     }// tell table which section corresponds to section title/index (e.g. "B",1)
     
-    
-//    func searchDisplayController(controller: UISearchDisplayController, shouldReloadTableForSearchScope searchOption: Int) -> Bool {
-//          }
     
     func searchDisplayController(controller: UISearchDisplayController, shouldReloadTableForSearchString searchString: String?) -> Bool {
         
@@ -216,12 +257,8 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
                     allData.append(temp)
                 }
             }
-
-            
-            
             let predicate = NSPredicate(format: "self contains %@",searchStr)
             
-
             let search = allData.filter({ (t) -> Bool in
                 predicate.evaluateWithObject(t.name)
             })
@@ -234,6 +271,10 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
         }
     }
     
+    deinit{
+        net = nil
+    }
+
     
 }
 
@@ -284,9 +325,16 @@ class ExhibitorCell: UITableViewCell {
         self.contentView.addConstraint(NSLayoutConstraint.layoutTopEqual(titleL, toItem: contentImage))
         
         
+        let locationV = UIImageView()
+        locationV.image = UIImage(named: "exhibitorLocation")
+        locationV.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(locationV)
+        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(locationV, toItem: titleL))
+         self.contentView.addConstraint(NSLayoutConstraint(item: locationV, attribute: NSLayoutAttribute.Top, relatedBy: NSLayoutRelation.Equal, toItem: titleL, attribute: NSLayoutAttribute.Bottom, multiplier: 1.0, constant: 8))
+        
         self.contentView.addSubview(addressL)
-        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(addressL, toItem: titleL))
-        self.contentView.addConstraint(NSLayoutConstraint(item: addressL, attribute: NSLayoutAttribute.Top, relatedBy: NSLayoutRelation.Equal, toItem: titleL, attribute: NSLayoutAttribute.Bottom, multiplier: 1.0, constant: 10))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[locationV]-10-[addressL]", aView: locationV, bView: addressL))
+        self.contentView.addConstraint(NSLayoutConstraint(item: addressL, attribute: NSLayoutAttribute.Top, relatedBy: NSLayoutRelation.Equal, toItem: titleL, attribute: NSLayoutAttribute.Bottom, multiplier: 1.0, constant: 8))
         
         
         self.contentView.addSubview(name)
@@ -298,7 +346,10 @@ class ExhibitorCell: UITableViewCell {
 
     func fillData(data:ExhibitorData)
     {
-        contentImage.sd_setImageWithURL(NSURL(string: data.iconUrl!)!, placeholderImage: nil)
+        if data.iconUrl != nil
+        {
+            contentImage.sd_setImageWithURL(NSURL(string: data.iconUrl!)!, placeholderImage: nil)
+        }
         titleL.text = data.name
         addressL.text = data.address
         name.text = data.address

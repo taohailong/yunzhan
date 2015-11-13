@@ -37,10 +37,13 @@ class CommonCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setImageUrl(url:String){
-        let req = NSURL(string: url)
-
-      label.sd_setImageWithURL(req!, placeholderImage: nil)
+    func setImageUrl(url:String?){
+        
+        if let furl = url
+        {
+           let req = NSURL(string: furl)
+            label.sd_setImageWithURL(req!, placeholderImage: nil)
+        }
     }
     
     func changeColor(){
@@ -64,7 +67,6 @@ class CommonHeadView: UICollectionReusableView {
         
         super.init(frame: frame)
     
-
         self.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         
         let topView = UIView()
@@ -74,13 +76,13 @@ class CommonHeadView: UICollectionReusableView {
         topView.translatesAutoresizingMaskIntoConstraints = false
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[topView]|", options: [], metrics: nil, views: ["topView":topView]))
         
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[topView]-0.5-|", options: [], metrics: nil , views: ["topView":topView]))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-15-[topView]-0.5-|", options: [], metrics: nil , views: ["topView":topView]))
         
         
         let label = UIButton(type: .Custom)
         label.setImage(UIImage(named: "narrowLeft"), forState: .Normal)
         label.titleEdgeInsets = UIEdgeInsetsMake(0, -20, 0, 0)
-        label.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -90)
+        label.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -92)
         label.setTitleColor(Profile.rgb(153, g: 153, b: 153), forState: .Normal)
         label.titleLabel?.font = Profile.font(11)
         label.setTitle("查看更多", forState: .Normal)
@@ -97,7 +99,7 @@ class CommonHeadView: UICollectionReusableView {
         self.addSubview(iconImage)
         
         self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[iconImage]", options: [], metrics: nil, views: ["iconImage":iconImage]))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-5-[iconImage]", options: [], metrics: nil, views: ["iconImage":iconImage]))
+        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[iconImage]", options: [], metrics: nil, views: ["iconImage":iconImage]))
     }
     
     func iconImage(name:String?){
@@ -152,7 +154,6 @@ class CollectionNewCell: UICollectionViewCell {
         self.contentView.addSubview(titleL)
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[contentImage]-20-[titleL]", options: [], metrics: nil, views: ["titleL":titleL,"contentImage":contentImage]))
         self.contentView.addConstraint(NSLayoutConstraint.layoutTopEqual(titleL, toItem: contentImage))
-//        titleL.setContentHuggingPriority(UILayoutPriorityDefaultHigh, forAxis: UILayoutConstraintAxis.Horizontal)
         titleL.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: UILayoutConstraintAxis.Horizontal)
         
         
@@ -166,17 +167,17 @@ class CollectionNewCell: UICollectionViewCell {
         
 //        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-5-[contentL]-5-|", options: [], metrics: nil, views: ["contentL":contentL,"titleL":titleL]))
         
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-5-[contentL]-5-|", aView: titleL, bView: contentL))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-7-[contentL]-5-|", aView: titleL, bView: contentL))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[contentL]-5-|", options: [], metrics: nil, views: ["contentL":contentL]))
         
         
         
         timeL.textColor = Profile.rgb(191, g: 191, b: 191)
-        timeL.font = Profile.font(11)
+        timeL.font = Profile.font(12)
         self.contentView.addSubview(timeL)
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(titleL, toItem: timeL))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[titleL]-(>=1)-[timeL]-15-|", options: [], metrics: nil, views: ["titleL":titleL,"timeL":timeL]))
-//        timeL.setContentHuggingPriority(UILayoutPriorityDefaultHigh, forAxis: UILayoutConstraintAxis.Horizontal)
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[titleL]-(>=3)-[timeL]-15-|", options: [], metrics: nil, views: ["titleL":titleL,"timeL":timeL]))
+//        timeL.setContentHuggingPriority(UILayoutPriorityDefaultLow, forAxis: UILayoutConstraintAxis.Horizontal)
     }
     
     func fillData(data:NewsData)
@@ -199,7 +200,7 @@ class AdRootCollectionView: UICollectionReusableView {
     
     typealias Blok = (link:String) ->Void
     var tapBlock:Blok!
-    
+    var timer:NSTimer!
     var imageArr:[PicData]?
     var scroll: UIScrollView!
     
@@ -218,10 +219,11 @@ class AdRootCollectionView: UICollectionReusableView {
             return
         }
         scroll = UIScrollView(frame: CGRectMake(0,0,CGRectGetWidth(frame),CGRectGetHeight(frame)))
-        
         scroll.pagingEnabled = true
         scroll.showsHorizontalScrollIndicator = false
         self.addSubview(scroll)
+        
+        timer = NSTimer.scheduledTimerWithTimeInterval(6, target: self, selector: "changeSrcollView", userInfo: nil, repeats: true)
         self.creatImageView()
         
     }
@@ -254,6 +256,24 @@ class AdRootCollectionView: UICollectionReusableView {
         scroll.contentSize = CGSizeMake(scroll.bounds.size.width * CGFloat(i+1), scroll.bounds.height)
     }
     
+    
+    func changeSrcollView(){
+      
+       var nu = ceil(scroll.contentOffset.x / scroll.bounds.size.width)
+       nu = nu+1
+       var point = scroll.contentOffset
+      if Int(nu) < imageArr!.count
+      {
+         point.x = scroll.bounds.size.width*CGFloat(nu)
+      }
+        else
+      {
+         point.x = 0
+      }
+      scroll.setContentOffset(point, animated: true)
+        
+    }
+    
     func imageTap(let tap:UITapGestureRecognizer){
         
         let tag = tap.view?.tag
@@ -282,7 +302,7 @@ class CollectionActView: UICollectionViewCell {
         
       
         timeL = UILabel()
-        timeL.font = Profile.font(10)
+        timeL.font = Profile.font(11)
         timeL.translatesAutoresizingMaskIntoConstraints = false
         
         dateL = UILabel()
@@ -307,10 +327,16 @@ class CollectionActView: UICollectionViewCell {
         timeL.font = Profile.font(15)
         self.contentView.addSubview(timeL)
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[timeL]", options: [], metrics: nil, views: ["timeL":timeL]))
-//         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-15-[timeL]", options: [], metrics: nil, views: ["timeL":timeL]))
         self.contentView.addConstraint(NSLayoutConstraint(item: timeL, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: -15))
         
         
+        let upView = UIView()
+        upView.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(upView)
+        upView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-0-[upView]-0-|", aView: upView, bView: nil))
+         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-74-[upView(0.5)]", options: [], metrics: nil, views: ["upView":upView,"timeL":timeL]))
+
         
         
         let spot = UIView()
@@ -321,7 +347,7 @@ class CollectionActView: UICollectionViewCell {
         spot.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(spot)
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(spot, toItem: self.contentView))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[timeL]-15-[spot(8)]", options: [], metrics: nil, views: ["spot":spot,"timeL":timeL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-70-[spot(8)]", options: [], metrics: nil, views: ["spot":spot]))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[spot(8)]", options: [], metrics: nil, views: ["spot":spot]))
         
         
@@ -336,7 +362,7 @@ class CollectionActView: UICollectionViewCell {
         introduce.textColor = Profile.rgb(102, g: 102, b: 102)
         introduce.font = Profile.font(13)
         self.contentView.addSubview(introduce)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[timeL]-35-[introduce]-(>=2)-|", options: [], metrics: nil, views: ["introduce":introduce,"timeL":timeL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[timeL]-40-[introduce]-(>=2)-|", options: [], metrics: nil, views: ["introduce":introduce,"timeL":timeL]))
         
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(introduce, toItem: self.contentView))
         introduce.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: UILayoutConstraintAxis.Horizontal)
@@ -346,7 +372,7 @@ class CollectionActView: UICollectionViewCell {
         titleL.font = Profile.font(15)
         self.contentView.addSubview(titleL)
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(titleL, toItem: introduce))
-        self.contentView.addConstraint(NSLayoutConstraint(item: titleL, attribute: NSLayoutAttribute.Bottom, relatedBy: NSLayoutRelation.Equal, toItem: introduce, attribute: NSLayoutAttribute.Top, multiplier: 1.0, constant: -5))
+        self.contentView.addConstraint(NSLayoutConstraint(item: titleL, attribute: NSLayoutAttribute.Bottom, relatedBy: NSLayoutRelation.Equal, toItem: introduce, attribute: NSLayoutAttribute.Top, multiplier: 1.0, constant: -7))
         
         address.textColor = Profile.rgb(153, g: 153, b: 153)
         address.font = Profile.font(13)

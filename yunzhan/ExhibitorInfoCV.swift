@@ -19,10 +19,15 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
     var table:UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
+    
+        let favoriteBt = UIButton(type: .Custom)
+        favoriteBt.frame = CGRectMake(0, 0, 35, 35)
+        favoriteBt.imageEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0)
+        favoriteBt.setImage(UIImage(named: "favorite"), forState: .Normal)
+        favoriteBt.setImage(UIImage(named: "favorite_select"), forState: .Selected)
+        favoriteBt.addTarget(self, action: "favoriteAction", forControlEvents: .TouchUpInside)
         
-        
-        
-        let leftBar = UIBarButtonItem(image: UIImage(named: "favorite"), style: .Done, target: self, action: "favorite")
+        let leftBar = UIBarButtonItem(customView: favoriteBt)
         self.navigationItem.rightBarButtonItem = leftBar
         
         
@@ -45,19 +50,126 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         self.fetchData()
     }
     
-    func favorite(){
+    func favoriteAction(){
     
+        if UserData.shared.token == nil
+        {
+            let loginVC = LogViewController()
+            self.navigationController?.pushViewController(loginVC, animated: true)
+            return
+        }
         
-        
-        
+        if id != nil
+        {
+            let leftBar = self.navigationItem.rightBarButtonItem
+            if let button = leftBar?.customView as? UIButton
+            {
+                if button.selected == true
+                {
+                    self.delFavorite()
+                }
+                else
+                {
+                    self.favorite()
+                }
+            }
+            
+        }
     }
     
     
+    
+    func favorite(){
+        
+        weak var wself = self
+        let loadV = THActivityView(activityViewWithSuperView: self.view)
+        let favoriteNet = NetWorkData()
+        favoriteNet.addMyExhibitor(id!, block: { (result, status) -> (Void) in
+            
+            loadV.removeFromSuperview()
+            if let warnStr = result as? String
+            {
+                let showV = THActivityView(string: warnStr)
+                showV.show()
+            }
+            
+            if status == .NetWorkStatusError
+            {
+            }
+            else
+            {
+                let leftBar = wself?.navigationItem.rightBarButtonItem
+                if let button = leftBar?.customView as? UIButton
+                {
+                    button.selected = true
+                    print(button)
+                }
+            }
+        })
+        favoriteNet.start()
+    }
+    
+    
+    func delFavorite(){
+        
+        weak var wself = self
+        let loadV = THActivityView(activityViewWithSuperView: self.view)
+        let favoriteNet = NetWorkData()
+        favoriteNet.delectMyExhibitor(id!, block: { (result, status) -> (Void) in
+
+            loadV.removeFromSuperview()
+            if let warnStr = result as? String
+            {
+                let showV = THActivityView(string: warnStr)
+                showV.show()
+            }
+            
+            if status == .NetWorkStatusError
+            {
+            }
+            else
+            {
+                let leftBar = wself?.navigationItem.rightBarButtonItem
+                if let button = leftBar?.customView as? UIButton
+                {
+                    button.selected = false
+                }
+            }
+        })
+        favoriteNet.start()
+    }
+    
     func fetchData(){
     
+        let loadView = THActivityView(activityViewWithSuperView: self.view)
         weak var wself = self
-       net = NetWorkData()
+        net = NetWorkData()
         net.getExhibitorInfo(id!) { (result, status) -> (Void) in
+            
+            loadView.removeFromSuperview()
+            if status == .NetWorkStatusError
+            {
+                if result == nil
+                {
+                    let errView = THActivityView(netErrorWithSuperView: wself!.view)
+                    weak var werr = errView
+                    errView.setErrorBk({ () -> Void in
+                        wself?.fetchData()
+                        werr?.removeFromSuperview()
+                    })
+                }
+                else
+                {
+                    if let warnStr = result as? String
+                    {
+                        let warnView = THActivityView(string: warnStr)
+                        warnView.show()
+                    }
+                }
+                return
+            }
+
+            
           guard let tuple = result as? (data:ExhibitorData,personArr:[PersonData],producArr:[ProductData],introduce:[PicData]) else
           {
             return
@@ -165,8 +277,11 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         }
         else if indexPath.section == 1
         {
+            
            let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorProductCell") as! ExhibitorProductCell
             
+            weak var wself = self
+            cell.tapBlock = { wself?.showProductInfoController() }
             cell.fillImageArr(productArr)
            return cell
           
@@ -174,10 +289,14 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             
         else if indexPath.section == 3
         {
+
             if indexPath.row == 0
             {
                 let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorMoreCell") as! ExhibitorMoreCell
                 cell.iconImage.image = UIImage(named: "exhibitorIntroduct")
+                cell.moreBt.hidden = false
+                weak var wself = self
+                cell.tapBlock = { wself?.showExhibitorImage()}
                 return cell
             }
             else
@@ -190,24 +309,29 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             
         else
         {
+            //            展会信息
             if indexPath.row == 0
             {
                 let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorMoreCell") as! ExhibitorMoreCell
+
                 cell.iconImage.image = UIImage(named: "exhibitorInfoHead")
                 return cell
             }
             else if indexPath.row == personArr.count+1
             {
                 let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorMapCell") as! ExhibitorMapCell
+                
                 cell.fillData(elementData.location!, locationUrl: elementData.addressMap!)
                 return cell
             }
             else
             {
-                print("\(personArr)\(indexPath)")
                 let person = personArr[indexPath.row-1]
                 let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorPerson") as! ExhibitorPerson
                 cell.fillData(person.title  , name:person.name, phone: person.phone)
+                 weak var wself = self
+                weak var wperson = person
+                cell.tapBlock = { wself?.addMyContact(wperson!) }
                 return cell
 
             }
@@ -215,8 +339,59 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
  
     }
     
+    func addMyContact(person: PersonData)
+    {
+        if UserData.shared.token == nil
+        {
+            let loginVC = LogViewController()
+            self.navigationController?.pushViewController(loginVC, animated: true)
+            return
+        }
+        let loadV = THActivityView(activityViewWithSuperView: self.view)
+        
+        let tempNet = NetWorkData()
+        tempNet.addContact(id!, personID: person.id!) { (result, status) -> (Void) in
+            loadV.removeFromSuperview()
+            if let warnStr = result as? String
+            {
+                let showV = THActivityView(string: warnStr)
+                showV.show()
+            }
+        }
+        tempNet.start()
+    }
     
     
+    func showProductInfoController(){
+        
+       let productVC = ProductListVC()
+        productVC.products = productArr
+        self.navigationController?.pushViewController(productVC, animated: true)
+    }
+    
+    
+    func showExhibitorImage()
+    {
+    
+        var picHtml = ""
+        
+        for p in introductArr
+        {
+            picHtml = picHtml+"<img src=\"\(p.url)\" style=\"max-width:100%; margin-bottom:8px\"/><br>"
+        }
+        
+        let html = "<html> <body> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /> <p> <font size=\"3px\" color=\"black\">展会风采</font></p>\(picHtml)</body></html>"
+        
+        let web = CommonWebController(html: html)
+        web.title = "展会形象"
+        self.navigationController?.pushViewController(web, animated: true)
+
+    }
+    
+    deinit{
+        net = nil
+    }
+
 }
 
 class ExhibitorInfoHeadCell: UITableViewCell {
@@ -347,6 +522,7 @@ class ExhibitorInfoHeadCell: UITableViewCell {
 
 class ExhibitorProductCell: UITableViewCell {
     
+    var tapBlock:((Void)->(Void))?
     var imageArr:[ProductData]!
     let iconImage:UIImageView
     let scroll :UIScrollView
@@ -373,7 +549,7 @@ class ExhibitorProductCell: UITableViewCell {
         moreBt.setImage(UIImage(named: "narrowLeft"), forState: .Normal)
         moreBt.titleEdgeInsets = UIEdgeInsetsMake(0, -20, 0, 0)
         moreBt.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -90)
-
+        moreBt.addTarget(self, action: "tapAction", forControlEvents: .TouchUpInside)
         moreBt.setTitle("查看更多", forState: .Normal)
       
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[moreBt]-15-|", options: [], metrics: nil, views: ["moreBt":moreBt]))
@@ -392,8 +568,6 @@ class ExhibitorProductCell: UITableViewCell {
         scroll.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addConstraints(NSLayoutConstraint.layoutHorizontalFull(scroll))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[separate]-10-[scroll]-1-|", options: [], metrics: nil, views: ["separate":separate,"scroll":scroll]))
-        
-        
     }
 
     func fillImageArr(arr:[ProductData]){
@@ -410,7 +584,7 @@ class ExhibitorProductCell: UITableViewCell {
         for (index ,imageData) in arr.enumerate(){
             
             let image = UIImageView(frame: frame)
-            image.backgroundColor = UIColor.redColor()
+//            image.backgroundColor = UIColor.redColor()
             image.tag = index
             scroll.addSubview(image)
             print(imageData.imageUrl!)
@@ -425,7 +599,14 @@ class ExhibitorProductCell: UITableViewCell {
         scroll.contentSize = CGSizeMake(Profile.width() * CGFloat(i+1), frame.height)
     }
     
-    
+    func tapAction()
+    {
+        if tapBlock != nil
+        {
+            tapBlock!()
+        }
+       
+    }
       required init?(coder aDecoder: NSCoder) {
           fatalError("init(coder:) has not been implemented")
       }
@@ -433,29 +614,59 @@ class ExhibitorProductCell: UITableViewCell {
 
 class ExhibitorMoreCell:UITableViewCell {
     
+    let moreBt:UIButton
     var iconImage :UIImageView
+    var tapBlock:((Void)->Void)?
    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-    iconImage = UIImageView()
-    super.init(style: style, reuseIdentifier: reuseIdentifier)
-    self.contentView.addSubview(iconImage)
-    iconImage.translatesAutoresizingMaskIntoConstraints = false
     
-    self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[iconImage]", options: [], metrics: nil, views: ["iconImage":iconImage]))
-    self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-(0)-[iconImage]", options: [], metrics: nil, views: ["iconImage":iconImage]))
+    
+    moreBt = UIButton(type: UIButtonType.Custom)
+    moreBt.hidden = true
+    moreBt.translatesAutoresizingMaskIntoConstraints = false
+    moreBt.setTitleColor(Profile.rgb(153, g: 153, b: 153), forState: .Normal)
+    moreBt.titleLabel?.font = Profile.font(11)
+    moreBt.setImage(UIImage(named: "narrowLeft"), forState: .Normal)
+    moreBt.titleEdgeInsets = UIEdgeInsetsMake(0, -20, 0, 0)
+    moreBt.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -90)
+    
+    moreBt.setTitle("查看更多", forState: .Normal)
+    
+   
+     iconImage = UIImageView()
+     super.init(style: style, reuseIdentifier: reuseIdentifier)
+     self.contentView.addSubview(iconImage)
+     iconImage.translatesAutoresizingMaskIntoConstraints = false
+    
+     self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[iconImage]", options: [], metrics: nil, views: ["iconImage":iconImage]))
+     self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-(0)-[iconImage]", options: [], metrics: nil, views: ["iconImage":iconImage]))
 
     
+    
+      self.contentView.addSubview(moreBt)
+      moreBt.addTarget(self, action: "tapAction", forControlEvents: .TouchUpInside)
+      self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[moreBt]-15-|", options: [], metrics: nil, views: ["moreBt":moreBt]))
+      self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-5-[moreBt]", options: [], metrics: nil, views: ["moreBt":moreBt]))
     }
    required init?(coder aDecoder: NSCoder) {
        fatalError("init(coder:) has not been implemented")
    }
+    func tapAction(){
+    
+       if tapBlock != nil
+       {
+          tapBlock!()
+        }
+    }
+    
 }
 
-class ExhibitorPerson: UITableViewCell {
+class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
     
     let nameL:UILabel
     let titleL:UILabel
 //    let phoneL:UILabel
     var phoneBt:UIButton
+    var tapBlock:((Void)->Void)?
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         nameL = UILabel()
@@ -468,7 +679,8 @@ class ExhibitorPerson: UITableViewCell {
         titleL.font = Profile.font(12)
         self.contentView.addSubview(titleL)
         titleL.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
+        self.contentView.addConstraint(NSLayoutConstraint(item: titleL, attribute: .Left, relatedBy: .Equal, toItem: self.contentView, attribute: .Left, multiplier: 1.0, constant: 15))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
         
 
@@ -477,7 +689,8 @@ class ExhibitorPerson: UITableViewCell {
         nameL.font = Profile.font(12)
         self.contentView.addSubview(nameL)
         nameL.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[nameL]", options: [], metrics: nil, views: ["nameL":nameL]))
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[nameL]", options: [], metrics: nil, views: ["nameL":nameL]))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(nameL, toItem: titleL))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-10-[nameL]", options: [], metrics: nil, views: ["nameL":nameL,"titleL":titleL]))
 
     
@@ -487,6 +700,7 @@ class ExhibitorPerson: UITableViewCell {
         phoneBt.translatesAutoresizingMaskIntoConstraints = false
         phoneBt.setImage(UIImage(named: "exhibitorPhone"), forState: .Normal)
         phoneBt.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0)
+        phoneBt.addTarget(self, action: "makeACall", forControlEvents: .TouchUpInside)
         self.contentView.addSubview(phoneBt)
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[nameL]-15-[phoneBt]", options: [], metrics: nil, views: ["phoneBt":phoneBt,"nameL":nameL]))
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(phoneBt, toItem: nameL))
@@ -495,13 +709,40 @@ class ExhibitorPerson: UITableViewCell {
         let addBt = UIButton(type: .Custom)
         addBt.setImage(UIImage(named: "addPhoneBt"), forState: .Normal)
         addBt.translatesAutoresizingMaskIntoConstraints = false
+        addBt.addTarget(self, action: "addContact", forControlEvents: .TouchUpInside)
         self.contentView.addSubview(addBt)
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(addBt , toItem: self.contentView))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[addBt]-15-|", options: [], metrics: nil, views: ["addBt":addBt]))
     }
 
+    func makeACall()
+    {
+       let alert = UIAlertView(title: "提示", message: "是否拨打电话", delegate: self, cancelButtonTitle: "取消", otherButtonTitles: "确定")
+        alert.show()
     
-    func fillData(title:String?,name:String?,phone:String?)
+    }
+    func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
+        
+        if alertView.cancelButtonIndex == buttonIndex
+        {
+           return
+        }
+        if let nu = phoneBt.currentTitle
+        {
+            let url = NSURL(string: "tel://\(nu)")
+            UIApplication.sharedApplication().openURL(url!)
+        }
+    }
+    
+    
+    func addContact()
+    {
+       if tapBlock != nil
+       {
+         tapBlock!()
+       }
+    }
+    func fillData(title:String? ,name:String?,phone:String?)
     {
        titleL.text = title
         nameL.text =  name
@@ -577,7 +818,7 @@ class ExhibitorIntroduceCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         scroll.showsHorizontalScrollIndicator = true
-        scroll.pagingEnabled = true
+//        scroll.pagingEnabled = true
         self.contentView.addSubview(scroll)
         scroll.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-10-[scroll]-10-|", aView: scroll, bView: nil))
@@ -612,7 +853,7 @@ class ExhibitorIntroduceCell: UITableViewCell {
            scroll.addSubview(contentV)
         
         
-           let image = UIImageView(frame: CGRectMake(0, 0, 105, frame.height))
+           let image = UIImageView(frame: CGRectMake(0, 0, frame.size.width - 5, frame.height))
            image.tag = index
            contentV.addSubview(image)
         
