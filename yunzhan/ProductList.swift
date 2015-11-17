@@ -16,6 +16,7 @@ class ProductListVC: UIViewController,UITableViewDataSource,UITableViewDelegate 
         table = UITableView(frame: CGRectZero, style: .Plain)
         table.delegate = self
         table.dataSource = self
+        table.separatorColor = Profile.rgb(243, g: 243, b: 243)
         table.registerClass(ProductListCell.self , forCellReuseIdentifier: "ProductListCell")
         table.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(table)
@@ -44,7 +45,7 @@ class ProductListVC: UIViewController,UITableViewDataSource,UITableViewDelegate 
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 100
+        return 105
     }
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
@@ -69,13 +70,15 @@ class ProductListCell: UITableViewCell {
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.contentView.addSubview(imageV)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[imageV]", aView: imageV, bView: nil))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-10-[imageV]-10-|", aView: imageV, bView: nil))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[imageV(125)]", options: [], metrics: nil, views: ["imageV":imageV]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-15-[imageV]-15-|", options: [], metrics: nil, views: ["imageV":imageV]))
+//        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[imageV]", aView: imageV, bView: nil))
+//        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-10-[imageV]-10-|", aView: imageV, bView: nil))
 
-        self.contentView.addConstraint(NSLayoutConstraint(item: imageV, attribute: .Width, relatedBy: .Equal, toItem: imageV, attribute: .Height, multiplier: 1.0, constant: 0))
+//        self.contentView.addConstraint(NSLayoutConstraint(item: imageV, attribute: .Width, relatedBy: .Equal, toItem: imageV, attribute: .Height, multiplier: 1.0, constant: 0))
         
         titleL.translatesAutoresizingMaskIntoConstraints = false
-        titleL.font = Profile.font(14)
+        titleL.font = Profile.font(15)
         titleL.textColor = Profile.rgb(51, g: 51, b: 51)
         
         self.contentView.addSubview(titleL)
@@ -94,7 +97,7 @@ class ProductListCell: UITableViewCell {
 //        contentL.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Vertical)
 //        contentL.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: .Vertical)
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(contentL, toItem: titleL))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-10-[contentL]-10-|", aView: titleL, bView: contentL))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-7-[contentL]-15-|", aView: titleL, bView: contentL))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[contentL]-10-|", aView: contentL, bView: nil))
 
     }

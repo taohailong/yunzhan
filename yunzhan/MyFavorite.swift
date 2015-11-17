@@ -9,6 +9,17 @@
 import Foundation
 class MySchedulerListVC: SchedulerController {
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.tintColor = Profile.rgb(102, g: 102, b: 102)
+        self.title = "我的活动"
+        table.tableHeaderView = nil
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        
+    }
     override func fetchData() {
         let loadView = THActivityView(activityViewWithSuperView: self.view)
         weak var wself = self
@@ -55,12 +66,68 @@ class MySchedulerListVC: SchedulerController {
         net.start()
     
     }
+    
+    
+    //    滑动删除 部分
+    
+    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+        return .Delete
+    }
+    
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        var subArr = dataArr[indexPath.section]
+        let p = subArr[indexPath.row]
+        weak var wself = self
+        let delectNet = NetWorkData()
+        delectNet.delectMyScheduler(p.id, block: { (result, status) -> (Void) in
+            
+            if status == .NetWorkStatusError
+            {
+                return
+            }
+            
+            let subA = wself?.dataArr[indexPath.section]
+            wself?.dateArr.removeAtIndex(indexPath.section)
+            subArr.removeAtIndex(indexPath.row)
+            wself?.dataArr.removeAtIndex(indexPath.section)
+            
+            if subArr.count != 0
+            {
+               wself?.dataArr.insert(subA!, atIndex: indexPath.section)
+            }
+            
+            wself?.table.reloadData()
+        })
+        
+        delectNet.start()
+    }
+    
 }
 
 
 
 class MyExhibitorList: Exhibitor {
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+        self.navigationController?.navigationBar.tintColor = Profile.rgb(102, g: 102, b: 102)
+        self.title = "我的展商"
+        table.tableHeaderView = nil
+    }
+
+    override func setNavgationBarAttribute(change: Bool) {
+        
+    }
    override func fetchExhibitorData(){
     
         let loadView = THActivityView(activityViewWithSuperView: self.view)
@@ -127,28 +194,36 @@ class MyExhibitorList: Exhibitor {
         return true
     }
     
-//    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-//        
-//        var subArr = dataArr[indexPath.section]
-//        let p = subArr[indexPath.row]
-//        weak var wself = self
-//        let delectNet = NetWorkData()
-//        delectNet.delectMyExhibitor(p.id, block: { (result, status) -> (Void) in
-//            
-//            
-//            if status == .NetWorkStatusError
-//            {
-//                return
-//            }
-//            
-//            let subA = wself?.dataArr[indexPath.section]
-//            subArr.removeAtIndex(indexPath.row)
-//            
-//            wself?.dataArr.removeAtIndex(indexPath.section)
-//            wself?.dataArr.insert(subA!, atIndex: indexPath.section)
-//            
-//            wself?.table.reloadData()
-//        }
-//    }
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    
+        var subArr = dataArr[indexPath.section]
+        let p = subArr[indexPath.row]
+        weak var wself = self
+        let delectNet = NetWorkData()
+        delectNet.delectMyExhibitor(p.id, block: { (result, status) -> (Void) in
+            
+            
+            if status == .NetWorkStatusError
+            {
+                return
+            }
+            
+            let subA = wself?.dataArr[indexPath.section]
+            subArr.removeAtIndex(indexPath.row)
+            wself?.prefixArr?.removeAtIndex(indexPath.section)
+            
+            wself?.dataArr.removeAtIndex(indexPath.section)
+            
+            if subArr.count != 0
+            {
+                wself?.dataArr.insert(subA!, atIndex: indexPath.section)
+            }
+            
+            wself?.table.reloadData()
+        })
+        
+        delectNet.start()
+    }
+    
     
 }

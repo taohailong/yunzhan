@@ -211,7 +211,7 @@
     
     reloadBt.layer.cornerRadius = 4;
     reloadBt.layer.masksToBounds = YES;
-//    reloadBt.layer.borderColor = DEFAULTNAVCOLOR.CGColor;
+    reloadBt.layer.borderColor = [UIColor colorWithRed:253/255.0 green:45/255.0 blue:99/255.0 alpha:1].CGColor;
     reloadBt.layer.borderWidth = 1;
     [reloadBt setTitleColor:[UIColor colorWithRed:253/255.0 green:45/255.0 blue:99/255.0 alpha:1] forState:UIControlStateNormal];
     reloadBt.titleLabel.font = [UIFont systemFontOfSize:15];
@@ -219,7 +219,7 @@
     [self addSubview:reloadBt];
     [reloadBt addTarget:self action:@selector(performReloadAction) forControlEvents:UIControlEventTouchUpInside];
     
-    [self addConstraint:[NSLayoutConstraint constraintWithItem:reloadBt attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:90]];
+    [self addConstraint:[NSLayoutConstraint constraintWithItem:reloadBt attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:65]];
     
     [self addConstraint:[NSLayoutConstraint constraintWithItem:reloadBt attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
     
@@ -287,7 +287,7 @@
         size.width = [UIScreen mainScreen].bounds.size.width;
     }
 
-    self = [super initWithFrame:CGRectMake(0, 0, size.width+25, 30)];
+    self = [super initWithFrame:CGRectMake(0, 0, size.width+25, 28)];
     if (self)
     {
         self.backgroundColor = [UIColor blackColor];
@@ -340,7 +340,7 @@
     nameL.translatesAutoresizingMaskIntoConstraints = NO;
     nameL.text = str;
     nameL.font = [UIFont systemFontOfSize:16];;
-//    nameL.textColor = DEFAULTGRAYCOLO;
+    nameL.textColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0];
     [self addSubview:nameL];
     [self addConstraint:[NSLayoutConstraint constraintWithItem:nameL attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:image attribute:NSLayoutAttributeBottom multiplier:1.0 constant:10]];
     

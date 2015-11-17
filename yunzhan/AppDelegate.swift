@@ -12,7 +12,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
+    var net :NetWorkData!
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -38,7 +38,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        
+        var deviceToken = NSString(format: "%@", deviceToken)
+        deviceToken = deviceToken.substringWithRange(NSMakeRange(1, deviceToken.length-2))
+    
+        deviceToken = deviceToken.stringByReplacingOccurrencesOfString(" ", withString: "")
+//        app = [app stringByReplacingOccurrencesOfString:@" " withString:@""];
         print(deviceToken)
+        
+        net = NetWorkData()
+        net.sendDeviceToken(deviceToken as String)
+        net.start()
     }
     
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {

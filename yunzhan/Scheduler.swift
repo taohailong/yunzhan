@@ -7,12 +7,13 @@
 //
 
 import Foundation
-class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataSource,UISearchBarDelegate {
+class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataSource,UISearchDisplayDelegate {
     var net:NetWorkData!
     var dataArr:[[SchedulerData]]!
     var dateArr:[String]!
     var table:UITableView!
     var searchArr:[SchedulerData]!
+    var searchCV:UISearchDisplayController!
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
@@ -29,7 +30,7 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         if change == true
         {
             self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor(),NSFontAttributeName:Profile.font(18)]
             self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
             let application = UIApplication.sharedApplication()
             application.setStatusBarStyle(.LightContent, animated: true)
@@ -40,8 +41,8 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
             {
                 return
             }
-            self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor()]
+            self.navigationController?.navigationBar.tintColor = Profile.rgb(102, g: 102, b: 102)
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor(),NSFontAttributeName:Profile.font(18)]
             self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
             let application = UIApplication.sharedApplication()
             application.setStatusBarStyle(.Default, animated: true)
@@ -51,6 +52,7 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.navigationController?.tabBarItem.selectedImage = UIImage(named: "root-3_selected")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationController?.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
         
@@ -58,10 +60,14 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
         self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
         
+        let dict = [NSFontAttributeName: Profile.font(18)]
+        self.navigationController!.navigationBar.titleTextAttributes = dict
+        
+        
         self.title = "日程"
         let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
         
-        searchBar.delegate = self
+//        searchBar.delegate = self
         
         
         table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
@@ -79,19 +85,27 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
+        
+        
+        searchCV = UISearchDisplayController(searchBar: searchBar, contentsController: self)
+        searchCV.searchResultsDelegate = self
+        searchCV.searchResultsDataSource = self
+        searchCV.delegate = self
+        searchCV.searchResultsTableView.registerClass(ExhibitorCell.self, forCellReuseIdentifier: "ExhibitorCell")
+        
         self.fetchData()
     }
     
     
-    func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
-        searchBar.setShowsCancelButton(true, animated: true)
-        return true
-    }
-    
-    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
-        searchBar.resignFirstResponder()
-        searchBar.setShowsCancelButton(false, animated: true)
-    }
+//    func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
+//        searchBar.setShowsCancelButton(true, animated: true)
+//        return true
+//    }
+//    
+//    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+//        searchBar.resignFirstResponder()
+//        searchBar.setShowsCancelButton(false, animated: true)
+//    }
     
     
     
@@ -136,6 +150,11 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
+        if tableView != table
+        {
+           return 1
+        }
+        
         if dataArr == nil
         {
           return 0
@@ -144,15 +163,30 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if tableView != table
+        {
+            if searchArr == nil
+            {
+                return 0
+            }
+            return (searchArr?.count)!
+        }
+        
         let subArr = dataArr[section]
         return subArr.count
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 75
+        return 80
     }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        if tableView != table
+        {
+            return nil
+        }
         
         let headData = dateArr[section]
         let head = tableView.dequeueReusableHeaderFooterViewWithIdentifier("TableHeadView") as! TableHeadView
@@ -163,6 +197,11 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
     }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if tableView != table
+        {
+            return 0
+        }
+
         return 40
     }
     
@@ -172,10 +211,19 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
 //    }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
-        let subArr = dataArr[indexPath.section]
-        let schedule = subArr[indexPath.row]
-        let cell = tableView.dequeueReusableCellWithIdentifier("SchedulerCell") as! SchedulerCell
-        cell.fullDataToCell(schedule)
+        var cellData:SchedulerData? = nil
+        if tableView != table
+        {
+            cellData = searchArr![indexPath.row]
+        }
+        else
+        {
+            let subArr = dataArr[indexPath.section]
+            cellData = subArr[indexPath.row]
+        }
+        
+        let cell = table.dequeueReusableCellWithIdentifier("SchedulerCell") as! SchedulerCell
+        cell.fullDataToCell(cellData!)
         
         return cell
     }
@@ -192,6 +240,27 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         schedulerInfo.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(schedulerInfo, animated: true)
     }
+    
+    
+    func searchDisplayController(controller: UISearchDisplayController, shouldReloadTableForSearchString searchString: String?) -> Bool {
+        
+        if let s = searchString where s.isEmpty == false
+        {
+            self.fetchSearchData(s)
+        }
+        
+        if searchArr == nil
+        {
+            return false
+        }
+        else
+        {
+            return true
+        }
+    }
+
+    
+    
     
     func fetchSearchData(searchStr:String){
         
@@ -214,7 +283,7 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 
                 self.searchArr = search
-//                self.searchCV.searchResultsTableView.reloadData()
+                self.searchCV.searchResultsTableView.reloadData()
             })
         }
     }

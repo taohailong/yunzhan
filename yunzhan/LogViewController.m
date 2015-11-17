@@ -73,8 +73,8 @@
     _verifyBt.layer.borderWidth = 1;
     _verifyBt.layer.borderColor = [UIColor redColor].CGColor;
     [_verifyBt setBackgroundImage:[UIImage imageNamed:@"button_back_red"] forState:UIControlStateHighlighted];
-    [_verifyBt setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-    [_verifyBt setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+    [_verifyBt setTitleColor:[UIColor colorWithRed:250/255.0 green:60/255.0 blue:96/255.0 alpha:1.0 ] forState:UIControlStateNormal];
+    [_verifyBt setTitleColor:[UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0 ] forState:UIControlStateDisabled];
     [_verifyBt setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     
     
@@ -86,15 +86,18 @@
     _logBt = [UIButton buttonWithType:UIButtonTypeCustom];
     _logBt.translatesAutoresizingMaskIntoConstraints = NO;
     [tableFoot addSubview:_logBt];
+    _logBt.titleLabel.font = [UIFont systemFontOfSize:15];
     [_logBt setTitle:@"立即登陆" forState:UIControlStateNormal];
-    [_logBt setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-    [_logBt setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
+    [_logBt setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    [_logBt setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     
-    [_logBt setBackgroundImage:[UIImage imageNamed:@"button_back_red"] forState:UIControlStateHighlighted];
+//    [_logBt setBackgroundImage:[UIImage imageNamed:@"login_hight"] forState:UIControlStateHighlighted];
+     [_logBt setBackgroundImage:[UIImage imageNamed:@"login_tap"] forState:UIControlStateHighlighted];
+    [_logBt setBackgroundImage:[UIImage imageNamed:@"login_default"] forState:UIControlStateNormal];
     _logBt.layer.masksToBounds = YES;
     _logBt.layer.cornerRadius = 3;
     _logBt.layer.borderWidth = 1;
-    _logBt.layer.borderColor = [UIColor redColor].CGColor;
+    _logBt.layer.borderColor = [UIColor clearColor].CGColor;
 
     [_logBt addTarget:self action:@selector(logAction:) forControlEvents:UIControlEventTouchUpInside];
     [tableFoot addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-15-[_logBt]-15-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(_logBt)]];
@@ -108,8 +111,8 @@
     _voiceVerifyBt = [UIButton buttonWithType:UIButtonTypeCustom];
     
     NSMutableAttributedString* voiceStr = [[NSMutableAttributedString alloc]initWithString:@"收不到短信？使用语音验证码" attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13]}];
-    [voiceStr addAttributes:@{NSForegroundColorAttributeName:[UIColor blackColor]} range:NSMakeRange(0, 8)];
-    [voiceStr addAttributes:@{NSForegroundColorAttributeName:[UIColor redColor]} range:NSMakeRange(8, 5)];
+    [voiceStr addAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0]} range:NSMakeRange(0, 8)];
+    [voiceStr addAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:250/255.0 green:60/255.0 blue:96/255.0 alpha:1.0]} range:NSMakeRange(8, 5)];
     
     [_voiceVerifyBt setAttributedTitle:voiceStr forState:UIControlStateNormal];
     _voiceVerifyBt.translatesAutoresizingMaskIntoConstraints = NO;
@@ -164,7 +167,7 @@
         _phoneField.placeholder = @"请输入手机号";
         phoneField.keyboardType = UIKeyboardTypeNumberPad;
         phoneField.leftViewMode =UITextFieldViewModeAlways;
-        UIImageView* phoneLeftV = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 30, 20)];
+        UIImageView* phoneLeftV = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 35, 20)];
         phoneLeftV.contentMode = UIViewContentModeScaleAspectFit;
         phoneLeftV.image = [UIImage imageNamed:@"login_photo"];
         phoneField.leftView = phoneLeftV;
@@ -181,7 +184,7 @@
         pwField.keyboardType = UIKeyboardTypeNumberPad;
         pwField.translatesAutoresizingMaskIntoConstraints = NO;
         pwField.leftViewMode =UITextFieldViewModeAlways;
-        UIImageView* pwLeftV = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 30, 20)];
+        UIImageView* pwLeftV = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 35, 20)];
         pwLeftV.image = [UIImage imageNamed:@"login_pw"];
         pwLeftV.contentMode = UIViewContentModeScaleAspectFit;
         pwField.leftView = pwLeftV;
@@ -200,7 +203,6 @@
 
 -(void)accessVerifyNu:(id)sender
 {
-//    NetWork* net = [net]
     if ([self verifyNumber:_phoneField.text] == NO) {
         
         THActivityView* showStr = [[THActivityView alloc]initWithString:@"号码格式不正确"];
@@ -212,7 +214,7 @@
     
     __weak LogViewController* wself = self;
     
-    NSString* str = [NSString stringWithFormat:@"http://123.56.102.224:8099/api/app/user/login?chn=ios&eid=1&phone=%@&code=%@",_phoneField.text,_pwField.text];
+    NSString* str = [NSString stringWithFormat:@"http://123.56.102.224:8099/api/app/user/verifysms?eid=1&phone=%@",_phoneField.text];
     NSURLRequest* url = [NSURLRequest requestWithURL:[NSURL URLWithString:str]];
     AFHTTPRequestOperation * req = [[AFHTTPRequestOperation alloc]initWithRequest:url];
     [req setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -242,8 +244,10 @@
 -(void)startCountdown
 {
     _countDown = 60;
-    [_verifyBt setTitle:[NSString stringWithFormat:@"还差%d秒",_countDown] forState:UIControlStateDisabled];
+    [_verifyBt setTitle:[NSString stringWithFormat:@"%ds后(重发)",_countDown] forState:UIControlStateDisabled];
     _verifyBt.enabled = NO;
+    _verifyBt.layer.borderColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0 ].CGColor;
+    
     _timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timeRunLoop) userInfo:nil repeats:YES];
 
 }
@@ -251,9 +255,11 @@
 -(void)timeRunLoop
 {
     _countDown--;
-    [_verifyBt setTitle:[NSString stringWithFormat:@"还差%d秒",_countDown] forState:UIControlStateDisabled];
+    [_verifyBt setTitle:[NSString stringWithFormat:@"%ds后(重发)",_countDown] forState:UIControlStateDisabled];
+//    _verifyBt.layer.borderColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0 ].CGColor;
     
     if (_countDown==0) {
+         _verifyBt.layer.borderColor = [UIColor colorWithRed:250/255.0 green:60/255.0 blue:96/255.0 alpha:1.0 ].CGColor;
         _verifyBt.enabled = YES;
         [_timer invalidate];
     }
@@ -352,7 +358,7 @@
 
 -(void)voiceVerifyPhoneAction:(id)sender
 {
-    if ([self verifyNumber: self.phoneStr] == NO) {
+    if ([self verifyNumber: _phoneField.text] == NO) {
         
         THActivityView* showStr = [[THActivityView alloc]initWithString:@"号码格式不正确"];
         [showStr show];
@@ -365,7 +371,8 @@
     
     __weak LogViewController* wself = self;
     
-    NSURLRequest* url = [NSURLRequest requestWithURL:[NSURL URLWithString:@""]];
+     NSString* str = [NSString stringWithFormat:@"http://123.56.102.224:8099/api/app/user/verifyvoice?eid=1&phone=%@",_phoneField.text];
+    NSURLRequest* url = [NSURLRequest requestWithURL:[NSURL URLWithString:str]];
     AFHTTPRequestOperation * req = [[AFHTTPRequestOperation alloc]initWithRequest:url];
     [req setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         
@@ -373,15 +380,14 @@
         
         NSDictionary* dataDic = [NSJSONSerialization JSONObjectWithData:responseObject options:NSJSONReadingMutableContainers error:NULL];
         
-//        if (status==NetWorkSuccess) {
-//            [wself voiceVerifyComplete];
-//        }
-//        else
-//        {
-//            THActivityView* showStr = [[THActivityView alloc]initWithString:respond];
-//            [showStr show];
-//            
-//        }
+        if ([dataDic[@"code"] intValue]==0) {
+            [wself voiceVerifyComplete];
+        }
+        else
+        {
+            THActivityView* showStr = [[THActivityView alloc]initWithString:dataDic[@"msg"]];
+            [showStr show];
+        }
         
         
         
@@ -450,6 +456,9 @@
 
 - (void)keyboardShown:(NSNotification *)aNotification
 {
+    [_logBt setBackgroundImage:[UIImage imageNamed:@"login_tap"] forState:UIControlStateHighlighted];
+    [_logBt setBackgroundImage:[UIImage imageNamed:@"login_hight"] forState:UIControlStateNormal];
+
     NSDictionary *info = [aNotification userInfo];
     NSValue *aValue = [info objectForKey:UIKeyboardFrameEndUserInfoKey];
     
@@ -459,6 +468,7 @@
 
 - (void)keyboardHidden:(NSNotification *)aNotification
 {
+     [_logBt setBackgroundImage:[UIImage imageNamed:@"login_default"] forState:UIControlStateNormal];
     [self accessViewAnimate:0.0];
 }
 

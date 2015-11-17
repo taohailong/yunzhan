@@ -168,7 +168,7 @@ class CollectionNewCell: UICollectionViewCell {
 //        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-5-[contentL]-5-|", options: [], metrics: nil, views: ["contentL":contentL,"titleL":titleL]))
         
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-7-[contentL]-5-|", aView: titleL, bView: contentL))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[contentL]-5-|", options: [], metrics: nil, views: ["contentL":contentL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[contentL]-15-|", options: [], metrics: nil, views: ["contentL":contentL]))
         
         
         
@@ -251,13 +251,13 @@ class AdRootCollectionView: UICollectionReusableView {
             let tap = UITapGestureRecognizer(target: self, action: "imageTap:")
             image.addGestureRecognizer(tap)
             i = index
-        }       
+        }
         scroll.contentSize = CGSizeMake(scroll.bounds.size.width * CGFloat(i+1), scroll.bounds.height)
     }
     
     
     func changeSrcollView(){
-      
+//      
        var nu = ceil(scroll.contentOffset.x / scroll.bounds.size.width)
        nu = nu+1
        var point = scroll.contentOffset
@@ -277,7 +277,7 @@ class AdRootCollectionView: UICollectionReusableView {
         
         let tag = tap.view?.tag
         let imageData = imageArr![tag!]
-        tapBlock(link: imageData.url)
+        tapBlock(link: imageData.id!)
     }
     
     required init?(coder aDecoder: NSCoder) {

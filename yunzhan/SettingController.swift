@@ -31,7 +31,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         if change == true
         {
             self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor(),NSFontAttributeName:Profile.font(18)]
             self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
             let application = UIApplication.sharedApplication()
             application.setStatusBarStyle(.LightContent, animated: true)
@@ -42,7 +42,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
             {
                 return
             }
-            self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
+            self.navigationController?.navigationBar.tintColor = Profile.rgb(102, g: 102, b: 102)
             self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor()]
             self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
             let application = UIApplication.sharedApplication()
@@ -59,6 +59,9 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
         self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
+        
+        let dict = [NSFontAttributeName: Profile.font(18)]
+        self.navigationController!.navigationBar.titleTextAttributes = dict
         
         self.title = "我的"
         table.registerClass(SettingHeadCell.self , forCellReuseIdentifier: "SettingHeadCell")
@@ -200,12 +203,26 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         }
         else if indexPath.section == 2
         {
+            let user = UserData.shared
+            if user.token == nil
+            {
+                self.showLoginVC()
+                return
+            }
+
             let suggest = SuggestionVC()
             suggest.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(suggest, animated: true)
         }
         else
         {
+            let user = UserData.shared
+            if user.token == nil
+            {
+                self.showLoginVC()
+                return
+            }
+
             let aboutVC = LogOutVC()
             aboutVC.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(aboutVC, animated: true)
@@ -233,7 +250,8 @@ class LogOutVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UIAle
         table = UITableView(frame: CGRectZero, style: .Plain)
         table.delegate = self
         table.dataSource = self
-        table.backgroundColor = Profile.rgb(227, g: 231, b: 231)
+        table.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        table.registerClass(UITableViewHeaderFooterView.self , forHeaderFooterViewReuseIdentifier: "common")
         table.translatesAutoresizingMaskIntoConstraints = false
         table.registerClass(UITableViewCell.self , forCellReuseIdentifier: "UITableViewCell")
         self.view.addSubview(table)
@@ -259,7 +277,19 @@ class LogOutVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UIAle
     }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 10
+        return 14
+    }
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let head = tableView.dequeueReusableHeaderFooterViewWithIdentifier("common")
+        head?.contentView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        return head
+    }
+    
+    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        let head = tableView.dequeueReusableHeaderFooterViewWithIdentifier("common")
+        head?.contentView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        return head
     }
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
@@ -275,7 +305,7 @@ class LogOutVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UIAle
         else
         {
             cell?.textLabel?.textColor = Profile.rgb(51, g: 51, b: 51)
-            cell?.textLabel?.font = Profile.font(18)
+            cell?.textLabel?.font = Profile.font(16)
             cell?.textLabel?.textAlignment = .Center
            cell?.textLabel?.text = "退出登陆"
         }
@@ -342,14 +372,17 @@ class SettingHeadCell: UITableViewCell {
         
         
         self.contentView.addSubview(titleL)
-//        self.contentView.addConstraint(NSLayoutConstraint.layoutTopEqual(titleL, toItem: userImage))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[userImage]-15-[titleL]", options: [], metrics: nil, views: ["titleL":titleL,"userImage":userImage]))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-14-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-15-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
         
     
         self.contentView.addSubview(phoneL)
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(phoneL, toItem: titleL))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-5-[phoneL]", options: [], metrics: nil, views: ["titleL":titleL,"phoneL":phoneL]))
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-5-[phoneL]", options: [], metrics: nil, views: ["titleL":titleL,"phoneL":phoneL]))
+        self.contentView.addConstraint(NSLayoutConstraint(item: phoneL, attribute: .Top, relatedBy: .Equal, toItem: titleL, attribute: .Bottom, multiplier: 1.0, constant: 5))
+        
+        
+        
         
         loginBt = UIButton(type: .Custom)
         loginBt?.translatesAutoresizingMaskIntoConstraints = false
@@ -375,7 +408,29 @@ class SettingHeadCell: UITableViewCell {
         titleL.hidden = false
         phoneL.hidden = false
         
-//        titleL.text = "\(title)\(name)"
+//        titleL.text = "dsfasdf"
+        var constraint : NSLayoutConstraint? = nil
+        for temp in  self.contentView.constraints
+        {
+            if let f = temp.firstItem as? UIView
+            {
+                if f == phoneL&&temp.secondAttribute == .Bottom&&temp.firstAttribute == .Top
+                {
+                    constraint = temp
+                }
+
+            }
+        }
+       
+        if name == nil
+        {
+          constraint?.constant = 14
+        }
+        else
+        {
+          constraint?.constant = 5
+        }
+        
         titleL.text = name
         phoneL.text = phone
         loginBt?.hidden = true
@@ -406,6 +461,7 @@ class SettingCommonCell: UITableViewCell {
             self.textLabel?.text = title
 //          iconImage.image = UIImage(named: imageName!)
             self.imageView?.image = UIImage(named: imageName!)
+//            self.imageView?.backgroundColor = UIColor.redColor()
         }
         
 //        titleL.text = title

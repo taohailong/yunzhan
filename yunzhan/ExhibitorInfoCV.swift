@@ -9,12 +9,13 @@
 import Foundation
 class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDelegate {
     var net: NetWorkData!
+    var check:NetWorkData!
     var id:String?
     var productArr:[ProductData]!
     var personArr:[PersonData]!
     var elementData:ExhibitorData!
     var introductArr:[PicData]!
-    
+    var height_OneSection:CGFloat?
     
     var table:UITableView!
     override func viewDidLoad() {
@@ -35,6 +36,8 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         table = UITableView(frame: CGRect.zero, style: UITableViewStyle.Grouped)
         table.dataSource = self
         table.delegate = self
+        table.separatorColor = Profile.rgb(243, g: 243, b: 243)
+        table.separatorStyle = .None
         table.translatesAutoresizingMaskIntoConstraints = false
         table.registerClass(ExhibitorInfoHeadCell.self, forCellReuseIdentifier: "ExhibitorInfoHeadCell")
         table.registerClass(ExhibitorMoreCell.self, forCellReuseIdentifier: "ExhibitorMoreCell")
@@ -48,7 +51,39 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         
         self.fetchData()
+        self.checkFavoriteStatus()
     }
+    
+    func checkFavoriteStatus(){
+    
+        let user = UserData.shared
+        
+        if  user.token == nil
+        {
+            return
+        }
+
+        
+        check = NetWorkData()
+        check.checkExhibitorStatus(id!) { (status) -> Void in
+            
+            let leftBar = self.navigationItem.rightBarButtonItem
+            if let button = leftBar?.customView as? UIButton
+            {
+                if status == true
+                {
+                    button.selected = true
+                }
+                else
+                {
+                   button.selected = false
+                }
+            }
+        }
+        check.start()
+    }
+    
+    
     
     func favoriteAction(){
     
@@ -175,9 +210,21 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             return
          }
             wself?.elementData = tuple.data
-            wself?.personArr = tuple.personArr
-            wself?.productArr = tuple.producArr
-            wself?.introductArr = tuple.introduce
+            if tuple.personArr.count != 0
+            {
+                wself?.personArr = tuple.personArr
+            }
+            if tuple.producArr.count != 0
+            {
+               wself?.productArr = tuple.producArr
+            }
+            
+            if tuple.introduce.count != 0
+            {
+               wself?.introductArr = tuple.introduce
+            }
+            
+           
             wself?.table.reloadData()
         }
        net.start()
@@ -186,19 +233,42 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
     
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 4
+        
+        let nu = 4
+//        if introductArr != nil
+//        {
+//           nu = nu + 1
+//        }
+//        else if personArr != nil
+//        {
+//          nu = nu + 1
+//        }
+//        else if productArr != nil
+//        {
+//          nu = nu + 1
+//        }
+        return nu
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
       
-        if section == 0 || section == 1
+        if section == 0
         {
             if elementData == nil
             {
               return 0
             }
           return 1
+        }
+        else if section == 1
+        {
+           if productArr == nil
+           {
+              return 0
+           }
+            
+            return 1
         }
         
         if section == 3
@@ -222,17 +292,61 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         return 1
     }
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 10
+        
+        if section == 0
+        {
+          return 1
+        }
+        
+        if section == 0
+        {
+            if elementData == nil
+            {
+                return 0.5
+            }
+        }
+        else if section == 1
+        {
+            if productArr == nil
+            {
+                return 0.5
+            }
+        }
+        
+        if section == 3
+        {
+            if introductArr == nil
+            {
+                return 0.5
+            }
+        }
+        
+        if personArr == nil
+        {
+            return 0.5
+        }
+        return 14
     }
     
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        
         if indexPath.section == 0
         {
-           return 170
+            if height_OneSection == nil
+            {
+              return 170
+            }
+//            头部分
+           return 130.5 + height_OneSection!
         }
         else if indexPath.section == 1
         {
+//            产品
+            if productArr == nil
+            {
+                return 0
+            }
            return 180
         }
             
@@ -240,25 +354,30 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         {
             if indexPath.row == 0
             {
-              return 40
+              return 35
             }
             else
             {
-              return 85
+//                企业形象展示
+                return (Profile.width()-20)/3*0.6+19
+//              return 85
             }
         }
         else
         {
             if indexPath.row == 0
             {
-              return 40
+//                头部
+              return 35
             }
             else if indexPath.row == (personArr.count + 1)
             {
+//                地图
               return 150
             }
             else
             {
+//                联系人
               return 60
             }
         
@@ -273,6 +392,12 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorInfoHeadCell") as!ExhibitorInfoHeadCell
             print(elementData)
             cell.fillData(elementData.iconUrl!, name: elementData.name, company: elementData.remark, addre: elementData.address, location: elementData.location, content: elementData.introduct)
+            
+            weak var wself = self
+            cell.tapBlock = {(height:CGFloat)->Void in
+                wself?.height_OneSection = height
+                wself?.table.reloadData()
+            }
             return cell
         }
         else if indexPath.section == 1
@@ -350,7 +475,8 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         let loadV = THActivityView(activityViewWithSuperView: self.view)
         
         let tempNet = NetWorkData()
-        tempNet.addContact(id!, personID: person.id!) { (result, status) -> (Void) in
+        tempNet.addExhibitorContact(id!, personID: person.id!) { (result, status) -> (Void) in
+            
             loadV.removeFromSuperview()
             if let warnStr = result as? String
             {
@@ -397,7 +523,8 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
 class ExhibitorInfoHeadCell: UITableViewCell {
     
     let iconImage:UIImageView
-    
+    var tapBlock:((height:CGFloat)->Void)?
+    var height:CGFloat?
     let titleL:UILabel
     let companyNameL:UILabel
     let addressL:UILabel
@@ -409,7 +536,7 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         iconImage = UIImageView()
         
         titleL = UILabel()
-        titleL.textColor = Profile.rgb(102, g: 102, b: 102)
+        titleL.textColor = Profile.rgb(51, g: 51, b: 51)
         titleL.font = Profile.font(15)
         
         companyNameL = UILabel()
@@ -419,7 +546,7 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         
         addressL = UILabel()
         addressL.textColor = Profile.rgb(102, g: 102, b: 102)
-        addressL.font = Profile.font(11)
+        addressL.font = Profile.font(12)
         
         contentL = UILabel()
         contentL.numberOfLines = 0
@@ -428,9 +555,11 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         
         locationL = UILabel()
         locationL.textColor = Profile.rgb(107, g: 206, b: 234)
-        locationL.font = Profile.font(11)
+        locationL.font = Profile.font(13)
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        self.selectionStyle = .None
         
         iconImage.contentMode = .ScaleAspectFit
         iconImage.translatesAutoresizingMaskIntoConstraints = false
@@ -464,13 +593,13 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         locationView.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(locationView)
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(locationView, toItem: titleL))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[addressL]-10-[locationView]", options: [], metrics: nil, views: ["locationView":locationView,"addressL":addressL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[addressL]-8-[locationView]", options: [], metrics: nil, views: ["locationView":locationView,"addressL":addressL]))
         
         
         locationL.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(locationL)
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(locationView, toItem: locationL))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[locationView]-10-[locationL]", options: [], metrics: nil, views: ["locationView":locationView,"locationL":locationL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[locationView]-8-[locationL]", options: [], metrics: nil, views: ["locationView":locationView,"locationL":locationL]))
 
         
         let separateView = UIView()
@@ -485,35 +614,64 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         
         contentL.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(contentL)
+//        contentL.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Vertical)
+        contentL.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: .Vertical)
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[contentL]-15-|", options: [], metrics: nil, views: ["contentL":contentL]))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[separateView]-10-[contentL]-30-|", options: [], metrics: nil, views: ["contentL":contentL,"separateView":separateView]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[separateView]-8-[contentL]-30-|", options: [], metrics: nil, views: ["contentL":contentL,"separateView":separateView]))
         
         
         let moreBt = UIButton(type: .Custom)
         moreBt.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(moreBt)
         moreBt.titleLabel?.font = Profile.font(11)
-        moreBt.setTitle("查看更多", forState: .Normal)
+        moreBt.setTitle("查看全部", forState: .Normal)
         moreBt.setTitleColor(Profile.rgb(153, g: 153, b: 153), forState: .Normal)
         moreBt.titleLabel?.font = Profile.font(11)
         moreBt.setImage(UIImage(named: "narrowLeft"), forState: .Normal)
         moreBt.titleEdgeInsets = UIEdgeInsetsMake(0, -20, 0, 0)
         moreBt.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -90)
-
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[moreBt]-5-|", options: [], metrics: nil, views: ["moreBt":moreBt]))
+        moreBt.addTarget(self, action: "moreBtAction:", forControlEvents: .TouchUpInside)
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[moreBt]-10-|", options: [], metrics: nil, views: ["moreBt":moreBt]))
          self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[moreBt]-15-|", options: [], metrics: nil, views: ["moreBt":moreBt]))
     }
 
-    
+    func moreBtAction(button:UIButton)
+    {
+       
+        if button.tag == 0
+        {
+            button.setTitle("收起", forState: .Normal)
+            button.tag = 1
+            if tapBlock != nil
+            {
+                 tapBlock!(height: height!)
+                
+            }
+
+        }
+        else
+        {
+            button.tag = 0
+            button.setTitle("查看全部", forState: .Normal)
+            if tapBlock != nil
+            {
+               tapBlock!(height: 39.5)
+            }
+
+        }
+    }
     
     func fillData(iconUrl:String,name:String?,company:String?,addre:String?,location:String?,content:String?)
     {
        iconImage.sd_setImageWithURL(NSURL(string: iconUrl), placeholderImage: nil)
        titleL.text = name
         companyNameL.text = company
-        addressL.text = addre
+        addressL.text = "地址：\(addre!)"
         locationL.text = location
         contentL.text = content
+        print(Profile.width()-30)
+         let size = content!.boundingRectWithSize(CGSizeMake(Profile.width()-30,1000), options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName:Profile.font(11)], context: nil)
+        height = size.height
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -533,12 +691,21 @@ class ExhibitorProductCell: UITableViewCell {
         scroll.showsHorizontalScrollIndicator = false
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-
+       self.selectionStyle = .None
+//        self.separatorInset = UIEdgeInsetsMake(0, 50, 0, 0)
        self.contentView.addSubview(iconImage)
        iconImage.translatesAutoresizingMaskIntoConstraints = false
        iconImage.image = UIImage(named: "productCellHead")
        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[iconImage]", options: [], metrics: nil, views: ["iconImage":iconImage]))
-       self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-(0)-[iconImage]", options: [], metrics: nil, views: ["iconImage":iconImage]))
+       self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-(-4)-[iconImage]", options: [], metrics: nil, views: ["iconImage":iconImage]))
+        
+        let separate = UIView()
+        separate.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        separate.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(separate)
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[iconImage]-10-[separate(0.5)]", options: [], metrics: nil, views: ["separate":separate,"iconImage":iconImage]))
+        self.contentView.addConstraints(NSLayoutConstraint.layoutHorizontalFull(separate))
+        
         
         
         let moreBt = UIButton(type: UIButtonType.Custom)
@@ -550,24 +717,20 @@ class ExhibitorProductCell: UITableViewCell {
         moreBt.titleEdgeInsets = UIEdgeInsetsMake(0, -20, 0, 0)
         moreBt.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -90)
         moreBt.addTarget(self, action: "tapAction", forControlEvents: .TouchUpInside)
-        moreBt.setTitle("查看更多", forState: .Normal)
-      
+        moreBt.setTitle("查看全部", forState: .Normal)
+//        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(moreBt, toItem: self.contentView))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[moreBt]-15-|", options: [], metrics: nil, views: ["moreBt":moreBt]))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-5-[moreBt]", options: [], metrics: nil, views: ["moreBt":moreBt]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-9-[moreBt]", options: [], metrics: nil, views: ["moreBt":moreBt]))
         
         
-        let separate = UIView()
-        separate.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addSubview(separate)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[moreBt]-10-[separate(0.5)]", options: [], metrics: nil, views: ["separate":separate,"moreBt":moreBt]))
-        self.contentView.addConstraints(NSLayoutConstraint.layoutHorizontalFull(separate))
+       
         
         
         scroll.pagingEnabled = true
         self.contentView.addSubview(scroll)
         scroll.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addConstraints(NSLayoutConstraint.layoutHorizontalFull(scroll))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[separate]-10-[scroll]-1-|", options: [], metrics: nil, views: ["separate":separate,"scroll":scroll]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[separate]-0-[scroll]-0-|", options: [], metrics: nil, views: ["separate":separate,"scroll":scroll]))
     }
 
     func fillImageArr(arr:[ProductData]){
@@ -578,18 +741,38 @@ class ExhibitorProductCell: UITableViewCell {
         }
         imageArr = arr
         
-        var frame = CGRectMake(0,0,Profile.width() ,138)
+        var frame = CGRectMake(0,0,Profile.width() ,147.5)
         
         var i = 0
         for (index ,imageData) in arr.enumerate(){
             
             let image = UIImageView(frame: frame)
-//            image.backgroundColor = UIColor.redColor()
             image.tag = index
             scroll.addSubview(image)
             print(imageData.imageUrl!)
             image.sd_setImageWithURL(NSURL(string: imageData.imageUrl!),  placeholderImage:nil)
             frame = CGRectMake(frame.origin.x + frame.size.width, 0, CGRectGetWidth(frame), frame.height)
+            
+            
+            let back = UIView()
+            back.translatesAutoresizingMaskIntoConstraints = false
+            back.backgroundColor = UIColor(white: 0, alpha: 0.6)
+            image.addSubview(back)
+            image.addConstraints(NSLayoutConstraint.layoutHorizontalFull(back))
+            image.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[back(40)]-0-|", options: [], metrics: nil, views: ["back":back]))
+            
+            
+            let troduceL = UILabel()
+            troduceL.font = Profile.font(14)
+            troduceL.textColor = UIColor.whiteColor()
+            troduceL.translatesAutoresizingMaskIntoConstraints = false
+            back.addSubview(troduceL)
+            back.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[troduceL]-0-|", aView: troduceL, bView: nil))
+            back.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[troduceL]-0-|", options: [], metrics: nil, views: ["troduceL":troduceL]))
+            
+         
+            troduceL.text = imageData.introduce
+            
 //            image.userInteractionEnabled = true
 //            let tap = UITapGestureRecognizer(target: self, action: "imageTap:")
 //            image.addGestureRecognizer(tap)
@@ -638,14 +821,27 @@ class ExhibitorMoreCell:UITableViewCell {
      iconImage.translatesAutoresizingMaskIntoConstraints = false
     
      self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[iconImage]", options: [], metrics: nil, views: ["iconImage":iconImage]))
-     self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-(0)-[iconImage]", options: [], metrics: nil, views: ["iconImage":iconImage]))
+     self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-(-4)-[iconImage]", options: [], metrics: nil, views: ["iconImage":iconImage]))
 
+    
+     let separateV = UIView()
+    separateV.translatesAutoresizingMaskIntoConstraints = false
+    self.contentView.addSubview(separateV)
+//    self.contentView.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.contentView))
+    self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-0-[separateV]-0-|", aView: separateV, bView: nil))
+     self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[iconImage]-10-[separateV(0.5)]", options: [], metrics: nil, views: ["iconImage":iconImage,"separateV":separateV]))
+    separateV.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+    
     
     
       self.contentView.addSubview(moreBt)
       moreBt.addTarget(self, action: "tapAction", forControlEvents: .TouchUpInside)
       self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[moreBt]-15-|", options: [], metrics: nil, views: ["moreBt":moreBt]))
-      self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-5-[moreBt]", options: [], metrics: nil, views: ["moreBt":moreBt]))
+//    self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(moreBt, toItem: self.contentView))
+      self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-9-[moreBt]", options: [], metrics: nil, views: ["moreBt":moreBt]))
+    
+    
+    
     }
    required init?(coder aDecoder: NSCoder) {
        fatalError("init(coder:) has not been implemented")
@@ -674,19 +870,19 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
         phoneBt = UIButton(type: .Custom)
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        
+        self.selectionStyle = .None
         titleL.textColor = Profile.rgb(153, g: 153, b: 153)
-        titleL.font = Profile.font(12)
+        titleL.font = Profile.font(13)
         self.contentView.addSubview(titleL)
         titleL.translatesAutoresizingMaskIntoConstraints = false
 //        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
         self.contentView.addConstraint(NSLayoutConstraint(item: titleL, attribute: .Left, relatedBy: .Equal, toItem: self.contentView, attribute: .Left, multiplier: 1.0, constant: 15))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-5-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
         
 
         
         nameL.textColor = Profile.rgb(102, g: 102, b: 102)
-        nameL.font = Profile.font(12)
+        nameL.font = Profile.font(14)
         self.contentView.addSubview(nameL)
         nameL.translatesAutoresizingMaskIntoConstraints = false
 //        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[nameL]", options: [], metrics: nil, views: ["nameL":nameL]))
@@ -695,14 +891,15 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
 
     
         
-       phoneBt.setTitleColor(Profile.rgb(102, g: 102, b: 102), forState: .Normal)
+        phoneBt.setTitleColor(Profile.rgb(102, g: 102, b: 102), forState: .Normal)
         phoneBt.titleLabel?.font = Profile.font(14)
         phoneBt.translatesAutoresizingMaskIntoConstraints = false
         phoneBt.setImage(UIImage(named: "exhibitorPhone"), forState: .Normal)
-        phoneBt.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0)
+        phoneBt.imageEdgeInsets = UIEdgeInsetsMake(0, -8, 0, 0)
         phoneBt.addTarget(self, action: "makeACall", forControlEvents: .TouchUpInside)
         self.contentView.addSubview(phoneBt)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[nameL]-15-[phoneBt]", options: [], metrics: nil, views: ["phoneBt":phoneBt,"nameL":nameL]))
+        self.contentView.addConstraint(NSLayoutConstraint(item: phoneBt, attribute: .Left, relatedBy: .Equal, toItem: self.contentView, attribute: .Left, multiplier: 1.0, constant: 72))
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-72-[phoneBt]", options: [], metrics: nil, views: ["phoneBt":phoneBt,"nameL":nameL]))
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(phoneBt, toItem: nameL))
         
         
@@ -713,8 +910,22 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
         self.contentView.addSubview(addBt)
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(addBt , toItem: self.contentView))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[addBt]-15-|", options: [], metrics: nil, views: ["addBt":addBt]))
+        
+        self.bottomSeparateView()
     }
 
+    
+    func bottomSeparateView(){
+    
+        let separateV = UIView()
+        separateV.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(separateV)
+        separateV.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[separateV(0.5)]-0-|", options: [], metrics: nil, views: ["separateV":separateV]))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(separateV, toItem: phoneBt))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[separateV]-0-|", aView: separateV, bView: nil))
+    }
+    
     func makeACall()
     {
        let alert = UIAlertView(title: "提示", message: "是否拨打电话", delegate: self, cancelButtonTitle: "取消", otherButtonTitles: "确定")
@@ -777,7 +988,7 @@ class ExhibitorMapCell: UITableViewCell {
         image.image = UIImage(named: "exhibitorLocation")
         image.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(image)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[titleL]-25-[image]", options: [], metrics: nil, views: ["image":image,"titleL":titleL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[titleL]-16-[image]", options: [], metrics: nil, views: ["image":image,"titleL":titleL]))
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(image, toItem: titleL))
         
         
@@ -821,10 +1032,14 @@ class ExhibitorIntroduceCell: UITableViewCell {
 //        scroll.pagingEnabled = true
         self.contentView.addSubview(scroll)
         scroll.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-10-[scroll]-10-|", aView: scroll, bView: nil))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-9-[scroll]-10-|", aView: scroll, bView: nil))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[scroll]-15-|", aView: scroll, bView: nil))
     }
 
+    func setSubLayout(){
+    
+      
+    }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -842,8 +1057,9 @@ class ExhibitorIntroduceCell: UITableViewCell {
          return
        }
        imageArr = arr
-    
-       var frame = CGRectMake(0,0,110 ,64)
+     
+        let width = (Profile.width()-20)/3
+       var frame = CGRectMake(0,0, width,width*0.6)
     
        var i = 0
        for (index ,imageData) in arr.enumerate(){

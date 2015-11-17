@@ -10,7 +10,9 @@ import Foundation
 import UIKit
 
 
-
+//Content Hugging Priority代表控件拒绝拉伸的优先级。优先级越高，控件会越不容易被拉伸。
+//
+//而下面的Content Compression Resistance Priority代表控件拒绝压缩内置空间的优先级。优先级越高，控件的内置空间会越不容易被压缩。而这里的内置空间，就是上面讲的UIView的intrinsicContentSize。
 
 class NSLog {
     init(_ s : String){

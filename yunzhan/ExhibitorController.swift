@@ -32,7 +32,7 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
         if change == true
         {
             self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor(),NSFontAttributeName:Profile.font(18)]
             self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
             let application = UIApplication.sharedApplication()
             application.setStatusBarStyle(.LightContent, animated: true)
@@ -43,8 +43,8 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
             {
                 return
             }
-            self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor()]
+            self.navigationController?.navigationBar.tintColor = Profile.rgb(102, g: 102, b: 102)
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor(),NSFontAttributeName:Profile.font(18)]
             self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
             let application = UIApplication.sharedApplication()
             application.setStatusBarStyle(.Default, animated: true)
@@ -54,9 +54,6 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
-        self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
         
         self.title = "展商"
         
@@ -67,8 +64,11 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
         table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
         table.delegate = self
         table.dataSource = self
+        self.table.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         table.translatesAutoresizingMaskIntoConstraints = false
         table.separatorColor = Profile.rgb(243, g: 243, b: 243)
+        
+        
         let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
         table.tableHeaderView = searchBar
         table.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")

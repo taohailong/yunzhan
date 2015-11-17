@@ -48,13 +48,42 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         
-        
+        self.checkFavoriteStatus()
         self.fetchNetData()
     }
     
+    
+    func checkFavoriteStatus(){
+        
+        let user = UserData.shared
+        if user.token == nil
+        {
+            return
+        }
+
+        
+        let network = NetWorkData()
+        network.checkSchedulerStatus(schedulerID) { (status) -> Void in
+            
+            let leftBar = self.navigationItem.rightBarButtonItem
+            if let button = leftBar?.customView as? UIButton
+            {
+                if status == true
+                {
+                    button.selected = true
+                }
+                else
+                {
+                    button.selected = false
+                }
+            }
+        }
+        network.start()
+    }
+    
+    
     func favoriteAction(){
     
-        
         if UserData.shared.token == nil
         {
             let loginVC = LogViewController()
@@ -243,10 +272,10 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
     }
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
-        let commonTitleHeight:CGFloat = 30
+        let commonTitleHeight:CGFloat = 27
         if indexPath.section == 0
         {
-            return 145
+            return 137
         }
         else if indexPath.row == 0
         {
@@ -288,7 +317,7 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
             }
             else
             {
-                return 50
+                return 60
             }
 
         }
@@ -336,7 +365,7 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
                 let cell = tableView.dequeueReusableCellWithIdentifier("CommonOneLabelCell") as! CommonOneLabelCell
                 let guest = guests[indexPath.row-2-contents.count-1]
                 
-                let attributeStr = NSMutableAttributedString(string: "\(guest.title!)  ", attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)])
+                let attributeStr = NSMutableAttributedString(string: "\(guest.title!)  ", attributes: [NSFontAttributeName:Profile.font(13),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)])
                 
                 let nameAttribute = NSMutableAttributedString(string: guest.name!, attributes: [NSFontAttributeName:Profile.font(13),NSForegroundColorAttributeName:Profile.rgb(102, g: 102, b: 102)])
                 
@@ -388,8 +417,9 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
         let loadV = THActivityView(activityViewWithSuperView: self.view)
         
         let tempNet = NetWorkData()
-        tempNet.addContact(person.exhibitorID!, personID: person.id!) { (result, status) -> (Void) in
+        tempNet.addSchedulerContact(schedulerID, personID: person.id!) { (result, status) -> (Void) in
             loadV.removeFromSuperview()
+            
             if let warnStr = result as? String
             {
                 let showV = THActivityView(string: warnStr)
@@ -444,7 +474,7 @@ class SchedulerInfoHeadCell: UITableViewCell {
         timeL.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(timeL)
 //        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-15-[timeL]", options: [], metrics: nil, views: ["titleL":titleL,"timeL":timeL]))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-15-[timeL]", aView: titleL, bView: timeL))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-13-[timeL]", aView: titleL, bView: timeL))
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(timeL, toItem: titleL))
         
 
@@ -453,14 +483,14 @@ class SchedulerInfoHeadCell: UITableViewCell {
         addressL.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(addressL)
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(addressL, toItem: timeL))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[timeL]-10-[addressL]", aView: timeL, bView: addressL))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[timeL]-8-[addressL]", aView: timeL, bView: addressL))
         
         
         typeL.translatesAutoresizingMaskIntoConstraints = false
         typeL.textColor = timeL.textColor
         typeL.font = timeL.font
         self.contentView.addSubview(typeL)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[addressL]-10-[typeL]", aView: addressL, bView: typeL))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[addressL]-8-[typeL]", aView: addressL, bView: typeL))
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(typeL, toItem: timeL))
         
         companyL.translatesAutoresizingMaskIntoConstraints = false
@@ -468,7 +498,7 @@ class SchedulerInfoHeadCell: UITableViewCell {
         companyL.font = timeL.font
         self.contentView.addSubview(companyL)
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(companyL, toItem: timeL))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[typeL]-10-[companyL]", aView: typeL, bView: companyL))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[typeL]-8-[companyL]", aView: typeL, bView: companyL))
         
     }
 
@@ -497,16 +527,16 @@ class SchedulerInfoTitleCell: UITableViewCell {
         
         let spot = UIView()
         spot.layer.masksToBounds = true
-        spot.layer.cornerRadius = 4.0
+        spot.layer.cornerRadius = 3.0
         
         spot.backgroundColor = Profile.rgb(254, g: 167, b: 84)
         spot.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(spot)
 //        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(spot, toItem: self.contentView))
-        self.contentView.addConstraint(NSLayoutConstraint(item: spot, attribute: .CenterY, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1.0, constant: 3))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[spot(8)]", options: [], metrics: nil, views: ["spot":spot]))
+        self.contentView.addConstraint(NSLayoutConstraint(item: spot, attribute: .CenterY, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1.0, constant: 0))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[spot(6)]", options: [], metrics: nil, views: ["spot":spot]))
         
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[spot(8)]", options: [], metrics: nil, views: ["spot":spot]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[spot(6)]", options: [], metrics: nil, views: ["spot":spot]))
         
         
         titleL.textColor = Profile.rgb(102, g: 102, b: 102)
@@ -553,10 +583,22 @@ class SchedulerInfoContactCell: ExhibitorPerson {
            if temp.firstAttribute == .Left && temp.secondAttribute == .Left && temp.firstItem as! NSObject == titleL
            {
               temp.constant = 33
-              return
+               break
             }
         
         }
+        
+        
+        for temp  in self.contentView.constraints
+        {
+            if temp.firstAttribute == .Left && temp.secondAttribute == .Left && temp.firstItem as! NSObject == phoneBt
+            {
+                temp.constant = 91
+                return
+            }
+            
+        }
+
     }
 
     required init?(coder aDecoder: NSCoder) {

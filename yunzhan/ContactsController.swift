@@ -18,10 +18,15 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         self.title = "我的联系人"
         table = UITableView(frame: CGRectZero, style: .Plain)
         table.delegate = self
+//        table.separatorColor = Profile.rgb(210, g: 210, b: 210)
+        table.separatorStyle = .None
         table.dataSource = self
         table.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(table)
+        table.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        table.tableFooterView = UIView()
         table.registerClass(ContactsPersonCell.self, forCellReuseIdentifier: "ContactsPersonCell")
+//        table.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
         self.fetchContactList()
@@ -96,7 +101,7 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 55
+        return 63
     }
     
     
@@ -105,6 +110,12 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         let arr = dataArr[indexPath.section]
         let p = arr[indexPath.row]
         cell.fillData(p.title, name: p.name, phone: p.phone)
+        cell.separatorInset = UIEdgeInsetsZero
+        if #available(iOS 8.0, *) {
+            cell.layoutMargins = UIEdgeInsetsZero
+        } else {
+            // Fallback on earlier versions
+        }
         return cell
     }
     
@@ -153,9 +164,15 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
             
             let subA = wself?.dataArr[indexPath.section]
             subArr.removeAtIndex(indexPath.row)
+            wself?.prefixArr.removeAtIndex(indexPath.section)
             
             wself?.dataArr.removeAtIndex(indexPath.section)
-            wself?.dataArr.insert(subA!, atIndex: indexPath.section)
+            if subArr.count != 0
+            {
+                wself?.dataArr.insert(subA!, atIndex: indexPath.section)
+            }
+
+//            wself?.dataArr.insert(subA!, atIndex: indexPath.section)
 
             wself?.table.reloadData()
         }
@@ -181,7 +198,7 @@ class ContactsPersonCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         titleL.textColor = Profile.rgb(153, g: 153, b: 153)
-        titleL.font = Profile.font(12)
+        titleL.font = Profile.font(13)
         self.contentView.addSubview(titleL)
         titleL.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
@@ -189,8 +206,8 @@ class ContactsPersonCell: UITableViewCell {
         
         
         
-        nameL.textColor = Profile.rgb(102, g: 102, b: 102)
-        nameL.font = Profile.font(12)
+        nameL.textColor = Profile.rgb(51, g: 51, b: 51)
+        nameL.font = Profile.font(15)
         self.contentView.addSubview(nameL)
         nameL.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[nameL]", options: [], metrics: nil, views: ["nameL":nameL]))
@@ -198,8 +215,8 @@ class ContactsPersonCell: UITableViewCell {
         
         
         
-        phoneBt.setTitleColor(Profile.rgb(102, g: 102, b: 102), forState: .Normal)
-        phoneBt.titleLabel?.font = Profile.font(14)
+        phoneBt.setTitleColor(Profile.rgb(51, g: 51, b: 51), forState: .Normal)
+        phoneBt.titleLabel?.font = Profile.font(15)
         phoneBt.translatesAutoresizingMaskIntoConstraints = false
         phoneBt.setImage(UIImage(named: "exhibitorPhone"), forState: .Normal)
         phoneBt.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0)

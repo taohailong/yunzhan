@@ -11,47 +11,7 @@ import Foundation
 //typealias NetTestBlock = (s:String) ->Void
 
 typealias NetBlock = (result: Any?,  status: NetStatus) ->(Void)
-//enum NetStatus{
-//    
-//    case NetWorkStatusSucess(Int)
-//    case NetWorkStatusError(String)
-//}
 
-
-//func getNetRootData(block:NetBlock)
-//{
-//    let url = "http://\(Profile.domain)/api/app/exhibition/index?id=1"
-//    
-//    self.getMethodRequest(url) { (result, status) -> (Void) in
-//        
-//        if status == NetStatus.NetWorkStatusError
-//        {
-//            block(result: result, status: status)
-//            return
-//        }
-//        
-//        
-//        if let dic = result as? NSDictionary {
-//            
-//            guard let data = dic["data"] , let list = data["buzs"] as? [[String:AnyObject]]
-//                else {
-//                    return
-//            }
-//            
-//            var exhibitorArr = [ExhibitorData]()
-//            for temp in list
-//            {
-//                print(temp)
-//                let data = ExhibitorData(address: temp["addr"] as? String, id: String(temp["exhibition_id"]!), name: temp["name_zh"] as? String, iconUrl: temp["logo_url"] as? String, addressMap: temp["booth_url"] as? String, webLink: temp["website"] as? String)
-//                exhibitorArr.append(data)
-//            }
-//            
-//        }
-//        
-//        //            block(result: (result,"ddd"), status: status)
-//    }
-//    
-//}
 
 enum NetStatus:Int{
   case NetWorkStatusSucess = 0
@@ -318,7 +278,7 @@ class NetWorkData {
             
     
             
-            var productBack = [ProductData]()
+            var productBack:[ProductData]! = [ProductData]()
             
             for dic in productArr
             {
@@ -337,11 +297,15 @@ class NetWorkData {
 
                productBack.append(p)
             }
+//            if productBack.count == 0
+//            {
+//                productBack = nil
+//            }
+
             
             
             
-            
-            var introductArrBack = [PicData]()
+            var introductArrBack:[PicData]! = [PicData]()
             if let introductArr = list["sceneUrls"] as? [[String:String]]
             {
                for dic in introductArr
@@ -350,6 +314,11 @@ class NetWorkData {
                   introductArrBack.append(p)
                 }
             }
+//            if introductArrBack.count == 0
+//            {
+//               introductArrBack = nil
+//            }
+            
             
             let tuple:(data:ExhibitorData,personArr:[PersonData],producArr:[ProductData],introduce:[PicData]) = (exhibitor,personArr,productBack,introductArrBack)
             
@@ -532,10 +501,13 @@ class NetWorkData {
         }
     }
     
-    func addContact(exhibitorID:String,personID:String,block:NetBlock)
+    
+    
+    
+    func addSchedulerContact(schedulerID:String,personID:String,block:NetBlock)
     {
         weak var user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/personal/addcontact?chn=ios&token=\(user!.token!)&eid=1&bid=\(exhibitorID)&cid=\(personID)"
+        let url = "http://\(Profile.domain)/api/app/personal/addscontact?chn=ios&token=\(user!.token!)&eid=1&sid=\(schedulerID)&cid=\(personID)"
         
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
@@ -555,10 +527,34 @@ class NetWorkData {
     
     
     
+    func addExhibitorContact(exhibitorID:String,personID:String,block:NetBlock)
+    {
+        weak var user = UserData.shared
+        let url = "http://\(Profile.domain)/api/app/personal/addcontact?chn=ios&token=\(user!.token!)&eid=1&bid=\(exhibitorID)&cid=\(personID)"
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: status)
+                return
+            }
+            
+            guard let data = result as? [String:AnyObject],let list = data["code"] as? Int,let msg = data["msg"] else {
+                return
+            }
+            block(result: msg, status: status)
+        }
+
+    
+    }
+    
+    
+    
     func delectContact(exhibitorID:String,personID:String,block:NetBlock)
     {
         weak var user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/personal/delcontact?chn=ios&token=\(user!.token)&eid=1&bid=\(exhibitorID)&cid=\(personID)"
+        let url = "http://\(Profile.domain)/api/app/personal/delcontact?chn=ios&token=\(user!.token!)&eid=1&id=\(personID)"
         
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
@@ -647,8 +643,9 @@ class NetWorkData {
             {
                 if let first = temp["name_first"] as? String
                 {
-                    
+//                    print(temp)
                    let p = ExhibitorData(rootDic: temp)
+                    
                     if let index = prefixArr.indexOf(first)
                     {
                         var subArr = exhibitorArr[index]
@@ -761,6 +758,125 @@ class NetWorkData {
 
 
     
+    func sendSuggestion(suggestion:String,block:NetBlock)
+    {
+        let user = UserData.shared
+        var url = "http://\(Profile.domain)/api/app/feedback/add?eid=1&mobile=\(user.phone!)&content=\(suggestion)&chn=ios&token=\(user.token!)"
+        url = url.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
+//        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet)
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: status)
+                return
+            }
+            print(result)
+            guard let data = result as? [String:AnyObject],let msg = data["msg"] as? String else {
+                return
+            }
+            
+            block(result:msg , status: status)
+        }
+
+    }
+    
+    //    true 已存在
+    func checkExhibitorStatus(exhibitorID:String,block:(status:Bool)->Void)
+    {
+        let user = UserData.shared
+        let url = "http://\(Profile.domain)/api/app/personal/checkbuz?eid=1&bid=\(exhibitorID)&chn=ios&token=\(user.token!)"
+      
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(status: false)
+                return
+            }
+            print(result)
+            guard let data = result as? [String:AnyObject],let code  = data["code"] as? Int  else {
+                block(status: false)
+                return
+            }
+            if code == 1
+            {
+              block(status: false)
+            }
+            else
+            {
+             block(status: true)
+            }
+            
+        }
+    
+    }
+    
+//    true 已存在
+    func checkSchedulerStatus(schedulerID:String,block:(status:Bool)->Void)
+    {
+        let user = UserData.shared
+        let url = "http://\(Profile.domain)/api/app/personal/checkschedule?eid=1&sid=\(schedulerID)&chn=ios&token=\(user.token!)"
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(status: false)
+                return
+            }
+            print(result)
+            guard let data = result as? [String:AnyObject],let code  = data["code"] as? Int  else {
+                block(status: false)
+                return
+            }
+            if code == 1
+            {
+                block(status: false)
+            }
+            else
+            {
+                block(status: true)
+            }
+        }
+    }
+    
+    
+    
+    func sendDeviceToken(deviceToken:String){
+    
+        let user = UserData.shared
+        var url = "http://\(Profile.domain)/api/app/user/setToken?eid=1&device_token=\(deviceToken)&chn=ios"
+        
+        if let token = user.token
+        {
+           url = "\(url)&user_token=\(token)"
+        }
+        
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+//                block(status: false)
+                return
+            }
+//            guard let data = result as? [String:AnyObject],let code  = data["code"] as? Int  else {
+//                block(status: false)
+//                return
+//            }
+//            if code == 1
+//            {
+//                block(status: false)
+//            }
+//            else
+//            {
+//                block(status: true)
+//            }
+        }
+    }
+    
+
     func getMethodRequest(url:String,completeBlock:NetBlock){
         
         if url.isEmpty

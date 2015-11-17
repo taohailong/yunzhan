@@ -12,7 +12,7 @@ class SuggestionVC: UIViewController,UITextViewDelegate {
     var textView:UITextView!
     var lenth:Int!
     var indicateL:UILabel!
-    
+    var net:NetWorkData!
     override func viewDidLoad() {
         self.title = "建议意见"
         self.automaticallyAdjustsScrollViewInsets = false
@@ -24,8 +24,9 @@ class SuggestionVC: UIViewController,UITextViewDelegate {
         
         textView = UITextView(frame: CGRectZero)
         textView.layer.masksToBounds = true;
+        textView.becomeFirstResponder()
         textView.layer.cornerRadius = 4;
-        textView.textColor = Profile.rgb(221, g: 221, b: 221)
+        textView.textColor = Profile.rgb(102, g: 102, b: 102)
         textView.font = Profile.font(14)
         textView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(textView)
@@ -46,11 +47,27 @@ class SuggestionVC: UIViewController,UITextViewDelegate {
     
     func commitSuggestion(){
        
-    
+        weak var wself = self
+        net = NetWorkData()
+         let loadV = THActivityView(activityViewWithSuperView: self.view)
+        net.sendSuggestion(textView.text) { (result, status) -> (Void) in
+            
+            loadV.removeFromSuperview()
+            
+            if let warnStr = result as? String
+            {
+                let showV = THActivityView(string: warnStr)
+                showV.show()
+                wself?.navigationController?.popViewControllerAnimated(true)
+            }
+        }
+        net.start()
     }
     
     
     func textViewDidChange(textView: UITextView) {
+//        print(textView.text)
+//        textView.text = "1"
         lenth = textView.text.characters.count
         let l =  140-lenth>0 ? 140-lenth:0
         indicateL.text = "还能输入\(l)个字"
@@ -58,6 +75,8 @@ class SuggestionVC: UIViewController,UITextViewDelegate {
     
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool
     {
+ 
+         print(text)
         if lenth > 139
         {
             return false

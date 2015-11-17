@@ -31,7 +31,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         if change == true
         {
             self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor(),NSFontAttributeName:Profile.font(18)]
             self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
             let application = UIApplication.sharedApplication()
             application.setStatusBarStyle(.LightContent, animated: true)
@@ -42,8 +42,8 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             {
                 return
             }
-            self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor()]
+            self.navigationController?.navigationBar.tintColor = Profile.rgb(102, g: 102, b: 102)
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor(),NSFontAttributeName:Profile.font(18)]
             self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
             let application = UIApplication.sharedApplication()
             application.setStatusBarStyle(.Default, animated: true)
@@ -57,6 +57,9 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         self.navigationController?.tabBarItem.image = UIImage(named: "root-1_selected")
         self.navigationController?.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
             
+//        let dict = [NSFontAttributeName: Profile.font(20),NSForegroundColorAttributeName:UIColor.redColor()]
+//        self.navigationController!.navigationBar.titleTextAttributes = dict
+   
         #if false
             print("ok le")
         #else

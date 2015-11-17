@@ -28,7 +28,7 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
         if change == true
         {
             self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor(),NSFontAttributeName:Profile.font(18)]
             self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
             let application = UIApplication.sharedApplication()
             application.setStatusBarStyle(.LightContent, animated: true)
@@ -39,8 +39,8 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
             {
                 return
             }
-            self.navigationController?.navigationBar.tintColor = UIColor.blackColor()
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor()]
+            self.navigationController?.navigationBar.tintColor = Profile.rgb(102, g: 102, b: 102)
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor(),NSFontAttributeName:Profile.font(18)]
             self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
             let application = UIApplication.sharedApplication()
             application.setStatusBarStyle(.Default, animated: true)
@@ -56,7 +56,11 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
         self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
+        let dict = [NSFontAttributeName: Profile.font(18)]
+        self.navigationController!.navigationBar.titleTextAttributes = dict
+        
         self.title = "新闻"
+        table.separatorColor = Profile.rgb(243, g: 243, b: 243)
         table.registerClass(NewCell.self , forCellReuseIdentifier: "NewCell")
         self.fetchData()
     }
@@ -119,6 +123,10 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
         return cell
     }
     
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 75
+    }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
@@ -186,7 +194,7 @@ class NewCell: UITableViewCell {
         //        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-5-[contentL]-5-|", options: [], metrics: nil, views: ["contentL":contentL,"titleL":titleL]))
         
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-7-[contentL]-5-|", aView: titleL, bView: contentL))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[contentL]-5-|", options: [], metrics: nil, views: ["contentL":contentL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[contentL]-15-|", options: [], metrics: nil, views: ["contentL":contentL]))
         
         
         

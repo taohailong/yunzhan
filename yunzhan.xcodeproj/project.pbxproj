@@ -546,7 +546,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.miaomiao.bike;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9fa1e2a4-49af-4e8b-9b13-42b9627872b9";
+				PROVISIONING_PROFILE = "b7d39625-a584-44bd-b4f8-c89ecb8c6996";
 				SWIFT_OBJC_BRIDGING_HEADER = "yunzhan/yunzhan-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
