@@ -9,6 +9,7 @@
 import Foundation
 class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataSource,UISearchDisplayDelegate {
     var net:NetWorkData!
+//    var test:[T]?
     var dataArr:[[SchedulerData]]!
     var dateArr:[String]!
     var table:UITableView!
@@ -56,9 +57,9 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         self.navigationController?.tabBarItem.selectedImage = UIImage(named: "root-3_selected")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationController?.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
         
-        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
-        self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
+//        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+//        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
+//        self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
         
         let dict = [NSFontAttributeName: Profile.font(18)]
         self.navigationController!.navigationBar.titleTextAttributes = dict
@@ -232,9 +233,17 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        let subArr = dataArr[indexPath.section]
+        var data:SchedulerData!
+        if tableView != table
+        {
+           data = searchArr[indexPath.row]
+        }
+        else
+        {
+            let subArr = dataArr[indexPath.section]
+            data = subArr[indexPath.row]
+        }
         
-        let data = subArr[indexPath.row]
         let schedulerInfo = SchedulerInfoVC()
         schedulerInfo.schedulerID = data.id
         schedulerInfo.hidesBottomBarWhenPushed = true

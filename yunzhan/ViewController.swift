@@ -350,13 +350,22 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
     func collectionView(link: String, didSelectHeadView indexPath: NSIndexPath) {
         print(link)
         
+        
+//        let req = SendMessageToWXReq()
+//        req.text = "ok"
+//        req.scene = 0
+//        req.bText = true
+//        let f = WXApi.sendReq(req)
+//        
+//          return
+//        WXApi.sendAuthReq(<#T##req: SendAuthReq!##SendAuthReq!#>, viewController: <#T##UIViewController!#>, delegate: <#T##WXApiDelegate!#>)
+//        req.scene =  WXSceneSession.rawValue
+        
+        
         let comment = CommonWebController(url:link)
         comment.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(comment, animated: true)
     }
-//    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-//        return .LightContent
-//    }
     
     deinit{
       net = nil

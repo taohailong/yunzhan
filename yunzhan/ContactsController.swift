@@ -171,12 +171,25 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
             {
                 wself?.dataArr.insert(subA!, atIndex: indexPath.section)
             }
-
 //            wself?.dataArr.insert(subA!, atIndex: indexPath.section)
 
             wself?.table.reloadData()
         }
         delectNet.start()
+    }
+    
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        let subA = self.dataArr[indexPath.section]
+        let person = subA[indexPath.row]
+        
+        if let url = NSURL(string: "tel://\(person.phone!)")
+        {
+           UIApplication.sharedApplication().openURL(url)
+        }
+        
     }
 }
 
@@ -215,14 +228,15 @@ class ContactsPersonCell: UITableViewCell {
         
         
         
-        phoneBt.setTitleColor(Profile.rgb(51, g: 51, b: 51), forState: .Normal)
+        phoneBt.setTitleColor(Profile.rgb(51, g: 51, b: 51), forState: .Disabled)
         phoneBt.titleLabel?.font = Profile.font(15)
         phoneBt.translatesAutoresizingMaskIntoConstraints = false
-        phoneBt.setImage(UIImage(named: "exhibitorPhone"), forState: .Normal)
+        phoneBt.setImage(UIImage(named: "exhibitorPhone"), forState: .Disabled)
         phoneBt.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0)
         self.contentView.addSubview(phoneBt)
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[nameL]-35-[phoneBt]", options: [], metrics: nil, views: ["phoneBt":phoneBt,"nameL":nameL]))
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(phoneBt, toItem: nameL))
+        phoneBt.enabled = false
     }
 
     func fillData(title: String?,name: String? ,phone: String?)

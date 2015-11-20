@@ -147,14 +147,6 @@ extension Int {
     
     func toWeekData() ->String
     {
-//       let date = self.toTimeString("yyyy-MM-dd")
-//       let comps = NSDateComponents()
-//        
-//        let year = date.substringToIndex(date.startIndex.advancedBy(3))
-//        let rang = date.startIndex.advancedBy(4)...date.startIndex.advancedBy(5)
-//        let month = date.substringWithRange(rang)
-//        let day = date.substringFromIndex(date.startIndex.advancedBy(7))
-        
          let date = NSDate(timeIntervalSince1970: Double(self/1000))
         let gregorian = NSCalendar(calendarIdentifier: NSGregorianCalendar)
         let weekDayCompon = gregorian?.components(.NSWeekdayCalendarUnit, fromDate: date)
@@ -198,8 +190,7 @@ extension String {
             
             return nil
         }
-        
-        
+
         let str = CFStringCreateMutableCopy(nil, 0, self)
         CFStringTransform(str, nil, kCFStringTransformToLatin, false )
         //        print(str)
@@ -217,6 +208,35 @@ extension String {
         return predicate.evaluateWithObject(self)
     }
     
+    
+    subscript(start:Int,lenth:Int)->String?{
+    
+      get {
+        
+        if start < 0 || lenth<=0||self.isEmpty == true || start+lenth > self.characters.count
+        {
+           return nil
+        }
+        let subString = self.substringWithRange(Range.init(start: self.startIndex.advancedBy(start), end: self.startIndex.advancedBy(start+lenth)))
+        return subString
+       }
+    
+    }
+}
+
+extension Dictionary {
+    
+    func fecth<T>(key:Key,type:T) ->T?
+        {
+            if let values = self[key] as? T
+            {
+                return values
+            }
+            else
+            {
+                return nil
+            }
+        }
 }
 
 

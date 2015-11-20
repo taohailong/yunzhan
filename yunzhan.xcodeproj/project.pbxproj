@@ -33,12 +33,32 @@
 		C77E1DB41BE0D05600B8F444 /* ProfileSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77E1DB21BE0AEE600B8F444 /* ProfileSwift.swift */; };
 		C78200211BEC800F002BBDB7 /* ExhibitorInfoCV.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78200201BEC800F002BBDB7 /* ExhibitorInfoCV.swift */; };
 		C78200221BEC800F002BBDB7 /* ExhibitorInfoCV.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78200201BEC800F002BBDB7 /* ExhibitorInfoCV.swift */; };
+		C7848F471BFDD8F400339623 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F421BFDD8F400339623 /* libWeChatSDK.a */; };
+		C7848F481BFDD8F400339623 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F421BFDD8F400339623 /* libWeChatSDK.a */; };
+		C7848F491BFDD8F400339623 /* read_me.txt in Resources */ = {isa = PBXBuildFile; fileRef = C7848F431BFDD8F400339623 /* read_me.txt */; };
+		C7848F4A1BFDD8F400339623 /* read_me.txt in Resources */ = {isa = PBXBuildFile; fileRef = C7848F431BFDD8F400339623 /* read_me.txt */; };
+		C7848F4C1BFDD99C00339623 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F4B1BFDD99C00339623 /* CoreTelephony.framework */; };
+		C7848F4E1BFDD9D900339623 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F4D1BFDD9D900339623 /* libsqlite3.0.tbd */; };
+		C7848F521BFDDA2300339623 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F511BFDDA2300339623 /* libz.tbd */; };
+		C7848F531BFDDA3900339623 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F4D1BFDD9D900339623 /* libsqlite3.0.tbd */; };
+		C7848F541BFDDA4500339623 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F511BFDDA2300339623 /* libz.tbd */; };
+		C7848F551BFDDEC400339623 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F4F1BFDDA0800339623 /* SystemConfiguration.framework */; };
+		C7848F571BFDDEDC00339623 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F561BFDDEDC00339623 /* libc++.tbd */; };
 		C79285711BEAF65B00287A24 /* NewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79285701BEAF65B00287A24 /* NewsView.swift */; };
 		C79285721BEAF65B00287A24 /* NewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79285701BEAF65B00287A24 /* NewsView.swift */; };
 		C79285751BEB06A400287A24 /* THActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = C79285741BEB06A400287A24 /* THActivityView.m */; };
 		C79285761BEB06A400287A24 /* THActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = C79285741BEB06A400287A24 /* THActivityView.m */; };
 		C79285781BEB322700287A24 /* SettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79285771BEB322700287A24 /* SettingController.swift */; };
 		C79285791BEB322700287A24 /* SettingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79285771BEB322700287A24 /* SettingController.swift */; };
+		C79546DE1BFEBC8F0080CD46 /* NewListCV.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79546DD1BFEBC8F0080CD46 /* NewListCV.swift */; };
+		C79546DF1BFEBC8F0080CD46 /* NewListCV.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79546DD1BFEBC8F0080CD46 /* NewListCV.swift */; };
+		C79546E11BFEBCE30080CD46 /* TimeLineVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79546E01BFEBCE30080CD46 /* TimeLineVC.swift */; };
+		C79546E21BFEBCE30080CD46 /* TimeLineVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79546E01BFEBCE30080CD46 /* TimeLineVC.swift */; };
+		C79546E51BFEC3D80080CD46 /* TSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = C79546E41BFEC3D80080CD46 /* TSegmentedControl.m */; };
+		C79546E61BFEC3D80080CD46 /* TSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = C79546E41BFEC3D80080CD46 /* TSegmentedControl.m */; };
+		C79546E71BFF0D0A0080CD46 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F4B1BFDD99C00339623 /* CoreTelephony.framework */; };
+		C79546E81BFF0D730080CD46 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F4F1BFDDA0800339623 /* SystemConfiguration.framework */; };
+		C79546E91BFF0DCF0080CD46 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F561BFDDEDC00339623 /* libc++.tbd */; };
 		C79E545C1BE9B79100E4A514 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79E545B1BE9B79100E4A514 /* Scheduler.swift */; };
 		C79E545D1BE9B79100E4A514 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79E545B1BE9B79100E4A514 /* Scheduler.swift */; };
 		C79E545F1BE9DCB800E4A514 /* RootCollectionCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79E545E1BE9DCB800E4A514 /* RootCollectionCells.swift */; };
@@ -89,10 +109,24 @@
 		C77E1DB01BE0ADD400B8F444 /* test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = test.m; sourceTree = "<group>"; };
 		C77E1DB21BE0AEE600B8F444 /* ProfileSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileSwift.swift; sourceTree = "<group>"; };
 		C78200201BEC800F002BBDB7 /* ExhibitorInfoCV.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitorInfoCV.swift; sourceTree = "<group>"; };
+		C7848F421BFDD8F400339623 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
+		C7848F431BFDD8F400339623 /* read_me.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = read_me.txt; sourceTree = "<group>"; };
+		C7848F441BFDD8F400339623 /* WechatAuthSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WechatAuthSDK.h; sourceTree = "<group>"; };
+		C7848F451BFDD8F400339623 /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
+		C7848F461BFDD8F400339623 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
+		C7848F4B1BFDD99C00339623 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		C7848F4D1BFDD9D900339623 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		C7848F4F1BFDDA0800339623 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		C7848F511BFDDA2300339623 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		C7848F561BFDDEDC00339623 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		C79285701BEAF65B00287A24 /* NewsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsView.swift; sourceTree = "<group>"; };
 		C79285731BEB06A400287A24 /* THActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THActivityView.h; sourceTree = "<group>"; };
 		C79285741BEB06A400287A24 /* THActivityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THActivityView.m; sourceTree = "<group>"; };
 		C79285771BEB322700287A24 /* SettingController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingController.swift; sourceTree = "<group>"; };
+		C79546DD1BFEBC8F0080CD46 /* NewListCV.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewListCV.swift; sourceTree = "<group>"; };
+		C79546E01BFEBCE30080CD46 /* TimeLineVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineVC.swift; sourceTree = "<group>"; };
+		C79546E31BFEC3D80080CD46 /* TSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSegmentedControl.h; sourceTree = "<group>"; };
+		C79546E41BFEC3D80080CD46 /* TSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSegmentedControl.m; sourceTree = "<group>"; };
 		C79E545B1BE9B79100E4A514 /* Scheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
 		C79E545E1BE9DCB800E4A514 /* RootCollectionCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootCollectionCells.swift; sourceTree = "<group>"; };
 		C79E54611BE9E47400E4A514 /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
@@ -111,6 +145,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C7848F571BFDDEDC00339623 /* libc++.tbd in Frameworks */,
+				C7848F551BFDDEC400339623 /* SystemConfiguration.framework in Frameworks */,
+				C7848F521BFDDA2300339623 /* libz.tbd in Frameworks */,
+				C7848F4E1BFDD9D900339623 /* libsqlite3.0.tbd in Frameworks */,
+				C7848F4C1BFDD99C00339623 /* CoreTelephony.framework in Frameworks */,
+				C7848F471BFDD8F400339623 /* libWeChatSDK.a in Frameworks */,
 				992C42617DC41C9282A5E10D /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -119,6 +159,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C79546E91BFF0DCF0080CD46 /* libc++.tbd in Frameworks */,
+				C79546E81BFF0D730080CD46 /* SystemConfiguration.framework in Frameworks */,
+				C79546E71BFF0D0A0080CD46 /* CoreTelephony.framework in Frameworks */,
+				C7848F541BFDDA4500339623 /* libz.tbd in Frameworks */,
+				C7848F531BFDDA3900339623 /* libsqlite3.0.tbd in Frameworks */,
+				C7848F481BFDD8F400339623 /* libWeChatSDK.a in Frameworks */,
 				C7F0AE411BE210C70056C06B /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -129,6 +175,11 @@
 		252D83792F6B9EBF98BA1FF7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C7848F561BFDDEDC00339623 /* libc++.tbd */,
+				C7848F511BFDDA2300339623 /* libz.tbd */,
+				C7848F4F1BFDDA0800339623 /* SystemConfiguration.framework */,
+				C7848F4D1BFDD9D900339623 /* libsqlite3.0.tbd */,
+				C7848F4B1BFDD99C00339623 /* CoreTelephony.framework */,
 				2B0B27D84BE8C3C370A017F5 /* libPods.a */,
 			);
 			name = Frameworks;
@@ -174,6 +225,8 @@
 				C79E545B1BE9B79100E4A514 /* Scheduler.swift */,
 				C71A3A821BF1954B0081F7E6 /* SchedulerInfo.swift */,
 				C79285701BEAF65B00287A24 /* NewsView.swift */,
+				C79546DD1BFEBC8F0080CD46 /* NewListCV.swift */,
+				C79546E01BFEBCE30080CD46 /* TimeLineVC.swift */,
 				C79285771BEB322700287A24 /* SettingController.swift */,
 				C779C1021BF48A92008D625F /* MyFavorite.swift */,
 				C7A962981BF32354003B883A /* ProductList.swift */,
@@ -193,6 +246,9 @@
 				C779C0F81BF42D35008D625F /* LogViewController.m */,
 				C779C0F91BF42D35008D625F /* LogInCell.h */,
 				C779C0FA1BF42D35008D625F /* LogInCell.m */,
+				C79546E31BFEC3D80080CD46 /* TSegmentedControl.h */,
+				C79546E41BFEC3D80080CD46 /* TSegmentedControl.m */,
+				C7848F411BFDD8F400339623 /* weixin */,
 				C77E1DA01BE09EDA00B8F444 /* Main.storyboard */,
 				C77E1DA31BE09EDA00B8F444 /* Assets.xcassets */,
 				C77E1DA51BE09EDA00B8F444 /* LaunchScreen.storyboard */,
@@ -201,6 +257,18 @@
 			);
 			path = yunzhan;
 			sourceTree = "<group>";
+		};
+		C7848F411BFDD8F400339623 /* weixin */ = {
+			isa = PBXGroup;
+			children = (
+				C7848F421BFDD8F400339623 /* libWeChatSDK.a */,
+				C7848F431BFDD8F400339623 /* read_me.txt */,
+				C7848F441BFDD8F400339623 /* WechatAuthSDK.h */,
+				C7848F451BFDD8F400339623 /* WXApi.h */,
+				C7848F461BFDD8F400339623 /* WXApiObject.h */,
+			);
+			path = weixin;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -288,6 +356,7 @@
 			files = (
 				C77E1DA71BE09EDA00B8F444 /* LaunchScreen.storyboard in Resources */,
 				C77E1DA41BE09EDA00B8F444 /* Assets.xcassets in Resources */,
+				C7848F491BFDD8F400339623 /* read_me.txt in Resources */,
 				C77E1DA21BE09EDA00B8F444 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -298,6 +367,7 @@
 			files = (
 				C7F0AE431BE210C70056C06B /* LaunchScreen.storyboard in Resources */,
 				C7F0AE441BE210C70056C06B /* Assets.xcassets in Resources */,
+				C7848F4A1BFDD8F400339623 /* read_me.txt in Resources */,
 				C7F0AE451BE210C70056C06B /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -386,11 +456,14 @@
 				C79285781BEB322700287A24 /* SettingController.swift in Sources */,
 				C77E1D9D1BE09EDA00B8F444 /* AppDelegate.swift in Sources */,
 				C79E54621BE9E47400E4A514 /* DataModel.swift in Sources */,
+				C79546E11BFEBCE30080CD46 /* TimeLineVC.swift in Sources */,
 				C779C0FB1BF42D35008D625F /* LogViewController.m in Sources */,
 				C779C1031BF48A92008D625F /* MyFavorite.swift in Sources */,
 				C71A3A831BF1954B0081F7E6 /* SchedulerInfo.swift in Sources */,
+				C79546DE1BFEBC8F0080CD46 /* NewListCV.swift in Sources */,
 				C79E545F1BE9DCB800E4A514 /* RootCollectionCells.swift in Sources */,
 				C78200211BEC800F002BBDB7 /* ExhibitorInfoCV.swift in Sources */,
+				C79546E51BFEC3D80080CD46 /* TSegmentedControl.m in Sources */,
 				C79285711BEAF65B00287A24 /* NewsView.swift in Sources */,
 				C7A962991BF32354003B883A /* ProductList.swift in Sources */,
 				C77E1DB11BE0ADD400B8F444 /* test.m in Sources */,
@@ -416,11 +489,14 @@
 				C7A9629A1BF32354003B883A /* ProductList.swift in Sources */,
 				C78200221BEC800F002BBDB7 /* ExhibitorInfoCV.swift in Sources */,
 				C779C0FE1BF42D35008D625F /* LogInCell.m in Sources */,
+				C79546E21BFEBCE30080CD46 /* TimeLineVC.swift in Sources */,
 				C779C0FC1BF42D35008D625F /* LogViewController.m in Sources */,
 				C779C1041BF48A92008D625F /* MyFavorite.swift in Sources */,
 				C779C1011BF43917008D625F /* Singleton.swift in Sources */,
+				C79546DF1BFEBC8F0080CD46 /* NewListCV.swift in Sources */,
 				C79285761BEB06A400287A24 /* THActivityView.m in Sources */,
 				C79E54631BE9E47400E4A514 /* DataModel.swift in Sources */,
+				C79546E61BFEC3D80080CD46 /* TSegmentedControl.m in Sources */,
 				C7A9629D1BF32F01003B883A /* WebHtml.swift in Sources */,
 				C7F0AE3E1BE210C70056C06B /* test.m in Sources */,
 				C7F0AE3F1BE210C70056C06B /* ProfileSwift.swift in Sources */,
@@ -544,6 +620,10 @@
 				INFOPLIST_FILE = yunzhan/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/weixin",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.miaomiao.bike;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "b7d39625-a584-44bd-b4f8-c89ecb8c6996";
@@ -563,6 +643,10 @@
 				INFOPLIST_FILE = yunzhan/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/weixin",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.miaomiao.bike;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "de8241a8-b492-453e-beb2-bd08177447e4";
@@ -586,6 +670,10 @@
 				INFOPLIST_FILE = "yunzhan copy-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/weixin",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.miaomiao.enterprisebike;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -610,6 +698,10 @@
 				INFOPLIST_FILE = "yunzhan copy-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/weixin",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.miaomiao.enterprisebike;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "0289aedb-c43d-4fd4-ad0f-0c68a40e89d3";

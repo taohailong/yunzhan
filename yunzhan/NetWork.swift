@@ -132,10 +132,19 @@ class NetWorkData {
             for temp in list
             {
                 let element = ExhibitorData(rootDic: temp)
-               let prefixStr = temp["name_first"] as! String
+                var prefixStr:String!
+                
+                if let t = temp["name_first"] as? String
+                {
+                   prefixStr = t
+                }
+                else
+                {
+                   prefixStr = "#"
+                }
+
                 if let index = prefixArr.indexOf(prefixStr)
                 {
-                    
                   var subArr = returnArr[index]
                     
                    subArr.append(element)
@@ -481,6 +490,9 @@ class NetWorkData {
                 }
 
                 let first = temp["name_first"] as! String
+                
+//                let test = temp.fecth("dd", type: String)
+                
                 if let index = prefixArr.indexOf(first)
                 {
                     subArr = personArr[index]
@@ -578,7 +590,7 @@ class NetWorkData {
     func delectMyExhibitor(exhibitorID:String,block:NetBlock)
     {
         weak var user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/personal/delbuz?chn=ios&token=\(user!.token!)&eid=1&id=\(exhibitorID)"
+        let url = "http://\(Profile.domain)/api/app/personal/delbuz?chn=ios&token=\(user!.token!)&eid=1&bid=\(exhibitorID)"
         
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
@@ -694,7 +706,7 @@ class NetWorkData {
     func delectMyScheduler(schedulerID:String,block:NetBlock)
     {
         weak var user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/personal/delshedule?chn=ios&token=\(user!.token!)&eid=1&id=\(schedulerID)"
+        let url = "http://\(Profile.domain)/api/app/personal/delshedule?chn=ios&token=\(user!.token!)&eid=1&sid=\(schedulerID)"
         
         self.getMethodRequest(url) { (result, status) -> (Void) in
             

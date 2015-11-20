@@ -235,18 +235,6 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
         let nu = 4
-//        if introductArr != nil
-//        {
-//           nu = nu + 1
-//        }
-//        else if personArr != nil
-//        {
-//          nu = nu + 1
-//        }
-//        else if productArr != nil
-//        {
-//          nu = nu + 1
-//        }
         return nu
     }
     
@@ -333,10 +321,17 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         
         if indexPath.section == 0
         {
+            let size =  elementData.getIntroductSize(Profile.font(11), size: CGSizeMake(Profile.width()-30,1000))
+            
+            if size == nil
+            {
+              return 115
+            }
             if height_OneSection == nil
             {
-              return 170
+               return 170
             }
+//            height_OneSection = size?.height
 //            头部分
            return 130.5 + height_OneSection!
         }
@@ -390,14 +385,14 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         if indexPath.section == 0
         {
             let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorInfoHeadCell") as!ExhibitorInfoHeadCell
-            print(elementData)
-            cell.fillData(elementData.iconUrl!, name: elementData.name, company: elementData.remark, addre: elementData.address, location: elementData.location, content: elementData.introduct)
             
+            cell.fillData(elementData.iconUrl!, name: elementData.name, company: elementData.remark, addre: elementData.address, location: elementData.location, content: elementData.introduct)
             weak var wself = self
             cell.tapBlock = {(height:CGFloat)->Void in
                 wself?.height_OneSection = height
                 wself?.table.reloadData()
             }
+
             return cell
         }
         else if indexPath.section == 1
@@ -530,7 +525,7 @@ class ExhibitorInfoHeadCell: UITableViewCell {
     let addressL:UILabel
     let contentL:UILabel
     let locationL:UILabel
-    
+    var moreBt:UIButton!
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         iconImage = UIImageView()
@@ -620,7 +615,7 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[separateView]-8-[contentL]-30-|", options: [], metrics: nil, views: ["contentL":contentL,"separateView":separateView]))
         
         
-        let moreBt = UIButton(type: .Custom)
+        moreBt = UIButton(type: .Custom)
         moreBt.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(moreBt)
         moreBt.titleLabel?.font = Profile.font(11)
@@ -645,7 +640,6 @@ class ExhibitorInfoHeadCell: UITableViewCell {
             if tapBlock != nil
             {
                  tapBlock!(height: height!)
-                
             }
 
         }
@@ -669,9 +663,36 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         addressL.text = "地址：\(addre!)"
         locationL.text = location
         contentL.text = content
-        print(Profile.width()-30)
-         let size = content!.boundingRectWithSize(CGSizeMake(Profile.width()-30,1000), options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName:Profile.font(11)], context: nil)
-        height = size.height
+        
+//        if content == nil
+//        {
+//            if tapBlock != nil
+//            {
+//                tapBlock!(height: 0)
+//            }
+//            contentL.hidden = true
+//            moreBt.hidden = true
+//        }
+//        else
+//        {
+//            moreBt.hidden = false
+//            contentL.hidden = false
+        
+        
+            let size = content!.boundingRectWithSize(CGSizeMake(Profile.width()-30,1000), options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName:Profile.font(11)], context: nil)
+            height = size.height
+            
+//            if height>=39.5
+//            {
+//                moreBt.hidden = false
+//                contentL.hidden = false
+//            }
+//            else
+//            {
+//                contentL.hidden = true
+//                moreBt.hidden = true
+//            }
+       
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -819,7 +840,7 @@ class ExhibitorMoreCell:UITableViewCell {
      super.init(style: style, reuseIdentifier: reuseIdentifier)
      self.contentView.addSubview(iconImage)
      iconImage.translatesAutoresizingMaskIntoConstraints = false
-    
+//    self.contentView.backgroundColor = UIColor.redColor()
      self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[iconImage]", options: [], metrics: nil, views: ["iconImage":iconImage]))
      self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-(-4)-[iconImage]", options: [], metrics: nil, views: ["iconImage":iconImage]))
 

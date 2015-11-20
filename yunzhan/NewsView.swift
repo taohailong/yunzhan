@@ -11,7 +11,10 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
     
     var net:NetWorkData!
     var dataArr:[NewsData]!
+    var segmentV:TSegmentedControl!
     @IBOutlet weak var table: UITableView!
+    var newList:NewsListVC!
+    var timeLineV:TimeLineVC!
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
@@ -50,19 +53,53 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
     override func viewDidLoad() {
         
          super.viewDidLoad()
-        
+         self.title = "新闻"
         self.navigationController?.tabBarItem.selectedImage = UIImage(named: "root-4_selected")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationController?.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
-        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
-        self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
-        let dict = [NSFontAttributeName: Profile.font(18)]
-        self.navigationController!.navigationBar.titleTextAttributes = dict
+
         
-        self.title = "新闻"
-        table.separatorColor = Profile.rgb(243, g: 243, b: 243)
-        table.registerClass(NewCell.self , forCellReuseIdentifier: "NewCell")
-        self.fetchData()
+        segmentV = TSegmentedControl(sectionTitles: ["新闻","图片"])
+        segmentV.addTarget(self, action: "segmentChange", forControlEvents: .ValueChanged)
+        segmentV.frame = CGRectMake(0, 64, Profile.width(), 40)
+        segmentV.selectionIndicatorHeight = 1
+        segmentV.selectionIndicatorColor = Profile.NavBarColor()
+        segmentV.selectionIndicatorMode = HMSelectionIndicatorFillsTop
+        self.view.addSubview(segmentV)
+        
+         newList = NewsListVC()
+         newList.view.translatesAutoresizingMaskIntoConstraints = false
+         self.view.addSubview(newList.view)
+        var tempView = newList.view
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-104-[tempView]-49-|", options: [], metrics: nil, views: ["tempView":tempView]))
+         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(newList.view))
+         self.addChildViewController(newList)
+        
+        
+        timeLineV = TimeLineVC()
+        timeLineV.view.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(timeLineV.view)
+        tempView = timeLineV.view
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-104-[tempView]-49-|", options: [], metrics: nil, views: ["tempView":tempView]))
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(timeLineV.view))
+        self.addChildViewController(timeLineV)
+        timeLineV.view.hidden = true
+        
+        
+    }
+    
+    
+    func segmentChange()
+    {
+        if segmentV.selectedIndex == 0
+        {
+           newList.view.hidden = false
+            timeLineV.view.hidden = true
+        }
+        else
+        {
+           newList.view.hidden = true
+            timeLineV.view.hidden = false
+        }
     }
     
     func fetchData(){
@@ -98,7 +135,7 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
             guard let arr = result as? [NewsData] else { return }
             
             wself?.dataArr = arr
-            wself?.table.reloadData()
+//            wself?.table.reloadData()
         }
         net.start()
 

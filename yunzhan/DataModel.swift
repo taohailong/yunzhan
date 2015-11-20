@@ -105,7 +105,7 @@ extension SchedulerData{
 
 class ExhibitorData {
     var address:String?, addressMap:String?, id:String, iconUrl:String?, name:String?,webLink:String?,remark:String?,location:String?,introduct:String?
-    
+
     init(address:String?, id:String, name:String?, iconUrl:String?,addressMap:String?,webLink:String? = nil)
     {
         self.address = address
@@ -115,7 +115,17 @@ class ExhibitorData {
         self.addressMap = addressMap
         self.webLink = webLink
     }
-}
+    func getIntroductSize(font:UIFont,size:CGSize)->CGSize?{
+    
+        if introduct == nil || introduct?.isEmpty == true
+        {
+            return nil
+        }
+        let size = introduct!.boundingRectWithSize(size, options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName:font], context: nil)
+        return size.size
+    }
+    
+ }
 
 extension ExhibitorData{
 
@@ -157,6 +167,21 @@ class PersonData {
         self.title = title
         self.phone = phone
     }
-    
 }
+
+
+
+
+class TimeMessage {
+    var picUrl:String?
+    var personName:String?
+    var personTitle:String?
+    var time:String?
+    var comment:String?
+    var favoriteNu:Int?
+    var feedBackNu:Int?
+    var forwardNu:Int?
+}
+
+
 

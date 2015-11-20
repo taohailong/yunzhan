@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
+        
 //        application.statusBarStyle = UIStatusBarStyleLightContent
         if #available(iOS 8.0,*)
         {
@@ -33,6 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
           application.registerForRemoteNotificationTypes([.Badge,.Alert,.Sound])
         }
         
+        WXApi.registerApp("wx9f2610aedf4da519")
         return true
     }
 
@@ -50,6 +52,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         net.sendDeviceToken(deviceToken as String)
         net.start()
     }
+    
+//    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
+//        WXApi.handleOpenURL(url, delegate: self)
+//    }
+    
     
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
         print(error)

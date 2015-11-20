@@ -33,7 +33,7 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
         self.navigationItem.rightBarButtonItem = leftBar
 
         
-        table = UITableView(frame: CGRectZero, style: .Plain)
+        table = UITableView(frame: CGRectZero, style: .Grouped)
         table.separatorStyle = .None
         table.delegate = self
         table.dataSource = self
@@ -262,7 +262,7 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0
         {
-          return 0
+          return 0.5
         }
         return 10
     }

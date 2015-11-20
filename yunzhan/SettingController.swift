@@ -98,7 +98,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
             {
                 weak var wself = self
               cell.setLoginBtBlock({ () -> Void in
-                wself?.showLoginVC()
+               wself?.showLoginVC( )
               })
             }
             else
@@ -171,7 +171,8 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         
         if indexPath.section == 0
         {
-          return
+            self.showLoginVC()
+            return
         }
         else if indexPath.section == 1
         {

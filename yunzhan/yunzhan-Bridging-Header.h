@@ -8,3 +8,5 @@
 #import "THActivityView.h"
 #import "LogInCell.h"
 #import "LogViewController.h"
+#import "WXApi.h"
+#import "TSegmentedControl.h"

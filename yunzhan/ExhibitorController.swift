@@ -205,7 +205,6 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
             cellData = subArr[indexPath.row]
         }
 
-        
         let exhibitorCV = ExhibitorController()
         exhibitorCV.title = cellData.name
         exhibitorCV.id = cellData.id
