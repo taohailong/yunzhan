@@ -181,6 +181,25 @@ class TimeMessage {
     var favoriteNu:Int?
     var feedBackNu:Int?
     var forwardNu:Int?
+    var contentHeight:Float?
+    var id:String?
+    var favorited:Bool?
+    func figureOutContentHeight(size:CGSize,font:UIFont) ->Float{
+        
+        
+        if contentHeight == nil && comment != nil {
+        
+          contentHeight = Float(comment!.boundingRectWithSize(size, options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName:font], context: nil).height)
+          return contentHeight!
+        }
+        
+        if contentHeight == nil && comment == nil
+        {
+          return 0
+        }
+        return contentHeight!
+    }
+    
 }
 
 

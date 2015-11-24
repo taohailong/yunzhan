@@ -22,6 +22,7 @@ class NewsListVC:UIViewController,UITableViewDataSource,UITableViewDelegate {
         table.delegate = self
         table.registerClass(NewCell.self , forCellReuseIdentifier: "NewCell")
         self.view.addSubview(table)
+        table.tableFooterView = UIView()
         table.translatesAutoresizingMaskIntoConstraints = false
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))

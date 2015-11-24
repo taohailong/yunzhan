@@ -10,6 +10,12 @@
 		992C42617DC41C9282A5E10D /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0B27D84BE8C3C370A017F5 /* libPods.a */; };
 		C71A3A831BF1954B0081F7E6 /* SchedulerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71A3A821BF1954B0081F7E6 /* SchedulerInfo.swift */; };
 		C71A3A841BF1954B0081F7E6 /* SchedulerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71A3A821BF1954B0081F7E6 /* SchedulerInfo.swift */; };
+		C763D3E81C045FE2005E3921 /* TimeLineCommit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C763D3E71C045FE2005E3921 /* TimeLineCommit.swift */; };
+		C763D3E91C045FE2005E3921 /* TimeLineCommit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C763D3E71C045FE2005E3921 /* TimeLineCommit.swift */; };
+		C763D3EC1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */ = {isa = PBXBuildFile; fileRef = C763D3EB1C0468FC005E3921 /* UIImage+ZoomImage.m */; };
+		C763D3ED1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */ = {isa = PBXBuildFile; fileRef = C763D3EB1C0468FC005E3921 /* UIImage+ZoomImage.m */; };
+		C763D3F01C049945005E3921 /* ShareCoverageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C763D3EF1C049945005E3921 /* ShareCoverageView.m */; };
+		C763D3F11C049945005E3921 /* ShareCoverageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C763D3EF1C049945005E3921 /* ShareCoverageView.m */; };
 		C779C0FB1BF42D35008D625F /* LogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C779C0F81BF42D35008D625F /* LogViewController.m */; };
 		C779C0FC1BF42D35008D625F /* LogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C779C0F81BF42D35008D625F /* LogViewController.m */; };
 		C779C0FD1BF42D35008D625F /* LogInCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C779C0FA1BF42D35008D625F /* LogInCell.m */; };
@@ -24,6 +30,8 @@
 		C779C10A1BF4A72D008D625F /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C779C1081BF4A72D008D625F /* ViewModel.swift */; };
 		C77C14731BE8B02B00DCC670 /* ExhibitorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77C14721BE8B02B00DCC670 /* ExhibitorController.swift */; };
 		C77C14741BE8B02B00DCC670 /* ExhibitorController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77C14721BE8B02B00DCC670 /* ExhibitorController.swift */; };
+		C77C402E1C040285005596E0 /* TimeLineInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77C402D1C040284005596E0 /* TimeLineInfo.swift */; };
+		C77C402F1C040285005596E0 /* TimeLineInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77C402D1C040284005596E0 /* TimeLineInfo.swift */; };
 		C77E1D9D1BE09EDA00B8F444 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77E1D9C1BE09EDA00B8F444 /* AppDelegate.swift */; };
 		C77E1D9F1BE09EDA00B8F444 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77E1D9E1BE09EDA00B8F444 /* ViewController.swift */; };
 		C77E1DA21BE09EDA00B8F444 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C77E1DA01BE09EDA00B8F444 /* Main.storyboard */; };
@@ -88,6 +96,11 @@
 		6A23C94284D64802DC2E07B8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		A80FDAACCEBB8A18BFE651DC /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		C71A3A821BF1954B0081F7E6 /* SchedulerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SchedulerInfo.swift; sourceTree = "<group>"; };
+		C763D3E71C045FE2005E3921 /* TimeLineCommit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineCommit.swift; sourceTree = "<group>"; };
+		C763D3EA1C0468FC005E3921 /* UIImage+ZoomImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ZoomImage.h"; sourceTree = "<group>"; };
+		C763D3EB1C0468FC005E3921 /* UIImage+ZoomImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ZoomImage.m"; sourceTree = "<group>"; };
+		C763D3EE1C049945005E3921 /* ShareCoverageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareCoverageView.h; sourceTree = "<group>"; };
+		C763D3EF1C049945005E3921 /* ShareCoverageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareCoverageView.m; sourceTree = "<group>"; };
 		C779C0F71BF42D35008D625F /* LogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogViewController.h; sourceTree = "<group>"; };
 		C779C0F81BF42D35008D625F /* LogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogViewController.m; sourceTree = "<group>"; };
 		C779C0F91BF42D35008D625F /* LogInCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogInCell.h; sourceTree = "<group>"; };
@@ -97,6 +110,7 @@
 		C779C1051BF48E9C008D625F /* Suggestion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Suggestion.swift; sourceTree = "<group>"; };
 		C779C1081BF4A72D008D625F /* ViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		C77C14721BE8B02B00DCC670 /* ExhibitorController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitorController.swift; sourceTree = "<group>"; };
+		C77C402D1C040284005596E0 /* TimeLineInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineInfo.swift; sourceTree = "<group>"; };
 		C77E1D991BE09EDA00B8F444 /* yunzhan.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yunzhan.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C77E1D9C1BE09EDA00B8F444 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C77E1D9E1BE09EDA00B8F444 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -227,6 +241,8 @@
 				C79285701BEAF65B00287A24 /* NewsView.swift */,
 				C79546DD1BFEBC8F0080CD46 /* NewListCV.swift */,
 				C79546E01BFEBCE30080CD46 /* TimeLineVC.swift */,
+				C77C402D1C040284005596E0 /* TimeLineInfo.swift */,
+				C763D3E71C045FE2005E3921 /* TimeLineCommit.swift */,
 				C79285771BEB322700287A24 /* SettingController.swift */,
 				C779C1021BF48A92008D625F /* MyFavorite.swift */,
 				C7A962981BF32354003B883A /* ProductList.swift */,
@@ -240,6 +256,8 @@
 				C779C1081BF4A72D008D625F /* ViewModel.swift */,
 				C77E1DAF1BE0ADD400B8F444 /* test.h */,
 				C77E1DB01BE0ADD400B8F444 /* test.m */,
+				C763D3EA1C0468FC005E3921 /* UIImage+ZoomImage.h */,
+				C763D3EB1C0468FC005E3921 /* UIImage+ZoomImage.m */,
 				C79285731BEB06A400287A24 /* THActivityView.h */,
 				C79285741BEB06A400287A24 /* THActivityView.m */,
 				C779C0F71BF42D35008D625F /* LogViewController.h */,
@@ -248,6 +266,8 @@
 				C779C0FA1BF42D35008D625F /* LogInCell.m */,
 				C79546E31BFEC3D80080CD46 /* TSegmentedControl.h */,
 				C79546E41BFEC3D80080CD46 /* TSegmentedControl.m */,
+				C763D3EE1C049945005E3921 /* ShareCoverageView.h */,
+				C763D3EF1C049945005E3921 /* ShareCoverageView.m */,
 				C7848F411BFDD8F400339623 /* weixin */,
 				C77E1DA01BE09EDA00B8F444 /* Main.storyboard */,
 				C77E1DA31BE09EDA00B8F444 /* Assets.xcassets */,
@@ -449,6 +469,7 @@
 				C7C0EABC1BF09CA2004711BF /* ContactsController.swift in Sources */,
 				C779C1091BF4A72D008D625F /* ViewModel.swift in Sources */,
 				C79E545C1BE9B79100E4A514 /* Scheduler.swift in Sources */,
+				C763D3E81C045FE2005E3921 /* TimeLineCommit.swift in Sources */,
 				C79E54651BE9FED500E4A514 /* NetWork.swift in Sources */,
 				C77E1D9F1BE09EDA00B8F444 /* ViewController.swift in Sources */,
 				C79285751BEB06A400287A24 /* THActivityView.m in Sources */,
@@ -457,13 +478,16 @@
 				C77E1D9D1BE09EDA00B8F444 /* AppDelegate.swift in Sources */,
 				C79E54621BE9E47400E4A514 /* DataModel.swift in Sources */,
 				C79546E11BFEBCE30080CD46 /* TimeLineVC.swift in Sources */,
+				C763D3F01C049945005E3921 /* ShareCoverageView.m in Sources */,
 				C779C0FB1BF42D35008D625F /* LogViewController.m in Sources */,
 				C779C1031BF48A92008D625F /* MyFavorite.swift in Sources */,
 				C71A3A831BF1954B0081F7E6 /* SchedulerInfo.swift in Sources */,
 				C79546DE1BFEBC8F0080CD46 /* NewListCV.swift in Sources */,
 				C79E545F1BE9DCB800E4A514 /* RootCollectionCells.swift in Sources */,
 				C78200211BEC800F002BBDB7 /* ExhibitorInfoCV.swift in Sources */,
+				C77C402E1C040285005596E0 /* TimeLineInfo.swift in Sources */,
 				C79546E51BFEC3D80080CD46 /* TSegmentedControl.m in Sources */,
+				C763D3EC1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */,
 				C79285711BEAF65B00287A24 /* NewsView.swift in Sources */,
 				C7A962991BF32354003B883A /* ProductList.swift in Sources */,
 				C77E1DB11BE0ADD400B8F444 /* test.m in Sources */,
@@ -482,6 +506,7 @@
 				C7F0AE3C1BE210C70056C06B /* ViewController.swift in Sources */,
 				C779C10A1BF4A72D008D625F /* ViewModel.swift in Sources */,
 				C7F0AE3D1BE210C70056C06B /* AppDelegate.swift in Sources */,
+				C763D3E91C045FE2005E3921 /* TimeLineCommit.swift in Sources */,
 				C79E54601BE9DCB800E4A514 /* RootCollectionCells.swift in Sources */,
 				C79285721BEAF65B00287A24 /* NewsView.swift in Sources */,
 				C77C14741BE8B02B00DCC670 /* ExhibitorController.swift in Sources */,
@@ -490,13 +515,16 @@
 				C78200221BEC800F002BBDB7 /* ExhibitorInfoCV.swift in Sources */,
 				C779C0FE1BF42D35008D625F /* LogInCell.m in Sources */,
 				C79546E21BFEBCE30080CD46 /* TimeLineVC.swift in Sources */,
+				C763D3F11C049945005E3921 /* ShareCoverageView.m in Sources */,
 				C779C0FC1BF42D35008D625F /* LogViewController.m in Sources */,
 				C779C1041BF48A92008D625F /* MyFavorite.swift in Sources */,
 				C779C1011BF43917008D625F /* Singleton.swift in Sources */,
 				C79546DF1BFEBC8F0080CD46 /* NewListCV.swift in Sources */,
 				C79285761BEB06A400287A24 /* THActivityView.m in Sources */,
 				C79E54631BE9E47400E4A514 /* DataModel.swift in Sources */,
+				C77C402F1C040285005596E0 /* TimeLineInfo.swift in Sources */,
 				C79546E61BFEC3D80080CD46 /* TSegmentedControl.m in Sources */,
+				C763D3ED1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */,
 				C7A9629D1BF32F01003B883A /* WebHtml.swift in Sources */,
 				C7F0AE3E1BE210C70056C06B /* test.m in Sources */,
 				C7F0AE3F1BE210C70056C06B /* ProfileSwift.swift in Sources */,

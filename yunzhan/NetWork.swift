@@ -888,19 +888,272 @@ class NetWorkData {
         }
     }
     
+    
+    
+    
+    func getTimeLineList(start:Int,block:NetBlock){
+    
+        let user = UserData.shared
+        var url :String?
+        if user.token != nil
+        {
+           url = "http://\(Profile.domain)/api/app/infoWall/infoWallList?eid=1&start=\(start)&offset=20&chn=ios&token=\(user.token!)"
+        }
+        else
+        {
+           url = "http://\(Profile.domain)/api/app/infoWall/infoWallList?eid=1&start=\(start)&offset=20&chn=ios&token="
+        }
+        
+        self.getMethodRequest(url!) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                    block(result: result, status: .NetWorkStatusError)
+                return
+            }
+            guard let data = result as? [String:AnyObject],let t  = data["data"],let list = t["infoWallList"] as? [[String:AnyObject]]  else {
+                    block(result: "数据参数错误", status: .NetWorkStatusError)
+                return
+            }
+            
+            var listArr = [TimeMessage]()
+            for temp  in list{
+    
+                let m = TimeMessage()
+                m.comment = temp["content"] as? String
+                m.figureOutContentHeight(CGSizeMake(Profile.width()-30, 1000), font: Profile.font(11))
+                if let time = temp["create_time"] as? Int
+                {
+                    m.time = time.toTimeString("MM/dd-HH:mm")
+                }
+                if let id = temp["id"] as? Int
+                {
+                    m.id = String(id)
+                }
+                m.picUrl = temp["pic_url"] as? String
+                m.forwardNu = temp["share_num"] as? Int
+                m.favorited = temp["praiseStatus"] as? Bool
+                m.favoriteNu = temp["praiseCount"] as? Int
+                m.feedBackNu = temp["commentCount"] as? Int
+                m.personName = temp["name"] as? String
+                m.personTitle = temp["title"] as? String
+                listArr.append(m)
+            }
+            block(result: listArr, status: .NetWorkStatusSucess)
+        }
+    }
+    
+    
+    func makeFavoriteToMessage(id:String,block:NetBlock){
+       
+        let user = UserData.shared
+        var url :String?
+        if user.token != nil
+        {
+            url = "http://\(Profile.domain)/api/app/infoWall/praise?eid=1&info_wall_id=\(id)&chn=ios&token=\(user.token!)"
+        }
+        else
+        {
+            url = "http://\(Profile.domain)/api/app/infoWall/praise?eid=1&info_wall_id=\(id)&chn=ios&token="
+        }
+        
+        self.getMethodRequest(url!) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: .NetWorkStatusError)
+                return
+            }
+            guard let data = result as? [String:AnyObject],let code = data["code"] as? Int  else {
+                block(result: "数据参数错误", status: .NetWorkStatusError)
+                return
+            }
+            
+           if code == 0
+           {
+              block(result: "", status: .NetWorkStatusSucess)
+            }
+            else
+           {
+             block(result: data["msg"] as! String, status: .NetWorkStatusError)
+           }
+            
+        }
+    }
+    
+    
+    func getForwardNu(id:String,block:NetBlock){
+    
+        let user = UserData.shared
+        var url :String?
+        if user.token != nil
+        {
+            url = "http://\(Profile.domain)/api/app/infoWall/share?eid=1&info_wall_id=\(id)&chn=ios&token=\(user.token!)"
+        }
+        else
+        {
+            url = "http://\(Profile.domain)/api/app/infoWall/share?eid=1&info_wall_id=\(id)&chn=ios&token="
+        }
+        
+        self.getMethodRequest(url!) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: .NetWorkStatusError)
+                return
+            }
+            guard let data = result as? [String:AnyObject],let code = data["code"] as? Int  else {
+                block(result: "数据参数错误", status: .NetWorkStatusError)
+                return
+            }
+            
+            if code == 0
+            {
+                block(result: "", status: .NetWorkStatusSucess)
+            }
+            else
+            {
+                block(result: data["msg"] as! String, status: .NetWorkStatusError)
+            }
+            
+        }
+    
+    }
+    
+    
+    func sendCommentToMessage(id:String,comment:String,block:NetBlock){
+    
+        let user = UserData.shared
+        let url = "http://\(Profile.domain)/api/app/infoWall/comment?eid=1&info_wall_id=\(id)&content=\(comment)&chn=ios&token=\(user.token!)"
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: .NetWorkStatusError)
+                return
+            }
+            guard let data = result as? [String:AnyObject],let code = data["code"] as? Int  else {
+                block(result: "数据参数错误", status: .NetWorkStatusError)
+                return
+            }
+            
+            if code == 0
+            {
+                block(result: "", status: .NetWorkStatusSucess)
+            }
+            else
+            {
+                block(result: data["msg"] as! String, status: .NetWorkStatusError)
+            }
+            
+        }
 
+    }
+
+    
+    func getMessageCommentList(id:String,block:NetBlock){
+    
+        let user = UserData.shared
+        var url :String?
+        if user.token != nil
+        {
+            url = "http://\(Profile.domain)/api/app/infoWall/getContents?eid=1&info_wall_id=\(id)&chn=ios&token=\(user.token!)"
+        }
+        else
+        {
+            url = "http://\(Profile.domain)/api/app/infoWall/getContents?eid=1&info_wall_id=\(id)&chn=ios&token="
+        }
+        
+        self.getMethodRequest(url!) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: .NetWorkStatusError)
+                return
+            }
+            guard let data = result as? [String:AnyObject],let t = data["data"] as? [String:AnyObject] ,let list = t["infoWallComments"] as? [[String:AnyObject]] else {
+                block(result: "数据参数错误", status: .NetWorkStatusError)
+                return
+            }
+            
+//            print(result)
+            var listArr = [TimeMessage]()
+           for temp in list
+           {
+              let element = TimeMessage()
+              element.comment = temp["content"] as? String
+              element.figureOutContentHeight(CGSizeMake(Profile.width()-30, 1000), font: Profile.font(11))
+              if let time = temp["create_time"] as? Int
+              {
+                element.time = time.toTimeString("MM/dd-HH:mm")
+              }
+              element.personName = temp["name"] as? String
+              element.personTitle = temp["title"] as? String
+              listArr.append(element)
+            }
+        
+            block(result: listArr, status: .NetWorkStatusSucess)
+        }
+        
+    }
+    
+    
+    
+    func loadUpImage(let data:NSData,comment:String,block:NetBlock){
+
+        let user = UserData.shared
+        let url = "http://\(Profile.domain)/api/app/infoWall/publish"
+        
+        let manager = AFHTTPRequestOperationManager()
+        let parameter:NSDictionary = ["chn":"ios","token":user.token!,"eid":"1","content":comment]
+        
+        manager.POST(url, parameters: parameter, constructingBodyWithBlock: { (let formData:AFMultipartFormData!) -> Void in
+            
+//            let date = NSDate()
+//            String(date.timeIntervalSince1970)
+            formData.appendPartWithFileData(data, name: "pic", fileName: "text.jpg", mimeType: "image/jpeg")
+            
+            }, success: { (let operation:AFHTTPRequestOperation!,let responseObject:AnyObject!) -> Void in
+            
+                if let jsonData = responseObject as? [String:AnyObject]
+                {
+                    if let code  = jsonData["code"] as? Int
+                    {
+                       
+                        if code == 0
+                        {
+                           block(result: jsonData["msg"], status: .NetWorkStatusSucess)
+                        }
+                        else
+                        {
+                           block(result: jsonData["msg"], status: .NetWorkStatusError)
+                        }
+
+                    }
+                }
+
+                
+            }) { (let operation:AFHTTPRequestOperation!,let err:NSError!) -> Void in
+                
+                block(result: "网络连接失败", status: .NetWorkStatusError)
+          }
+        }
+    
+    
+    
     func getMethodRequest(url:String,completeBlock:NetBlock){
         
         if url.isEmpty
         {
             print(url)
-//            exit(0)
             return
         }
         print(url)
         net = AFHTTPRequestOperation(request: NSURLRequest(URL: NSURL(string: url)!))
         
         net.setCompletionBlockWithSuccess({ (operation:AFHTTPRequestOperation!, result:AnyObject!) -> Void in
+            
             if let jsonData = result as? NSData
             {
                 if let json = try?  NSJSONSerialization.JSONObjectWithData(jsonData, options: [])

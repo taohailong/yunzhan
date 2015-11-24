@@ -10,3 +10,5 @@
 #import "LogViewController.h"
 #import "WXApi.h"
 #import "TSegmentedControl.h"
+#import "UIImage+ZoomImage.h"
+#import "ShareCoverageView.h"

@@ -58,6 +58,11 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
         self.navigationController?.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
 
         
+        
+        let rightBar = UIBarButtonItem(image: UIImage(named: "timeLineUpLoad"), style: .Plain, target: self, action: "showSendVC")
+        self.navigationItem.rightBarButtonItem = rightBar
+        
+        
         segmentV = TSegmentedControl(sectionTitles: ["新闻","图片"])
         segmentV.addTarget(self, action: "segmentChange", forControlEvents: .ValueChanged)
         segmentV.frame = CGRectMake(0, 64, Profile.width(), 40)
@@ -83,11 +88,33 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(timeLineV.view))
         self.addChildViewController(timeLineV)
         timeLineV.view.hidden = true
-        
-        
     }
     
     
+    func showSendVC(){
+        
+        let user = UserData.shared
+        if user.token == nil
+        {
+            self.newsShowLoginVC()
+            return
+        }
+        
+        let writeVC = TimeLineCommitVC()
+        writeVC.hidesBottomBarWhenPushed = true
+        weak var wself = self
+        writeVC.commitFinsh = {
+          wself?.timeLineV.fetchTimeLineList()
+        }
+        
+        let nav = UINavigationController(rootViewController: writeVC)
+        
+        self.presentViewController(nav, animated: true) { () -> Void in
+            
+        }
+    }
+
+
     func segmentChange()
     {
         if segmentV.selectedIndex == 0
@@ -173,6 +200,15 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
         web.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(web, animated: true)
     }
+    
+    func newsShowLoginVC(){
+        
+        let logVC = LogViewController()
+        logVC.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(logVC, animated: true)
+        
+    }
+
     
 }
 

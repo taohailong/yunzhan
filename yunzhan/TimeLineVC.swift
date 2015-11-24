@@ -8,9 +8,10 @@
 
 import Foundation
 
-class TimeLineVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
+class TimeLineVC: UIViewController,UITableViewDelegate,UITableViewDataSource,ShareCoverageProtocol {
     var table:UITableView!
-    var dataArr:[String]!
+    var dataArr:[TimeMessage]!
+    var net:NetWorkData!
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -22,6 +23,7 @@ class TimeLineVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
         table.registerClass(TimeLinePicCell.self , forCellReuseIdentifier: "TimeLinePicCell")
         table.registerClass(TimeLinePersonCell.self, forCellReuseIdentifier: "TimeLinePersonCell")
         table.registerClass(TimeLineStatusCell.self , forCellReuseIdentifier: "TimeLineStatusCell")
+        table.separatorColor = Profile.rgb(243, g: 243, b: 243)
         self.view.addSubview(table)
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
@@ -33,12 +35,117 @@ class TimeLineVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
         } else {
             // Fallback on earlier versions
         }
-
+        
+        
+        self.fetchTimeLineList()
+    }
+    
+    
+    func fetchTimeLineList(){
+    
+        weak var wself = self
+        var index = 0
+        let loadView = THActivityView(activityViewWithSuperView: self.view)
+        net = NetWorkData()
+        net.getTimeLineList(index) { (result, status) -> (Void) in
+            
+            loadView.removeFromSuperview()
+            if status == .NetWorkStatusError
+            {
+                if result == nil
+                {
+                    let errView = THActivityView(netErrorWithSuperView: wself!.view)
+                    weak var werr = errView
+                    errView.setErrorBk({ () -> Void in
+                        wself?.fetchTimeLineList()
+                        werr?.removeFromSuperview()
+                    })
+                }
+                else
+                {
+                    if let warnStr = result as? String
+                    {
+                        let warnView = THActivityView(string: warnStr)
+                        warnView.show()
+                    }
+                }
+                return
+            }
+         
+            if let list = result as? [TimeMessage]{
+            
+               wself?.dataArr = list
+               wself?.table.reloadData()
+               wself?.addLoadMoreView(list.count)
+            }
+            
+        }
+        net.start()
+        
+  }
+    
+    
+    func loadMoreData(){
+    
+        weak var wself = self
+        var index :Int!
+        if dataArr == nil
+        {
+            index = 0
+        }
+        else
+        {
+            index = dataArr.count
+        }
+        
+        let loadView = THActivityView(activityViewWithSuperView: self.view)
+        net = NetWorkData()
+        net.getTimeLineList(index) { (result, status) -> (Void) in
+            
+            loadView.removeFromSuperview()
+            if status == .NetWorkStatusError
+            {
+                if let warnStr = result as? String
+                {
+                    let warnView = THActivityView(string: warnStr)
+                    warnView.show()
+                }
+            
+                return
+            }
+            
+            if let list = result as? [TimeMessage]{
+                
+                wself?.dataArr.appendContentsOf(list)
+                wself?.table.reloadData()
+                wself?.addLoadMoreView(list.count)
+            }
+            
+        }
+        net.start()
+    }
+    
+    func addLoadMoreView(count:Int){
+    
+        if count < 20{
+        
+          table.tableFooterView = UIView()
+        }
+        else
+        {
+           table.tableFooterView = MoreTableFootView(frame: CGRectMake(0, 0, Profile.width(), 50))
+        }
+    
     }
     
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 4
+        
+        if dataArr == nil
+        {
+          return 0
+        }
+        return dataArr.count
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -47,21 +154,27 @@ class TimeLineVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
     
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        
         if indexPath.row == 0
         {
-           return 130
+           return 150
         }
         else if indexPath.row == 1
         {
-          return 35
+          return 25
         }
         else if indexPath.row == 2
         {
-          return 50
+            let element = dataArr[indexPath.section]
+            if element.contentHeight == nil
+            {
+              return 0
+            }
+          return  CGFloat(Float(12.0) + element.contentHeight!)
         }
         else
         {
-          return 40
+          return 30
         }
     }
     
@@ -76,34 +189,127 @@ class TimeLineVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         
+        let element = dataArr[indexPath.section]
         if indexPath.row == 0
         {
              let cell = tableView.dequeueReusableCellWithIdentifier("TimeLinePicCell") as! TimeLinePicCell
-             cell.loadPicUrl("http://www.ddc.net.cn/upload/20080918014052_big.jpg")
+             cell.loadPicUrl(element.picUrl)
              return cell
         }
         else if indexPath.row == 1
         {
             let cell = tableView.dequeueReusableCellWithIdentifier("TimeLinePersonCell") as! TimeLinePersonCell
-            cell.filPersonInfo(nil, name: "阳阳 ", title: "-艾玛总监", time: "7/20-12:30")
+            
+            cell.filPersonInfo(nil, name: element.personName, title: element.personTitle, time: element.time)
             return cell
         }
         else if indexPath.row == 2
         {
             let cell = tableView.dequeueReusableCellWithIdentifier("TimeLineContentCell") as! TimeLineContentCell
-            cell.contentL.text = "本人在电动车厂工作。因工厂现在是淡季，闲着没事在家装电动车卖卖 ，高配车型，最低价格。有意者请联系15190213190"
+            cell.contentL.text = element.comment
             return cell
         }
         else
         {
             let cell = tableView.dequeueReusableCellWithIdentifier("TimeLineStatusCell") as! TimeLineStatusCell
-            cell.fillDataAttribute(300, commentNu: 80, favoriteNu: 200)
-            cell.favoriteBlock = { }
+            cell.fillDataAttribute(element.forwardNu!, commentNu: element.feedBackNu!, favoriteNu: element.favoriteNu!)
+            
+            if element.favorited == true
+            {
+                cell.favoriteBt.selected = true
+            }
+            else
+            {
+              cell.favoriteBt.selected = false
+            }
+            weak var wself = self
+            cell.favoriteBlock = {
+                wself?.favoriteAction(element)
+            }
             cell.commentBlock = { }
-            cell.forwardBlock = { }
+            cell.forwardBlock = {
+              wself?.shareAction()
+            }
             return cell
         }
     }
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        table.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        let element = dataArr[indexPath.section]
+        let commentInfo = TimeLineInfoVC()
+        commentInfo.timeData = element
+        commentInfo.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(commentInfo, animated: true)
+    }
+    
+    
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        
+        guard let view = table.tableFooterView
+            else{
+          return
+        }
+        
+        let offset = scrollView.contentOffset
+        let size = scrollView.contentSize
+        let inset = scrollView.contentInset
+        let y = scrollView.bounds.size.height - inset.bottom
+        let h = size.height
+        
+        if (h - offset.y - y < 50 && view.bounds.size.height>10)
+        {
+           self.loadMoreData()
+        }
+        
+    }
+    
+    
+    func favoriteAction(message:TimeMessage){
+       
+        let user = UserData.shared
+        if user.token == nil
+        {
+            self.timeLineShowLoginVC()
+            return
+        }
+       weak var wself = self
+       let favoriteNet = NetWorkData()
+        favoriteNet.makeFavoriteToMessage(message.id!) { (result, status) -> (Void) in
+            
+            if status == .NetWorkStatusError
+            {
+                if let string = result as? String
+                {
+                  let warnV = THActivityView(string: string)
+                   warnV.show()
+                }
+            }
+            else
+            {
+                message.favoriteNu = message.favoriteNu! + 1
+                message.favorited = true
+                wself?.table.reloadData()
+            }
+        }
+        favoriteNet.start()
+    }
+    
+    
+    func timeLineShowLoginVC(){
+        
+        let logVC = LogViewController()
+        logVC.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(logVC, animated: true)
+        
+    }
+
+    func shareAction(){
+    
+       let shareView = ShareCoverageView(delegate: self)
+       shareView.showInView(self.tabBarController?.view)
+    }
+    
     
 }
 
@@ -152,43 +358,57 @@ class TimeLineStatusCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         forwardBt = UIButton(type: .Custom)
-        forwardBt.titleLabel?.font = Profile.font(10)
+        forwardBt.titleLabel?.font = Profile.font(12)
         forwardBt.setTitleColor(Profile.rgb(102, g: 102, b: 102), forState: .Normal)
         forwardBt.translatesAutoresizingMaskIntoConstraints = false
         
         commentBt = UIButton(type: .Custom)
-        commentBt.titleLabel?.font = Profile.font(10)
+        commentBt.titleLabel?.font = Profile.font(12)
         commentBt.setTitleColor(Profile.rgb(102, g: 102, b: 102), forState: .Normal)
         commentBt.translatesAutoresizingMaskIntoConstraints = false
         
         favoriteBt = UIButton(type: .Custom)
-        favoriteBt.titleLabel?.font = Profile.font(10)
-        favoriteBt.setTitleColor(Profile.rgb(102, g: 102, b: 1025), forState: .Normal)
+        favoriteBt.titleLabel?.font = Profile.font(12)
+        favoriteBt.setTitleColor(Profile.rgb(102, g: 102, b: 102), forState: .Normal)
         favoriteBt.translatesAutoresizingMaskIntoConstraints = false
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        
+        self.selectionStyle = .None
+//        forwardBt.backgroundColor = UIColor.redColor()
+        forwardBt.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0)
+        forwardBt.imageEdgeInsets = UIEdgeInsetsMake(0, -15, 0, 0)
         forwardBt.setImage(UIImage(named: "forward_timeLine"), forState: .Normal)
         forwardBt.addTarget(self, action: "forwardAction", forControlEvents: .TouchUpInside)
         self.contentView.addSubview(forwardBt)
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(forwardBt, toItem: self.contentView))
-        self.contentView.addConstraint(NSLayoutConstraint(item: forwardBt, attribute: .CenterX, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterX, multiplier: 0.5, constant: 0))
+        self.contentView.addConstraint(NSLayoutConstraint(item: forwardBt, attribute: .CenterX, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterX, multiplier: 0.35, constant: 0))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[forwardBt(>=35)]", options: [], metrics: nil, views: ["forwardBt":forwardBt]))
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[forwardBt(>=20)]", options: [], metrics: nil, views: ["forwardBt":forwardBt]))
         
         
+        commentBt.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0)
+        commentBt.imageEdgeInsets = UIEdgeInsetsMake(0, -15, 0, 0)
         commentBt.setImage(UIImage(named: "comment_timeLine"), forState: .Normal)
         commentBt.addTarget(self, action: "commentAction", forControlEvents: .TouchUpInside)
         self.contentView.addSubview(commentBt)
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(commentBt, toItem: self.contentView))
         self.contentView.addConstraint(NSLayoutConstraint(item: commentBt, attribute: .CenterX, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterX, multiplier: 1.0, constant: 0))
         
-        
-        
+//        favoriteBt.backgroundColor = UIColor.redColor()
+        favoriteBt.contentEdgeInsets = UIEdgeInsetsMake(0, -10, 0, 0)
+        favoriteBt.imageEdgeInsets = UIEdgeInsetsMake(0, -15, 0, 0)
         favoriteBt.addTarget(self, action: "favoriteAction", forControlEvents: .TouchUpInside)
         favoriteBt.setImage(UIImage(named: "favorite_timeLine"), forState: .Normal)
+        favoriteBt.setImage(UIImage(named: "forward_timeLine_select"), forState: .Selected)
         self.contentView.addSubview(favoriteBt)
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(favoriteBt, toItem: self.contentView))
-        self.contentView.addConstraint(NSLayoutConstraint(item: favoriteBt, attribute: .CenterX, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterX, multiplier: 1.5, constant: 0))
+        self.contentView.addConstraint(NSLayoutConstraint(item: favoriteBt, attribute: .CenterX, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterX, multiplier: 1.75, constant: 0))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[favoriteBt(>=30)]", options: [], metrics: nil, views: ["favoriteBt":favoriteBt]))
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[favoriteBt(>=25)]", options: [], metrics: nil, views: ["favoriteBt":favoriteBt]))
+        
         
         
         let separateVerticalOne = UIView()
@@ -275,8 +495,8 @@ class TimeLinePersonCell: UITableViewCell {
         
         timeL = UILabel()
         timeL.translatesAutoresizingMaskIntoConstraints = false
-        timeL.textColor = Profile.rgb(102, g: 102, b: 102)
-        timeL.font = Profile.font(10)
+        timeL.textColor = Profile.rgb(191, g: 191, b: 191)
+        timeL.font = Profile.font(11)
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.contentView.addSubview(userPicV)
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[userPicV(30)]", options: [], metrics: nil, views: ["userPicV":userPicV]))
@@ -311,11 +531,11 @@ class TimeLinePersonCell: UITableViewCell {
         
         if name != nil
         {
-            let attribute = NSMutableAttributedString(string: name!, attributes: [NSFontAttributeName:Profile.font(13),NSForegroundColorAttributeName:Profile.rgb(102, g: 102, b: 102)])
+            let attribute = NSMutableAttributedString(string: name!, attributes: [NSFontAttributeName:Profile.font(15),NSForegroundColorAttributeName:Profile.rgb(102, g: 102, b: 102)])
             
             if title != nil
             {
-              attribute.appendAttributedString(NSAttributedString(string: title!, attributes: [NSFontAttributeName:Profile.font(10),NSForegroundColorAttributeName:Profile.rgb(51, g: 51, b: 51)]))
+              attribute.appendAttributedString(NSAttributedString(string:" -\(title!)" , attributes: [NSFontAttributeName:Profile.font(11),NSForegroundColorAttributeName:Profile.rgb(51, g: 51, b: 51)]))
             }
             
             nameL.attributedText = attribute
@@ -335,8 +555,8 @@ class TimeLineContentCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         contentL = UILabel()
-        contentL.textColor = Profile.rgb(51, g: 51, b: 51)
-        contentL.font = Profile.font(13)
+        contentL.textColor = Profile.rgb(153, g: 153, b: 153)
+        contentL.font = Profile.font(11)
         contentL.numberOfLines = 0
         contentL.translatesAutoresizingMaskIntoConstraints = false
         super.init(style: style, reuseIdentifier: reuseIdentifier)
