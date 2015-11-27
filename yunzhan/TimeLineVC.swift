@@ -13,7 +13,7 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
     var dataArr:[TimeMessage]!
     var net:NetWorkData!
     var shareElement:TimeMessage!
-
+    var loading:Bool = false
 //    override func viewWillAppear(animated: Bool) {
 //        super.viewWillAppear(animated)
 //        if dataArr == nil
@@ -109,7 +109,12 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
     
     
     func loadMoreData(){
-    
+       
+        if loading == true
+        {
+           return
+        }
+        loading = true
         weak var wself = self
         var index :Int!
         if dataArr == nil
@@ -125,6 +130,7 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
         net = NetWorkData()
         net.getTimeLineList(index) { (result, status) -> (Void) in
             
+            wself?.loading = false
             loadView.removeFromSuperview()
             if status == .NetWorkStatusError
             {
@@ -386,8 +392,14 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
 class TimeLinePicCell:UITableViewCell {
     let picImageV:UIImageView
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        
         picImageV = UIImageView()
         picImageV.translatesAutoresizingMaskIntoConstraints = false
+        picImageV.image = UIImage(named: "default_big")
+        picImageV.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        picImageV.contentMode = .Center
+        
+        
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.contentView.addSubview(picImageV)
@@ -406,7 +418,16 @@ class TimeLinePicCell:UITableViewCell {
     {
        if url != nil
        {
-           picImageV.sd_setImageWithURL(NSURL(string: url!), placeholderImage: nil)
+//           picImageV.sd_setImageWithURL(NSURL(string: url!), placeholderImage: nil ,complete)
+        weak var wimage = picImageV
+        picImageV.contentMode = .Center
+        picImageV.sd_setImageWithURL(NSURL(string: url!)!, placeholderImage: UIImage(named: "default_big"), completed: { (let image: UIImage!, err: NSError!, type: SDImageCacheType!, url:NSURL!) -> Void in
+            
+            if err == nil {
+              wimage?.contentMode = .ScaleToFill
+            }
+        })
+
         }
     }
     required init?(coder aDecoder: NSCoder) {

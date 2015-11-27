@@ -68,7 +68,7 @@ class Exhibitor: UITableViewController,UISearchDisplayDelegate {
 //        table.translatesAutoresizingMaskIntoConstraints = false
          self.tableView.separatorColor = Profile.rgb(243, g: 243, b: 243)
         self.tableView.sectionIndexBackgroundColor = UIColor.clearColor()
-        self.tableView.sectionIndexColor = Profile.NavBarColor()
+//        self.tableView.sectionIndexColor = Profile.NavBarColor()
         let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
         self.tableView.tableHeaderView = searchBar
         self.tableView.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
@@ -97,13 +97,13 @@ class Exhibitor: UITableViewController,UISearchDisplayDelegate {
     func fetchExhibitorData(){
 
 //        self.refreshControl?.beginRefreshing()
-//        let loadView = THActivityView(activityViewWithSuperView: self.view)
+        let loadView = THActivityView(activityViewWithSuperView: self.tableView.superview)
         weak var wself = self
         net = NetWorkData()
         net.getExhibitorList { (result, status) -> (Void) in
             
             wself?.refreshControl?.endRefreshing()
-//            loadView.removeFromSuperview()
+            loadView.removeFromSuperview()
             if status == .NetWorkStatusError
             {
                 if result == nil
@@ -299,6 +299,8 @@ class ExhibitorCell: UITableViewCell {
         
         contentImage = UIImageView()
         contentImage.translatesAutoresizingMaskIntoConstraints = false
+        contentImage.image = UIImage(named: "default")
+        contentImage.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         
         titleL = UILabel()
         titleL.translatesAutoresizingMaskIntoConstraints = false
@@ -357,7 +359,7 @@ class ExhibitorCell: UITableViewCell {
     {
         if data.iconUrl != nil
         {
-            contentImage.sd_setImageWithURL(NSURL(string: data.iconUrl!)!, placeholderImage: nil)
+            contentImage.sd_setImageWithURL(NSURL(string: data.iconUrl!)!, placeholderImage: UIImage(named: "default"))
         }
         titleL.text = data.name
         addressL.text = data.address

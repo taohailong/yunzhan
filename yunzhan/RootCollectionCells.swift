@@ -18,7 +18,8 @@ class CommonCell: UICollectionViewCell {
         label = UIImageView()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.contentMode = .ScaleAspectFit
-        
+        label.image = UIImage(named: "default")
+        label.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         
         super.init(frame: frame)
         self.contentView.addSubview(label)
@@ -42,7 +43,7 @@ class CommonCell: UICollectionViewCell {
         if let furl = url
         {
            let req = NSURL(string: furl)
-            label.sd_setImageWithURL(req!, placeholderImage: nil)
+            label.sd_setImageWithURL(req!, placeholderImage: UIImage(named: "default"))
         }
     }
     
@@ -126,6 +127,8 @@ class CollectionNewCell: UICollectionViewCell {
         
         contentImage = UIImageView()
         contentImage.translatesAutoresizingMaskIntoConstraints = false
+        contentImage.image = UIImage(named: "default")
+        contentImage.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         
         titleL = UILabel()
         titleL.translatesAutoresizingMaskIntoConstraints = false
@@ -182,7 +185,15 @@ class CollectionNewCell: UICollectionViewCell {
     
     func fillData(data:NewsData)
     {
-        contentImage.sd_setImageWithURL(NSURL(string: data.imageUrl!), placeholderImage: nil)
+//        weak var wimage = contentImage
+//        contentImage.sd_setImageWithURL(NSURL(string: data.imageUrl!)!, placeholderImage: UIImage(named: "default"), completed: { (let image:UIImage!,err:NSError!, type:SDImageCacheType, url:NSURL!) -> Void in
+//            if err == nil
+//            {
+//                wimage?.contentMode = .ScaleToFill
+//            }
+//        })
+
+        contentImage.sd_setImageWithURL(NSURL(string: data.imageUrl!), placeholderImage: UIImage(named: "default"))
         titleL.text = data.title
         contentL.text = data.content
         timeL.text = data.time
@@ -252,8 +263,17 @@ class AdRootCollectionView: UICollectionReusableView,UIScrollViewDelegate {
             let image = UIImageView(frame: frame)
             image.tag = index
             scroll.addSubview(image)
+            image.backgroundColor = Profile.rgb(243, g: 243, b: 243)
             
-            image.sd_setImageWithURL(NSURL(string: imageData.url),  placeholderImage:UIImage(named: "AdRootDeault") )
+            image.contentMode = .Center
+            weak var wimage = image
+            image.sd_setImageWithURL(NSURL(string: imageData.url)!, placeholderImage: UIImage(named: "default_big"), completed: { (let image:UIImage!,err:NSError!, type:SDImageCacheType, url:NSURL!) -> Void in
+                if err == nil
+                {
+                  wimage?.contentMode = .ScaleToFill
+                }
+            })
+//            image.sd_setImageWithURL(NSURL(string: imageData.url)!,  placeholderImage:UIImage(named: "default_big"))
             frame = CGRectMake(frame.origin.x + frame.size.width, 0, CGRectGetWidth(frame), CGRectGetHeight(frame))
             image.userInteractionEnabled = true
             let tap = UITapGestureRecognizer(target: self, action: "imageTap:")

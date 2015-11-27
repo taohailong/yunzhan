@@ -38,11 +38,13 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
         table.delegate = self
         table.dataSource = self
         table.registerClass(SchedulerInfoHeadCell.self , forCellReuseIdentifier: "SchedulerInfoHeadCell")
-        table.registerClass(SchedulerInfoTitleCell.self, forCellReuseIdentifier: "SchedulerInfoTitleCell")
+        table.registerClass(SchedulerInfoTitleHeadView.self, forHeaderFooterViewReuseIdentifier: "SchedulerInfoTitleHeadView")
+        
         table.registerClass(SchedulerInfoContactCell.self , forCellReuseIdentifier: "SchedulerInfoContactCell")
         table.registerClass(ExhibitorMapCell.self , forCellReuseIdentifier: "ExhibitorMapCell")
         table.registerClass(CommonOneLabelCell.self , forCellReuseIdentifier: "CommonOneLabelCell")
         table.registerClass(ExhibitorMoreCell.self , forCellReuseIdentifier: "ExhibitorMoreCell")
+        table.registerClass(MoreTableHeadView.self, forHeaderFooterViewReuseIdentifier: "MoreTableHeadView")
         table.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(table)
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
@@ -229,141 +231,198 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
     
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 2
+        
+        let nu = 5
+//        if contents == nil || contents.count == 0
+//        {
+//            nu = nu - 1
+//          if guests == nil || guests.count == 0
+//          {
+//             nu = nu - 1
+//            
+//            if contacts == nil || contacts.count == 0
+//            {
+//               nu = nu - 1
+//            }
+//          }
+//        }
+//        if nu == 2
+//        {
+//          nu = nu - 1
+//        }
+        return nu
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if contents == nil
-        {
-          return 0
-        }
         
         if section == 0
         {
+            if schedulerData == nil
+            {
+              return 0
+            }
           return 1
         }
         
-        var nu = 2 + contents.count
-        if contacts != nil
+        else if section == 1
         {
-           nu = nu+contacts.count+1
+          return 0
         }
-        
-        
-        if guests != nil
+        else if section == 2
         {
-           nu = nu+guests.count+1
+           if contents != nil
+           {
+              return contents.count
+            }
+            return 0
         }
-        
-        return   nu
+        else if section == 3
+        {
+            if guests != nil
+            {
+                return guests.count
+            }
+            return 0
+        }
+        else
+        {
+            if contacts != nil
+            {
+                return contacts.count
+            }
+            return 0
+        }
     }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        
+        let commonTitleHeight:CGFloat = 27
         if section == 0
         {
-          return 0.5
+          return 0.1
         }
-        return 10
+        if section == 1
+        {
+          return 45
+        }
+        else if section == 2
+        {
+            if contents == nil || contents.count == 0
+            {
+                return 0.1
+            }
+            return commonTitleHeight
+        }
+        else if section == 3
+        {
+            if guests == nil || guests.count == 0
+            {
+                return 0.1
+            }
+            return commonTitleHeight
+        }
+        else
+        {
+            if contacts == nil || contacts.count == 0
+            {
+                return 0.1
+            }
+             return commonTitleHeight
+        }
     }
     
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 1
+        return 0.1
     }
+    
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        if section == 0
+        {
+          return nil
+        }
+        
+        if section == 1
+        {
+            let head = tableView.dequeueReusableHeaderFooterViewWithIdentifier("MoreTableHeadView") as! MoreTableHeadView
+            head.iconImage.image = UIImage(named: "schedulerInfo")
+           return head
+        }
+        else if section == 2
+        {
+            if contents == nil ||  contents.count == 0
+            {
+               return nil
+            }
+            let head = tableView.dequeueReusableHeaderFooterViewWithIdentifier("SchedulerInfoTitleHeadView") as! SchedulerInfoTitleHeadView
+            head.titleL.text = "大会内容"
+            return head
+            
+        }
+        else if section == 3
+        {
+            if guests == nil || guests.count == 0
+            {
+                return nil
+            }
+            let head = tableView.dequeueReusableHeaderFooterViewWithIdentifier("SchedulerInfoTitleHeadView") as! SchedulerInfoTitleHeadView
+            head.titleL.text = "参会嘉宾"
+            return head
+        }
+        else
+        {
+            if contacts == nil || contacts.count == 0
+            {
+                return nil
+            }
+            let head = tableView.dequeueReusableHeaderFooterViewWithIdentifier("SchedulerInfoTitleHeadView") as! SchedulerInfoTitleHeadView
+            head.titleL.text = "大会联系人"
+            return head
+        }
+
+    }
+    
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
-        let commonTitleHeight:CGFloat = 27
+
         if indexPath.section == 0
         {
             return 137
         }
-        else if indexPath.row == 0
+        else if indexPath.section == 4
         {
-          return 35
-        }
-        else if indexPath.row == 1
-        {
-           return commonTitleHeight
-        }
-        else if  indexPath.row-2 < contents.count
-        {
-          return 25
-        }
-        else if guests != nil && indexPath.row-3 < contents.count+guests.count
-        {
-            if indexPath.row-2 == contents.count
-            {
-//                "参会嘉宾"
-                return commonTitleHeight
-            }
-            else
-            {
-                return 25
-            }
+            return 60
         }
         else
         {
-            var nu = 2+contents.count
-            if guests != nil
-            {
-                nu = nu+guests.count+1
-            }
-            
-            if nu == indexPath.row
-            {
-//                "大会联系人"
-                return commonTitleHeight
-                
-            }
-            else
-            {
-                return 60
-            }
-
+          return 25
         }
     }
     
     
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         if indexPath.section == 0{
            
              let cell = tableView.dequeueReusableCellWithIdentifier("SchedulerInfoHeadCell") as! SchedulerInfoHeadCell
-            cell.fillData(schedulerData.title, time: "\(schedulerData.date) \(schedulerData.time)", address: schedulerData.address, type: schedulerData.type!, company: schedulerData.company!)
+            cell.fillData(schedulerData.title, time: "\(schedulerData.date) \(schedulerData.time)", address: schedulerData.address, type: schedulerData.type, company: schedulerData.company)
             return cell
         }
         
-        else if indexPath.row == 0
-        {
-            let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorMoreCell") as! ExhibitorMoreCell
-            cell.iconImage.image = UIImage(named: "schedulerInfo")
-            return cell
-        }
-        else if indexPath.row == 1
-        {
-            let cell = tableView.dequeueReusableCellWithIdentifier("SchedulerInfoTitleCell") as! SchedulerInfoTitleCell
-            cell.titleL.text = "大会内容"
-            return cell
-        }
-        else if indexPath.row-2 < contents.count
+        else if indexPath.section == 2
         {
             
             let cell = tableView.dequeueReusableCellWithIdentifier("CommonOneLabelCell") as! CommonOneLabelCell
-            cell.titleL.text = contents[indexPath.row - 2]
+            cell.titleL.text = contents[indexPath.row]
             return cell
         }
-        else if  guests != nil && indexPath.row-3 < contents.count+guests.count
+        else if  indexPath.section == 3
         {
-            if indexPath.row-2 == contents.count
-            {
-                let cell = tableView.dequeueReusableCellWithIdentifier("SchedulerInfoTitleCell") as! SchedulerInfoTitleCell
-                cell.titleL.text = "参会嘉宾"
-                return cell
-            }
-            else
-            {
                 let cell = tableView.dequeueReusableCellWithIdentifier("CommonOneLabelCell") as! CommonOneLabelCell
-                let guest = guests[indexPath.row-2-contents.count-1]
+                let guest = guests[indexPath.row]
                 
                 let attributeStr = NSMutableAttributedString(string: "\(guest.title!)  ", attributes: [NSFontAttributeName:Profile.font(13),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)])
                 
@@ -372,35 +431,18 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
                 attributeStr.appendAttributedString(nameAttribute)
                 cell.titleL.attributedText = attributeStr
                 return cell
-            }
         }
         else
         {
-            var nu = 2+contents.count
-           if guests != nil
-           {
-              nu = nu+guests.count+1
-           }
-           
-           if nu == indexPath.row
-           {
-               let cell = tableView.dequeueReusableCellWithIdentifier("SchedulerInfoTitleCell") as! SchedulerInfoTitleCell
-               cell.titleL.text = "大会联系人"
-               return cell
-
-            }
-            else
-           {
-               let cell = tableView.dequeueReusableCellWithIdentifier("SchedulerInfoContactCell") as! SchedulerInfoContactCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("SchedulerInfoContactCell") as! SchedulerInfoContactCell
             
-               let person = contacts[indexPath.row-nu-1]
-               cell.fillData(person.title, name: person.name, phone: person.phone)
-                weak var wself = self
-                weak var wperson = person
-               cell.tapBlock = { wself?.addMyContact(wperson!) }
+            let person = contacts[indexPath.row]
+            cell.fillData(person.title, name: person.name, phone: person.phone)
+            weak var wself = self
+            weak var wperson = person
+            cell.tapBlock = { wself?.addMyContact(wperson!) }
 
-               return cell
-            }
+            return cell
         }
         
     }
@@ -502,14 +544,32 @@ class SchedulerInfoHeadCell: UITableViewCell {
         
     }
 
-    func fillData(title:String,time:String,address:String,type:Bool,company:String)
+    func fillData(title:String?,time:String?,address:String?,type:Bool?,company:String?)
     {
 //        iconImage.sd_setImageWithURL(NSURL(string: iconUrl), placeholderImage: nil)
         titleL.text = title
-        timeL.text = "时间：\(time)"
-        addressL.text = "地点：\(address)"
-        typeL.text = type ? "类型：公开":"类型：非公开"
-        companyL.text = "主办单位：\(company)"
+        if time != nil
+        {
+            timeL.text = "时间：\(time!)"
+        }
+        
+        if address != nil
+        {
+            addressL.text = "地点：\(address!)"
+        }
+        if let f = type
+        {
+           typeL.text = f ? "类型：公开":"类型：非公开"
+        }
+        else
+        {
+           typeL.text = "类型：非公开"
+        }
+        if company != nil
+        {
+          companyL.text = "主办单位：\(company!)"
+        }
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -517,14 +577,14 @@ class SchedulerInfoHeadCell: UITableViewCell {
     }
 }
 
-class SchedulerInfoTitleCell: UITableViewCell {
+class SchedulerInfoTitleHeadView: UITableViewHeaderFooterView {
     
     let titleL:UILabel
-    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+    override init(reuseIdentifier: String?) {
         
         titleL = UILabel()
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+        super.init(reuseIdentifier: reuseIdentifier)
+        self.contentView.backgroundColor = UIColor.whiteColor()
         let spot = UIView()
         spot.layer.masksToBounds = true
         spot.layer.cornerRadius = 3.0

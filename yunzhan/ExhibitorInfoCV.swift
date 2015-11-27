@@ -529,6 +529,9 @@ class ExhibitorInfoHeadCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         iconImage = UIImageView()
+        iconImage.image = UIImage(named: "default")
+        iconImage.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        
         
         titleL = UILabel()
         titleL.textColor = Profile.rgb(51, g: 51, b: 51)
@@ -659,7 +662,7 @@ class ExhibitorInfoHeadCell: UITableViewCell {
     {
         if iconUrl != nil
         {
-           iconImage.sd_setImageWithURL(NSURL(string: iconUrl!), placeholderImage: nil)
+           iconImage.sd_setImageWithURL(NSURL(string: iconUrl!), placeholderImage: UIImage(named: "default"))
         }
       
         titleL.text = name

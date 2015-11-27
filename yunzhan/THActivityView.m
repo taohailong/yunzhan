@@ -214,6 +214,7 @@
     reloadBt.layer.borderColor = [UIColor colorWithRed:253/255.0 green:45/255.0 blue:99/255.0 alpha:1].CGColor;
     reloadBt.layer.borderWidth = 1;
     [reloadBt setTitleColor:[UIColor colorWithRed:253/255.0 green:45/255.0 blue:99/255.0 alpha:1] forState:UIControlStateNormal];
+    [reloadBt setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [reloadBt setBackgroundImage:[UIImage imageNamed:@"login_hight"] forState:UIControlStateHighlighted];
     reloadBt.titleLabel.font = [UIFont systemFontOfSize:15];
     reloadBt.translatesAutoresizingMaskIntoConstraints = NO;
@@ -223,7 +224,7 @@
     [self addConstraint:[NSLayoutConstraint constraintWithItem:reloadBt attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterY multiplier:1.0 constant:65]];
     
     [self addConstraint:[NSLayoutConstraint constraintWithItem:reloadBt attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
-    
+    [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[reloadBt(35)]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(reloadBt)]];
     [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:[reloadBt(>=120)]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(reloadBt)]];
     
     [reloadBt setTitle:@"刷新重试" forState:UIControlStateNormal];

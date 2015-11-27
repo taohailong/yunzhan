@@ -57,14 +57,6 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         self.navigationController?.tabBarItem.image = UIImage(named: "root-1_selected")
         self.navigationController?.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
             
-//        let dict = [NSFontAttributeName: Profile.font(20),NSForegroundColorAttributeName:UIColor.redColor()]
-//        self.navigationController!.navigationBar.titleTextAttributes = dict
-   
-        #if false
-            print("ok le")
-        #else
-            print("haole ")
-        #endif
         
 
         self.view.backgroundColor = Profile.rgb(240, g: 0, b: 0)
@@ -92,8 +84,13 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(collection))
             self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(collection))
             
+            
+            
+//         self.addRefreshTableHead()
+            self.addHead()
+            
          self.fetchUserData()
-         self.fetchData()
+//         self.fetchData()
         // Do any additional setup after loading the view, typically from a nib.
     }
 
@@ -113,13 +110,13 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
     
     func fetchData(){
     
-        let loadView = THActivityView(activityViewWithSuperView: self.view)
+//        let loadView = THActivityView(activityViewWithSuperView: self.view)
         
         weak var wself = self
         net = NetWorkData()
         net.getRootData { (result, status) -> (Void) in
-            
-            loadView.removeFromSuperview()
+            wself?.collection.headerEndRefreshing()
+//            loadView.removeFromSuperview()
             if status == .NetWorkStatusError
             {
                  if result == nil
@@ -145,7 +142,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             guard let data = result as? (pics:[PicData], news:[NewsData],exhibitor:[ExhibitorData],scheduler:[SchedulerData])
                 
                 else{
-                                            return
+                    return
                 }
             
             wself?.pics = data.pics
@@ -377,22 +374,65 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
     func collectionView(link: String, didSelectHeadView indexPath: NSIndexPath) {
         print(link)
         
-        
-//        let req = SendMessageToWXReq()
-//        req.text = "ok"
-//        req.scene = 0
-//        req.bText = true
-//        let f = WXApi.sendReq(req)
-//        
-//          return
-//        WXApi.sendAuthReq(<#T##req: SendAuthReq!##SendAuthReq!#>, viewController: <#T##UIViewController!#>, delegate: <#T##WXApiDelegate!#>)
-//        req.scene =  WXSceneSession.rawValue
-        
-        
         let comment = CommonWebController(url:link)
         comment.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(comment, animated: true)
     }
+    
+    
+    func addHead(){
+    
+        weak var wself = self
+        collection.addHeaderWithCallback { () -> Void in
+            wself?.fetchData()
+        }
+        collection.headerBeginRefreshing()
+    
+    }
+    
+    
+    
+//    func addRefreshTableHead()
+//    {
+//    // 加入refreshView;
+//      let refreshRect = CGRectMake(0,
+//       0 - collection.bounds.size.height,
+//       collection.bounds.size.width,
+//       collection.bounds.size.height);
+//    
+//       refreshView = EGORefreshTableHeaderView(frame: refreshRect)
+//       refreshView.delegate = self;
+//        refreshView.scrollEdge = collection.contentInset
+//       collection.addSubview(refreshView)
+//    /* 刷新一次数据 */
+////       refreshView.refreshLastUpdatedDate()
+//    
+//    }
+//    
+//    func egoRefreshTableHeaderDidTriggerRefresh(view: EGORefreshTableHeaderView!) {
+//        
+//    //    if (isLoading) {
+//    //        return;
+//    //    }
+//    /* 开始更新代码放在这里 */
+//      self.fetchData()
+//    
+//    /* 实现更新代码 */
+//    
+//    }
+    
+//    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+//        
+//       refreshView.egoRefreshScrollViewDidEndDragging(scrollView)
+//    }
+//    
+//    func scrollViewDidScroll(scrollView: UIScrollView) {
+//        
+//       refreshView.egoRefreshScrollViewDidScroll(scrollView)
+//    }
+    
+
+    
     
     deinit{
       net = nil

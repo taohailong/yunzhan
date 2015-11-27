@@ -62,7 +62,7 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
         segmentV.frame = CGRectMake(0, 64, Profile.width(), 40)
         segmentV.textColor = Profile.rgb(102, g: 102, b: 102)
         segmentV.selectionIndicatorHeight = 1
-        segmentV.selectionIndicatorColor = Profile.NavBarColor()
+        segmentV.selectionIndicatorColor = Profile.rgb(223, g: 32, b: 82)
         segmentV.selectionIndicatorMode = HMSelectionIndicatorFillsTop
         self.view.addSubview(segmentV)
         
@@ -230,6 +230,10 @@ class NewCell: UITableViewCell {
         
         contentImage = UIImageView()
         contentImage.translatesAutoresizingMaskIntoConstraints = false
+        contentImage.image = UIImage(named: "default")
+        contentImage.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        
+        
         
         titleL = UILabel()
         titleL.translatesAutoresizingMaskIntoConstraints = false
@@ -285,7 +289,7 @@ class NewCell: UITableViewCell {
 
     func fillData(newsData:NewsData)
     {
-        contentImage.sd_setImageWithURL(NSURL(string: newsData.imageUrl!), placeholderImage: nil)
+        contentImage.sd_setImageWithURL(NSURL(string: newsData.imageUrl!), placeholderImage: UIImage(named: "default"))
         timeL.text = newsData.time
         titleL.text = newsData.title
         contentL.text = newsData.content
