@@ -7,12 +7,12 @@
 //
 
 import Foundation
-class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataSource,UISearchDisplayDelegate {
+class SchedulerController: UITableViewController,UISearchDisplayDelegate {
     var net:NetWorkData!
 //    var test:[T]?
     var dataArr:[[SchedulerData]]!
     var dateArr:[String]!
-    var table:UITableView!
+//    var table:UITableView!
     var searchArr:[SchedulerData]!
     var searchCV:UISearchDisplayController!
     
@@ -20,6 +20,7 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         super.viewWillAppear(animated)
         self.setNavgationBarAttribute(true)
     }
+    
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
@@ -71,21 +72,25 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
 //        searchBar.delegate = self
         
         
-        table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
-        table.delegate = self
-        table.dataSource = self
-        table.separatorStyle = .None
-        table.tableHeaderView = searchBar
-        table.translatesAutoresizingMaskIntoConstraints = false
-        table.backgroundColor = Profile.rgb(243, g: 243, b: 243)
-        table.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
-        table.registerClass(TableHeadView.self , forHeaderFooterViewReuseIdentifier: "TableHeadView")
-        self.view.addSubview(table)
         
-        table.registerClass(SchedulerCell.self , forCellReuseIdentifier: "SchedulerCell")
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl?.addTarget(self, action: "refreshBegin", forControlEvents: .ValueChanged)
+
+//        table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
+//        table.delegate = self
+//        table.dataSource = self
+        self.tableView.separatorStyle = .None
+        self.tableView.tableHeaderView = searchBar
+//        table.translatesAutoresizingMaskIntoConstraints = false
+        self.tableView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        self.tableView.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
+        self.tableView.registerClass(TableHeadView.self , forHeaderFooterViewReuseIdentifier: "TableHeadView")
+//        self.view.addSubview(table)
         
-        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
-        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
+        self.tableView.registerClass(SchedulerCell.self , forCellReuseIdentifier: "SchedulerCell")
+        
+//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
+//        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         
         
         searchCV = UISearchDisplayController(searchBar: searchBar, contentsController: self)
@@ -98,32 +103,27 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
     }
     
     
-//    func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
-//        searchBar.setShowsCancelButton(true, animated: true)
-//        return true
-//    }
-//    
-//    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
-//        searchBar.resignFirstResponder()
-//        searchBar.setShowsCancelButton(false, animated: true)
-//    }
-    
-    
-    
+    func refreshBegin(){
+        
+        self.fetchData()
+    }
+
     
     func fetchData(){
        
-        let loadView = THActivityView(activityViewWithSuperView: self.view)
+        
+        let loadView = THActivityView(activityViewWithSuperView: self.navigationController?.view)
         weak var wself = self
         net = NetWorkData()
         net.getSchedulList { (result, status) -> (Void) in
             
+            wself!.refreshControl?.endRefreshing()
             loadView.removeFromSuperview()
             if status == .NetWorkStatusError
             {
                 if result == nil
                 {
-                    let errView = THActivityView(netErrorWithSuperView: wself!.view)
+                    let errView = THActivityView(netErrorWithSuperView: wself!.tableView.superview)
                     weak var werr = errView
                     errView.setErrorBk({ () -> Void in
                         wself?.fetchData()
@@ -143,15 +143,15 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
             let tuple = result as! (schedulerList:[[SchedulerData]],dateArr:[String])
             wself?.dataArr = tuple.schedulerList
             wself?.dateArr = tuple.dateArr
-            wself?.table.reloadData()
+            wself?.tableView.reloadData()
         }
         net.start()
     
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
-        if tableView != table
+        if tableView != self.tableView
         {
            return 1
         }
@@ -163,9 +163,9 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         return dataArr.count
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+   override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if tableView != table
+        if tableView != self.tableView
         {
             if searchArr == nil
             {
@@ -178,13 +178,13 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         return subArr.count
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+   override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 80
     }
     
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        if tableView != table
+        if tableView != self.tableView
         {
             return nil
         }
@@ -197,8 +197,9 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         return head
     }
     
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if tableView != table
+   override  func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        
+        if tableView != self.tableView
         {
             return 0
         }
@@ -206,14 +207,10 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         return 40
     }
     
-//    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//        let head = dateArr[section]
-//        return head
-//    }
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+   override  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
         var cellData:SchedulerData? = nil
-        if tableView != table
+        if tableView != self.tableView
         {
             cellData = searchArr![indexPath.row]
         }
@@ -223,18 +220,18 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
             cellData = subArr[indexPath.row]
         }
         
-        let cell = table.dequeueReusableCellWithIdentifier("SchedulerCell") as! SchedulerCell
+        let cell = self.tableView.dequeueReusableCellWithIdentifier("SchedulerCell") as! SchedulerCell
         cell.fullDataToCell(cellData!)
         
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
         var data:SchedulerData!
-        if tableView != table
+        if tableView != self.tableView
         {
            data = searchArr[indexPath.row]
         }

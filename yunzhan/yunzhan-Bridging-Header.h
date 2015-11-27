@@ -12,3 +12,4 @@
 #import "TSegmentedControl.h"
 #import "UIImage+ZoomImage.h"
 #import "ShareCoverageView.h"
+#import "CommentScoreView.h"

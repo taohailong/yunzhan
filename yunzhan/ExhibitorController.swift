@@ -8,10 +8,10 @@
 
 import Foundation
 //typealias ExhibitorData = (urlIcon:String,idNu:String,name:String,address:String)
-class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISearchDisplayDelegate {
+class Exhibitor: UITableViewController,UISearchDisplayDelegate {
     
     var net:NetWorkData!
-    var table:UITableView!
+//    var table:UITableView!
     var dataArr: [[ExhibitorData]]!
     var searchArr:[ExhibitorData]?
     var searchCV:UISearchDisplayController!
@@ -61,22 +61,23 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
         self.navigationController?.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
         
         
-        table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
-        table.delegate = self
-        table.dataSource = self
-        self.table.backgroundColor = Profile.rgb(243, g: 243, b: 243)
-        table.translatesAutoresizingMaskIntoConstraints = false
-        table.separatorColor = Profile.rgb(243, g: 243, b: 243)
-        
-        
+//        table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
+//        table.delegate = self
+//        table.dataSource = self
+        self.tableView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+//        table.translatesAutoresizingMaskIntoConstraints = false
+         self.tableView.separatorColor = Profile.rgb(243, g: 243, b: 243)
+        self.tableView.sectionIndexBackgroundColor = UIColor.clearColor()
+        self.tableView.sectionIndexColor = Profile.NavBarColor()
         let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
-        table.tableHeaderView = searchBar
-        table.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
-        self.view.addSubview(table)
+        self.tableView.tableHeaderView = searchBar
+        self.tableView.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
+//        self.view.addSubview(table)
+//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
+//        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         
-        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
-        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
-        
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl?.addTarget(self, action: "refreshBegin", forControlEvents: .ValueChanged)
         
         searchCV = UISearchDisplayController(searchBar: searchBar, contentsController: self)
         searchCV.searchResultsDelegate = self
@@ -86,19 +87,28 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
         self.fetchExhibitorData()
     }
     
+    func refreshBegin(){
+        
+        self.fetchExhibitorData()
+    }
+
+    
+    
     func fetchExhibitorData(){
 
-        let loadView = THActivityView(activityViewWithSuperView: self.view)
+//        self.refreshControl?.beginRefreshing()
+//        let loadView = THActivityView(activityViewWithSuperView: self.view)
         weak var wself = self
         net = NetWorkData()
         net.getExhibitorList { (result, status) -> (Void) in
             
-            loadView.removeFromSuperview()
+            wself?.refreshControl?.endRefreshing()
+//            loadView.removeFromSuperview()
             if status == .NetWorkStatusError
             {
                 if result == nil
                 {
-                    let errView = THActivityView(netErrorWithSuperView: wself!.view)
+                    let errView = THActivityView(netErrorWithSuperView: wself!.tableView.superview)
                     weak var werr = errView
                     errView.setErrorBk({ () -> Void in
                         wself?.fetchExhibitorData()
@@ -121,16 +131,16 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
               return
             }
             wself?.dataArr = list.list
-            print(list.list)
+//            print(list.list)
             wself?.prefixArr = list.prefixArr
-            wself?.table.reloadData()
+            wself?.tableView.reloadData()
         }
         net.start()
         
     }
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
-        if table != tableView
+        if  self.tableView != tableView
         {
           return 1
         }
@@ -141,9 +151,9 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
         return (prefixArr?.count)!
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
     
-        if tableView != table
+        if tableView !=  self.tableView
         {
             if searchArr == nil
             {
@@ -156,9 +166,9 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
     }
     
     
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
-        if tableView != table
+        if tableView != self.tableView
         {
           return nil
         }
@@ -167,16 +177,16 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
     }
     
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 60
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = table.dequeueReusableCellWithIdentifier("ExhibitorCell") as! ExhibitorCell
+        let cell =  self.tableView.dequeueReusableCellWithIdentifier("ExhibitorCell") as! ExhibitorCell
         
         var cellData:ExhibitorData!
-        if tableView != table
+        if tableView !=  self.tableView
         {
             cellData = searchArr![indexPath.row]
         }
@@ -191,11 +201,11 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         var cellData:ExhibitorData!
-        if tableView != table
+        if tableView !=  self.tableView
         {
             cellData = searchArr![indexPath.row]
         }
@@ -213,12 +223,12 @@ class Exhibitor: UIViewController,UITableViewDataSource,UITableViewDelegate,UISe
     }
     
     
-    func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
+    override func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
         
         return prefixArr
     }// return list of section titles to display in section index view (e.g. "ABCD...Z#")
    
-    func tableView(tableView: UITableView, sectionForSectionIndexTitle title: String, atIndex index: Int) -> Int {
+    override func tableView(tableView: UITableView, sectionForSectionIndexTitle title: String, atIndex index: Int) -> Int {
         
         let s = prefixArr!.indexOf(title)
        return s!
@@ -351,7 +361,7 @@ class ExhibitorCell: UITableViewCell {
         }
         titleL.text = data.name
         addressL.text = data.address
-        name.text = data.address
+        name.text = data.remark
     }
 
     

@@ -263,6 +263,33 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         
           return CGSizeMake(Profile.width(),Profile.width()*0.4)
         }
+        
+        if section == 1
+        {
+            if exhibitor == nil || exhibitor.count==0
+            {
+                return CGSizeZero
+            }
+//            return exhibitor.count
+        }
+        else if section == 2
+        {
+            if scheduler == nil || scheduler.count==0
+            {
+                return CGSizeZero
+            }
+//            return scheduler.count
+        }
+        else
+        {
+            if news == nil || news.count==0{
+                
+                return CGSizeZero
+            }
+//            return news.count
+        }
+
+        
         return CGSizeMake(Profile.width(), 47)
     }
     

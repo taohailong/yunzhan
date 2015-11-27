@@ -9,7 +9,7 @@
 import UIKit
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate {
 
     var window: UIWindow?
     var net :NetWorkData!
@@ -53,9 +53,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         net.start()
     }
     
-//    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
-//        WXApi.handleOpenURL(url, delegate: self)
-//    }
+    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
+        return WXApi.handleOpenURL(url, delegate: self)
+    }
+    
+    func onResp(resp: BaseResp!) {
+        
+        
+        if resp.errCode == 0
+        {
+           
+           
+        }
+//        print(resp.errCode)
+////        print(resp.errStr)
+//        print(resp.type)
+    }
     
     
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {

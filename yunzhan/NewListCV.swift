@@ -7,43 +7,65 @@
 //
 
 import Foundation
-class NewsListVC:UIViewController,UITableViewDataSource,UITableViewDelegate {
+class NewsListVC:UITableViewController {
     
     var net:NetWorkData!
     var dataArr:[NewsData]!
-    var table: UITableView!
+//    var table: UITableView!
+    
+//    override func viewWillAppear(animated: Bool) {
+//        super.viewWillAppear(animated)
+//        if dataArr == nil
+//        {
+//           self.refreshControl?.beginRefreshing()
+//        }
+//       
+//    }
+
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
-        table = UITableView(frame: CGRectZero, style: .Plain)
-        table.dataSource = self
-        table.delegate = self
-        table.registerClass(NewCell.self , forCellReuseIdentifier: "NewCell")
-        self.view.addSubview(table)
-        table.tableFooterView = UIView()
-        table.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
-        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
+//        table = UITableView(frame: CGRectZero, style: .Plain)
+//        table.dataSource = self
+//        table.delegate = self
+        tableView.registerClass(NewCell.self , forCellReuseIdentifier: "NewCell")
+        tableView.tableFooterView = UIView()
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl?.addTarget(self, action: "newsRefreshBegin", forControlEvents: .ValueChanged)
+
+        
+//        self.view.addSubview(table)
+//        table.translatesAutoresizingMaskIntoConstraints = false
+//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
+//        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         
         self.fetchData()
+    }
+
+    func newsRefreshBegin(){
+        
+        self.fetchData()
+        
     }
 
     
     func fetchData(){
         
-        let loadView = THActivityView(activityViewWithSuperView: self.view)
+        self.refreshControl?.beginRefreshing()
+//        let loadView = THActivityView(activityViewWithSuperView: self.navigationController?.view)
         weak var wself = self
         net = NetWorkData()
         net.getNewsList { (result, status) -> (Void) in
             
-            loadView.removeFromSuperview()
+            wself?.refreshControl?.endRefreshing()
+//            loadView.removeFromSuperview()
             if status == .NetWorkStatusError
             {
                 if result == nil
                 {
-                    let errView = THActivityView(netErrorWithSuperView: wself!.view)
+                    let errView = THActivityView(netErrorWithSuperView: wself!.tableView.superview)
                     weak var werr = errView
                     errView.setErrorBk({ () -> Void in
                         wself?.fetchData()
@@ -64,17 +86,18 @@ class NewsListVC:UIViewController,UITableViewDataSource,UITableViewDelegate {
             guard let arr = result as? [NewsData] else { return }
             
             wself?.dataArr = arr
-            wself?.table.reloadData()
+            wself?.tableView.reloadData()
         }
         net.start()
         
     }
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
     
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+       
         if dataArr == nil
         {
             return 0
@@ -82,7 +105,7 @@ class NewsListVC:UIViewController,UITableViewDataSource,UITableViewDelegate {
         return dataArr.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("NewCell") as! NewCell
         let new = dataArr[indexPath.row]
         cell.fillData(new)
@@ -90,10 +113,10 @@ class NewsListVC:UIViewController,UITableViewDataSource,UITableViewDelegate {
     }
     
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 75
     }
-    
+override     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)

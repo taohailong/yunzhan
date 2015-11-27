@@ -214,6 +214,7 @@
     reloadBt.layer.borderColor = [UIColor colorWithRed:253/255.0 green:45/255.0 blue:99/255.0 alpha:1].CGColor;
     reloadBt.layer.borderWidth = 1;
     [reloadBt setTitleColor:[UIColor colorWithRed:253/255.0 green:45/255.0 blue:99/255.0 alpha:1] forState:UIControlStateNormal];
+    [reloadBt setBackgroundImage:[UIImage imageNamed:@"login_hight"] forState:UIControlStateHighlighted];
     reloadBt.titleLabel.font = [UIFont systemFontOfSize:15];
     reloadBt.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:reloadBt];

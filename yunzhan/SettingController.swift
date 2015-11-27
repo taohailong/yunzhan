@@ -69,7 +69,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 4
+        return 5
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -80,6 +80,10 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         else if section == 1
         {
           return 3
+        }
+        else if section == 2
+        {
+          return 2
         }
         else
         {
@@ -130,7 +134,15 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
                 imageName = "settingMyConnect"
                 title = "我的联系人"
     
-            case let s where s.section == 2:
+            case let s where s.section == 2 && s.row == 1:
+                imageName = "settingMyHotel"
+                title = "相关推荐"
+                
+            case let s where s.section == 2 && s.row == 0:
+                imageName = "settingMyRegist"
+                title = "预约报名"
+                
+             case let s where s.section == 3:
                 
                 imageName = "settingSuggestion"
                 title = "反馈"
@@ -169,14 +181,20 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
+        
+        let user = UserData.shared
         if indexPath.section == 0
         {
-            self.showLoginVC()
+            if user.token == nil
+            {
+                self.showLoginVC()
+                return
+            }
+
             return
         }
         else if indexPath.section == 1
         {
-            let user = UserData.shared
             if user.token == nil
             {
                 self.showLoginVC()
@@ -195,16 +213,33 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
                 exhibitorList.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(exhibitorList, animated: true)
             }
-            else
+            else if indexPath.row == 2
             {
                 let contactList = ContactsListVC()
                 contactList.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(contactList, animated: true)
             }
+            
         }
         else if indexPath.section == 2
         {
-            let user = UserData.shared
+        
+            if indexPath.row == 1
+            {
+                let companyVC = MyCompanyVC()
+                companyVC.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(companyVC, animated: true)
+            }
+            else
+            {
+                let registVC = MyRegistVC()
+                registVC.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(registVC, animated: true)
+            }
+
+        }
+        else if indexPath.section == 3
+        {
             if user.token == nil
             {
                 self.showLoginVC()
@@ -217,7 +252,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         }
         else
         {
-            let user = UserData.shared
+            
             if user.token == nil
             {
                 self.showLoginVC()
@@ -239,7 +274,6 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
     }
     
 }
-
 
 
 class LogOutVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UIAlertViewDelegate {

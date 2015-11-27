@@ -325,7 +325,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             
             if size == nil
             {
-              return 115
+              return 120
             }
             if height_OneSection == nil
             {
@@ -386,7 +386,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         {
             let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorInfoHeadCell") as!ExhibitorInfoHeadCell
             
-            cell.fillData(elementData.iconUrl!, name: elementData.name, company: elementData.remark, addre: elementData.address, location: elementData.location, content: elementData.introduct)
+            cell.fillData(elementData.iconUrl, name: elementData.name, company: elementData.remark, addre: elementData.address, location: elementData.location, content: elementData.introduct)
             weak var wself = self
             cell.tapBlock = {(height:CGFloat)->Void in
                 wself?.height_OneSection = height
@@ -441,7 +441,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             {
                 let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorMapCell") as! ExhibitorMapCell
                 
-                cell.fillData(elementData.location!, locationUrl: elementData.addressMap!)
+                cell.fillData(elementData.location, locationUrl: elementData.addressMap)
                 return cell
             }
             else
@@ -559,14 +559,14 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         iconImage.contentMode = .ScaleAspectFit
         iconImage.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(iconImage)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[iconImage(30)]", options: [], metrics: nil, views: ["iconImage":iconImage]))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-25-[iconImage(30)]", options: [], metrics: nil, views: ["iconImage":iconImage]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[iconImage(40)]", options: [], metrics: nil, views: ["iconImage":iconImage]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-25-[iconImage(40)]", options: [], metrics: nil, views: ["iconImage":iconImage]))
         
        
         
         self.contentView.addSubview(titleL)
         titleL.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[iconImage]-25-[titleL]", options: [], metrics: nil, views: ["iconImage":iconImage,"titleL":titleL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[iconImage]-15-[titleL]", options: [], metrics: nil, views: ["iconImage":iconImage,"titleL":titleL]))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
         
         
@@ -637,9 +637,9 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         {
             button.setTitle("收起", forState: .Normal)
             button.tag = 1
-            if tapBlock != nil
+            if tapBlock != nil && height != nil
             {
-                 tapBlock!(height: height!)
+                tapBlock!(height: height!)
             }
 
         }
@@ -655,12 +655,20 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         }
     }
     
-    func fillData(iconUrl:String,name:String?,company:String?,addre:String?,location:String?,content:String?)
+    func fillData(iconUrl:String?,name:String?,company:String?,addre:String?,location:String?,content:String?)
     {
-       iconImage.sd_setImageWithURL(NSURL(string: iconUrl), placeholderImage: nil)
-       titleL.text = name
+        if iconUrl != nil
+        {
+           iconImage.sd_setImageWithURL(NSURL(string: iconUrl!), placeholderImage: nil)
+        }
+      
+        titleL.text = name
         companyNameL.text = company
-        addressL.text = "地址：\(addre!)"
+        if addre != nil
+        {
+          addressL.text = "地址：\(addre!)"
+        }
+        
         locationL.text = location
         contentL.text = content
         
@@ -678,9 +686,12 @@ class ExhibitorInfoHeadCell: UITableViewCell {
 //            moreBt.hidden = false
 //            contentL.hidden = false
         
+            if content != nil
+            {
+                let size = content!.boundingRectWithSize(CGSizeMake(Profile.width()-30,1000), options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName:Profile.font(11)], context: nil)
+                height = size.height
+            }
         
-            let size = content!.boundingRectWithSize(CGSizeMake(Profile.width()-30,1000), options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName:Profile.font(11)], context: nil)
-            height = size.height
             
 //            if height>=39.5
 //            {
@@ -770,8 +781,11 @@ class ExhibitorProductCell: UITableViewCell {
             let image = UIImageView(frame: frame)
             image.tag = index
             scroll.addSubview(image)
-            print(imageData.imageUrl!)
-            image.sd_setImageWithURL(NSURL(string: imageData.imageUrl!),  placeholderImage:nil)
+            
+            if imageData.imageUrl != nil
+            {
+                image.sd_setImageWithURL(NSURL(string: imageData.imageUrl!),  placeholderImage:nil)
+            }
             frame = CGRectMake(frame.origin.x + frame.size.width, 0, CGRectGetWidth(frame), frame.height)
             
             
@@ -862,7 +876,12 @@ class ExhibitorMoreCell:UITableViewCell {
       self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-9-[moreBt]", options: [], metrics: nil, views: ["moreBt":moreBt]))
     
     
-    
+      self.separatorInset = UIEdgeInsetsMake(0, Profile.width(), 0, 0)
+      if #available(iOS 8.0, *) {
+          self.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0)
+      } else {
+          // Fallback on earlier versions
+      }
     }
    required init?(coder aDecoder: NSCoder) {
        fatalError("init(coder:) has not been implemented")
@@ -1028,10 +1047,14 @@ class ExhibitorMapCell: UITableViewCell {
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-10-[mapImageView]-10-|", options: [], metrics: nil, views: ["mapImageView":mapImageView,"titleL":titleL]))
     }
 
-    func fillData(location:String,locationUrl:String)
+    func fillData(location:String?,locationUrl:String?)
     {
        locationL.text = location
-       mapImageView.sd_setImageWithURL(NSURL(string: locationUrl), placeholderImage: nil)
+        if locationUrl != nil
+        {
+           mapImageView.sd_setImageWithURL(NSURL(string: locationUrl!), placeholderImage: nil)
+        }
+       
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

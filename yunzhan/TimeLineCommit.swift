@@ -42,7 +42,7 @@ class TimeLineCommitVC: UIViewController,UIActionSheetDelegate,UIImagePickerCont
         
         
         addBt = UIButton(type: .Custom)
-        addBt.backgroundColor = UIColor.redColor()
+//        addBt.backgroundColor = UIColor.redColor()
         addBt.translatesAutoresizingMaskIntoConstraints = false
         addBt.addTarget(self, action: "addImageAction", forControlEvents: .TouchUpInside)
         backView.addSubview(addBt)
@@ -95,9 +95,12 @@ class TimeLineCommitVC: UIViewController,UIActionSheetDelegate,UIImagePickerCont
             return
         }
         
+        let loadV = THActivityView(activityViewWithSuperView: self.view)
+        
        weak var wself = self
         net = NetWorkData()
-        net.loadUpImage(UIImageJPEGRepresentation(scaleImage, 0.5)!, comment: textV.text!) { (result, status) -> (Void) in
+        net.loadUpImage(UIImagePNGRepresentation(scaleImage)!, comment: textV.text!, block: { (result, status) -> (Void) in
+            loadV.removeFromSuperview()
            if status == .NetWorkStatusError
            {
               if let warnString = result as? String
@@ -118,7 +121,7 @@ class TimeLineCommitVC: UIViewController,UIActionSheetDelegate,UIImagePickerCont
             {
                 wself?.commitFinsh!()
             }
-        }
+        })
 //        net.start()
     }
     
@@ -136,6 +139,10 @@ class TimeLineCommitVC: UIViewController,UIActionSheetDelegate,UIImagePickerCont
         if buttonIndex == 0
         {
            self.launchPhotoCarmera()
+        }
+        else if actionSheet.cancelButtonIndex == buttonIndex
+        {
+          return
         }
         else
         {
@@ -171,10 +178,30 @@ class TimeLineCommitVC: UIViewController,UIActionSheetDelegate,UIImagePickerCont
         picker.dismissViewControllerAnimated(true) { () -> Void in
             
         }
-        let image = info[UIImagePickerControllerOriginalImage]
-        scaleImage = image?.scaleToSize(CGSizeMake((image?.size.width)!*0.09, (image?.size.height)!*0.09))
+        let image = info[UIImagePickerControllerOriginalImage] as? UIImage
+//        scaleImage = image
+        print("width \(image?.size.width) height \(image?.size.height)")
+//        scaleImage = image?.scaleToSize(CGSizeMake((image?.size.width)!*0.1, (image?.size.height)!*0.1))
+        scaleImage = UIImage(byScalingAndCroppingForSize: CGSizeMake((image?.size.width)!*0.1, (image?.size.height)!*0.1), and: image)
+        
+//        scaleImage = image?.imageCompressScale(0.1)
+        print("width \(scaleImage?.size.width) height \(scaleImage?.size.height)")
+        
+//        let s = UIImageView()
+//        s.backgroundColor = UIColor.redColor()
+//        s.translatesAutoresizingMaskIntoConstraints = false
+//        self.view.addSubview(s)
+//        
+//        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(s))
+//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(s))
+//        
+//        s.image = scaleImage
         addBt.setImage(scaleImage, forState: .Normal)
     }
     
+    deinit{
     
+//        net.cancel()
+//        net = nil
+    }
 }

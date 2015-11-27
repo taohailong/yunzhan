@@ -131,7 +131,10 @@ class NetWorkData {
             var returnArr = [[ExhibitorData]]()
             for temp in list
             {
+            
                 let element = ExhibitorData(rootDic: temp)
+                
+                element.remark = temp["remark"] as? String
                 var prefixStr:String!
                 
                 if let t = temp["name_first"] as? String
@@ -261,62 +264,78 @@ class NetWorkData {
             }
             
             
-            guard let data = result as? [String:AnyObject],let list = data["data"] as? [String:AnyObject],let address = list["addr"] as? String,let mapUrl = list["booth_url"] as? String,let introduce = list["intro"] as? String,let iconUrl = list["logo_url"] as?String,let location = list["booth_name"] as? String,let company = list["name_zh"] as? String, let connectArr = list["contacts"] as? [[String:AnyObject]],let productArr = list["products"] as? [[String:AnyObject]] ,let mark = list["remark"] as? String  ,let web = list["website"] as?String ,let id = list["id"] as? Int   else {
+            guard let data = result as? [String:AnyObject],let list = data["data"] as? [String:AnyObject],let id = list["id"] as? Int   else {
                 
                         return
                 }
             
             
-            let exhibitor = ExhibitorData(address: address, id: String(id), name: company, iconUrl: iconUrl, addressMap: mapUrl, webLink: web)
-            exhibitor.introduct = introduce
-            exhibitor.remark = mark
-            exhibitor.location = location
+            let exhibitor = ExhibitorData(address:list["addr"] as? String , id: String(id), name: list["name_zh"] as? String, iconUrl:list["logo_url"] as? String, addressMap: list["booth_url"] as? String, webLink: list["website"] as?String)
             
-            var personArr = [PersonData]()
-            for dic in connectArr
-            {
-//               print(dic)
-               
-               let person = PersonData(name: dic["name"] as?String, title: dic["title"] as? String, phone: dic["phone"] as? String)
-                if let id = dic["id"] as? Int
+            exhibitor.introduct = list["intro"] as? String
+            exhibitor.remark = list["remark"] as? String
+            exhibitor.location = list["booth_name"] as? String
+            
+            
+            var personArr:[PersonData]! = nil
+            
+            if let connectArr = list["contacts"] as? [[String:AnyObject]]{
+            
+                personArr = [PersonData]()
+                for dic in connectArr
                 {
-                    person.id = String(id)
+                    //               print(dic)
+                    
+                    let person = PersonData(name: dic["name"] as?String, title: dic["title"] as? String, phone: dic["phone"] as? String)
+                    if let id = dic["id"] as? Int
+                    {
+                        person.id = String(id)
+                    }
+                    personArr.append(person)
                 }
-                personArr.append(person)
+            
             }
             
     
             
-            var productBack:[ProductData]! = [ProductData]()
+            var productBack:[ProductData]! = nil
             
-            for dic in productArr
-            {
-                let purl = dic["picUrls"] as![[String:String]]
-                
-               let p = ProductData(imageUrl: purl[0]["url"], id: dic["id"] as? String, name: dic["name_zh"] as? String)
-                p.introduce = dic["intro"] as? String
-                
-                var picArr = [PicData]()
-               for t in purl
-               {
-                  let pic = PicData(id: nil, url: t["url"]!)
-                   picArr.append(pic)
+            if let productArr = list["products"] as? [[String:AnyObject]]  {
+               
+                productBack = [ProductData]()
+                for dic in productArr
+                {
+                    let purls = dic["picUrls"] as![[String:String]]
+                    
+                    var purl:String? = nil
+                    if purls.count != 0
+                    {
+                       purl = purls[0]["url"]
+                    }
+                    
+                    
+                    let p = ProductData(imageUrl: purl, id: dic["id"] as? String, name: dic["name_zh"] as? String)
+                    p.introduce = dic["intro"] as? String
+                    
+                    var picArr = [PicData]()
+                    for t in purls
+                    {
+                        let pic = PicData(id: nil, url: t["url"]!)
+                        picArr.append(pic)
+                    }
+                    p.picArr = picArr
+                    
+                    productBack.append(p)
                 }
-                p.picArr = picArr
-
-               productBack.append(p)
+            
             }
-//            if productBack.count == 0
-//            {
-//                productBack = nil
-//            }
-
             
             
             
-            var introductArrBack:[PicData]! = [PicData]()
+            var introductArrBack:[PicData]! = nil
             if let introductArr = list["sceneUrls"] as? [[String:String]]
             {
+                introductArrBack = [PicData]()
                for dic in introductArr
                {
                  let p = PicData(id: nil, url: dic["url"]!)
@@ -655,21 +674,22 @@ class NetWorkData {
             {
                 if let first = temp["name_first"] as? String
                 {
-//                    print(temp)
+
                    let p = ExhibitorData(rootDic: temp)
                     
                     if let index = prefixArr.indexOf(first)
                     {
                         var subArr = exhibitorArr[index]
                         subArr.append(p)
-                        exhibitorArr.append(subArr)
+                        exhibitorArr.removeAtIndex(index)
+                        exhibitorArr.insert(subArr, atIndex: index)
                     }
                     else
                     {
                         var subArr = [ExhibitorData]()
                         subArr.append(p)
                         exhibitorArr.append(subArr)
-                       prefixArr.append(first)
+                        prefixArr.append(first)
                         
                     }
 
@@ -773,9 +793,10 @@ class NetWorkData {
     func sendSuggestion(suggestion:String,block:NetBlock)
     {
         let user = UserData.shared
+        
         var url = "http://\(Profile.domain)/api/app/feedback/add?eid=1&mobile=\(user.phone!)&content=\(suggestion)&chn=ios&token=\(user.token!)"
-        url = url.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
-//        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet)
+//        url = url.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
+        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -918,9 +939,23 @@ class NetWorkData {
             
             var listArr = [TimeMessage]()
             for temp  in list{
-    
+                
+                
+//               print(temp)
                 let m = TimeMessage()
-                m.comment = temp["content"] as? String
+                
+                var scale = 0.0
+                if let width = temp["width"] as? Double
+                {
+                    if let height = temp["height"] as? Double
+                    {
+                        scale =  height / width
+                        m.picHeight = Double(Profile.width()) * scale
+                    }
+                }
+
+//                m.comment = temp["content"] as? String
+                m.comment = "啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦"
                 m.figureOutContentHeight(CGSizeMake(Profile.width()-30, 1000), font: Profile.font(11))
                 if let time = temp["create_time"] as? Int
                 {
@@ -935,8 +970,12 @@ class NetWorkData {
                 m.favorited = temp["praiseStatus"] as? Bool
                 m.favoriteNu = temp["praiseCount"] as? Int
                 m.feedBackNu = temp["commentCount"] as? Int
-                m.personName = temp["name"] as? String
-                m.personTitle = temp["title"] as? String
+//                m.personName = temp["name"] as? String
+//                m.personTitle = temp["title"] as? String
+                
+                m.personName = "啦啦啦"
+                m.personTitle = "总监"
+ 
                 listArr.append(m)
             }
             block(result: listArr, status: .NetWorkStatusSucess)
@@ -969,9 +1008,14 @@ class NetWorkData {
                 return
             }
             
+            
            if code == 0
            {
-              block(result: "", status: .NetWorkStatusSucess)
+            if let content = data["data"] as? [String:Int]
+            {
+               block(result: content["praiseCount"], status: .NetWorkStatusSucess)
+            }
+            
             }
             else
            {
@@ -1002,19 +1046,24 @@ class NetWorkData {
                 block(result: result, status: .NetWorkStatusError)
                 return
             }
-            guard let data = result as? [String:AnyObject],let code = data["code"] as? Int  else {
+            guard let data = result as? [String:AnyObject],let code = data["data"] as? [String:AnyObject]  else {
                 block(result: "数据参数错误", status: .NetWorkStatusError)
                 return
             }
+            print(result)
+            if let nu = code["shareNum"] as? Int
+            {
+               block(result: nu, status: .NetWorkStatusSucess)
+            }
             
-            if code == 0
-            {
-                block(result: "", status: .NetWorkStatusSucess)
-            }
-            else
-            {
-                block(result: data["msg"] as! String, status: .NetWorkStatusError)
-            }
+//            if code == 0
+//            {
+//                block(result: "", status: .NetWorkStatusSucess)
+//            }
+//            else
+//            {
+//                block(result: data["msg"] as! String, status: .NetWorkStatusError)
+//            }
             
         }
     
@@ -1024,8 +1073,9 @@ class NetWorkData {
     func sendCommentToMessage(id:String,comment:String,block:NetBlock){
     
         let user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/infoWall/comment?eid=1&info_wall_id=\(id)&content=\(comment)&chn=ios&token=\(user.token!)"
-        
+        var url = "http://\(Profile.domain)/api/app/infoWall/comment?eid=1&info_wall_id=\(id)&content=\(comment)&chn=ios&token=\(user.token!)"
+
+        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -1048,7 +1098,6 @@ class NetWorkData {
             }
             
         }
-
     }
 
     
@@ -1083,13 +1132,16 @@ class NetWorkData {
            {
               let element = TimeMessage()
               element.comment = temp["content"] as? String
-              element.figureOutContentHeight(CGSizeMake(Profile.width()-30, 1000), font: Profile.font(11))
+              element.figureOutContentHeight(CGSizeMake(Profile.width()-73, 1000), font: Profile.font(12))
               if let time = temp["create_time"] as? Int
               {
-                element.time = time.toTimeString("MM/dd-HH:mm")
+                element.time = time.toTimeString("yy-MM-dd HH:mm")
               }
-              element.personName = temp["name"] as? String
-              element.personTitle = temp["title"] as? String
+//              element.personName = temp["name"] as? String
+//              element.personTitle = temp["title"] as? String
+            element.personName = "啦啦啦"
+            element.personTitle = "总监"
+
               listArr.append(element)
             }
         
@@ -1110,8 +1162,6 @@ class NetWorkData {
         
         manager.POST(url, parameters: parameter, constructingBodyWithBlock: { (let formData:AFMultipartFormData!) -> Void in
             
-//            let date = NSDate()
-//            String(date.timeIntervalSince1970)
             formData.appendPartWithFileData(data, name: "pic", fileName: "text.jpg", mimeType: "image/jpeg")
             
             }, success: { (let operation:AFHTTPRequestOperation!,let responseObject:AnyObject!) -> Void in
@@ -1139,6 +1189,105 @@ class NetWorkData {
                 block(result: "网络连接失败", status: .NetWorkStatusError)
           }
         }
+    
+    
+    func getRegistUrl(block:NetBlock){
+    
+        let user = UserData.shared
+        var url = "http://\(Profile.domain)/api/app/personal/applyurl?eid=1&chn=ios&token=\(user.token!)"
+        
+        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: .NetWorkStatusError)
+                return
+            }
+            guard let data = result as? [String:AnyObject],let code = data["data"] as? String  else {
+                block(result: "数据参数错误", status: .NetWorkStatusError)
+                return
+            }
+            
+            block(result: code, status: .NetWorkStatusSucess)
+        }
+    }
+    
+    
+    func getCompanyOfExhibitor(block:NetBlock){
+    
+        let user = UserData.shared
+        var url = "http://\(Profile.domain)/api/app/personal/recommend?eid=1&chn=ios&token=\(user.token!)"
+        
+        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: .NetWorkStatusError)
+                return
+            }
+            guard let data = result as? [String:AnyObject],let code = data["data"] as? [[String:AnyObject]]  else {
+                block(result: "数据参数错误", status: .NetWorkStatusError)
+                return
+            }
+            
+            var listArr = [[CompanyData]]()
+            var hotelArr = [CompanyData]()
+            var companyArr = [CompanyData]()
+            for temp in code
+            {
+                print(temp)
+              let c = CompanyData()
+                c.address = temp["addr"] as? String
+                c.contact = temp["contacts"] as? String
+                if let time = temp["create_time"] as? Int
+                {
+                  c.time = time.toTimeString("yy-MM-dd HH:mm")
+                }
+                c.name = temp["name"] as? String
+                c.mobile = temp["mobile"] as? String
+                c.route = temp["traffic"] as? String
+                c.score = temp["star"] as? Double
+                c.roomNu = temp["scale"] as? Int
+                c.phone = temp["telephone"] as? String
+                if let id = temp["id"] as? Int
+                {
+                  c.id = String(id)
+                }
+                
+                if let type = temp["rtype"] as? Int
+                {
+                    if type == 1
+                    {
+                        c.type = .Hotel
+                        hotelArr.append(c)
+                    }
+                    else
+                    {
+                      c.type = .Company
+                        companyArr.append(c)
+                    }
+                }
+            
+                
+            }
+            
+            if companyArr.count != 0
+            {
+               listArr.append(companyArr)
+            
+            }
+            if hotelArr.count != 0
+            {
+                listArr.append(hotelArr)
+            }
+
+            block(result: listArr, status: .NetWorkStatusSucess)
+        }
+    
+    }
+    
     
     
     
@@ -1171,5 +1320,9 @@ class NetWorkData {
     func start(){
         
         net.start()
+    }
+    
+    func cancel(){
+       net.cancel()
     }
 }

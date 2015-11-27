@@ -39,6 +39,8 @@
 		C77E1DA71BE09EDA00B8F444 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C77E1DA51BE09EDA00B8F444 /* LaunchScreen.storyboard */; };
 		C77E1DB11BE0ADD400B8F444 /* test.m in Sources */ = {isa = PBXBuildFile; fileRef = C77E1DB01BE0ADD400B8F444 /* test.m */; };
 		C77E1DB41BE0D05600B8F444 /* ProfileSwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77E1DB21BE0AEE600B8F444 /* ProfileSwift.swift */; };
+		C77E8FA51C06DB48003832BA /* CommentScoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = C77E8FA41C06DB48003832BA /* CommentScoreView.m */; };
+		C77E8FA61C06DB48003832BA /* CommentScoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = C77E8FA41C06DB48003832BA /* CommentScoreView.m */; };
 		C78200211BEC800F002BBDB7 /* ExhibitorInfoCV.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78200201BEC800F002BBDB7 /* ExhibitorInfoCV.swift */; };
 		C78200221BEC800F002BBDB7 /* ExhibitorInfoCV.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78200201BEC800F002BBDB7 /* ExhibitorInfoCV.swift */; };
 		C7848F471BFDD8F400339623 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F421BFDD8F400339623 /* libWeChatSDK.a */; };
@@ -79,6 +81,10 @@
 		C7A9629A1BF32354003B883A /* ProductList.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A962981BF32354003B883A /* ProductList.swift */; };
 		C7A9629C1BF32F01003B883A /* WebHtml.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A9629B1BF32F01003B883A /* WebHtml.swift */; };
 		C7A9629D1BF32F01003B883A /* WebHtml.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7A9629B1BF32F01003B883A /* WebHtml.swift */; };
+		C7AEDEDD1C05A938009C196C /* MyRegist.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AEDEDC1C05A938009C196C /* MyRegist.swift */; };
+		C7AEDEDE1C05A938009C196C /* MyRegist.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AEDEDC1C05A938009C196C /* MyRegist.swift */; };
+		C7AEDEE31C05C341009C196C /* MyCompany.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AEDEE21C05C341009C196C /* MyCompany.swift */; };
+		C7AEDEE41C05C341009C196C /* MyCompany.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AEDEE21C05C341009C196C /* MyCompany.swift */; };
 		C7C0EABC1BF09CA2004711BF /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C0EABB1BF09CA2004711BF /* ContactsController.swift */; };
 		C7C0EABD1BF09CA2004711BF /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C0EABB1BF09CA2004711BF /* ContactsController.swift */; };
 		C7F0AE3C1BE210C70056C06B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77E1D9E1BE09EDA00B8F444 /* ViewController.swift */; };
@@ -122,6 +128,8 @@
 		C77E1DAF1BE0ADD400B8F444 /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = test.h; sourceTree = "<group>"; };
 		C77E1DB01BE0ADD400B8F444 /* test.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = test.m; sourceTree = "<group>"; };
 		C77E1DB21BE0AEE600B8F444 /* ProfileSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileSwift.swift; sourceTree = "<group>"; };
+		C77E8FA31C06DB48003832BA /* CommentScoreView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommentScoreView.h; sourceTree = "<group>"; };
+		C77E8FA41C06DB48003832BA /* CommentScoreView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentScoreView.m; sourceTree = "<group>"; };
 		C78200201BEC800F002BBDB7 /* ExhibitorInfoCV.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitorInfoCV.swift; sourceTree = "<group>"; };
 		C7848F421BFDD8F400339623 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
 		C7848F431BFDD8F400339623 /* read_me.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = read_me.txt; sourceTree = "<group>"; };
@@ -149,6 +157,8 @@
 		C79E54681BEA2C6500E4A514 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		C7A962981BF32354003B883A /* ProductList.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductList.swift; sourceTree = "<group>"; };
 		C7A9629B1BF32F01003B883A /* WebHtml.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebHtml.swift; sourceTree = "<group>"; };
+		C7AEDEDC1C05A938009C196C /* MyRegist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyRegist.swift; sourceTree = "<group>"; };
+		C7AEDEE21C05C341009C196C /* MyCompany.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyCompany.swift; sourceTree = "<group>"; };
 		C7C0EABB1BF09CA2004711BF /* ContactsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsController.swift; sourceTree = "<group>"; };
 		C7F0AE4A1BE210C70056C06B /* yunzhan copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "yunzhan copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7F0AE4B1BE210C80056C06B /* yunzhan copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "yunzhan copy-Info.plist"; path = "/Users/taohailong/Desktop/yunzhan/yunzhan copy-Info.plist"; sourceTree = "<absolute>"; };
@@ -244,6 +254,8 @@
 				C77C402D1C040284005596E0 /* TimeLineInfo.swift */,
 				C763D3E71C045FE2005E3921 /* TimeLineCommit.swift */,
 				C79285771BEB322700287A24 /* SettingController.swift */,
+				C7AEDEDC1C05A938009C196C /* MyRegist.swift */,
+				C7AEDEE21C05C341009C196C /* MyCompany.swift */,
 				C779C1021BF48A92008D625F /* MyFavorite.swift */,
 				C7A962981BF32354003B883A /* ProductList.swift */,
 				C7A9629B1BF32F01003B883A /* WebHtml.swift */,
@@ -268,6 +280,8 @@
 				C79546E41BFEC3D80080CD46 /* TSegmentedControl.m */,
 				C763D3EE1C049945005E3921 /* ShareCoverageView.h */,
 				C763D3EF1C049945005E3921 /* ShareCoverageView.m */,
+				C77E8FA31C06DB48003832BA /* CommentScoreView.h */,
+				C77E8FA41C06DB48003832BA /* CommentScoreView.m */,
 				C7848F411BFDD8F400339623 /* weixin */,
 				C77E1DA01BE09EDA00B8F444 /* Main.storyboard */,
 				C77E1DA31BE09EDA00B8F444 /* Assets.xcassets */,
@@ -467,11 +481,14 @@
 				C779C1001BF43917008D625F /* Singleton.swift in Sources */,
 				C7A9629C1BF32F01003B883A /* WebHtml.swift in Sources */,
 				C7C0EABC1BF09CA2004711BF /* ContactsController.swift in Sources */,
+				C7AEDEDD1C05A938009C196C /* MyRegist.swift in Sources */,
 				C779C1091BF4A72D008D625F /* ViewModel.swift in Sources */,
+				C7AEDEE31C05C341009C196C /* MyCompany.swift in Sources */,
 				C79E545C1BE9B79100E4A514 /* Scheduler.swift in Sources */,
 				C763D3E81C045FE2005E3921 /* TimeLineCommit.swift in Sources */,
 				C79E54651BE9FED500E4A514 /* NetWork.swift in Sources */,
 				C77E1D9F1BE09EDA00B8F444 /* ViewController.swift in Sources */,
+				C77E8FA51C06DB48003832BA /* CommentScoreView.m in Sources */,
 				C79285751BEB06A400287A24 /* THActivityView.m in Sources */,
 				C779C0FD1BF42D35008D625F /* LogInCell.m in Sources */,
 				C79285781BEB322700287A24 /* SettingController.swift in Sources */,
@@ -504,11 +521,14 @@
 				C7C0EABD1BF09CA2004711BF /* ContactsController.swift in Sources */,
 				C79285791BEB322700287A24 /* SettingController.swift in Sources */,
 				C7F0AE3C1BE210C70056C06B /* ViewController.swift in Sources */,
+				C7AEDEDE1C05A938009C196C /* MyRegist.swift in Sources */,
 				C779C10A1BF4A72D008D625F /* ViewModel.swift in Sources */,
+				C7AEDEE41C05C341009C196C /* MyCompany.swift in Sources */,
 				C7F0AE3D1BE210C70056C06B /* AppDelegate.swift in Sources */,
 				C763D3E91C045FE2005E3921 /* TimeLineCommit.swift in Sources */,
 				C79E54601BE9DCB800E4A514 /* RootCollectionCells.swift in Sources */,
 				C79285721BEAF65B00287A24 /* NewsView.swift in Sources */,
+				C77E8FA61C06DB48003832BA /* CommentScoreView.m in Sources */,
 				C77C14741BE8B02B00DCC670 /* ExhibitorController.swift in Sources */,
 				C79E545D1BE9B79100E4A514 /* Scheduler.swift in Sources */,
 				C7A9629A1BF32354003B883A /* ProductList.swift in Sources */,

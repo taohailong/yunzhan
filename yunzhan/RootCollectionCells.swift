@@ -196,14 +196,14 @@ class CollectionNewCell: UICollectionViewCell {
 
 
 
-class AdRootCollectionView: UICollectionReusableView {
+class AdRootCollectionView: UICollectionReusableView,UIScrollViewDelegate {
     
     typealias Blok = (link:String) ->Void
     var tapBlock:Blok!
     var timer:NSTimer!
     var imageArr:[PicData]?
     var scroll: UIScrollView!
-    
+    var page:UIPageControl!
     func loadData(imageData:[PicData]?,tapBlock:Blok?){
         
         if scroll != nil{ return}
@@ -221,7 +221,15 @@ class AdRootCollectionView: UICollectionReusableView {
         scroll = UIScrollView(frame: CGRectMake(0,0,CGRectGetWidth(frame),CGRectGetHeight(frame)))
         scroll.pagingEnabled = true
         scroll.showsHorizontalScrollIndicator = false
+        scroll.delegate = self
         self.addSubview(scroll)
+        
+        
+        page = UIPageControl(frame: CGRectMake(0, 0, 15, 20))
+        page.pageIndicatorTintColor = Profile.rgb(222 , g: 227, b: 223);
+        page.currentPageIndicatorTintColor = UIColor.whiteColor();
+        self.addSubview(page);
+        
         
         timer = NSTimer.scheduledTimerWithTimeInterval(6, target: self, selector: "changeSrcollView", userInfo: nil, repeats: true)
         self.creatImageView()
@@ -253,6 +261,14 @@ class AdRootCollectionView: UICollectionReusableView {
             i = index
         }
         scroll.contentSize = CGSizeMake(scroll.bounds.size.width * CGFloat(i+1), scroll.bounds.height)
+        
+        
+        let width = 15 * CGFloat(imageArr!.count)
+        
+        page.frame = CGRectMake((CGRectGetWidth(self.frame)/2 - width/2), CGRectGetHeight(self.frame)-20,width , 20);
+        
+        page.numberOfPages = imageArr!.count;
+
     }
     
     
@@ -263,14 +279,22 @@ class AdRootCollectionView: UICollectionReusableView {
        var point = scroll.contentOffset
       if Int(nu) < imageArr!.count
       {
-         point.x = scroll.bounds.size.width*CGFloat(nu)
+        page.currentPage = Int(nu);
+         point.x = scroll.bounds.size.width*nu
       }
         else
       {
+        page.currentPage = 0
          point.x = 0
       }
       scroll.setContentOffset(point, animated: true)
         
+    }
+    
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        
+        let nu = scrollView.contentOffset.x/scrollView.frame.size.width;
+        page.currentPage = Int(nu);
     }
     
     func imageTap(let tap:UITapGestureRecognizer){

@@ -7,16 +7,18 @@
 //
 
 import Foundation
-class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate {
+class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ShareCoverageProtocol {
+    
     var timeData:TimeMessage!
     var commentArr:[TimeMessage]!
     var table:UITableView!
     var commentField:UITextField!
     var accessView:UIView!
     var net:NetWorkData!
+    var sendNet:NetWorkData!
     override func viewDidLoad() {
         super.viewDidLoad()
-//        self.inputAccessoryView
+
         self.registerNoticOfKeyboard()
         self.title = "图片详情"
         table = UITableView(frame: CGRectZero, style: .Plain)
@@ -30,7 +32,10 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         table.registerClass(TimeLineStatusCell.self , forCellReuseIdentifier: "TimeLineStatusCell")
         table.registerClass(ExhibitorMoreCell.self , forCellReuseIdentifier: "ExhibitorMoreCell")
         table.registerClass(TimeCommentCell.self, forCellReuseIdentifier: "TimeCommentCell")
+        table.registerClass(MoreTableHeadView.self , forHeaderFooterViewReuseIdentifier: "MoreTableHeadView")
         self.view.addSubview(table)
+        table.separatorColor = Profile.rgb(243, g: 243, b: 243)
+//        table.separatorStyle = .None
         table.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
         if #available(iOS 8.0, *) {
             table?.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0)
@@ -48,9 +53,6 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     }
     
     func fetchCommentList(){
-    
-        commentArr = [timeData]
-        table.reloadData()
         
         weak var wself = self
         net = NetWorkData()
@@ -79,10 +81,22 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        
+        if commentArr == nil
+        {
+            return 1
+        }
+        
+        if commentArr.count == 0
+        {
+            return 1
+        }
+
         return 2
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         if section == 0
         {
           return 4
@@ -90,24 +104,21 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         
         else
         {
-           if commentArr == nil
-           {
-             return 0
-            }
-        
-            return commentArr.count + 1
+            return commentArr.count
         }
     }
+    
+    
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
         if section == 0
         {
-          return 0.5
+           return 0.5
         }
         else
         {
-            return 10
+            return 46
         }
     }
    
@@ -115,17 +126,33 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         return 0.5
     }
     
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        if section == 1
+        {
+            let head = tableView.dequeueReusableHeaderFooterViewWithIdentifier("MoreTableHeadView") as! MoreTableHeadView
+            head.contentView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+            head.iconImage.image = UIImage(named: "comment_more")
+            return head
+        }
+        else
+        {
+          return nil
+        }
+    }
+    
+    
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
    
         if indexPath.section == 0
         {
             if indexPath.row == 0
             {
-                return 150
+                return CGFloat(timeData.picHeight)
             }
             else if indexPath.row == 1
             {
-                return 25
+                return 46
             }
             else if indexPath.row == 2
             {
@@ -133,29 +160,24 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
                 {
                     return 0
                 }
-                return  CGFloat(Float(12.0) + timeData.contentHeight!)
+                return  CGFloat(Float(16.0) + timeData.contentHeight!)
             }
             else
             {
-                return 30
+                return 40
             }
         }
         else
         {
-           if indexPath.row == 0
-           {
-             return 45
-            }
-            else
-           {
-             let element = commentArr[indexPath.row - 1]
+            let element = commentArr[indexPath.row]
              if element.contentHeight == nil
              {
-               return 0
+               return 60.0
              }
-              return CGFloat(75) + CGFloat(element.contentHeight!)
-            }
-        
+            let height = CGFloat(65) + CGFloat(element.contentHeight!)
+            print(height)
+            print(element.comment)
+              return height
         }
     
     }
@@ -200,23 +222,19 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
                     wself?.favoriteAction(element)
                 }
 
-                cell.favoriteBlock = { }
                 cell.commentBlock = { }
-                cell.forwardBlock = { }
+                cell.forwardBlock = {
+                  wself?.shareAction()
+                }
                 return cell
             }
         }
         else
         {
-            if indexPath.row == 0
-            {
-                let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorMoreCell") as! ExhibitorMoreCell
-                cell.moreBt.setImage(UIImage(named: "comment_more"), forState: .Normal)
-                return cell
-            }
            
             let cell = tableView.dequeueReusableCellWithIdentifier("TimeCommentCell") as! TimeCommentCell
-            let element = commentArr[indexPath.row - 1]
+//            let element = commentArr[indexPath.row - 1]
+            let element = commentArr[indexPath.row]
             cell.fillCommentData(nil, title: element.personTitle, name: element.personName, time: element.time, content: element.comment)
             
             return cell
@@ -224,6 +242,10 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         
     }
     
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        commentField.resignFirstResponder()
+    }
     
     func getAccessInputView()->UIView{
         
@@ -240,10 +262,12 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         commentField = UITextField(frame: CGRectMake(15,10,Profile.width()-70,30))
         commentField.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         commentField.placeholder = " 我也说一句："
-        commentField.textColor = Profile.rgb(210, g: 210, b: 210)
+        commentField.textColor = Profile.rgb(102, g: 102, b: 102)
         commentField.font = Profile.font(13)
         commentField.layer.masksToBounds = true
         commentField.layer.cornerRadius = 4
+        commentField.leftView = UIView(frame: CGRectMake(0,0,7,30))
+        commentField.leftViewMode = .Always
         backV.addSubview(commentField)
         
         let sendBt = UIButton(type: .Custom)
@@ -275,7 +299,7 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         
         weak var wself = self
         
-        let sendNet = NetWorkData()
+        sendNet = NetWorkData()
         sendNet.sendCommentToMessage(timeData.id!, comment: commentField.text!) { (result, status) -> (Void) in
             
             if status == .NetWorkStatusError
@@ -289,7 +313,9 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
             else
             {
                 wself?.timeData.feedBackNu = (wself?.timeData.feedBackNu)! + 1
-                wself?.table.reloadData()
+                wself?.commentField.text = nil
+//                wself?.table.reloadData()
+                wself?.fetchCommentList()
             }
         }
         sendNet.start()
@@ -318,15 +344,56 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
             }
             else
             {
-                message.favoriteNu = message.favoriteNu! + 1
-                message.favorited = true
-                wself?.table.reloadData()
+                if let nu = result as? Int
+                {
+                    message.favoriteNu = nu
+                    if message.favorited == true
+                    {
+                        message.favorited = false
+                    }
+                    else
+                    {
+                        message.favorited = true
+                    }
+                    wself?.table.reloadData()
+                }
+
             }
         }
         favoriteNet.start()
     }
 
     
+    func shareAction(){
+        
+        let shareView = ShareCoverageView(delegate: self)
+        shareView.showInView(self.navigationController!.view)
+    }
+    
+    func shareActionFinish(success: Bool) {
+        let shareNet = NetWorkData()
+        weak var wself = self
+        shareNet.getForwardNu(timeData.id!) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                if let str = result as? String
+                {
+                    let warnV = THActivityView(string: str)
+                    warnV.show()
+                }
+                return
+            }
+            
+            if let nu = result as? Int
+            {
+                wself?.timeData.forwardNu = nu
+                wself?.table.reloadData()
+            }
+        }
+        shareNet.start()
+    }
+
     
     
     func timeLineInfoShowLoginVC(){
@@ -374,9 +441,17 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         })
     }
     
+    deinit{
+        
+        net.cancel()
+        net = nil
+    }
+
+    
 }
 
 class TimeCommentCell: UITableViewCell {
+    
     let userImage:UIImageView
     let titleL:UILabel
     let timeL:UILabel
@@ -385,7 +460,7 @@ class TimeCommentCell: UITableViewCell {
         
         userImage = UIImageView()
         userImage.translatesAutoresizingMaskIntoConstraints = false
-        
+        userImage.image = UIImage(named: "settingUser")
         titleL = UILabel()
         titleL.translatesAutoresizingMaskIntoConstraints = false
         
@@ -396,7 +471,7 @@ class TimeCommentCell: UITableViewCell {
         
         contentL = UILabel()
         contentL.textColor = Profile.rgb(102, g: 102, b: 102)
-        contentL.font = Profile.font(11)
+        contentL.font = Profile.font(12)
         contentL.numberOfLines = 0
 //        contentL.backgroundColor = UIColor.redColor()
         contentL.translatesAutoresizingMaskIntoConstraints = false
@@ -404,17 +479,17 @@ class TimeCommentCell: UITableViewCell {
         
         
         self.contentView.addSubview(userImage)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[userImage(25)]", options: [], metrics: nil, views: ["userImage":userImage]))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[userImage(25)]", options: [], metrics: nil, views: ["userImage":userImage]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[userImage(33)]", options: [], metrics: nil, views: ["userImage":userImage]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[userImage(33)]", options: [], metrics: nil, views: ["userImage":userImage]))
         
         
         self.contentView.addSubview(titleL)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[userImage]-5-[titleL]", aView: userImage, bView: titleL))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[userImage]-10-[titleL]", aView: userImage, bView: titleL))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-10-[titleL]", aView: titleL, bView: nil))
         
         
         self.contentView.addSubview(timeL)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-10-[timeL]", aView: titleL, bView: timeL))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-6-[timeL]", aView: titleL, bView: timeL))
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(timeL, toItem: titleL))
         
         
@@ -422,7 +497,7 @@ class TimeCommentCell: UITableViewCell {
         self.contentView.addSubview(contentL)
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(contentL, toItem: titleL))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[contentL]-15-|", aView: contentL, bView: nil))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[timeL]-10-[contentL]-10-|", aView: timeL, bView: contentL))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[timeL]-6-[contentL]", aView: timeL, bView: contentL))
         
     }
 
@@ -431,7 +506,7 @@ class TimeCommentCell: UITableViewCell {
     {
         if imageUrl != nil
         {
-            userImage.sd_setImageWithURL(NSURL(string: imageUrl!), placeholderImage: nil)
+            userImage.sd_setImageWithURL(NSURL(string: imageUrl!), placeholderImage: UIImage(named: "settingUser"))
         }
         
         
@@ -441,7 +516,7 @@ class TimeCommentCell: UITableViewCell {
             
             if title != nil
             {
-                titleAtt.appendAttributedString(NSAttributedString(string: title!, attributes: [NSFontAttributeName:Profile.font(11),NSForegroundColorAttributeName:Profile.rgb(51, g: 51, b: 51)]))
+                titleAtt.appendAttributedString(NSAttributedString(string: "- \(title!)", attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)]))
             }
 
             titleL.attributedText = titleAtt
@@ -456,4 +531,44 @@ class TimeCommentCell: UITableViewCell {
     }
 }
 
+
+class MoreTableHeadView: UITableViewHeaderFooterView {
+    
+    let iconImage : UIImageView
+    override init(reuseIdentifier: String?) {
+        
+        iconImage = UIImageView()
+        iconImage.translatesAutoresizingMaskIntoConstraints = false
+        super.init(reuseIdentifier: reuseIdentifier)
+        
+        
+        
+        let backV = UIView()
+        backV.backgroundColor = UIColor.whiteColor()
+        backV.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(backV)
+        
+        self.contentView.addConstraints(NSLayoutConstraint.layoutHorizontalFull(backV))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-14-[backV]-0-|", options: [], metrics: nil, views: ["backV":backV]))
+        
+        self.contentView.addSubview(iconImage)
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[iconImage]", aView: iconImage, bView: nil))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[iconImage]-(-21)-[backV]", options: [], metrics: nil, views: ["iconImage":iconImage,"backV":backV]))
+        
+        
+        
+        let separateV = UIView()
+        separateV.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        self.contentView.addSubview(separateV)
+        separateV.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addConstraints(NSLayoutConstraint.layoutHorizontalFull(separateV))
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[separateV(0.5)]-0-|", options: [], metrics: nil, views: ["separateV":separateV]))
+        
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
 

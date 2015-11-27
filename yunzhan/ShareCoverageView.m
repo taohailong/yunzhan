@@ -138,7 +138,7 @@
     [footView addSubview:cancelBt];
     [cancelBt setTitleColor:[UIColor colorWithRed:223.0/255.0 green:32.0/255.0 blue:82.0/255.0 alpha:1.0] forState:UIControlStateNormal];
     [cancelBt setTitle:@"取消" forState:UIControlStateNormal];
-
+    [cancelBt setBackgroundImage:[UIImage imageNamed:@"login_hight"] forState:UIControlStateHighlighted];
     
     [footView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-15-[cancelBt]-15-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(cancelBt)]];
     
@@ -198,7 +198,12 @@
         req.scene = WXSceneTimeline;
         
     }
-    [WXApi sendReq:req];
+    BOOL success = [WXApi sendReq:req];
+    
+    if ([_delegate respondsToSelector:@selector(shareActionFinish:)])
+    {
+        [_delegate shareActionFinish:success];
+    }
 }
 
 

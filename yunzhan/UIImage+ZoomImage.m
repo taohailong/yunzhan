@@ -77,9 +77,10 @@
     width = width*radio;
     height = height*radio;
     
-    int xPos = (size.width - width)/2;
-    int yPos = (size.height-height)/2;
-    
+//    int xPos = (size.width - width)/2;
+//    int yPos = (size.height-height)/2;
+    int xPos = 0;
+    int yPos = 0;
     // 创建一个bitmap的context
     // 并把它设置成为当前正在使用的context
     UIGraphicsBeginImageContext(size);
@@ -95,6 +96,20 @@
     
     // 返回新的改变大小后的图片
     return scaledImage;
+}
+
+-(UIImage*)imageCompressScale:(float)scale
+{
+    CGSize size = self.size;
+    CGFloat width=size.width;
+    CGFloat height=size.height;
+    CGFloat scaledWidth=width*scale;
+    CGFloat scaledHeight=height*scale;
+    UIGraphicsBeginImageContext(size);//thiswillcrop
+    [self drawInRect:CGRectMake(0,0,scaledWidth,scaledHeight)];
+    UIImage*newImage=UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return newImage;
 }
 
 @end

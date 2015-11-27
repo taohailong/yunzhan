@@ -18,7 +18,7 @@ typedef enum ShareWxType_{
 @protocol ShareCoverageProtocol <NSObject>
 @optional
 -(void)shareCoverageSelectWxTpye:(ShareWxType)type;
-
+-(void)shareActionFinish:(BOOL)success;
 @end
 @interface ShareCoverageView : UIView
 {

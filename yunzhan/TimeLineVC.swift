@@ -8,48 +8,71 @@
 
 import Foundation
 
-class TimeLineVC: UIViewController,UITableViewDelegate,UITableViewDataSource,ShareCoverageProtocol {
-    var table:UITableView!
+class TimeLineVC: UITableViewController,ShareCoverageProtocol {
+//    var table:UITableView!
     var dataArr:[TimeMessage]!
     var net:NetWorkData!
+    var shareElement:TimeMessage!
+
+//    override func viewWillAppear(animated: Bool) {
+//        super.viewWillAppear(animated)
+//        if dataArr == nil
+//        {
+//            self.refreshControl?.beginRefreshing()
+//        }
+//    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        table = UITableView(frame: CGRectZero, style: .Grouped)
-        table.delegate = self
-        table.dataSource = self
-        table.translatesAutoresizingMaskIntoConstraints = false
-        table.registerClass(TimeLineContentCell.self , forCellReuseIdentifier: "TimeLineContentCell")
-        table.registerClass(TimeLinePicCell.self , forCellReuseIdentifier: "TimeLinePicCell")
-        table.registerClass(TimeLinePersonCell.self, forCellReuseIdentifier: "TimeLinePersonCell")
-        table.registerClass(TimeLineStatusCell.self , forCellReuseIdentifier: "TimeLineStatusCell")
-        table.separatorColor = Profile.rgb(243, g: 243, b: 243)
-        self.view.addSubview(table)
-        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
-        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
+//        table = UITableView(frame: CGRectZero, style: .Grouped)
+//        table.delegate = self
+//        table.dataSource = self
+//        table.translatesAutoresizingMaskIntoConstraints = false
+        self.tableView.registerClass(TimeLineContentCell.self , forCellReuseIdentifier: "TimeLineContentCell")
+        self.tableView.registerClass(TimeLinePicCell.self , forCellReuseIdentifier: "TimeLinePicCell")
+        self.tableView.registerClass(TimeLinePersonCell.self, forCellReuseIdentifier: "TimeLinePersonCell")
+        self.tableView.registerClass(TimeLineStatusCell.self , forCellReuseIdentifier: "TimeLineStatusCell")
+        self.tableView.separatorColor = Profile.rgb(243, g: 243, b: 243)
+        
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl?.addTarget(self, action: "timeLineRefreshBegin", forControlEvents: .ValueChanged)
         
         
-        table?.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        
+//        self.view.addSubview(table)
+//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
+//        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
+        
+        
+        self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
         if #available(iOS 8.0, *) {
-            table?.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0)
+            self.tableView.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0)
         } else {
             // Fallback on earlier versions
         }
-        
-        
         self.fetchTimeLineList()
     }
     
+    func timeLineRefreshBegin(){
+    
+        self.fetchTimeLineList()
+        
+    }
+
     
     func fetchTimeLineList(){
     
+        
         weak var wself = self
-        var index = 0
-        let loadView = THActivityView(activityViewWithSuperView: self.view)
+        let index = 0
+//        let loadView = THActivityView(activityViewWithSuperView: self.view)
+        self.refreshControl?.beginRefreshing()
         net = NetWorkData()
         net.getTimeLineList(index) { (result, status) -> (Void) in
             
-            loadView.removeFromSuperview()
+            wself?.refreshControl?.endRefreshing()
+//            loadView.removeFromSuperview()
             if status == .NetWorkStatusError
             {
                 if result == nil
@@ -75,7 +98,7 @@ class TimeLineVC: UIViewController,UITableViewDelegate,UITableViewDataSource,Sha
             if let list = result as? [TimeMessage]{
             
                wself?.dataArr = list
-               wself?.table.reloadData()
+               wself?.tableView.reloadData()
                wself?.addLoadMoreView(list.count)
             }
             
@@ -117,7 +140,7 @@ class TimeLineVC: UIViewController,UITableViewDelegate,UITableViewDataSource,Sha
             if let list = result as? [TimeMessage]{
                 
                 wself?.dataArr.appendContentsOf(list)
-                wself?.table.reloadData()
+                wself?.tableView.reloadData()
                 wself?.addLoadMoreView(list.count)
             }
             
@@ -129,17 +152,17 @@ class TimeLineVC: UIViewController,UITableViewDelegate,UITableViewDataSource,Sha
     
         if count < 20{
         
-          table.tableFooterView = UIView()
+         self.tableView.tableFooterView = UIView()
         }
         else
         {
-           table.tableFooterView = MoreTableFootView(frame: CGRectMake(0, 0, Profile.width(), 50))
+           self.tableView.tableFooterView = MoreTableFootView(frame: CGRectMake(0, 0, Profile.width(), 50))
         }
     
     }
     
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+   override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
         if dataArr == nil
         {
@@ -148,20 +171,21 @@ class TimeLineVC: UIViewController,UITableViewDelegate,UITableViewDataSource,Sha
         return dataArr.count
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 4
     }
     
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
         if indexPath.row == 0
         {
-           return 150
+            let element = dataArr[indexPath.section]
+            return CGFloat(element.picHeight)
         }
         else if indexPath.row == 1
         {
-          return 25
+          return 46
         }
         else if indexPath.row == 2
         {
@@ -170,23 +194,25 @@ class TimeLineVC: UIViewController,UITableViewDelegate,UITableViewDataSource,Sha
             {
               return 0
             }
-          return  CGFloat(Float(12.0) + element.contentHeight!)
+            //            评论内容
+          return  CGFloat(Float(15.0) + element.contentHeight!)
         }
         else
         {
-          return 30
+//            状态栏
+          return 40
         }
     }
     
-    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    override func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 10
     }
     
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 0.5
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         
         let element = dataArr[indexPath.section]
@@ -228,13 +254,13 @@ class TimeLineVC: UIViewController,UITableViewDelegate,UITableViewDataSource,Sha
             }
             cell.commentBlock = { }
             cell.forwardBlock = {
-              wself?.shareAction()
+              wself?.shareAction(element)
             }
             return cell
         }
     }
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        table.deselectRowAtIndexPath(indexPath, animated: true)
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
         let element = dataArr[indexPath.section]
         let commentInfo = TimeLineInfoVC()
@@ -244,9 +270,9 @@ class TimeLineVC: UIViewController,UITableViewDelegate,UITableViewDataSource,Sha
     }
     
     
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         
-        guard let view = table.tableFooterView
+        guard let view = self.tableView.tableFooterView
             else{
           return
         }
@@ -287,9 +313,20 @@ class TimeLineVC: UIViewController,UITableViewDelegate,UITableViewDataSource,Sha
             }
             else
             {
-                message.favoriteNu = message.favoriteNu! + 1
-                message.favorited = true
-                wself?.table.reloadData()
+                if let nu = result as? Int
+                {
+                    message.favoriteNu = nu
+                    if message.favorited == true
+                    {
+                        message.favorited = false
+                    }
+                    else
+                    {
+                        message.favorited = true
+                    }
+                    wself?.tableView.reloadData()
+                }
+               
             }
         }
         favoriteNet.start()
@@ -304,13 +341,46 @@ class TimeLineVC: UIViewController,UITableViewDelegate,UITableViewDataSource,Sha
         
     }
 
-    func shareAction(){
+    func shareAction(let data:TimeMessage){
     
        let shareView = ShareCoverageView(delegate: self)
        shareView.showInView(self.tabBarController?.view)
+        shareElement = data
+    }
+    
+    func shareActionFinish(success: Bool) {
+        let shareNet = NetWorkData()
+        weak var wself = self
+        shareNet.getForwardNu(shareElement.id!) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                if let str = result as? String
+                {
+                   let warnV = THActivityView(string: str)
+                    warnV.show()
+                }
+                return
+            }
+            
+            if let nu = result as? Int
+            {
+                wself?.shareElement.forwardNu = nu
+                wself?.tableView.reloadData()
+            }
+        }
+        shareNet.start()
+        
     }
     
     
+    
+    deinit{
+        
+        net.cancel()
+        net = nil
+    }
+
 }
 
 class TimeLinePicCell:UITableViewCell {
@@ -489,6 +559,7 @@ class TimeLinePersonCell: UITableViewCell {
         
         userPicV = UIImageView()
         userPicV.translatesAutoresizingMaskIntoConstraints = false
+        userPicV.image = UIImage(named: "settingUser")
         
         nameL = UILabel()
         nameL.translatesAutoresizingMaskIntoConstraints = false
@@ -499,10 +570,11 @@ class TimeLinePersonCell: UITableViewCell {
         timeL.font = Profile.font(11)
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.contentView.addSubview(userPicV)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[userPicV(30)]", options: [], metrics: nil, views: ["userPicV":userPicV]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[userPicV(33)]", options: [], metrics: nil, views: ["userPicV":userPicV]))
         
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[userPicV(30)]", options: [], metrics: nil, views: ["userPicV":userPicV]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[userPicV(33)]", options: [], metrics: nil, views: ["userPicV":userPicV]))
         
+        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(userPicV, toItem: self.contentView))
         
         self.contentView.addSubview(nameL)
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[userPicV]-10-[nameL]", aView: userPicV, bView: nameL))
@@ -526,16 +598,16 @@ class TimeLinePersonCell: UITableViewCell {
     {
         if pic != nil
         {
-           userPicV.sd_setImageWithURL(NSURL(string: pic!), placeholderImage: nil)
+           userPicV.sd_setImageWithURL(NSURL(string: pic!), placeholderImage: UIImage(named: "settingUser"))
         }
         
         if name != nil
         {
-            let attribute = NSMutableAttributedString(string: name!, attributes: [NSFontAttributeName:Profile.font(15),NSForegroundColorAttributeName:Profile.rgb(102, g: 102, b: 102)])
+            let attribute = NSMutableAttributedString(string: name!, attributes: [NSFontAttributeName:Profile.font(15),NSForegroundColorAttributeName:Profile.rgb(51, g: 51, b: 51)])
             
             if title != nil
             {
-              attribute.appendAttributedString(NSAttributedString(string:" -\(title!)" , attributes: [NSFontAttributeName:Profile.font(11),NSForegroundColorAttributeName:Profile.rgb(51, g: 51, b: 51)]))
+              attribute.appendAttributedString(NSAttributedString(string:" -\(title!)" , attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)]))
             }
             
             nameL.attributedText = attribute
@@ -556,14 +628,14 @@ class TimeLineContentCell: UITableViewCell {
         
         contentL = UILabel()
         contentL.textColor = Profile.rgb(153, g: 153, b: 153)
-        contentL.font = Profile.font(11)
+        contentL.font = Profile.font(12)
         contentL.numberOfLines = 0
         contentL.translatesAutoresizingMaskIntoConstraints = false
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.contentView.addSubview(contentL)
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[contentL]-15-|", aView: contentL, bView: nil))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-5-[contentL]-5-|", aView: contentL, bView: nil))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-2-[contentL]-5-|", aView: contentL, bView: nil))
         
         self.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
         if #available(iOS 8.0, *) {

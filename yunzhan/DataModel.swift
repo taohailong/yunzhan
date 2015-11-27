@@ -173,6 +173,7 @@ class PersonData {
 
 
 class TimeMessage {
+    var picHeight = 0.0
     var picUrl:String?
     var personName:String?
     var personTitle:String?
@@ -200,6 +201,24 @@ class TimeMessage {
         return contentHeight!
     }
     
+}
+
+enum CompanyType:Int {
+   case Hotel = 0
+   case Company = 1
+}
+class CompanyData {
+    var address:String?
+    var contact:String?
+    var time:String?
+    var id:String?
+    var type:CompanyType = .Hotel
+    var mobile:String?
+    var name:String?
+    var phone:String?
+    var score:Double?
+    var route:String?
+    var roomNu:Int?
 }
 
 

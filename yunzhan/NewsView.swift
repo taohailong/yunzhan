@@ -53,19 +53,14 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
     override func viewDidLoad() {
         
          super.viewDidLoad()
-         self.title = "新闻"
+         self.title = "咨询"
         self.navigationController?.tabBarItem.selectedImage = UIImage(named: "root-4_selected")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationController?.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
-
-        
-        
-        let rightBar = UIBarButtonItem(image: UIImage(named: "timeLineUpLoad"), style: .Plain, target: self, action: "showSendVC")
-        self.navigationItem.rightBarButtonItem = rightBar
-        
         
         segmentV = TSegmentedControl(sectionTitles: ["新闻","图片"])
         segmentV.addTarget(self, action: "segmentChange", forControlEvents: .ValueChanged)
         segmentV.frame = CGRectMake(0, 64, Profile.width(), 40)
+        segmentV.textColor = Profile.rgb(102, g: 102, b: 102)
         segmentV.selectionIndicatorHeight = 1
         segmentV.selectionIndicatorColor = Profile.NavBarColor()
         segmentV.selectionIndicatorMode = HMSelectionIndicatorFillsTop
@@ -88,8 +83,16 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(timeLineV.view))
         self.addChildViewController(timeLineV)
         timeLineV.view.hidden = true
+        
+//        self.creatRightBar()
     }
     
+    func creatRightBar(){
+    
+        let rightBar = UIBarButtonItem(image: UIImage(named: "timeLineUpLoad"), style: .Plain, target: self, action: "showSendVC")
+        self.navigationItem.rightBarButtonItem = rightBar
+
+    }
     
     func showSendVC(){
         
@@ -121,11 +124,13 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
         {
            newList.view.hidden = false
             timeLineV.view.hidden = true
+            self.navigationItem.rightBarButtonItem = nil
         }
         else
         {
            newList.view.hidden = true
             timeLineV.view.hidden = false
+            self.creatRightBar()
         }
     }
     

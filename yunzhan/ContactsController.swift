@@ -8,11 +8,12 @@
 
 import Foundation
 
-class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate {
+class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate {
     var net:NetWorkData!
     var prefixArr:[String]!
     var table :UITableView!
     var dataArr:[[PersonData]]!
+    var phoneNu:String!
     override func viewDidLoad() {
         
         self.title = "我的联系人"
@@ -185,12 +186,28 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         let subA = self.dataArr[indexPath.section]
         let person = subA[indexPath.row]
         
-        if let url = NSURL(string: "tel://\(person.phone!)")
+       
+        if let url = person.phone
         {
-           UIApplication.sharedApplication().openURL(url)
+             phoneNu = url
+             let alert = UIAlertView(title: "提示", message: "拨打：\(person.phone!)", delegate: self, cancelButtonTitle: "取消", otherButtonTitles: "确定")
+            alert.show()
+          
         }
         
     }
+    
+    func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
+        
+        if buttonIndex == alertView.cancelButtonIndex
+        {
+            return
+        }
+        
+         let url = NSURL(string: "tel://\(phoneNu)")
+         UIApplication.sharedApplication().openURL(url!)
+    }
+    
 }
 
 

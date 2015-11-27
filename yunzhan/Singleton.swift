@@ -11,6 +11,7 @@ class UserData:NSObject {
     
     var name:String?
         {
+        
         get{
         
          return _name
@@ -22,7 +23,23 @@ class UserData:NSObject {
         }
     }
     var title:String?
-    var phone:String?
+    var phone:String?{
+        
+        get {
+            
+            let userDefault = NSUserDefaults.standardUserDefaults()
+            let tokenT = userDefault.objectForKey("phone") as? String
+            return tokenT
+        }
+        
+        set(new) {
+            
+            let userDefault = NSUserDefaults.standardUserDefaults()
+            userDefault.setObject(new, forKey: "phone")
+            userDefault.synchronize()
+        }
+    
+    }
     var _name:String?
     var isLogIn:Bool = false
     var token:String? {
@@ -48,6 +65,7 @@ class UserData:NSObject {
        name = nil
       let userDefault = NSUserDefaults.standardUserDefaults()
         userDefault.removeObjectForKey("token")
+        userDefault.removeObjectForKey("phone")
     }
     
     struct Inner {
