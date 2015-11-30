@@ -72,7 +72,6 @@ class SchedulerController: UITableViewController,UISearchDisplayDelegate {
 //        searchBar.delegate = self
         
         
-        
         self.refreshControl = UIRefreshControl()
         self.refreshControl?.addTarget(self, action: "refreshBegin", forControlEvents: .ValueChanged)
 
@@ -123,12 +122,17 @@ class SchedulerController: UITableViewController,UISearchDisplayDelegate {
             {
                 if result == nil
                 {
-                    let errView = THActivityView(netErrorWithSuperView: wself!.tableView.superview)
-                    weak var werr = errView
-                    errView.setErrorBk({ () -> Void in
-                        wself?.fetchData()
-                        werr?.removeFromSuperview()
-                    })
+                    
+                    let warnV = THActivityView(string: "网络错误")
+                    warnV.show()
+//                    let errView = THActivityView(netErrorWithSuperView: wself!.tableView)
+//                    errView.translatesAutoresizingMaskIntoConstraints = true
+//                    errView.frame = (wself?.tableView.bounds)!
+//                    weak var werr = errView
+//                    errView.setErrorBk({ () -> Void in
+//                        wself?.fetchData()
+//                        werr?.removeFromSuperview()
+//                    })
                 }
                 else
                 {
@@ -179,7 +183,21 @@ class SchedulerController: UITableViewController,UISearchDisplayDelegate {
     }
     
    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 80
+    
+      var cellData:SchedulerData? = nil
+    
+      if tableView != self.tableView
+      {
+         cellData = searchArr![indexPath.row]
+      }
+      else
+      {
+         let subArr = dataArr[indexPath.section]
+         cellData = subArr[indexPath.row]
+      }
+      cellData?.figureoutStringHeight(Profile.font(10), size: CGSizeMake(Profile.width()-90, 10000))
+    
+        return 80 + (cellData?.height)!
     }
     
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -306,6 +324,7 @@ class SchedulerCell: UITableViewCell {
     let titleL:UILabel
     let introduce:UILabel
     let address:UILabel
+    let spot:UIView
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
@@ -329,11 +348,15 @@ class SchedulerCell: UITableViewCell {
         
         introduce = UILabel()
         introduce.font = Profile.font(10)
+        introduce.numberOfLines = 0
         introduce.translatesAutoresizingMaskIntoConstraints = false
         
         address = UILabel()
         address.font = Profile.font(10)
         address.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        spot = UIView()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         
@@ -352,7 +375,7 @@ class SchedulerCell: UITableViewCell {
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-74-[upView(0.5)]", options: [], metrics: nil, views: ["upView":upView,"timeL":timeL]))
         
         
-        let spot = UIView()
+        
         spot.layer.masksToBounds = true
         spot.layer.cornerRadius = 4.0
         
@@ -381,11 +404,20 @@ class SchedulerCell: UITableViewCell {
         introduce.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: UILayoutConstraintAxis.Horizontal)
         
         
+        
+        
         titleL.textColor = Profile.rgb(51, g: 51, b: 51)
         titleL.font = Profile.font(15)
         self.contentView.addSubview(titleL)
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[timeL]-40-[titleL]-(>=15)-|", options: [], metrics: nil, views: ["titleL":titleL,"timeL":timeL]))
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(titleL, toItem: introduce))
+//        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[titleL]-5-|", aView: titleL, bView: nil))
+        
+        titleL.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: .Horizontal)
+        
         self.contentView.addConstraint(NSLayoutConstraint(item: titleL, attribute: NSLayoutAttribute.Bottom, relatedBy: NSLayoutRelation.Equal, toItem: introduce, attribute: NSLayoutAttribute.Top, multiplier: 1.0, constant: -5))
+        
+        
         
         address.textColor = Profile.rgb(153, g: 153, b: 153)
         address.font = Profile.font(13)
@@ -399,18 +431,35 @@ class SchedulerCell: UITableViewCell {
         
         timeL.text = data.time
         dateL.text = data.date
-        titleL.text = data.title
-        introduce.text = data.introduce
-        address.text = data.address
-       
-        if data.type == true
+        
+        if data.title != nil
         {
-          typeL.text = "类型:公开"
+            let titleAtt = NSMutableAttributedString(string: data.title!, attributes: [NSFontAttributeName:Profile.font(15.0),NSForegroundColorAttributeName:Profile.rgb(51, g: 51, b: 51)])
+            titleAtt.appendAttributedString(NSAttributedString(string: "  类型:\(data.typeName)", attributes: [NSFontAttributeName:Profile.font(10.0),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)]))
+            titleL.attributedText = titleAtt
         }
         else
         {
-          typeL.text = "类型:不公开"
+           titleL.text = data.title
         }
+        
+        introduce.text = data.introduce
+        address.text = data.address
+        
+        if data.type == .PublicMeeting || data.type == .UnPublicMeeting
+        {
+          spot.backgroundColor = Profile.rgb(110, g: 233, b: 194)
+        }
+        else if data.type == .UnPublicDiscuss || data.type == .PublicDiscuss
+        {
+          spot.backgroundColor = Profile.rgb(193, g: 129, b: 220)
+        }
+        else
+        {
+          spot.backgroundColor = Profile.rgb(254, g: 167, b: 84)
+        }
+        
+ 
     }
 
     

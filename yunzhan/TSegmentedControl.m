@@ -66,7 +66,7 @@
     [self.sectionTitles enumerateObjectsUsingBlock:^(id titleString, NSUInteger idx, BOOL *stop) {
        
         if (_selectedIndex == idx ) {
-            [[UIColor redColor] set];
+            [[UIColor colorWithRed:223/255.0 green:32/255.0 blue:82/255.0 alpha:1.0] set];
         }
         else
         {
@@ -98,6 +98,7 @@
 }
 
 - (CGRect)frameForSelectionIndicator {
+    
     CGFloat stringWidth = [[self.sectionTitles objectAtIndex:self.selectedIndex] sizeWithFont:self.font].width;
     
     if (self.selectionIndicatorMode == HMSelectionIndicatorResizesToStringWidth) {
@@ -105,7 +106,7 @@
         CGFloat widthTillBeforeSelectedIndex = (self.segmentWidth * self.selectedIndex);
         
         CGFloat x = ((widthTillEndOfSelectedIndex - widthTillBeforeSelectedIndex) / 2) + (widthTillBeforeSelectedIndex - stringWidth / 2);
-        return CGRectMake(x, CGRectGetHeight(self.frame)- self.selectionIndicatorHeight, stringWidth, self.selectionIndicatorHeight);
+        return CGRectMake(x, CGRectGetHeight(self.frame) - self.selectionIndicatorHeight, stringWidth, self.selectionIndicatorHeight);
     }
     else if(self.selectionIndicatorMode == HMSelectionIndicatorFillsTop)
     {

@@ -63,7 +63,9 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         
         let flowLayout = UICollectionViewFlowLayout()
         collection = UICollectionView(frame: CGRectMake(0, 0, Profile.width(), Profile.height()),
-         collectionViewLayout: flowLayout)
+        collectionViewLayout: flowLayout)
+//        collection.translatesAutoresizingMaskIntoConstraints = false
+            
         collection.alwaysBounceVertical = true
         collection.registerClass(CommonHeadView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "CommonHeadView")
         
@@ -81,9 +83,10 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         self.view.addSubview(collection)
             
         collection.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(collection))
-            self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(collection))
-            
+//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(collection))
+//            self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(collection))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[collection]-0-|", options: [], metrics: nil, views: ["collection" : collection]))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[collection]-0-|", options: [], metrics: nil, views: ["collection" : collection]))
             
             
 //         self.addRefreshTableHead()
@@ -121,12 +124,14 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             {
                  if result == nil
                  {
-                    let errView = THActivityView(netErrorWithSuperView: wself!.view)
-                    weak var werr = errView
-                    errView.setErrorBk({ () -> Void in
-                        wself?.fetchData()
-                        werr?.removeFromSuperview()
-                    })
+                    let warnV = THActivityView(string: "网络错误")
+                    warnV.show()
+//                    let errView = THActivityView(netErrorWithSuperView: wself!.view)
+//                    weak var werr = errView
+//                    errView.setErrorBk({ () -> Void in
+//                        wself?.fetchData()
+//                        werr?.removeFromSuperview()
+//                    })
                 }
                 else
                 {
@@ -372,7 +377,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
     }
     
     func collectionView(link: String, didSelectHeadView indexPath: NSIndexPath) {
-        print(link)
+//        print(link)
         
         let comment = CommonWebController(url:link)
         comment.hidesBottomBarWhenPushed = true
@@ -448,7 +453,9 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
 
 
 
-class CommonWebController:UIViewController {
+class CommonWebController:UIViewController,UIWebViewDelegate {
+    
+    var loadV:THActivityView!
     var webHtml:String?
     var webLink:String?
     init(url:String?){
@@ -458,19 +465,23 @@ class CommonWebController:UIViewController {
     
     init(html:String?)
     {
-       webHtml = html
+        webHtml = html
         super.init(nibName: nil, bundle: nil)
     }
     
     
     override func viewDidLoad() {
         
+        super.viewDidLoad()
+        
+        
         
         self.view.backgroundColor = UIColor.whiteColor()
         let web = UIWebView()
+        web.delegate = self
         web.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(web)
-        
+        loadV = THActivityView(activityViewWithSuperView: self.view)
         if webLink != nil
         {
           web.loadRequest( NSURLRequest(URL: NSURL(string: webLink!)!))
@@ -482,6 +493,15 @@ class CommonWebController:UIViewController {
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(web))
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(web))
     }
+    
+    func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
+        loadV.removeFromSuperview()
+    }
+    
+    func webViewDidFinishLoad(webView: UIWebView) {
+        loadV.removeFromSuperview()
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

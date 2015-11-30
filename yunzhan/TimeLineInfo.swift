@@ -16,6 +16,17 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     var accessView:UIView!
     var net:NetWorkData!
     var sendNet:NetWorkData!
+    var block:(Void->Void)!
+    var becomeFirstRes : Bool = false
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        if becomeFirstRes == true
+        {
+            commentField.becomeFirstResponder()
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -51,6 +62,9 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         
         self.fetchCommentList()
     }
+    
+    
+    
     
     func fetchCommentList(){
         
@@ -175,8 +189,8 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
                return 60.0
              }
             let height = CGFloat(65) + CGFloat(element.contentHeight!)
-            print(height)
-            print(element.comment)
+//            print(height)
+//            print(element.comment)
               return height
         }
     
@@ -190,7 +204,7 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
             if indexPath.row == 0
             {
                 let cell = tableView.dequeueReusableCellWithIdentifier("TimeLinePicCell") as! TimeLinePicCell
-                cell.loadPicUrl(element.picUrl)
+                cell.loadPicUrl(element.picUrl,height: element.picHeight)
                 return cell
             }
             else if indexPath.row == 1
@@ -222,9 +236,11 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
                     wself?.favoriteAction(element)
                 }
 
-                cell.commentBlock = { }
+                cell.commentBlock = {
+                  wself?.commentField.becomeFirstResponder()
+                }
                 cell.forwardBlock = {
-                  wself?.shareAction()
+                  wself?.shareAction(element)
                 }
                 return cell
             }
@@ -247,6 +263,22 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         commentField.resignFirstResponder()
     }
     
+    
+//    func scrollViewDidScroll(scrollView: UIScrollView) {
+//        
+//        if commentField.isFirstResponder() == true
+//        {
+//           commentField.resignFirstResponder()
+//        }
+//    }
+    
+    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        if commentField.isFirstResponder() == true
+        {
+            commentField.resignFirstResponder()
+        }
+
+    }
     func getAccessInputView()->UIView{
         
 //        let height = Double(Profile.height) - 49.0
@@ -356,6 +388,10 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
                         message.favorited = true
                     }
                     wself?.table.reloadData()
+                    if wself?.block != nil
+                    {
+                        wself?.block()
+                    }
                 }
 
             }
@@ -364,9 +400,19 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     }
 
     
-    func shareAction(){
+    func shareAction(mess:TimeMessage){
+        
+        let user = UserData.shared
+        if user.token == nil
+        {
+            self.timeLineInfoShowLoginVC()
+            return
+        }
+
         
         let shareView = ShareCoverageView(delegate: self)
+        shareView.token = UserData.shared.token
+        shareView.wallID = mess.id
         shareView.showInView(self.navigationController!.view)
     }
     
@@ -389,6 +435,10 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
             {
                 wself?.timeData.forwardNu = nu
                 wself?.table.reloadData()
+                if wself?.block != nil
+                {
+                    wself?.block()
+                }
             }
         }
         shareNet.start()
@@ -404,8 +454,6 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         
     }
 
-    
-    
     
     func registerNoticOfKeyboard(){
     
@@ -426,9 +474,7 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     
     
     func keyboardHidden(let notification:NSNotification){
-       
         self.accessViewAnimate(Profile.height() - 49.0)
-    
     }
     
     

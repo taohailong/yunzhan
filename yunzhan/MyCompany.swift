@@ -71,7 +71,8 @@ class MyCompanyVC: UITableViewController {
         
         if element.type == .Hotel
         {
-           return 115
+           let height = element.figureOutContentHeight(CGSizeMake(Profile.width() - 30, 1000), font: Profile.font(12))
+           return 105 + height
         }
         else
         {
@@ -122,6 +123,10 @@ class MyCompanyVC: UITableViewController {
             cell.fillCompanyData(temp.name, phone: temp.phone , mobile: temp.mobile, personName: temp.contact)
             return cell
         }
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
 }
 
@@ -174,7 +179,7 @@ class HotelCell: UITableViewCell,UIAlertViewDelegate {
         
         self.contentView.addSubview(roomNuL)
         roomNuL.font = Profile.font(13)
-        roomNuL.textColor = Profile.rgb(255, g: 199, b: 92)
+        roomNuL.textColor = Profile.rgb(51, g: 51, b: 51)
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[roomNuL]-15-|", aView: roomNuL, bView: nil))
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(roomNuL, toItem: titleL))
         
@@ -215,6 +220,7 @@ class HotelCell: UITableViewCell,UIAlertViewDelegate {
         self.contentView.addSubview(routeL)
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(routeL, toItem: titleL))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[addressL]-5-[routeL]", options: [], metrics: nil, views: ["routeL":routeL,"addressL":addressL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[routeL]-15-|", options: [], metrics: nil, views: ["routeL":routeL]))
         
     }
 
@@ -254,7 +260,10 @@ class HotelCell: UITableViewCell,UIAlertViewDelegate {
         if phoneNu != nil
         {
             phoneStr = phoneNu!
-           phoneBt.setTitle("电话：\(phoneNu!)", forState: .Normal)
+            let att = NSMutableAttributedString(string: "电话：", attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(102, g: 102, b: 102)])
+            att.appendAttributedString(NSAttributedString(string: phoneNu!, attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(255, g: 199, b: 92)]))
+            phoneBt.setAttributedTitle(att, forState: .Normal)
+//           phoneBt.setTitle("电话：\(phoneNu!)", forState: .Normal)
         }
         if address != nil
         {
@@ -332,21 +341,28 @@ class CompanyCell: UITableViewCell,UIAlertViewDelegate {
         if phone != nil
         {
             phoneNu = phone!
-           phoneBt.setTitle("电话：\(phone!)", forState: .Normal)
+            let att = NSMutableAttributedString(string: "电话：", attributes: [NSFontAttributeName:Profile.font(13),NSForegroundColorAttributeName:Profile.rgb(102, g: 102, b: 102)])
+            att.appendAttributedString(NSAttributedString(string: phoneNu!, attributes: [NSFontAttributeName:Profile.font(13),NSForegroundColorAttributeName:Profile.rgb(255, g: 199, b: 92)]))
+            phoneBt.setAttributedTitle(att, forState: .Normal)
+
+//           phoneBt.setTitle("电话：\(phone!)", forState: .Normal)
         }
         
         if mobile != nil
         {
             mobileNu = mobile!
+            
+            let att = NSMutableAttributedString(string: "联系人：", attributes: [NSFontAttributeName:Profile.font(13),NSForegroundColorAttributeName:Profile.rgb(102, g: 102, b: 102)])
+            
+            
+
             if personName != nil
             {
-               mobileBt.setTitle("联系人：\(personName!)  \(mobile!)", forState: .Normal)
+                att.appendAttributedString(NSAttributedString(string: personName!, attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(102, g: 102, b: 102)]))
+//               mobileBt.setTitle("联系人：\(personName!)  \(mobile!)", forState: .Normal)
             }
-            else
-            {
-               mobileBt.setTitle("联系人：\(mobile!)", forState: .Normal)
-            }
-           
+            att.appendAttributedString(NSAttributedString(string: "  \(mobile!)", attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(255, g: 199, b: 92)]))
+            mobileBt.setAttributedTitle(att, forState: .Normal)
         }
     
     }

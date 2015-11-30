@@ -8,7 +8,7 @@
 
 import Foundation
 //typealias ExhibitorData = (urlIcon:String,idNu:String,name:String,address:String)
-class Exhibitor: UITableViewController,UISearchDisplayDelegate {
+class Exhibitor: UITableViewController,UISearchDisplayDelegate,UISearchBarDelegate {
     
     var net:NetWorkData!
 //    var table:UITableView!
@@ -20,12 +20,15 @@ class Exhibitor: UITableViewController,UISearchDisplayDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.setNavgationBarAttribute(true)
+        
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         self.setNavgationBarAttribute(false)
     }
+    
+    
     
     func setNavgationBarAttribute(change:Bool)
     {
@@ -70,51 +73,77 @@ class Exhibitor: UITableViewController,UISearchDisplayDelegate {
         self.tableView.sectionIndexBackgroundColor = UIColor.clearColor()
 //        self.tableView.sectionIndexColor = Profile.NavBarColor()
         let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
-        self.tableView.tableHeaderView = searchBar
+        searchBar.delegate = self
+        let searchBack = UIView(frame: CGRectMake(0,0,Profile.width(),45))
+        searchBack.addSubview(searchBar)
+        self.tableView.tableHeaderView = searchBack
+        
+        
         self.tableView.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
 //        self.view.addSubview(table)
 //        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
 //        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         
-        self.refreshControl = UIRefreshControl()
-        self.refreshControl?.addTarget(self, action: "refreshBegin", forControlEvents: .ValueChanged)
         
         searchCV = UISearchDisplayController(searchBar: searchBar, contentsController: self)
         searchCV.searchResultsDelegate = self
         searchCV.searchResultsDataSource = self
         searchCV.delegate = self
+        
+        
+
+        self.setupRefresh()
 //        searchCV.searchResultsTitle = "dd"
-        self.fetchExhibitorData()
+//        self.fetchExhibitorData()
     }
     
-    func refreshBegin(){
+    
+    func setupRefresh(){
         
-        self.fetchExhibitorData()
-    }
+       weak var wself = self
+        
+        
+       self.tableView.addHeaderWithCallback { () -> Void in
+          wself?.fetchExhibitorData()
+        }
+        self.tableView.headerBeginRefreshing()
+//                self.refreshControl = UIRefreshControl()
+//                self.refreshControl?.addTarget(self, action: "refreshBegin", forControlEvents: .ValueChanged)
 
+    }
     
     
     func fetchExhibitorData(){
 
 //        self.refreshControl?.beginRefreshing()
-        let loadView = THActivityView(activityViewWithSuperView: self.tableView.superview)
+//        let loadView = THActivityView(activityViewWithSuperView: self.tableView.superview)
         weak var wself = self
         net = NetWorkData()
         net.getExhibitorList { (result, status) -> (Void) in
-            
-            wself?.refreshControl?.endRefreshing()
-            loadView.removeFromSuperview()
+            wself?.tableView.headerEndRefreshing()
+//            wself?.tableView?.endRefreshing()
+//            loadView.removeFromSuperview()
             if status == .NetWorkStatusError
             {
                 if result == nil
                 {
-                    let errView = THActivityView(netErrorWithSuperView: wself!.tableView.superview)
-                    weak var werr = errView
-                    errView.setErrorBk({ () -> Void in
-                        wself?.fetchExhibitorData()
-                        werr?.removeFromSuperview()
-                    })
-                }
+                    
+                     let warnV = THActivityView(string: "网络错误")
+                     warnV.show()
+//                    let time =  dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
+//                    dispatch_after(time, dispatch_get_main_queue()) { () -> Void in
+//                        
+//                        let errView = THActivityView(netErrorWithSuperView: wself!.tableView)
+//                        errView.translatesAutoresizingMaskIntoConstraints = true
+//                        errView.frame = (wself?.tableView.bounds)!
+//                        
+//                        weak var werr = errView
+//                        errView.setErrorBk({ () -> Void in
+//                            wself?.fetchExhibitorData()
+//                            werr?.removeFromSuperview()
+//                        })
+//                    }
+               }
                 else
                 {
                     if let warnStr = result as? String
@@ -172,7 +201,10 @@ class Exhibitor: UITableViewController,UISearchDisplayDelegate {
         {
           return nil
         }
-        
+        if  dataArr[section].count == 0
+        {
+          return nil
+        }
         return prefixArr![section]
     }
     
@@ -251,6 +283,11 @@ class Exhibitor: UITableViewController,UISearchDisplayDelegate {
         {
             return true
         }
+    }
+    
+    
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        searchBar.frame = CGRectMake(0,0,Profile.width(),43)
     }
     
     
@@ -362,8 +399,8 @@ class ExhibitorCell: UITableViewCell {
             contentImage.sd_setImageWithURL(NSURL(string: data.iconUrl!)!, placeholderImage: UIImage(named: "default"))
         }
         titleL.text = data.name
-        addressL.text = data.address
-        name.text = data.remark
+        addressL.text = data.location
+//        name.text = data.remark
     }
 
     

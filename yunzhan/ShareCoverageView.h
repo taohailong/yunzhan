@@ -27,4 +27,6 @@ typedef enum ShareWxType_{
 }
 -(id)initWithDelegate:(id<ShareCoverageProtocol>)delegate;
 -(void)showInView:(UIView*)superView;
+@property(nonatomic,strong)NSString* token;
+@property(nonatomic,strong)NSString* wallID;
 @end

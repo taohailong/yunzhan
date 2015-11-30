@@ -247,11 +247,11 @@
             </objects>
             <point key="canvasLocation" x="986" y="583"/>
         </scene>
-        <!--咨询-->
+        <!--发现-->
         <scene sceneID="Qso-YU-Hsf">
             <objects>
                 <navigationController id="rSc-Re-phh" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="咨询" image="root-4" id="PS1-Io-M29"/>
+                    <tabBarItem key="tabBarItem" title="发现" image="root-4" id="PS1-Io-M29"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Ave-Yh-Bve">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

@@ -65,6 +65,9 @@ class ProductListCell: UITableViewCell {
         
         imageV = UIImageView()
         imageV.translatesAutoresizingMaskIntoConstraints = false
+        imageV.contentMode = .Center
+        imageV.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        imageV.image = UIImage(named: "default")
         titleL = UILabel()
         contentL = UILabel()
         
@@ -104,7 +107,17 @@ class ProductListCell: UITableViewCell {
    
     func fillData(imageUrl:String?,title:String?,introduce:String?){
        
-        imageV.sd_setImageWithURL(NSURL(string: imageUrl!), placeholderImage: nil)
+        if imageUrl != nil
+        {
+            weak var wimage = imageV
+            imageV.sd_setImageWithURL(NSURL(string: imageUrl!), placeholderImage:  UIImage(named: "default"), completed: { (image:UIImage!, err:NSError!, type:SDImageCacheType, url:NSURL!) -> Void in
+                if err == nil
+                {
+                    wimage?.contentMode = .ScaleAspectFit
+                    wimage?.backgroundColor = UIColor.whiteColor()
+                }
+            })
+        }
         titleL.text = title
         contentL.text = introduce
     }

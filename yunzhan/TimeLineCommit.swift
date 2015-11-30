@@ -7,7 +7,7 @@
 //
 
 import Foundation
-class TimeLineCommitVC: UIViewController,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate{
+class TimeLineCommitVC: UIViewController,UIActionSheetDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UITextViewDelegate{
     var textV:UITextView!
     var addBt:UIButton!
     var scaleImage:UIImage!
@@ -31,8 +31,11 @@ class TimeLineCommitVC: UIViewController,UIActionSheetDelegate,UIImagePickerCont
         
         
         textV = UITextView()
-        textV.textColor = Profile.rgb(102, g: 102, b: 102)
+//        textV.textColor = Profile.rgb(102, g: 102, b: 102)
         textV.font = Profile.font(14)
+        textV.text = "这一刻的想法..."
+        textV.textColor = Profile.rgb(210, g: 210, b: 210)
+        textV.delegate = self
         textV.translatesAutoresizingMaskIntoConstraints = false
         backView.addSubview(textV)
 //        backView.addConstraints(NSLayoutConstraint.layoutHorizontalFull(textV))
@@ -86,6 +89,14 @@ class TimeLineCommitVC: UIViewController,UIActionSheetDelegate,UIImagePickerCont
     }
     
     
+    func textViewDidBeginEditing(textView: UITextView) {
+        if textView.text == "这一刻的想法..."{
+           textView.text = nil
+           textView.textColor = Profile.rgb(102, g: 102, b: 102)
+        }
+        
+    }
+    
     func sendMessage(){
         
         if scaleImage == nil
@@ -93,6 +104,10 @@ class TimeLineCommitVC: UIViewController,UIActionSheetDelegate,UIImagePickerCont
             let warn = THActivityView(string: "请选择图片")
             warn.show()
             return
+        }
+        
+        if textV.text == "这一刻的想法..."{
+            textV.text = ""
         }
         
         let loadV = THActivityView(activityViewWithSuperView: self.view)
@@ -129,6 +144,7 @@ class TimeLineCommitVC: UIViewController,UIActionSheetDelegate,UIImagePickerCont
 
     func addImageAction(){
     
+        textV.resignFirstResponder()
         let sheet = UIActionSheet(title: nil , delegate: self, cancelButtonTitle: "取消", destructiveButtonTitle:"手机拍照")
         sheet.addButtonWithTitle("从手机中选择图片")
         sheet.showInView((self.navigationController!.view))
@@ -180,12 +196,19 @@ class TimeLineCommitVC: UIViewController,UIActionSheetDelegate,UIImagePickerCont
         }
         let image = info[UIImagePickerControllerOriginalImage] as? UIImage
 //        scaleImage = image
-        print("width \(image?.size.width) height \(image?.size.height)")
+//        print("width \(image?.size.width) height \(image?.size.height)")
 //        scaleImage = image?.scaleToSize(CGSizeMake((image?.size.width)!*0.1, (image?.size.height)!*0.1))
-        scaleImage = UIImage(byScalingAndCroppingForSize: CGSizeMake((image?.size.width)!*0.1, (image?.size.height)!*0.1), and: image)
+        
+        var s:CGFloat = 1.0
+        if image!.size.width > 500.0
+        {
+            s = 500.0 / image!.size.width
+        }
+        scaleImage = UIImage(byScalingAndCroppingForSize: CGSizeMake((image?.size.width)! * s, (image?.size.height)! * s), and: image)
+        
         
 //        scaleImage = image?.imageCompressScale(0.1)
-        print("width \(scaleImage?.size.width) height \(scaleImage?.size.height)")
+//        print("width \(scaleImage?.size.width) height \(scaleImage?.size.height)")
         
 //        let s = UIImageView()
 //        s.backgroundColor = UIColor.redColor()

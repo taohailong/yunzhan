@@ -7,19 +7,32 @@
 //
 
 import Foundation
-class MyRegistVC: UIViewController {
+class MyRegistVC: UIViewController,UIWebViewDelegate {
     
+    var loadV:THActivityView!
     var net:NetWorkData!
     var webV:UIWebView!
     override func viewDidLoad() {
         super.viewDidLoad()
         
         webV = UIWebView()
+        webV.delegate = self
         webV.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(webV)
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(webV))
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(webV))
         self.fetchRegistData()
+        
+       loadV = THActivityView(activityViewWithSuperView: self.view)
+    }
+    
+    func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
+        loadV.removeFromSuperview()
+    }
+    
+    
+    func webViewDidStartLoad(webView: UIWebView) {
+        loadV.removeFromSuperview()
     }
     
     func fetchRegistData(){

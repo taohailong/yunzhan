@@ -76,7 +76,7 @@ class SuggestionVC: UIViewController,UITextViewDelegate {
     func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool
     {
  
-         print(text)
+//         print(text)
         if lenth > 139
         {
             return false

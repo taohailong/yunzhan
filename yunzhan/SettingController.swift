@@ -107,6 +107,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
             }
             else
             {
+            
               cell.fillData(nil, name: user.name, phone: user.phone ,title:user.title )
             }
             
@@ -122,12 +123,14 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
             switch indexPath {
              
             case let s where s.section == 1 && s.row == 0:
-                imageName = "settingActivty"
-                title = "我的活动"
-            case let s where s.section == 1 && s.row == 1:
-                
                 imageName = "settingMyExhibitor"
                 title = "我的展商"
+                
+           case let s where s.section == 1 && s.row == 1:
+                
+              imageName = "settingActivty"
+              title = "我的活动"
+
                 
             case let s where s.section == 1 && s.row == 2:
                 
@@ -160,8 +163,10 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+   
         if indexPath.section == 0{
-          return 75
+            
+            return 75
         }
         else
         {
@@ -190,7 +195,6 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
                 self.showLoginVC()
                 return
             }
-
             return
         }
         else if indexPath.section == 1
@@ -203,15 +207,16 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
             
             if indexPath.row == 0
             {
-                let schedulerList = MySchedulerListVC()
-                schedulerList.hidesBottomBarWhenPushed = true
-                self.navigationController?.pushViewController(schedulerList, animated: true)
-            }
-            else if indexPath.row == 1
-            {
                 let exhibitorList = MyExhibitorList()
                 exhibitorList.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(exhibitorList, animated: true)
+                
+            }
+            else if indexPath.row == 1
+            {
+                let schedulerList = MySchedulerListVC()
+                schedulerList.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(schedulerList, animated: true)
             }
             else if indexPath.row == 2
             {
@@ -223,7 +228,12 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         }
         else if indexPath.section == 2
         {
-        
+            if user.token == nil
+            {
+                self.showLoginVC()
+                return
+            }
+
             if indexPath.row == 1
             {
                 let companyVC = MyCompanyVC()
@@ -304,6 +314,7 @@ class LogOutVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UIAle
     }
     
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        
         if section == 1
         {
           return 15
@@ -342,7 +353,7 @@ class LogOutVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UIAle
             cell?.textLabel?.textColor = Profile.rgb(51, g: 51, b: 51)
             cell?.textLabel?.font = Profile.font(16)
             cell?.textLabel?.textAlignment = .Center
-           cell?.textLabel?.text = "退出登陆"
+           cell?.textLabel?.text = "退出登录"
         }
         return cell!
     }
@@ -351,11 +362,13 @@ class LogOutVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UIAle
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         if indexPath.section == 0
         {
+            let about = AboutVC()
+            self.navigationController?.pushViewController(about , animated: true)
 //            self
         }
         else
         {
-            let alert = UIAlertView(title: "提示", message: "您要退出登陆吗", delegate: self, cancelButtonTitle: "取消", otherButtonTitles: "确定")
+            let alert = UIAlertView(title: "提示", message: "您要退出登录吗？", delegate: self, cancelButtonTitle: "取消", otherButtonTitles: "确定")
             alert.show()
            
         }
@@ -424,7 +437,7 @@ class SettingHeadCell: UITableViewCell {
         self.contentView.addSubview(loginBt!)
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(loginBt!, toItem: self.contentView))
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(loginBt!, toItem: titleL))
-        loginBt?.setTitle("点击登陆", forState: .Normal)
+        loginBt?.setTitle("点击登录", forState: .Normal)
         loginBt?.setTitleColor(Profile.rgb(51, g: 51, b: 51), forState: .Normal)
         loginBt?.titleLabel?.font = Profile.font(15)
         loginBt?.addTarget(self, action: "logAction", forControlEvents: .TouchUpInside)
@@ -443,7 +456,6 @@ class SettingHeadCell: UITableViewCell {
         titleL.hidden = false
         phoneL.hidden = false
         
-//        titleL.text = "dsfasdf"
         var constraint : NSLayoutConstraint? = nil
         for temp in  self.contentView.constraints
         {
@@ -452,8 +464,8 @@ class SettingHeadCell: UITableViewCell {
                 if f == phoneL&&temp.secondAttribute == .Bottom&&temp.firstAttribute == .Top
                 {
                     constraint = temp
+                    break
                 }
-
             }
         }
        
@@ -466,7 +478,17 @@ class SettingHeadCell: UITableViewCell {
           constraint?.constant = 5
         }
         
-        titleL.text = name
+        if name != nil
+        {
+            let att = NSMutableAttributedString(string: name!, attributes: [NSFontAttributeName:Profile.font(17),NSForegroundColorAttributeName:Profile.rgb(51, g: 51, b: 51)])
+        
+            if title != nil
+            {
+              att.appendAttributedString(NSAttributedString(string: "  \(title!)", attributes: [NSFontAttributeName:Profile.font(11),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)]))
+            }
+            titleL.attributedText = att
+        }
+//        titleL.text = name
         phoneL.text = phone
         loginBt?.hidden = true
     }

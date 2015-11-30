@@ -53,38 +53,44 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
     override func viewDidLoad() {
         
          super.viewDidLoad()
-         self.title = "咨询"
+         self.title = "发现"
         self.navigationController?.tabBarItem.selectedImage = UIImage(named: "root-4_selected")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationController?.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
         
-        segmentV = TSegmentedControl(sectionTitles: ["新闻","图片"])
+        segmentV = TSegmentedControl(sectionTitles: ["展圈","资讯"])
         segmentV.addTarget(self, action: "segmentChange", forControlEvents: .ValueChanged)
         segmentV.frame = CGRectMake(0, 64, Profile.width(), 40)
+        segmentV.selectionIndicatorColor = Profile.rgb(223, g: 32, b: 82)
         segmentV.textColor = Profile.rgb(102, g: 102, b: 102)
         segmentV.selectionIndicatorHeight = 1
+        segmentV.font = Profile.font(15.0)
         segmentV.selectionIndicatorColor = Profile.rgb(223, g: 32, b: 82)
         segmentV.selectionIndicatorMode = HMSelectionIndicatorFillsTop
+//        segmentV.backgroundColor = UIColor.blueColor()
         self.view.addSubview(segmentV)
         
-         newList = NewsListVC()
-         newList.view.translatesAutoresizingMaskIntoConstraints = false
-         self.view.addSubview(newList.view)
-        var tempView = newList.view
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-104-[tempView]-49-|", options: [], metrics: nil, views: ["tempView":tempView]))
-         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(newList.view))
-         self.addChildViewController(newList)
         
         
         timeLineV = TimeLineVC()
         timeLineV.view.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(timeLineV.view)
-        tempView = timeLineV.view
+        var  tempView = timeLineV.view
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-104-[tempView]-49-|", options: [], metrics: nil, views: ["tempView":tempView]))
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(timeLineV.view))
         self.addChildViewController(timeLineV)
-        timeLineV.view.hidden = true
+
         
-//        self.creatRightBar()
+        
+         newList = NewsListVC()
+         newList.view.translatesAutoresizingMaskIntoConstraints = false
+         self.view.addSubview(newList.view)
+         tempView = newList.view
+         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-104-[tempView]-49-|", options: [], metrics: nil, views: ["tempView":tempView]))
+         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(newList.view))
+         self.addChildViewController(newList)
+        
+         tempView.hidden = true
+        self.creatRightBar()
     }
     
     func creatRightBar(){
@@ -122,15 +128,16 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
     {
         if segmentV.selectedIndex == 0
         {
-           newList.view.hidden = false
-            timeLineV.view.hidden = true
-            self.navigationItem.rightBarButtonItem = nil
+            newList.view.hidden = true
+            timeLineV.view.hidden = false
+            self.creatRightBar()
+
         }
         else
         {
-           newList.view.hidden = true
-            timeLineV.view.hidden = false
-            self.creatRightBar()
+            newList.view.hidden = false
+            timeLineV.view.hidden = true
+            self.navigationItem.rightBarButtonItem = nil
         }
     }
     

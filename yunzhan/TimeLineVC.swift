@@ -77,12 +77,16 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
             {
                 if result == nil
                 {
-                    let errView = THActivityView(netErrorWithSuperView: wself!.view)
-                    weak var werr = errView
-                    errView.setErrorBk({ () -> Void in
-                        wself?.fetchTimeLineList()
-                        werr?.removeFromSuperview()
-                    })
+                    let warnV = THActivityView(string: "网络错误")
+                    warnV.show()
+//                    let errView = THActivityView(netErrorWithSuperView: wself!.view)
+//                    errView.translatesAutoresizingMaskIntoConstraints = true
+//                    errView.frame = (wself?.tableView.bounds)!
+//                    weak var werr = errView
+//                    errView.setErrorBk({ () -> Void in
+//                        wself?.fetchTimeLineList()
+//                        werr?.removeFromSuperview()
+//                    })
                 }
                 else
                 {
@@ -97,7 +101,17 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
          
             if let list = result as? [TimeMessage]{
             
-               wself?.dataArr = list
+                
+                if list.count == 0{
+                
+                  let empty = THActivityView(emptyDataWarnViewWithString: "开来互动 上传图片吧", withImage: "noPicData", withSuperView: wself?.tableView)
+                    
+                    empty.translatesAutoresizingMaskIntoConstraints = true
+                    empty.frame = (wself?.tableView.bounds)!
+                    return
+                }
+                
+               (wself?.dataArr = list)!
                wself?.tableView.reloadData()
                wself?.addLoadMoreView(list.count)
             }
@@ -144,7 +158,7 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
             }
             
             if let list = result as? [TimeMessage]{
-                
+            
                 wself?.dataArr.appendContentsOf(list)
                 wself?.tableView.reloadData()
                 wself?.addLoadMoreView(list.count)
@@ -196,12 +210,12 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
         else if indexPath.row == 2
         {
             let element = dataArr[indexPath.section]
-            if element.contentHeight == nil
+            if element.contentHeight == 0
             {
-              return 0
+              return 1
             }
-            //            评论内容
-          return  CGFloat(Float(15.0) + element.contentHeight!)
+            //评论内容
+          return  CGFloat(Float(12.0) + element.contentHeight!)
         }
         else
         {
@@ -225,7 +239,8 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
         if indexPath.row == 0
         {
              let cell = tableView.dequeueReusableCellWithIdentifier("TimeLinePicCell") as! TimeLinePicCell
-             cell.loadPicUrl(element.picUrl)
+            
+             cell.loadPicUrl(element.picUrl,height: element.picHeight)
              return cell
         }
         else if indexPath.row == 1
@@ -258,7 +273,14 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
             cell.favoriteBlock = {
                 wself?.favoriteAction(element)
             }
-            cell.commentBlock = { }
+            cell.commentBlock = {
+                let commentInfo = TimeLineInfoVC()
+                commentInfo.timeData = element
+                commentInfo.hidesBottomBarWhenPushed = true
+                commentInfo.becomeFirstRes = true
+                wself!.navigationController?.pushViewController(commentInfo, animated: true)
+                
+            }
             cell.forwardBlock = {
               wself?.shareAction(element)
             }
@@ -268,11 +290,19 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        let element = dataArr[indexPath.section]
-        let commentInfo = TimeLineInfoVC()
-        commentInfo.timeData = element
-        commentInfo.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(commentInfo, animated: true)
+        if indexPath.row == 0 || indexPath.row == 1
+        {
+            let element = dataArr[indexPath.section]
+            
+            weak var wself = self
+            let commentInfo = TimeLineInfoVC()
+            commentInfo.block = { wself?.tableView.reloadData() }
+            commentInfo.timeData = element
+            commentInfo.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(commentInfo, animated: true)
+            
+        }
+        
     }
     
     
@@ -349,12 +379,23 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
 
     func shareAction(let data:TimeMessage){
     
+        
+        let user = UserData.shared
+        if user.token == nil
+        {
+            self.timeLineShowLoginVC()
+            return
+        }
+        
        let shareView = ShareCoverageView(delegate: self)
-       shareView.showInView(self.tabBarController?.view)
+        shareView.token = UserData.shared.token
+        shareView.wallID = data.id
+        shareView.showInView(self.tabBarController?.view)
         shareElement = data
     }
     
     func shareActionFinish(success: Bool) {
+        
         let shareNet = NetWorkData()
         weak var wself = self
         shareNet.getForwardNu(shareElement.id!) { (result, status) -> (Void) in
@@ -391,6 +432,7 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
 
 class TimeLinePicCell:UITableViewCell {
     let picImageV:UIImageView
+//    let heightImage:CGFloat = 115.0
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         picImageV = UIImageView()
@@ -414,13 +456,19 @@ class TimeLinePicCell:UITableViewCell {
         }
 
     }
-    func loadPicUrl(url:String?)
+    func loadPicUrl(url:String?,height:Double?)
     {
        if url != nil
        {
 //           picImageV.sd_setImageWithURL(NSURL(string: url!), placeholderImage: nil ,complete)
         weak var wimage = picImageV
         picImageV.contentMode = .Center
+        
+        if height < 115
+        {
+           picImageV.contentMode = .ScaleAspectFit
+        }
+        
         picImageV.sd_setImageWithURL(NSURL(string: url!)!, placeholderImage: UIImage(named: "default_big"), completed: { (let image: UIImage!, err: NSError!, type: SDImageCacheType!, url:NSURL!) -> Void in
             
             if err == nil {
@@ -430,6 +478,9 @@ class TimeLinePicCell:UITableViewCell {
 
         }
     }
+    
+    
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -649,6 +700,7 @@ class TimeLineContentCell: UITableViewCell {
         
         contentL = UILabel()
         contentL.textColor = Profile.rgb(153, g: 153, b: 153)
+//        contentL.backgroundColor = UIColor.redColor()
         contentL.font = Profile.font(12)
         contentL.numberOfLines = 0
         contentL.translatesAutoresizingMaskIntoConstraints = false

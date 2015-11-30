@@ -54,23 +54,27 @@ class NewsListVC:UITableViewController {
     func fetchData(){
         
         self.refreshControl?.beginRefreshing()
-//        let loadView = THActivityView(activityViewWithSuperView: self.navigationController?.view)
+        let loadView = THActivityView(activityViewWithSuperView: self.navigationController?.view)
         weak var wself = self
         net = NetWorkData()
         net.getNewsList { (result, status) -> (Void) in
             
             wself?.refreshControl?.endRefreshing()
-//            loadView.removeFromSuperview()
+            loadView.removeFromSuperview()
             if status == .NetWorkStatusError
             {
                 if result == nil
                 {
-                    let errView = THActivityView(netErrorWithSuperView: wself!.tableView.superview)
-                    weak var werr = errView
-                    errView.setErrorBk({ () -> Void in
-                        wself?.fetchData()
-                        werr?.removeFromSuperview()
-                    })
+                    let warnV = THActivityView(string: "网络错误")
+                    warnV.show()
+//                    let errView = THActivityView(netErrorWithSuperView: wself!.tableView)
+//                    errView.translatesAutoresizingMaskIntoConstraints = true
+//                    errView.frame = (wself?.tableView.bounds)!
+//                    weak var werr = errView
+//                    errView.setErrorBk({ () -> Void in
+//                        wself?.fetchData()
+//                        werr?.removeFromSuperview()
+//                    })
                 }
                 else
                 {
@@ -84,6 +88,18 @@ class NewsListVC:UITableViewController {
             }
             
             guard let arr = result as? [NewsData] else { return }
+            
+            
+            if arr.count == 0
+            {
+                let empty = THActivityView(emptyDataWarnViewWithString: "没有相关新闻哦", withImage: "noNewData", withSuperView: wself?.tableView)
+                
+                empty.translatesAutoresizingMaskIntoConstraints = true
+                empty.frame = (wself?.tableView.bounds)!
+                return
+
+            }
+           
             
             wself?.dataArr = arr
             wself?.tableView.reloadData()

@@ -119,16 +119,18 @@ class NetWorkData {
                 block(result: result, status: status)
                 return
             }
-            
-            
+        
             guard let data = result as? [String:AnyObject], let list = data["data"] as? [[String:AnyObject]]
             else
             {
                 return
             }
             
-            var prefixArr = [String]()
-            var returnArr = [[ExhibitorData]]()
+            var prefixArr = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#"]
+    
+            var returnArr = [[ExhibitorData]](count: 27, repeatedValue: [ExhibitorData]())
+            
+            
             for temp in list
             {
             
@@ -148,9 +150,9 @@ class NetWorkData {
 
                 if let index = prefixArr.indexOf(prefixStr)
                 {
-                  var subArr = returnArr[index]
+                    var subArr = returnArr[index]
                     
-                   subArr.append(element)
+                    subArr.append(element)
                     returnArr.removeAtIndex(index)
                     returnArr.insert(subArr, atIndex: index)
                 }
@@ -164,7 +166,7 @@ class NetWorkData {
             }
             
             let compound:(prefixArr:[String],list:[[ExhibitorData]]) = (prefixArr,returnArr)
-            print(compound)
+//            print(compound)
             block(result: (compound), status: status)
         }
     }
@@ -183,7 +185,7 @@ class NetWorkData {
             guard let data = result as? [String:AnyObject],let list = data["data"] as? [[String:AnyObject]] else {
                 return
             }
-            print(list)
+//            print(list)
             
             var schedulerList = [[SchedulerData]]()
             var schedulerDateArr = [String]()
@@ -255,7 +257,7 @@ class NetWorkData {
 //         let url = "http://\(Profile.domain)/api/app/buz/detail?eid=1&bid=2"
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
-            print(result)
+//            print(result)
             if status == NetStatus.NetWorkStatusError
             {
                 
@@ -380,8 +382,12 @@ class NetWorkData {
             let scheduleData = SchedulerData(time: "\(startT.toTimeString("HH:mm"))-\(endT.toTimeString("HH:mm"))" , date: startT.toTimeString("yy-MM-dd"), title: (list["name"] as? String)!, introduce: nil, address: (list["addr"] as? String)!, id: String(list["id"]))
         
             scheduleData.company = list["sponsor"] as? String
-            scheduleData.type = Bool(list["stype"] as! Int)
-            
+            scheduleData.type = SchedulerType.init(status: list["status"] as? Int, type: list["stype"] as? Int)
+            if let tN = list["stype_format"] as? String
+            {
+                scheduleData.typeName = tN
+            }
+
             
             var contacts = [PersonData]()
             if let contactArr = list["contacts"] as? [[String:AnyObject]]
@@ -389,7 +395,7 @@ class NetWorkData {
                 for dic in contactArr
                 {
                    let p = PersonData(name: dic["name"] as? String, title: dic["title"] as? String , phone: dic["phone"] as? String)
-                    print(dic)
+//                    print(dic)
                     
                     if let exhibitorID = dic["exhibition_id"] as? Int
                     {
@@ -804,7 +810,7 @@ class NetWorkData {
                 block(result: result, status: status)
                 return
             }
-            print(result)
+//            print(result)
             guard let data = result as? [String:AnyObject],let msg = data["msg"] as? String else {
                 return
             }
@@ -827,7 +833,7 @@ class NetWorkData {
                 block(status: false)
                 return
             }
-            print(result)
+//            print(result)
             guard let data = result as? [String:AnyObject],let code  = data["code"] as? Int  else {
                 block(status: false)
                 return
@@ -858,7 +864,7 @@ class NetWorkData {
                 block(status: false)
                 return
             }
-            print(result)
+//            print(result)
             guard let data = result as? [String:AnyObject],let code  = data["code"] as? Int  else {
                 block(status: false)
                 return
@@ -949,14 +955,20 @@ class NetWorkData {
                 {
                     if let height = temp["height"] as? Double
                     {
-                        scale =  height / width
-                        m.picHeight = Double(Profile.width()) * scale
+                        if width != 0
+                        {
+                            scale =  height / width
+                            m.picHeight = Double(Profile.width()) * scale
+                        }
+                        else
+                        {
+                          m.picHeight = 300.0
+                        }
                     }
                 }
 
-//                m.comment = temp["content"] as? String
-                m.comment = "啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦"
-                m.figureOutContentHeight(CGSizeMake(Profile.width()-30, 1000), font: Profile.font(11))
+                m.comment = temp["content"] as? String
+                m.figureOutContentHeight(CGSizeMake(Profile.width()-30, 1000), font: Profile.font(12))
                 if let time = temp["create_time"] as? Int
                 {
                     m.time = time.toTimeString("MM/dd-HH:mm")
@@ -970,11 +982,11 @@ class NetWorkData {
                 m.favorited = temp["praiseStatus"] as? Bool
                 m.favoriteNu = temp["praiseCount"] as? Int
                 m.feedBackNu = temp["commentCount"] as? Int
-//                m.personName = temp["name"] as? String
-//                m.personTitle = temp["title"] as? String
+                m.personName = temp["name"] as? String
+                m.personTitle = temp["title"] as? String
                 
-                m.personName = "啦啦啦"
-                m.personTitle = "总监"
+//                m.personName = "啦啦啦"
+//                m.personTitle = "总监"
  
                 listArr.append(m)
             }
@@ -1050,7 +1062,7 @@ class NetWorkData {
                 block(result: "数据参数错误", status: .NetWorkStatusError)
                 return
             }
-            print(result)
+//            print(result)
             if let nu = code["shareNum"] as? Int
             {
                block(result: nu, status: .NetWorkStatusSucess)
@@ -1074,7 +1086,8 @@ class NetWorkData {
     
         let user = UserData.shared
         var url = "http://\(Profile.domain)/api/app/infoWall/comment?eid=1&info_wall_id=\(id)&content=\(comment)&chn=ios&token=\(user.token!)"
-
+//        var str = url as NSString
+//        str = str.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
         url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
@@ -1137,10 +1150,10 @@ class NetWorkData {
               {
                 element.time = time.toTimeString("yy-MM-dd HH:mm")
               }
-//              element.personName = temp["name"] as? String
-//              element.personTitle = temp["title"] as? String
-            element.personName = "啦啦啦"
-            element.personTitle = "总监"
+              element.personName = temp["name"] as? String
+              element.personTitle = temp["title"] as? String
+//            element.personName = "啦啦啦"
+//            element.personTitle = "总监"
 
               listArr.append(element)
             }
@@ -1237,7 +1250,7 @@ class NetWorkData {
             var companyArr = [CompanyData]()
             for temp in code
             {
-                print(temp)
+//                print(temp)
               let c = CompanyData()
                 c.address = temp["addr"] as? String
                 c.contact = temp["contacts"] as? String
@@ -1295,10 +1308,10 @@ class NetWorkData {
         
         if url.isEmpty
         {
-            print(url)
+//            print(url)
             return
         }
-        print(url)
+//        print(url)
         net = AFHTTPRequestOperation(request: NSURLRequest(URL: NSURL(string: url)!))
         
         net.setCompletionBlockWithSuccess({ (operation:AFHTTPRequestOperation!, result:AnyObject!) -> Void in

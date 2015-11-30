@@ -8,23 +8,33 @@
 
 #import "ShareCoverageView.h"
 #import "WXApi.h"
-@implementation ShareCoverageView
-//-(id)initInSuperView:(UIView *)superView
-//{
-//    self = [super initWithFrame:superView.bounds];
-//
-//    
-//    return self;
-//}
+#if ENTERPISE
+#import "yunzhan_copy-Swift.h"
+#define PORT "www.zhangzhantong.com"
+#else
+#define PORT "www.zhangzhantong.com"
+#import "yunzhan-Swift.h"
+#endif
 
+@implementation ShareCoverageView
+@synthesize token,wallID;
 
 -(id)initWithDelegate:(id<ShareCoverageProtocol>)delegate
 {
     self = [super init];
     _delegate = delegate;
-    self.backgroundColor = [UIColor colorWithWhite:0.5 alpha:0.5];
+    self.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
+    UITapGestureRecognizer* tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapBackView)];
+    [self addGestureRecognizer:tap];
     return self;
 }
+
+-(void)tapBackView{
+
+   [self shareViewDisappera];
+
+}
+
 
 -(void)showInView:(UIView*)superView
 {
@@ -65,7 +75,7 @@
     
     [footView addConstraint:[NSLayoutConstraint constraintWithItem:titleL attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:footView attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:0]];
     
-    [footView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-10-[titleL]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(titleL)]];
+    [footView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-20-[titleL]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(titleL)]];
     
     
     UIView* separateView = [[UIView alloc]init];
@@ -118,15 +128,20 @@
     [footView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[separateView]-20-[groupBt(80)]" options:0 metrics:nil views:NSDictionaryOfVariableBindings(separateView,groupBt)]];
     
     
+    
     UIView* separateBottom = [[UIView alloc]init];
     separateBottom.translatesAutoresizingMaskIntoConstraints = NO;
+    separateBottom.backgroundColor = [UIColor clearColor];
     [footView addSubview:separateBottom];
-    separateBottom.backgroundColor = [UIColor colorWithRed:243.0/255.0 green:243.0/255.0 blue:243.0/255.0 alpha:1.0];
+//    separateBottom.backgroundColor = [UIColor colorWithRed:243.0/255.0 green:243.0/255.0 blue:243.0/255.0 alpha:1.0];
     
     [footView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-0-[separateBottom]-0-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(separateBottom)]];
     
     [footView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[separateBottom(0.5)]-50-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(separateBottom)]];
 
+    
+    
+    
     
     UIButton* cancelBt = [UIButton buttonWithType:UIButtonTypeCustom];
     cancelBt.layer.masksToBounds = YES;
@@ -136,13 +151,17 @@
     [cancelBt addTarget:self action:@selector(shareViewDisappera) forControlEvents:UIControlEventTouchUpInside];
     cancelBt.translatesAutoresizingMaskIntoConstraints = NO;
     [footView addSubview:cancelBt];
+     [cancelBt setTitle:@"取消" forState:UIControlStateNormal];
+    
+    
+    [cancelBt setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     [cancelBt setTitleColor:[UIColor colorWithRed:223.0/255.0 green:32.0/255.0 blue:82.0/255.0 alpha:1.0] forState:UIControlStateNormal];
-    [cancelBt setTitle:@"取消" forState:UIControlStateNormal];
+   
     [cancelBt setBackgroundImage:[UIImage imageNamed:@"login_hight"] forState:UIControlStateHighlighted];
     
     [footView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-15-[cancelBt]-15-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(cancelBt)]];
     
-    [footView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[cancelBt]-10-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(cancelBt)]];
+    [footView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[cancelBt(35)]-10-|" options:0 metrics:nil views:NSDictionaryOfVariableBindings(cancelBt)]];
     
     return footView;
 }
@@ -185,11 +204,25 @@
 }
 
 
--(void)wxShareToFriend:(BOOL)flag
+-(void)wxShareToFriend:(BOOL)flag  
 {
+    WXWebpageObject *ext = [WXWebpageObject object];
+    
+    NSString* url = [NSString stringWithFormat:@"http://www.zhangzhantong.com/share?name=jsbicycle&token=%@&eid=1&info_wall_id=%@",self.token,self.wallID];
+    NSLog(url);
+    ext.webpageUrl = url;
+    
+    WXMediaMessage *message = [WXMediaMessage message];
+//    message.message = "message"
+    message.title = @"中国电动车展";
+    message.description = @"《第34界中国江苏国际自行车新能源电动车及零部件交易会》火热报名中~";
+    [message setThumbImage:[UIImage imageNamed:@"aboutImage"]];
+    message.mediaObject = ext;
+    
     SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
-    req.text = @"人文的东西并不是体现在你看得到的方面，它更多的体现在你看不到的那些方面，它会影响每一个功能，这才是最本质的。但是，对这点可能很多人没有思考过，以为人文的东西就是我们搞一个很小清新的图片什么的。”综合来看，人文的东西其实是贯穿整个产品的脉络，或者说是它的灵魂所在。";
-    req.bText = YES;
+//    req.text = @"http://www.zhangzhantong.com/jsbicycle";
+    req.message = message;
+    req.bText = NO;
     if (flag) {
         req.scene = WXSceneSession;
     }
@@ -200,7 +233,7 @@
     }
     BOOL success = [WXApi sendReq:req];
     
-    if ([_delegate respondsToSelector:@selector(shareActionFinish:)])
+    if ([_delegate respondsToSelector:@selector(shareActionFinish:)]&&success==YES)
     {
         [_delegate shareActionFinish:success];
     }

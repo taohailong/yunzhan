@@ -28,6 +28,7 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         table.tableFooterView = UIView()
         table.registerClass(ContactsPersonCell.self, forCellReuseIdentifier: "ContactsPersonCell")
 //        table.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        table.sectionIndexBackgroundColor = UIColor.clearColor()
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
         self.fetchContactList()
@@ -97,7 +98,7 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         let arr = dataArr[section]
-        print(dataArr)
+//        print(dataArr)
         return arr.count
     }
     

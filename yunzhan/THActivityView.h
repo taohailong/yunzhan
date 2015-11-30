@@ -43,5 +43,5 @@ typedef void (^LoadErrorBk)(void);
 
 -(id)initEmptyDataWarnViewWithString:(NSString*)str WithImage:(NSString*)imageStr WithSuperView:(UIView*)superView
 ;
-
+//-(id)initFrameEmptyDataWarnViewWithString:(NSString*)str WithImage:(NSString*)imageStr WithSuperView:(UIView*)superView;
 @end

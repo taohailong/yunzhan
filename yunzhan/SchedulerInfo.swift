@@ -5,7 +5,12 @@
 //  Created by 陶海龙 on 15/11/10.
 //  Copyright © 2015年 miaomiao. All rights reserved.
 //
+/*
 
+//private int slevel = 0; 活动级别,0: 展会期间的活动, 1: 非展会期间活动
+private int smode = 0; //活动方式,0: 公开, 1: 不公开
+private int stype = 1; //活动类型,1:宴会,2:论坛,3:企业活动
+*/
 import Foundation
 class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
     var schedulerData: SchedulerData!
@@ -15,7 +20,7 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
     var contents:[String]!
     var net:NetWorkData!
     var schedulerID:String!
-    
+    var callBlock:((Void)->Void)!
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -37,6 +42,7 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
         table.separatorStyle = .None
         table.delegate = self
         table.dataSource = self
+        table.allowsSelection = false
         table.registerClass(SchedulerInfoHeadCell.self , forCellReuseIdentifier: "SchedulerInfoHeadCell")
         table.registerClass(SchedulerInfoTitleHeadView.self, forHeaderFooterViewReuseIdentifier: "SchedulerInfoTitleHeadView")
         
@@ -136,7 +142,7 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
                 if let button = leftBar?.customView as? UIButton
                 {
                     button.selected = true
-                    print(button)
+//                    print(button)
                 }
             }
           })
@@ -163,6 +169,10 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
             }
             else
             {
+                if wself?.callBlock != nil
+                {
+                   wself?.callBlock()
+                }
                 let leftBar = wself?.navigationItem.rightBarButtonItem
                 if let button = leftBar?.customView as? UIButton
                 {
@@ -210,7 +220,7 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
             {
               return
             }
-            print(tuple)
+//            print(tuple)
             wself?.schedulerData = tuple.scheduler
             
             if tuple.guests.count != 0
@@ -232,24 +242,17 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
-        let nu = 5
-//        if contents == nil || contents.count == 0
-//        {
-//            nu = nu - 1
-//          if guests == nil || guests.count == 0
-//          {
-//             nu = nu - 1
-//            
-//            if contacts == nil || contacts.count == 0
-//            {
-//               nu = nu - 1
-//            }
-//          }
-//        }
-//        if nu == 2
-//        {
-//          nu = nu - 1
-//        }
+        var nu = 5
+        if contents == nil || contents.count == 0
+        {
+          if guests == nil || guests.count == 0
+          {
+            if contacts == nil || contacts.count == 0
+            {
+               nu = 1
+            }
+          }
+        }
         return nu
     }
     
@@ -389,14 +392,22 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
 
         if indexPath.section == 0
         {
+//            第一行高度
             return 137
         }
         else if indexPath.section == 4
         {
+//            联系人
             return 60
+        }
+        else if indexPath.section == 2
+        {
+            let c = contents[indexPath.row]
+            return c.boundingRectWithSize(CGSizeMake(Profile.width()-38, 1000), options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName:Profile.font(13)], context: nil).height + 12
         }
         else
         {
+//          大会
           return 25
         }
     }
@@ -408,13 +419,12 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
         if indexPath.section == 0{
            
              let cell = tableView.dequeueReusableCellWithIdentifier("SchedulerInfoHeadCell") as! SchedulerInfoHeadCell
-            cell.fillData(schedulerData.title, time: "\(schedulerData.date) \(schedulerData.time)", address: schedulerData.address, type: schedulerData.type, company: schedulerData.company)
+            cell.fillData(schedulerData.title, time: "\(schedulerData.date) \(schedulerData.time)", address: schedulerData.address, type: schedulerData.typeName, company: schedulerData.company)
             return cell
         }
         
         else if indexPath.section == 2
         {
-            
             let cell = tableView.dequeueReusableCellWithIdentifier("CommonOneLabelCell") as! CommonOneLabelCell
             cell.titleL.text = contents[indexPath.row]
             return cell
@@ -544,7 +554,7 @@ class SchedulerInfoHeadCell: UITableViewCell {
         
     }
 
-    func fillData(title:String?,time:String?,address:String?,type:Bool?,company:String?)
+    func fillData(title:String?,time:String?,address:String?,type:String?,company:String?)
     {
 //        iconImage.sd_setImageWithURL(NSURL(string: iconUrl), placeholderImage: nil)
         titleL.text = title
@@ -559,7 +569,7 @@ class SchedulerInfoHeadCell: UITableViewCell {
         }
         if let f = type
         {
-           typeL.text = f ? "类型：公开":"类型：非公开"
+           typeL.text = "类型：\(f)"
         }
         else
         {
@@ -622,9 +632,10 @@ class CommonOneLabelCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         titleL.textColor = Profile.rgb(153, g: 153, b: 153)
         titleL.font = Profile.font(13)
+        titleL.numberOfLines = 0
         titleL.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(titleL)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-33-[titleL]", aView: titleL, bView: nil))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-33-[titleL]-5-|", aView: titleL, bView: nil))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-5-[titleL]-5-|", aView: titleL, bView: nil))
     }
 

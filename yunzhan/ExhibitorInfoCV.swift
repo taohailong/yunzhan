@@ -15,8 +15,9 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
     var personArr:[PersonData]!
     var elementData:ExhibitorData!
     var introductArr:[PicData]!
-    var height_OneSection:CGFloat?
-    
+    var height_OneSection:CGFloat = 100
+    var callBackBlock:(Void->Void)!
+    var close:Bool = false
     var table:UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,7 +46,8 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         table.registerClass(ExhibitorPerson.self , forCellReuseIdentifier: "ExhibitorPerson")
         table.registerClass(ExhibitorMapCell.self , forCellReuseIdentifier: "ExhibitorMapCell")
         table.registerClass(ExhibitorIntroduceCell.self, forCellReuseIdentifier: "ExhibitorIntroduceCell")
-        
+        table.registerClass(ExhibitorMoreIndicateCell.self , forCellReuseIdentifier: "ExhibitorMoreIndicateCell")
+        table.registerClass(ContentLabelCell.self, forCellReuseIdentifier: "ContentLabelCell")
         self.view.addSubview(table)
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
@@ -164,6 +166,11 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             }
             else
             {
+                if wself?.callBackBlock != nil
+                {
+                   wself?.callBackBlock()
+                }
+                
                 let leftBar = wself?.navigationItem.rightBarButtonItem
                 if let button = leftBar?.customView as? UIButton
                 {
@@ -247,7 +254,14 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             {
               return 0
             }
-          return 1
+            
+            height_OneSection =  elementData.getIntroductSize(Profile.font(11), size: CGSizeMake(Profile.width()-30,1000))
+            if height_OneSection < 27
+            {
+              return 2
+            }
+            
+          return 3
         }
         else if section == 1
         {
@@ -292,6 +306,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             {
                 return 0.5
             }
+            return 14
         }
         else if section == 1
         {
@@ -299,6 +314,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             {
                 return 0.5
             }
+            return 14
         }
         
         if section == 3
@@ -307,6 +323,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             {
                 return 0.5
             }
+            return 14
         }
         
         if personArr == nil
@@ -321,19 +338,29 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         
         if indexPath.section == 0
         {
-            let size =  elementData.getIntroductSize(Profile.font(11), size: CGSizeMake(Profile.width()-30,1000))
             
-            if size == nil
+            if indexPath.row == 0
             {
-              return 120
+              return 90
             }
-            if height_OneSection == nil
+            else if indexPath.row == 1
             {
-               return 170
+                if height_OneSection > 37 && close == false
+                {
+                  return 37
+                }
+                else
+                {
+                   return height_OneSection + 12
+                }
+                
             }
-//            height_OneSection = size?.height
-//            头部分
-           return 130.5 + height_OneSection!
+            else
+            {
+               return 30
+            }
+           
+            
         }
         else if indexPath.section == 1
         {
@@ -384,16 +411,32 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
        
         if indexPath.section == 0
         {
-            let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorInfoHeadCell") as!ExhibitorInfoHeadCell
-            
-            cell.fillData(elementData.iconUrl, name: elementData.name, company: elementData.remark, addre: elementData.address, location: elementData.location, content: elementData.introduct)
-            weak var wself = self
-            cell.tapBlock = {(height:CGFloat)->Void in
-                wself?.height_OneSection = height
-                wself?.table.reloadData()
+            if indexPath.row == 0
+            {
+                let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorInfoHeadCell") as!ExhibitorInfoHeadCell
+                
+                cell.fillData(elementData.iconUrl, name: elementData.name, company: elementData.remark, addre: elementData.address, location: elementData.location, content: elementData.introduct)
+//                weak var wself = self
+//                cell.tapBlock = {(height:CGFloat)->Void in
+//                    wself?.height_OneSection = height
+//                    wself?.table.reloadData()
+//                }
+                return cell
             }
-
-            return cell
+            
+            else if indexPath.row == 1
+            {
+               let cell = tableView.dequeueReusableCellWithIdentifier("ContentLabelCell") as! ContentLabelCell
+                cell.titleL.text = elementData.introduct
+                return cell
+            }
+            else
+            {
+                let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorMoreIndicateCell") as! ExhibitorMoreIndicateCell
+//                cell.titleL.text = elementData.introduct
+                return cell
+            }
+            
         }
         else if indexPath.section == 1
         {
@@ -423,6 +466,9 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             {
                 let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorIntroduceCell") as! ExhibitorIntroduceCell
                 cell.fillImageArr(introductArr)
+                 weak var wself = self
+                
+                cell.block = {wself?.showExhibitorImage() }
                 return cell
             }
         }
@@ -439,8 +485,14 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             }
             else if indexPath.row == personArr.count+1
             {
+                 weak var wself = self
                 let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorMapCell") as! ExhibitorMapCell
-                
+                cell.block  = {
+                    
+                  let zoom = ZoomVC()
+                    zoom.url = wself?.elementData.addressMap
+                   wself?.navigationController?.pushViewController(zoom, animated: true)
+                }
                 cell.fillData(elementData.location, locationUrl: elementData.addressMap)
                 return cell
             }
@@ -458,6 +510,34 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         }
  
     }
+    
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        if indexPath.section == 0 && indexPath.row == 2
+        {
+            let cell = tableView.cellForRowAtIndexPath(indexPath) as! ExhibitorMoreIndicateCell
+            
+            if cell.titleL.text == "收起"
+            {
+                close = false
+                cell.titleL.text = "查看全部"
+                height_OneSection = 100
+            }
+            else
+            {
+                close = true
+                cell.titleL.text = "收起"
+                height_OneSection = 120
+            }
+            
+            
+            tableView.reloadData()
+           
+        }
+    }
+    
     
     func addMyContact(person: PersonData)
     {
@@ -496,15 +576,22 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
     
         var picHtml = ""
         
+        let width = Int(Profile.width()) - 16
         for p in introductArr
         {
-            picHtml = picHtml+"<img src=\"\(p.url)\" style=\"max-width:100%; margin-bottom:8px\"/><br>"
+            if p.url != nil
+            {
+//                picHtml = picHtml+"<img src=\"\(p.url!)\" style=\"max-width:100%; margin-bottom:8px\"/><br>"
+                let s = "<img onload =  \"{if(this.width>\(width)){ this.height= \(width)/ this.width*this.height} else{ this.width = \(width)} }\" src=\"\(p.url!)\" style=\"margin-bottom:8px\"/>"
+                picHtml = picHtml + s
+                
+            }
         }
         
-        let html = "<html> <body> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /> <p> <font size=\"3px\" color=\"black\">展会风采</font></p>\(picHtml)</body></html>"
-        
+        let html = "<html> <body> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /> <p> <font size=\"3px\" color=\"black\">企业形象</font></p>\(picHtml)</body></html>"
+//        print(html)
         let web = CommonWebController(html: html)
-        web.title = "展会形象"
+        web.title = "企业形象"
         self.navigationController?.pushViewController(web, animated: true)
 
     }
@@ -521,7 +608,7 @@ class ExhibitorInfoHeadCell: UITableViewCell {
     var tapBlock:((height:CGFloat)->Void)?
     var height:CGFloat?
     let titleL:UILabel
-    let companyNameL:UILabel
+//    let companyNameL:UILabel
     let addressL:UILabel
     let contentL:UILabel
     let locationL:UILabel
@@ -536,10 +623,11 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         titleL = UILabel()
         titleL.textColor = Profile.rgb(51, g: 51, b: 51)
         titleL.font = Profile.font(15)
+        titleL.numberOfLines = 0
         
-        companyNameL = UILabel()
-        companyNameL.textColor = Profile.rgb(153, g: 153, b: 153)
-        companyNameL.font = Profile.font(11)
+//        companyNameL = UILabel()
+//        companyNameL.textColor = Profile.rgb(153, g: 153, b: 153)
+//        companyNameL.font = Profile.font(11)
         
         
         addressL = UILabel()
@@ -569,14 +657,14 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         
         self.contentView.addSubview(titleL)
         titleL.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[iconImage]-15-[titleL]", options: [], metrics: nil, views: ["iconImage":iconImage,"titleL":titleL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[iconImage]-15-[titleL]-15-|", options: [], metrics: nil, views: ["iconImage":iconImage,"titleL":titleL]))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
         
         
-        self.contentView.addSubview(companyNameL)
-        companyNameL.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[titleL]-15-[companyNameL]", options: [], metrics: nil, views: ["companyNameL":companyNameL,"titleL":titleL]))
-        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(companyNameL, toItem: titleL))
+//        self.contentView.addSubview(companyNameL)
+//        companyNameL.translatesAutoresizingMaskIntoConstraints = false
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[titleL]-15-[companyNameL]", options: [], metrics: nil, views: ["companyNameL":companyNameL,"titleL":titleL]))
+//        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(companyNameL, toItem: titleL))
         
     
         self.contentView.addSubview(addressL)
@@ -600,37 +688,37 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[locationView]-8-[locationL]", options: [], metrics: nil, views: ["locationView":locationView,"locationL":locationL]))
 
         
-        let separateView = UIView()
-        separateView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
-        separateView.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addSubview(separateView)
-        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(separateView, toItem: titleL))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[locationView]-10-[separateView(0.5)]", options: [], metrics: nil, views: ["locationView":locationView,"separateView":separateView]))
-         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[separateView]-0-|", options: [], metrics: nil, views: ["separateView":separateView]))
+//        let separateView = UIView()
+//        separateView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+//        separateView.translatesAutoresizingMaskIntoConstraints = false
+//        self.contentView.addSubview(separateView)
+//        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(separateView, toItem: titleL))
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[locationView]-10-[separateView(0.5)]", options: [], metrics: nil, views: ["locationView":locationView,"separateView":separateView]))
+//         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[separateView]-0-|", options: [], metrics: nil, views: ["separateView":separateView]))
+//        
+//        
+//        
+//        contentL.translatesAutoresizingMaskIntoConstraints = false
+//        self.contentView.addSubview(contentL)
+////        contentL.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Vertical)
+//        contentL.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: .Vertical)
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[contentL]-15-|", options: [], metrics: nil, views: ["contentL":contentL]))
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[separateView]-8-[contentL]-30-|", options: [], metrics: nil, views: ["contentL":contentL,"separateView":separateView]))
         
         
-        
-        contentL.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addSubview(contentL)
-//        contentL.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Vertical)
-        contentL.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: .Vertical)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[contentL]-15-|", options: [], metrics: nil, views: ["contentL":contentL]))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[separateView]-8-[contentL]-30-|", options: [], metrics: nil, views: ["contentL":contentL,"separateView":separateView]))
-        
-        
-        moreBt = UIButton(type: .Custom)
-        moreBt.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addSubview(moreBt)
-        moreBt.titleLabel?.font = Profile.font(11)
-        moreBt.setTitle("查看全部", forState: .Normal)
-        moreBt.setTitleColor(Profile.rgb(153, g: 153, b: 153), forState: .Normal)
-        moreBt.titleLabel?.font = Profile.font(11)
-        moreBt.setImage(UIImage(named: "narrowLeft"), forState: .Normal)
-        moreBt.titleEdgeInsets = UIEdgeInsetsMake(0, -20, 0, 0)
-        moreBt.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -90)
-        moreBt.addTarget(self, action: "moreBtAction:", forControlEvents: .TouchUpInside)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[moreBt]-10-|", options: [], metrics: nil, views: ["moreBt":moreBt]))
-         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[moreBt]-15-|", options: [], metrics: nil, views: ["moreBt":moreBt]))
+//        moreBt = UIButton(type: .Custom)
+//        moreBt.translatesAutoresizingMaskIntoConstraints = false
+//        self.contentView.addSubview(moreBt)
+//        moreBt.titleLabel?.font = Profile.font(11)
+//        moreBt.setTitle("查看全部", forState: .Normal)
+//        moreBt.setTitleColor(Profile.rgb(153, g: 153, b: 153), forState: .Normal)
+//        moreBt.titleLabel?.font = Profile.font(11)
+//        moreBt.setImage(UIImage(named: "narrowLeft"), forState: .Normal)
+//        moreBt.titleEdgeInsets = UIEdgeInsetsMake(0, -20, 0, 0)
+//        moreBt.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -90)
+//        moreBt.addTarget(self, action: "moreBtAction:", forControlEvents: .TouchUpInside)
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[moreBt]-10-|", options: [], metrics: nil, views: ["moreBt":moreBt]))
+//         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[moreBt]-15-|", options: [], metrics: nil, views: ["moreBt":moreBt]))
     }
 
     func moreBtAction(button:UIButton)
@@ -665,8 +753,17 @@ class ExhibitorInfoHeadCell: UITableViewCell {
            iconImage.sd_setImageWithURL(NSURL(string: iconUrl!), placeholderImage: UIImage(named: "default"))
         }
       
-        titleL.text = name
-        companyNameL.text = company
+//        titleL.text = name
+        if name != nil
+        {
+            let companyAtt = NSMutableAttributedString(string: name!, attributes: [NSFontAttributeName:Profile.font(15),NSForegroundColorAttributeName:Profile.rgb(51, g: 51, b: 51)])
+            if company != nil
+            {
+              companyAtt.appendAttributedString(NSAttributedString(string:"  \(company!)" , attributes: [NSFontAttributeName:Profile.font(11),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)]))
+            }
+          titleL.attributedText = companyAtt
+        }
+//        companyNameL.text = company
         if addre != nil
         {
           addressL.text = "地址：\(addre!)"
@@ -712,6 +809,56 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
+
+
+class ExhibitorMoreIndicateCell: UITableViewCell {
+    
+    
+    let titleL:UILabel
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        
+        titleL = UILabel()
+        titleL.textColor = Profile.rgb(153, g: 153, b: 153)
+        titleL.font = Profile.font(11)
+        titleL.text = "查看全部"
+        titleL.translatesAutoresizingMaskIntoConstraints = false
+        
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.contentView.addSubview(titleL)
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("[titleL]-15-|", options: [], metrics: nil, views: ["titleL":titleL]))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(titleL, toItem: self.contentView))
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+class ContentLabelCell: UITableViewCell {
+    var titleL:UILabel
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        
+        titleL = UILabel()
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        titleL.textColor = Profile.rgb(153, g: 153, b: 153)
+        titleL.font = Profile.font(11)
+        titleL.numberOfLines = 0
+        titleL.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(titleL)
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[titleL]-15-|", aView: titleL, bView: nil))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-5-[titleL]-5-|", aView: titleL, bView: nil))
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+
+
 
 class ExhibitorProductCell: UITableViewCell {
     
@@ -782,12 +929,22 @@ class ExhibitorProductCell: UITableViewCell {
         for (index ,imageData) in arr.enumerate(){
             
             let image = UIImageView(frame: frame)
+            image.contentMode = .Center
             image.tag = index
+            image.backgroundColor = Profile.rgb(243, g: 243, b: 243)
             scroll.addSubview(image)
             
             if imageData.imageUrl != nil
             {
-                image.sd_setImageWithURL(NSURL(string: imageData.imageUrl!),  placeholderImage:nil)
+                weak var wimage = image
+                image.sd_setImageWithURL(NSURL(string: imageData.imageUrl!), placeholderImage: UIImage(named: "default"), completed: { (image:UIImage!,err: NSError!, type: SDImageCacheType, url:NSURL!) -> Void in
+                    
+                    if err == nil && image != nil
+                    {
+                        wimage?.contentMode = .ScaleToFill
+                    }
+                })
+//                image.sd_setImageWithURL(NSURL(string: imageData.imageUrl!),  placeholderImage:UIImage(named: "default") )
             }
             frame = CGRectMake(frame.origin.x + frame.size.width, 0, CGRectGetWidth(frame), frame.height)
             
@@ -809,11 +966,11 @@ class ExhibitorProductCell: UITableViewCell {
             back.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[troduceL]-0-|", options: [], metrics: nil, views: ["troduceL":troduceL]))
             
          
-            troduceL.text = imageData.introduce
+            troduceL.text = imageData.name
             
-//            image.userInteractionEnabled = true
-//            let tap = UITapGestureRecognizer(target: self, action: "imageTap:")
-//            image.addGestureRecognizer(tap)
+            image.userInteractionEnabled = true
+            let tap = UITapGestureRecognizer(target: self, action: "tapAction")
+            image.addGestureRecognizer(tap)
             i = index
         }
         
@@ -868,9 +1025,9 @@ class ExhibitorMoreCell:UITableViewCell {
 //    self.contentView.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.contentView))
     self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-0-[separateV]-0-|", aView: separateV, bView: nil))
      self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[iconImage]-10-[separateV(0.5)]", options: [], metrics: nil, views: ["iconImage":iconImage,"separateV":separateV]))
-    separateV.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+     separateV.backgroundColor = Profile.rgb(243, g: 243, b: 243)
     
-    
+     self.selectionStyle = .None
     
       self.contentView.addSubview(moreBt)
       moreBt.addTarget(self, action: "tapAction", forControlEvents: .TouchUpInside)
@@ -941,7 +1098,7 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
         phoneBt.imageEdgeInsets = UIEdgeInsetsMake(0, -8, 0, 0)
         phoneBt.addTarget(self, action: "makeACall", forControlEvents: .TouchUpInside)
         self.contentView.addSubview(phoneBt)
-        self.contentView.addConstraint(NSLayoutConstraint(item: phoneBt, attribute: .Left, relatedBy: .Equal, toItem: self.contentView, attribute: .Left, multiplier: 1.0, constant: 72))
+        self.contentView.addConstraint(NSLayoutConstraint(item: phoneBt, attribute: .Left, relatedBy: .Equal, toItem: self.contentView, attribute: .Left, multiplier: 1.0, constant: 76))
 //        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-72-[phoneBt]", options: [], metrics: nil, views: ["phoneBt":phoneBt,"nameL":nameL]))
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(phoneBt, toItem: nameL))
         
@@ -1009,22 +1166,30 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
 }
 
 class ExhibitorMapCell: UITableViewCell {
+    
     let mapImageView:UIImageView
     var locationL:UILabel
+    var block:(Void->Void)!
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        
+        
         mapImageView = UIImageView()
         locationL = UILabel()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         
         let titleL = UILabel()
+//        titleL.backgroundColor = UIColor.redColor()
         titleL.text = "展位图"
         titleL.font = Profile.font(14)
         titleL.textColor = Profile.rgb(102, g: 102, b: 102)
         titleL.translatesAutoresizingMaskIntoConstraints = false
+        
         self.contentView.addSubview(titleL)
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
+//        titleL.setContentCompressionResistancePriority(UILayoutPriorityRequired, forAxis: .Vertical)
+        titleL.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Vertical)
         
         
         let image = UIImageView()
@@ -1045,6 +1210,10 @@ class ExhibitorMapCell: UITableViewCell {
         
         
         mapImageView.translatesAutoresizingMaskIntoConstraints = false
+        mapImageView.image = UIImage(named: "default")
+        mapImageView.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: .Vertical)
+        mapImageView.contentMode = .Center
+        mapImageView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         self.contentView.addSubview(mapImageView)
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[mapImageView]-15-|", options: [], metrics: nil, views: ["mapImageView":mapImageView]))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-10-[mapImageView]-10-|", options: [], metrics: nil, views: ["mapImageView":mapImageView,"titleL":titleL]))
@@ -1055,9 +1224,29 @@ class ExhibitorMapCell: UITableViewCell {
        locationL.text = location
         if locationUrl != nil
         {
-           mapImageView.sd_setImageWithURL(NSURL(string: locationUrl!), placeholderImage: nil)
+            weak var wimage = mapImageView
+            
+            let tap = UITapGestureRecognizer(target: self, action: "tapMapAction")
+            mapImageView.addGestureRecognizer(tap)
+            mapImageView.userInteractionEnabled = true
+            mapImageView.sd_setImageWithURL(NSURL(string: locationUrl!), placeholderImage: UIImage(named: "default"), completed: { (image:UIImage!,err: NSError!, type: SDImageCacheType, url:NSURL!) -> Void in
+                
+                if err == nil && image != nil
+                {
+                    wimage?.contentMode = .ScaleToFill
+                }
+            })
         }
        
+    }
+    
+    func tapMapAction(){
+    
+        if block != nil
+        {
+          block()
+        }
+
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -1069,6 +1258,7 @@ class ExhibitorIntroduceCell: UITableViewCell {
     
     let scroll :UIScrollView
     var imageArr:[PicData]?
+    var block:(Void ->Void)!
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         scroll = UIScrollView()
@@ -1120,15 +1310,27 @@ class ExhibitorIntroduceCell: UITableViewCell {
            image.tag = index
            contentV.addSubview(image)
         
-           image.sd_setImageWithURL(NSURL(string: imageData.url),  placeholderImage:nil)
+           if imageData.url != nil
+           {
+             image.sd_setImageWithURL(NSURL(string: imageData.url!),  placeholderImage:nil)
+           }
+        
            frame = CGRectMake(frame.origin.x + frame.size.width, 0, CGRectGetWidth(frame), frame.height)
-        //            image.userInteractionEnabled = true
-        //            let tap = UITapGestureRecognizer(target: self, action: "imageTap:")
-        //            image.addGestureRecognizer(tap)
+            image.userInteractionEnabled = true
+                    let tap = UITapGestureRecognizer(target: self, action: "imageTap")
+                    image.addGestureRecognizer(tap)
            i = index
        }
     
      scroll.contentSize = CGSizeMake(frame.width * CGFloat(i+1), frame.height)
    }
-
+    func imageTap(){
+    
+       if block != nil
+       {
+          block()
+        }
+    
+    }
+    
 }

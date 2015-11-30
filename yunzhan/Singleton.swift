@@ -10,18 +10,6 @@ import Foundation
 class UserData:NSObject {
     
     var name:String?
-        {
-        
-        get{
-        
-         return _name
-        }
-        set{
-        
-          _name = name
-          isLogIn = true
-        }
-    }
     var title:String?
     var phone:String?{
         
@@ -32,10 +20,10 @@ class UserData:NSObject {
             return tokenT
         }
         
-        set(new) {
+        set {
             
             let userDefault = NSUserDefaults.standardUserDefaults()
-            userDefault.setObject(new, forKey: "phone")
+            userDefault.setObject(newValue, forKey: "phone")
             userDefault.synchronize()
         }
     
@@ -43,6 +31,7 @@ class UserData:NSObject {
     var _name:String?
     var isLogIn:Bool = false
     var token:String? {
+        
         get {
             
             let userDefault = NSUserDefaults.standardUserDefaults()
@@ -50,12 +39,14 @@ class UserData:NSObject {
            return tokenT
         }
     
-        set(newToken) {
+        set {
         
           let userDefault = NSUserDefaults.standardUserDefaults()
-            userDefault.setObject(newToken, forKey: "token")
+            userDefault.setObject(newValue, forKey: "token")
         }
     }
+    
+    
     
     func clearUserData()
     {

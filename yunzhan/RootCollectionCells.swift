@@ -17,17 +17,17 @@ class CommonCell: UICollectionViewCell {
         
         label = UIImageView()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.contentMode = .ScaleAspectFit
+        label.contentMode = .Center
         label.image = UIImage(named: "default")
         label.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         
         super.init(frame: frame)
         self.contentView.addSubview(label)
         
+        self.contentView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        let h = NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[label]-0-|", options: [], metrics: nil , views: ["label":label])
         
-        let h = NSLayoutConstraint.constraintsWithVisualFormat("H:|[label]-0-|", options: [], metrics: nil , views: ["label":label])
-        
-        let v = NSLayoutConstraint.constraintsWithVisualFormat("V:|-5-[label]-5-|", options: [], metrics: nil, views: ["label":label])
+        let v = NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[label]-0-|", options: [], metrics: nil, views: ["label":label])
         
         self.contentView.addConstraints(h)
         self.contentView.addConstraints(v)
@@ -42,8 +42,15 @@ class CommonCell: UICollectionViewCell {
         
         if let furl = url
         {
+            label.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+            weak var wiamge = label
            let req = NSURL(string: furl)
-            label.sd_setImageWithURL(req!, placeholderImage: UIImage(named: "default"))
+            label.sd_setImageWithURL(req!, placeholderImage: UIImage(named: "default"), completed: { (image: UIImage!, err: NSError!, type:SDImageCacheType, url:NSURL!) -> Void in
+                if err == nil {
+                  wiamge?.contentMode = .ScaleAspectFit
+                  wiamge?.backgroundColor = UIColor.whiteColor()
+                }
+            })
         }
     }
     
@@ -266,14 +273,22 @@ class AdRootCollectionView: UICollectionReusableView,UIScrollViewDelegate {
             image.backgroundColor = Profile.rgb(243, g: 243, b: 243)
             
             image.contentMode = .Center
-            weak var wimage = image
-            image.sd_setImageWithURL(NSURL(string: imageData.url)!, placeholderImage: UIImage(named: "default_big"), completed: { (let image:UIImage!,err:NSError!, type:SDImageCacheType, url:NSURL!) -> Void in
-                if err == nil
-                {
-                  wimage?.contentMode = .ScaleToFill
-                }
-            })
-//            image.sd_setImageWithURL(NSURL(string: imageData.url)!,  placeholderImage:UIImage(named: "default_big"))
+            
+            if imageData.url != nil
+            {
+                weak var wimage = image
+                image.sd_setImageWithURL(NSURL(string: imageData.url!)!, placeholderImage: UIImage(named: "default_big"), completed: { (let image:UIImage!,err:NSError!, type:SDImageCacheType, url:NSURL!) -> Void in
+                    if err == nil
+                    {
+                        wimage?.contentMode = .ScaleToFill
+                    }
+                })
+            }
+            else
+            {
+               image.image = UIImage(named: "default_big")
+            }
+ //            image.sd_setImageWithURL(NSURL(string: imageData.url)!,  placeholderImage:UIImage(named: "default_big"))
             frame = CGRectMake(frame.origin.x + frame.size.width, 0, CGRectGetWidth(frame), CGRectGetHeight(frame))
             image.userInteractionEnabled = true
             let tap = UITapGestureRecognizer(target: self, action: "imageTap:")
@@ -340,7 +355,7 @@ class CollectionActView: UICollectionViewCell {
     let titleL:UILabel
     let introduce:UILabel
     let address:UILabel
-    
+    let spot : UIView
     override init(frame: CGRect) {
         
       
@@ -363,6 +378,9 @@ class CollectionActView: UICollectionViewCell {
         address = UILabel()
         address.font = Profile.font(10)
         address.translatesAutoresizingMaskIntoConstraints = false
+        
+        
+        spot = UIView()
         super.init(frame: frame)
         
         
@@ -381,8 +399,6 @@ class CollectionActView: UICollectionViewCell {
          self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-74-[upView(0.5)]", options: [], metrics: nil, views: ["upView":upView,"timeL":timeL]))
 
         
-        
-        let spot = UIView()
         spot.layer.masksToBounds = true
         spot.layer.cornerRadius = 4.0
         
@@ -416,6 +432,10 @@ class CollectionActView: UICollectionViewCell {
         self.contentView.addSubview(titleL)
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(titleL, toItem: introduce))
         self.contentView.addConstraint(NSLayoutConstraint(item: titleL, attribute: NSLayoutAttribute.Bottom, relatedBy: NSLayoutRelation.Equal, toItem: introduce, attribute: NSLayoutAttribute.Top, multiplier: 1.0, constant: -7))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[titleL]-(>=15)-|", aView: titleL, bView: nil))
+         titleL.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: .Horizontal)
+        
+        
         
         address.textColor = Profile.rgb(153, g: 153, b: 153)
         address.font = Profile.font(13)
@@ -426,7 +446,21 @@ class CollectionActView: UICollectionViewCell {
     
     
     func fullDataToCell(data:SchedulerData){
-        print(data.time)
+        
+        if data.type == .PublicMeeting || data.type == .UnPublicMeeting
+        {
+            spot.backgroundColor = Profile.rgb(110, g: 233, b: 194)
+        }
+        else if data.type == .UnPublicDiscuss || data.type == .PublicDiscuss
+        {
+            spot.backgroundColor = Profile.rgb(193, g: 129, b: 220)
+        }
+        else
+        {
+            spot.backgroundColor = Profile.rgb(254, g: 167, b: 84)
+        }
+
+        
         timeL.text = data.time
         dateL.text = data.date
         titleL.text = data.title

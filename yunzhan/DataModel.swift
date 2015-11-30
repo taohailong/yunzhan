@@ -10,8 +10,8 @@ import Foundation
 
 class PicData {
     let id:String?
-    let  url:String
-    init(id:String?, url:String)
+    let  url:String?
+    init(id:String?, url:String?)
     {
         self.id = id
         self.url = url
@@ -22,13 +22,7 @@ extension PicData
 {
     convenience init?(rootDic:[String:AnyObject])
     {
-        guard let url = rootDic["pic_url"] as? String , let link = rootDic["intro_url"] as? String
-            else
-        {
-            return nil
-        }
-
-       self.init(id: link, url: url)
+       self.init(id: rootDic["intro_url"] as? String, url: rootDic["pic_url"] as? String)
     }
 }
 
@@ -65,14 +59,58 @@ extension NewsData {
 }
 
 
-
+enum SchedulerType:String{
+  
+   case PublicMeeting = "公开宴会"
+   case PublicDiscuss = "公开论坛"
+   case PublicActive = "公开企业活动"
+   case UnPublicMeeting = "不公开宴会"
+   case UnPublicDiscuss = "不公开论坛"
+   case UnPublicActive = "不公开企业活动"
+    case UnKnow = ""
+    
+    init(status:Int?,type:Int?){
+       
+      if status == 0 && type == 1
+        {
+          self = .PublicMeeting
+        }
+        else if status == 0 && type == 2
+      {
+         self = .PublicDiscuss
+        }
+        else if status == 0 && type == 3
+      {
+         self = .PublicActive
+        }
+        
+        else if status == 1 && type == 1
+      {
+         self = .UnPublicMeeting
+        }
+        else if status == 1 && type == 2
+      {
+         self = .UnPublicDiscuss
+        }
+        else if status == 1 && type == 3
+      {
+         self = .UnPublicActive
+        }
+        else
+      {
+         self = .UnKnow
+        }
+    }
+    
+}
 
 class SchedulerData {
     
     var company:String?
-    var time:String,date:String,title:String,introduce:String?,address:String,type:Bool?,id:String
-    
-    init(time:String,date:String,title:String,introduce:String?,address:String,id:String,type:Bool? = true)
+    var time:String,date:String,title:String?,introduce:String?,address:String,type:SchedulerType ,id:String
+    var height:CGFloat = 0.0
+    var typeName:String = ""
+    init(time:String,date:String,title:String?,introduce:String?,address:String,id:String,type:SchedulerType = .UnKnow)
     {
         self.time = time
         self.date = date
@@ -81,6 +119,14 @@ class SchedulerData {
         self.address = address
         self.type = type
         self.id = id
+    }
+    
+    func figureoutStringHeight(font:UIFont,size:CGSize){
+    
+        if title != nil && height == 0
+        {
+           height = title!.boundingRectWithSize(size, options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName:font], context: nil).height
+        }
     }
 }
 
@@ -91,9 +137,16 @@ extension SchedulerData{
     {
         guard let name = rootDic["name"] as? String,let content = rootDic["intro"] as? String,let address = rootDic["addr"] as? String ,let time = rootDic["start_time"] as? Int,let id = rootDic["id"] as? NSNumber
             else { return nil }
-     
-        self.init(time: time.toTimeString("HH:mm"), date: time.toTimeString("MM/dd"), title: name, introduce: content, address: address, id: String(id))
+//      print(rootDic)
         
+        let status = rootDic["status"] as? Int
+        let type = rootDic["stype"] as? Int
+        
+        self.init(time: time.toTimeString("HH:mm"), date: time.toTimeString("MM/dd"), title: name, introduce: content, address: address, id: String(id),type:SchedulerType(status: status, type: type))
+        if let tN = rootDic["stype_format"] as? String
+        {
+            self.typeName = tN
+        }
     }
 
 }
@@ -115,14 +168,14 @@ class ExhibitorData {
         self.addressMap = addressMap
         self.webLink = webLink
     }
-    func getIntroductSize(font:UIFont,size:CGSize)->CGSize?{
+    func getIntroductSize(font:UIFont,size:CGSize)->CGFloat{
     
         if introduct == nil || introduct?.isEmpty == true
         {
-            return nil
+            return 0
         }
         let size = introduct!.boundingRectWithSize(size, options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName:font], context: nil)
-        return size.size
+        return size.size.height
     }
     
  }
@@ -130,8 +183,9 @@ class ExhibitorData {
 extension ExhibitorData{
 
     convenience init(rootDic:[String:AnyObject]){
-    
+//    print(rootDic)
        self.init(address: rootDic["addr"] as? String, id: String(rootDic["id"]!), name: rootDic["name_zh"] as? String, iconUrl: rootDic["logo_url"] as? String, addressMap: rootDic["booth_url"] as? String, webLink: rootDic["website"] as? String)
+        self.location = rootDic["booth_name"] as? String
     
     }
 }
@@ -187,6 +241,10 @@ class TimeMessage {
     var favorited:Bool?
     func figureOutContentHeight(size:CGSize,font:UIFont) ->Float{
         
+        if comment?.isEmpty == true
+        {
+           contentHeight = 0
+        }
         
         if contentHeight == nil && comment != nil {
         
@@ -219,6 +277,17 @@ class CompanyData {
     var score:Double?
     var route:String?
     var roomNu:Int?
+    var routeHeight:CGFloat = 0.0
+    func figureOutContentHeight(size:CGSize,font:UIFont) ->CGFloat{
+        
+        if routeHeight == 0 && route != nil {
+            
+            routeHeight = route!.boundingRectWithSize(size, options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName:font], context: nil).height
+        
+        }
+        return routeHeight
+    }
+
 }
 
 

@@ -13,9 +13,9 @@
 
 #if ENTERPISE
 #import "yunzhan_copy-Swift.h"
-#define PORT "123.56.102.224"
+#define PORT "www.zhangzhantong.com"
 #else
-#define PORT "123.56.102.224"
+#define PORT "www.zhangzhantong.com"
 #import "yunzhan-Swift.h"
 #endif
 
@@ -44,7 +44,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.title = @"登陆";
+    self.title = @"登录";
     self.view.backgroundColor = [UIColor whiteColor];
     
 
@@ -89,7 +89,7 @@
     _logBt.translatesAutoresizingMaskIntoConstraints = NO;
     [tableFoot addSubview:_logBt];
     _logBt.titleLabel.font = [UIFont systemFontOfSize:15];
-    [_logBt setTitle:@"立即登陆" forState:UIControlStateNormal];
+    [_logBt setTitle:@"立即登录" forState:UIControlStateNormal];
     [_logBt setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
 //    [_logBt setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     

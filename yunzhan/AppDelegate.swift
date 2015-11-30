@@ -46,7 +46,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate {
     
         deviceToken = deviceToken.stringByReplacingOccurrencesOfString(" ", withString: "")
 //        app = [app stringByReplacingOccurrencesOfString:@" " withString:@""];
-        print(deviceToken)
+//        print(deviceToken)
         
         net = NetWorkData()
         net.sendDeviceToken(deviceToken as String)
