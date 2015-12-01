@@ -430,12 +430,12 @@ class NetWorkData {
                 
                 for temp in contentArr
                 {
-                    let start = temp["start"] as? Int
-                    let end = temp["end"] as? Int
+//                    let start = temp["start"] as? Int
+//                    let end = temp["end"] as? Int
                     let c = temp["text"] as? String
-                    if start != nil && end != nil && c != nil
+                    if  c != nil
                     {
-                        contents.append("\(start!.toTimeString("HH:mm"))-\(end!.toTimeString("HH:mm"))\(c!)")
+                        contents.append(c!)
                     }
                    
                 }
@@ -1300,8 +1300,6 @@ class NetWorkData {
         }
     
     }
-    
-    
     
     
     func getMethodRequest(url:String,completeBlock:NetBlock){

@@ -23,11 +23,11 @@ class CommonCell: UICollectionViewCell {
         
         super.init(frame: frame)
         self.contentView.addSubview(label)
+//        self.backgroundColor = UIColor.whiteColor()
+        self.contentView.backgroundColor = UIColor.whiteColor()
+        let h = NSLayoutConstraint.constraintsWithVisualFormat("H:|-10-[label]-10-|", options: [], metrics: nil , views: ["label":label])
         
-        self.contentView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
-        let h = NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[label]-0-|", options: [], metrics: nil , views: ["label":label])
-        
-        let v = NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[label]-0-|", options: [], metrics: nil, views: ["label":label])
+        let v = NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[label]-10-|", options: [], metrics: nil, views: ["label":label])
         
         self.contentView.addConstraints(h)
         self.contentView.addConstraints(v)
@@ -42,14 +42,18 @@ class CommonCell: UICollectionViewCell {
         
         if let furl = url
         {
+            
             label.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+//            weak var wself = self
             weak var wiamge = label
            let req = NSURL(string: furl)
+//            let req = NSURL(string: "http:www.baidu.com")
             label.sd_setImageWithURL(req!, placeholderImage: UIImage(named: "default"), completed: { (image: UIImage!, err: NSError!, type:SDImageCacheType, url:NSURL!) -> Void in
                 if err == nil {
-                  wiamge?.contentMode = .ScaleAspectFit
-                  wiamge?.backgroundColor = UIColor.whiteColor()
+                  wiamge?.contentMode = .ScaleAspectFill
+                 
                 }
+                 wiamge?.backgroundColor = UIColor.whiteColor()
             })
         }
     }

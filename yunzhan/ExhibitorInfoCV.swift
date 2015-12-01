@@ -416,11 +416,10 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
                 let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorInfoHeadCell") as!ExhibitorInfoHeadCell
                 
                 cell.fillData(elementData.iconUrl, name: elementData.name, company: elementData.remark, addre: elementData.address, location: elementData.location, content: elementData.introduct)
-//                weak var wself = self
-//                cell.tapBlock = {(height:CGFloat)->Void in
-//                    wself?.height_OneSection = height
-//                    wself?.table.reloadData()
-//                }
+                weak var wself = self
+                cell.tapBlock = {
+                    wself?.showZoomMap(wself?.elementData.addressMap)
+                }
                 return cell
             }
             
@@ -488,10 +487,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
                  weak var wself = self
                 let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorMapCell") as! ExhibitorMapCell
                 cell.block  = {
-                    
-                  let zoom = ZoomVC()
-                    zoom.url = wself?.elementData.addressMap
-                   wself?.navigationController?.pushViewController(zoom, animated: true)
+                    wself?.showZoomMap(wself?.elementData.addressMap)
                 }
                 cell.fillData(elementData.location, locationUrl: elementData.addressMap)
                 return cell
@@ -536,6 +532,13 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             tableView.reloadData()
            
         }
+    }
+    
+    
+    func showZoomMap(url:String?){
+        let zoom = ZoomVC()
+        zoom.url = url
+        self.navigationController?.pushViewController(zoom, animated: true)
     }
     
     
@@ -605,13 +608,13 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
 class ExhibitorInfoHeadCell: UITableViewCell {
     
     let iconImage:UIImageView
-    var tapBlock:((height:CGFloat)->Void)?
+    var tapBlock:(Void ->Void)?
     var height:CGFloat?
     let titleL:UILabel
 //    let companyNameL:UILabel
     let addressL:UILabel
     let contentL:UILabel
-    let locationL:UILabel
+    let locationBt:UIButton
     var moreBt:UIButton!
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
@@ -639,9 +642,15 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         contentL.textColor = Profile.rgb(102, g: 102, b: 102)
         contentL.font = Profile.font(11)
         
-        locationL = UILabel()
-        locationL.textColor = Profile.rgb(107, g: 206, b: 234)
-        locationL.font = Profile.font(13)
+        locationBt = UIButton(type: .Custom)
+        locationBt.setTitleColor(Profile.rgb(107, g: 206, b: 234), forState: .Normal)
+        locationBt.titleLabel?.font = Profile.font(13)
+        locationBt.translatesAutoresizingMaskIntoConstraints = false
+//        locationBt.titleEdgeInsets = UIEdgeInsetsMake(0, 2, 0, 0)
+//        locationBt.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, 3)
+//        locationL = UILabel()
+//        locationL.textColor = Profile.rgb(107, g: 206, b: 234)
+//        locationL.font = Profile.font(13)
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
@@ -671,21 +680,17 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         addressL.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-10-[addressL]", options: [], metrics: nil, views: ["titleL":titleL,"addressL":addressL]))
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(addressL , toItem: titleL))
+    
         
+       
+        self.contentView.addSubview(locationBt)
+        locationBt.addTarget(self, action: "locationAction:", forControlEvents: .TouchUpInside)
+        locationBt.setImage(UIImage(named: "exhibitorLocation"), forState:.Normal)
+        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(locationBt, toItem: titleL))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[addressL]-8-[locationBt]", options: [], metrics: nil, views: ["locationBt":locationBt,"addressL":addressL]))
         
-        
-        let locationView = UIImageView()
-        locationView.image = UIImage(named: "exhibitorLocation")
-        locationView.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addSubview(locationView)
-        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(locationView, toItem: titleL))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[addressL]-8-[locationView]", options: [], metrics: nil, views: ["locationView":locationView,"addressL":addressL]))
-        
-        
-        locationL.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addSubview(locationL)
-        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(locationView, toItem: locationL))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[locationView]-8-[locationL]", options: [], metrics: nil, views: ["locationView":locationView,"locationL":locationL]))
+//        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(locationView, toItem: locationBt))
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[locationView]-8-[locationL]", options: [], metrics: nil, views: ["locationView":locationView,"locationL":locationL]))
 
         
 //        let separateView = UIView()
@@ -721,28 +726,11 @@ class ExhibitorInfoHeadCell: UITableViewCell {
 //         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[moreBt]-15-|", options: [], metrics: nil, views: ["moreBt":moreBt]))
     }
 
-    func moreBtAction(button:UIButton)
+    func locationAction(button:UIButton)
     {
-       
-        if button.tag == 0
+        if tapBlock != nil
         {
-            button.setTitle("收起", forState: .Normal)
-            button.tag = 1
-            if tapBlock != nil && height != nil
-            {
-                tapBlock!(height: height!)
-            }
-
-        }
-        else
-        {
-            button.tag = 0
-            button.setTitle("查看全部", forState: .Normal)
-            if tapBlock != nil
-            {
-               tapBlock!(height: 39.5)
-            }
-
+            tapBlock!()
         }
     }
     
@@ -763,47 +751,25 @@ class ExhibitorInfoHeadCell: UITableViewCell {
             }
           titleL.attributedText = companyAtt
         }
-//        companyNameL.text = company
+
         if addre != nil
         {
           addressL.text = "地址：\(addre!)"
         }
         
-        locationL.text = location
+//        locationL.text = location
+        if let l = location
+        {
+            locationBt.setTitle("  \(l)", forState: .Normal)
+        }
         contentL.text = content
         
-//        if content == nil
-//        {
-//            if tapBlock != nil
-//            {
-//                tapBlock!(height: 0)
-//            }
-//            contentL.hidden = true
-//            moreBt.hidden = true
-//        }
-//        else
-//        {
-//            moreBt.hidden = false
-//            contentL.hidden = false
+        if content != nil
+        {
+             let size = content!.boundingRectWithSize(CGSizeMake(Profile.width()-30,1000), options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName:Profile.font(11)], context: nil)
+              height = size.height
+        }
         
-            if content != nil
-            {
-                let size = content!.boundingRectWithSize(CGSizeMake(Profile.width()-30,1000), options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName:Profile.font(11)], context: nil)
-                height = size.height
-            }
-        
-            
-//            if height>=39.5
-//            {
-//                moreBt.hidden = false
-//                contentL.hidden = false
-//            }
-//            else
-//            {
-//                contentL.hidden = true
-//                moreBt.hidden = true
-//            }
-       
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

@@ -96,6 +96,8 @@ class NewsListVC:UITableViewController {
                 
                 empty.translatesAutoresizingMaskIntoConstraints = true
                 empty.frame = (wself?.tableView.bounds)!
+                wself?.dataArr = [NewsData]()
+                wself?.tableView.reloadData()
                 return
 
             }

@@ -104,10 +104,12 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
                 
                 if list.count == 0{
                 
-                  let empty = THActivityView(emptyDataWarnViewWithString: "开来互动 上传图片吧", withImage: "noPicData", withSuperView: wself?.tableView)
+                  let empty = THActivityView(emptyDataWarnViewWithString: "快来互动，上传图片吧", withImage: "noPicData", withSuperView: wself?.tableView)
                     
                     empty.translatesAutoresizingMaskIntoConstraints = true
                     empty.frame = (wself?.tableView.bounds)!
+                    wself?.dataArr = [TimeMessage]()
+                    wself?.tableView.reloadData()
                     return
                 }
                 
