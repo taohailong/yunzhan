@@ -205,7 +205,7 @@
 
 -(void)accessVerifyNu:(id)sender
 {
-    if ([self verifyNumber:_phoneField.text] == NO) {
+    if ([NSString verifyIsMobilePhoneNu: _phoneField.text] == NO) {
         
         THActivityView* showStr = [[THActivityView alloc]initWithString:@"号码格式不正确"];
         [showStr show];
@@ -360,7 +360,7 @@
 
 -(void)voiceVerifyPhoneAction:(id)sender
 {
-    if ([self verifyNumber: _phoneField.text] == NO) {
+    if ([NSString verifyIsMobilePhoneNu: _phoneField.text] == NO) {
         
         THActivityView* showStr = [[THActivityView alloc]initWithString:@"号码格式不正确"];
         [showStr show];
@@ -492,14 +492,14 @@
 }
 
 
--(BOOL)verifyNumber:(NSString*)str
-{
-    NSString * MOBILE =  @"[0-9]+.?[0-9]*";
-    
-    NSPredicate *regextestmobile = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", MOBILE];
-    
-    return  [regextestmobile evaluateWithObject:str];
-}
+//-(BOOL)verifyNumber:(NSString*)str
+//{
+//    NSString * MOBILE =  @"[0-9]+.?[0-9]*";
+//    
+//    NSPredicate *regextestmobile = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", MOBILE];
+//    
+//    return  [regextestmobile evaluateWithObject:str];
+//}
 
 //-(void)textFieldChanged:(NSNotification*)noti
 //{

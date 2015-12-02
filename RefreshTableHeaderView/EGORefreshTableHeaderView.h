@@ -47,11 +47,13 @@ typedef enum {
 	UILabel *_lastUpdatedLabel;
 	UILabel *_statusLabel;
 	CALayer *_arrowImage;
+//    UIImageView* arrowImageV;
 	UIActivityIndicatorView *_activityView;
 	
     float OFFY;
     float PUSHLENTH;
     UIEdgeInsets _scrollEdge;
+    
     
 }
 
@@ -60,6 +62,7 @@ typedef enum {
 -(void)setRefreshStyle:(RefreshStyle)style;
 - (void)refreshLastUpdatedDate;
 
+-(void)refreshBegin:(UIScrollView*)scrollView;
 -(void)egoRefreshScrollViewDataSourceDidBeginLoading:(UIScrollView *)scrollView;
 - (void)egoRefreshScrollViewDidScroll:(UIScrollView *)scrollView;
 - (void)egoRefreshScrollViewDidEndDragging:(UIScrollView *)scrollView;

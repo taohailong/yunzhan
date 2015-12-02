@@ -7,7 +7,7 @@
 //
 
 import Foundation
-class SchedulerController: UITableViewController,UISearchDisplayDelegate {
+class SchedulerController: PullDownTableViewController,UISearchDisplayDelegate {
     var net:NetWorkData!
 //    var test:[T]?
     var dataArr:[[SchedulerData]]!
@@ -69,27 +69,20 @@ class SchedulerController: UITableViewController,UISearchDisplayDelegate {
         self.title = "日程"
         let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
         
-//        searchBar.delegate = self
-        
-        
-        self.refreshControl = UIRefreshControl()
-        self.refreshControl?.addTarget(self, action: "refreshBegin", forControlEvents: .ValueChanged)
-
-//        table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
-//        table.delegate = self
-//        table.dataSource = self
+        self.tableView = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
         self.tableView.separatorStyle = .None
         self.tableView.tableHeaderView = searchBar
-//        table.translatesAutoresizingMaskIntoConstraints = false
+        self.tableView.translatesAutoresizingMaskIntoConstraints = false
         self.tableView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         self.tableView.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
         self.tableView.registerClass(TableHeadView.self , forHeaderFooterViewReuseIdentifier: "TableHeadView")
-//        self.view.addSubview(table)
-        
+        self.view.addSubview(self.tableView)
         self.tableView.registerClass(SchedulerCell.self , forCellReuseIdentifier: "SchedulerCell")
         
-//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
-//        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
+        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.tableView))
         
         
         searchCV = UISearchDisplayController(searchBar: searchBar, contentsController: self)
@@ -98,26 +91,32 @@ class SchedulerController: UITableViewController,UISearchDisplayDelegate {
         searchCV.delegate = self
         searchCV.searchResultsTableView.registerClass(ExhibitorCell.self, forCellReuseIdentifier: "ExhibitorCell")
         
-        self.fetchData()
+        self.schedulerRefresh()
     }
     
     
-    func refreshBegin(){
+    
+    func schedulerRefresh(){
+    
+        weak var wself = self
+        let height = Profile.height() - 113
         
-        self.fetchData()
+        self.addHeadViewWithTableEdge(UIEdgeInsetsMake(64, 0, 49, 0), withFrame: CGRectMake(0.0, 0 - height,Profile.width(),height)) { () -> Void in
+            wself?.fetchData()
+        }
+        
+        self.headViewBeginLoading()
     }
-
+    
+    
     
     func fetchData(){
-       
-        
-        let loadView = THActivityView(activityViewWithSuperView: self.navigationController?.view)
+
         weak var wself = self
         net = NetWorkData()
         net.getSchedulList { (result, status) -> (Void) in
-            
-            wself!.refreshControl?.endRefreshing()
-            loadView.removeFromSuperview()
+            wself?.headViewEndLoading()
+//            wself!.refreshControl?.endRefreshing()
             if status == .NetWorkStatusError
             {
                 if result == nil
@@ -184,20 +183,21 @@ class SchedulerController: UITableViewController,UISearchDisplayDelegate {
     
    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     
-      var cellData:SchedulerData? = nil
-    
-      if tableView != self.tableView
-      {
-         cellData = searchArr![indexPath.row]
-      }
-      else
-      {
-         let subArr = dataArr[indexPath.section]
-         cellData = subArr[indexPath.row]
-      }
-      cellData?.figureoutStringHeight(Profile.font(10), size: CGSizeMake(Profile.width()-90, 10000))
-    
-        return 80 + (cellData?.height)!
+    return 90
+//      var cellData:SchedulerData? = nil
+//    
+//      if tableView != self.tableView
+//      {
+//         cellData = searchArr![indexPath.row]
+//      }
+//      else
+//      {
+//         let subArr = dataArr[indexPath.section]
+//         cellData = subArr[indexPath.row]
+//      }
+//      cellData?.figureoutStringHeight(Profile.font(10), size: CGSizeMake(Profile.width()-90, 10000))
+//    
+//        return 80 + (cellData?.height)!
     }
     
     override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -348,7 +348,7 @@ class SchedulerCell: UITableViewCell {
         
         introduce = UILabel()
         introduce.font = Profile.font(10)
-        introduce.numberOfLines = 0
+//        introduce.numberOfLines = 0
         introduce.translatesAutoresizingMaskIntoConstraints = false
         
         address = UILabel()
@@ -398,7 +398,7 @@ class SchedulerCell: UITableViewCell {
         introduce.textColor = Profile.rgb(102, g: 102, b: 102)
         introduce.font = Profile.font(13)
         self.contentView.addSubview(introduce)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[timeL]-40-[introduce]-(>=2)-|", options: [], metrics: nil, views: ["introduce":introduce,"timeL":timeL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[timeL]-40-[introduce]-(>=5)-|", options: [], metrics: nil, views: ["introduce":introduce,"timeL":timeL]))
         
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(introduce, toItem: self.contentView))
         introduce.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: UILayoutConstraintAxis.Horizontal)
@@ -409,7 +409,7 @@ class SchedulerCell: UITableViewCell {
         titleL.textColor = Profile.rgb(51, g: 51, b: 51)
         titleL.font = Profile.font(15)
         self.contentView.addSubview(titleL)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[timeL]-40-[titleL]-(>=15)-|", options: [], metrics: nil, views: ["titleL":titleL,"timeL":timeL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[timeL]-40-[titleL]-(>=5)-|", options: [], metrics: nil, views: ["titleL":titleL,"timeL":timeL]))
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(titleL, toItem: introduce))
 //        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[titleL]-5-|", aView: titleL, bView: nil))
         

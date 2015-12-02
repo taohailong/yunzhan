@@ -20,8 +20,8 @@ class NSLog {
        print(s)
     }
 }
-class Profile {
-    
+class Profile
+{
     static let width = { return UIScreen.mainScreen().bounds.size.width }
     static let height = { return UIScreen.mainScreen().bounds.size.height}
 //    static let NavBarColor = { return  UIColor(red: 223/255.0, green: 32/255.0, blue: 82/255.0, alpha: 1.0) }
@@ -183,6 +183,12 @@ extension Int {
 
 extension String {
 
+    
+    func toAttribute(font:UIFont,color:UIColor)->NSMutableAttributedString{
+    
+        let att = NSMutableAttributedString(string: self, attributes: [NSFontAttributeName:font,NSForegroundColorAttributeName:color])
+        return att
+    }
     
     func toPinYin() ->String?
     {

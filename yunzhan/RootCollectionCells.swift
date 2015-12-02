@@ -14,7 +14,6 @@ class CommonCell: UICollectionViewCell {
     var exhibitorID:String!
     override init(frame: CGRect) {
         
-        
         label = UIImageView()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.contentMode = .Center
@@ -42,7 +41,6 @@ class CommonCell: UICollectionViewCell {
         
         if let furl = url
         {
-            
             label.backgroundColor = Profile.rgb(243, g: 243, b: 243)
 //            weak var wself = self
             weak var wiamge = label

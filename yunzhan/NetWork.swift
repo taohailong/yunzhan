@@ -277,17 +277,17 @@ class NetWorkData {
             exhibitor.introduct = list["intro"] as? String
             exhibitor.remark = list["remark"] as? String
             exhibitor.location = list["booth_name"] as? String
-            
+//            exhibitor.addressMap = nil
             
             var personArr:[PersonData]! = nil
             
             if let connectArr = list["contacts"] as? [[String:AnyObject]]{
-            
+                
                 personArr = [PersonData]()
                 for dic in connectArr
                 {
                     //               print(dic)
-                    
+//                    break
                     let person = PersonData(name: dic["name"] as?String, title: dic["title"] as? String, phone: dic["phone"] as? String)
                     if let id = dic["id"] as? Int
                     {

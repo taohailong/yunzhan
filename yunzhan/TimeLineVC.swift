@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TimeLineVC: UITableViewController,ShareCoverageProtocol {
+class TimeLineVC: PullDownTableViewController,ShareCoverageProtocol {
 //    var table:UITableView!
     var dataArr:[TimeMessage]!
     var net:NetWorkData!
@@ -25,24 +25,24 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        table = UITableView(frame: CGRectZero, style: .Grouped)
-//        table.delegate = self
-//        table.dataSource = self
-//        table.translatesAutoresizingMaskIntoConstraints = false
+        self.tableView = UITableView(frame: CGRectZero, style: .Grouped)
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        self.tableView.translatesAutoresizingMaskIntoConstraints = false
         self.tableView.registerClass(TimeLineContentCell.self , forCellReuseIdentifier: "TimeLineContentCell")
         self.tableView.registerClass(TimeLinePicCell.self , forCellReuseIdentifier: "TimeLinePicCell")
         self.tableView.registerClass(TimeLinePersonCell.self, forCellReuseIdentifier: "TimeLinePersonCell")
         self.tableView.registerClass(TimeLineStatusCell.self , forCellReuseIdentifier: "TimeLineStatusCell")
         self.tableView.separatorColor = Profile.rgb(243, g: 243, b: 243)
         
-        self.refreshControl = UIRefreshControl()
-        self.refreshControl?.addTarget(self, action: "timeLineRefreshBegin", forControlEvents: .ValueChanged)
+//        self.refreshControl = UIRefreshControl()
+//        self.refreshControl?.addTarget(self, action: "timeLineRefreshBegin", forControlEvents: .ValueChanged)
         
         
         
-//        self.view.addSubview(table)
-//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
-//        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
+        self.view.addSubview(self.tableView)
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
+        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.tableView))
         
         
         self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
@@ -51,14 +51,29 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
         } else {
             // Fallback on earlier versions
         }
-        self.fetchTimeLineList()
-    }
-    
-    func timeLineRefreshBegin(){
-    
-        self.fetchTimeLineList()
         
+        self.timeLineRefresh()
+//        self.fetchTimeLineList()
     }
+    
+    
+    func timeLineRefresh(){
+    
+        weak var wself = self
+        let height = Profile.height() - 153
+        
+        self.addHeadViewWithTableEdge(UIEdgeInsetsMake(0, 0, 0, 0), withFrame: CGRectMake(0.0, 0 - height,Profile.width(),height)) { () -> Void in
+            wself?.fetchTimeLineList()
+        }
+        
+        self.headViewBeginLoading()
+    }
+    
+//    func timeLineRefreshBegin(){
+//    
+//        self.fetchTimeLineList()
+//        
+//    }
 
     
     func fetchTimeLineList(){
@@ -67,11 +82,12 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
         weak var wself = self
         let index = 0
 //        let loadView = THActivityView(activityViewWithSuperView: self.view)
-        self.refreshControl?.beginRefreshing()
+//        self.refreshControl?.beginRefreshing()
         net = NetWorkData()
         net.getTimeLineList(index) { (result, status) -> (Void) in
             
-            wself?.refreshControl?.endRefreshing()
+            wself?.headViewEndLoading()
+//            wself?.refreshControl?.endRefreshing()
 //            loadView.removeFromSuperview()
             if status == .NetWorkStatusError
             {
@@ -104,10 +120,7 @@ class TimeLineVC: UITableViewController,ShareCoverageProtocol {
                 
                 if list.count == 0{
                 
-                  let empty = THActivityView(emptyDataWarnViewWithString: "快来互动，上传图片吧", withImage: "noPicData", withSuperView: wself?.tableView)
-                    
-                    empty.translatesAutoresizingMaskIntoConstraints = true
-                    empty.frame = (wself?.tableView.bounds)!
+                   _ = THActivityView(emptyDataWarnViewWithString: "快来互动，上传图片吧", withImage: "noPicData", withSuperView: wself?.view)
                     wself?.dataArr = [TimeMessage]()
                     wself?.tableView.reloadData()
                     return

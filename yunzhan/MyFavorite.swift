@@ -15,12 +15,17 @@ class MySchedulerListVC: SchedulerController {
         self.navigationController?.navigationBar.tintColor = Profile.rgb(102, g: 102, b: 102)
         self.title = "我的活动"
         self.tableView.tableHeaderView = nil
+        self.fetchData()
     }
     
     
     override func setNavgationBarAttribute(change: Bool) {
         
     }
+    override func schedulerRefresh() {
+        
+    }
+    
     override func fetchData() {
         
         let loadView = THActivityView(activityViewWithSuperView: self.view)
@@ -29,21 +34,21 @@ class MySchedulerListVC: SchedulerController {
         weak var wself = self
         net = NetWorkData()
         net.myFavoriteScheduler { (result, status) -> (Void) in
-             wself?.refreshControl?.endRefreshing()
+            
             loadView.removeFromSuperview()
             if status == .NetWorkStatusError
             {
                 if result == nil
                 {
-                    let warnV = THActivityView(string: "网络错误")
-                    warnV.show()
+//                    let warnV = THActivityView(string: "网络错误")
+//                    warnV.show()
                     
-//                    let errView = THActivityView(netErrorWithSuperView: wself?.tableView.superview)
-//                    weak var werr = errView
-//                    errView.setErrorBk({ () -> Void in
-//                        wself?.fetchData()
-//                        werr?.removeFromSuperview()
-//                    })
+                    let errView = THActivityView(netErrorWithSuperView: wself?.view)
+                    weak var werr = errView
+                    errView.setErrorBk({ () -> Void in
+                        wself?.fetchData()
+                        werr?.removeFromSuperview()
+                    })
                 }
                 else
                 {
@@ -60,9 +65,9 @@ class MySchedulerListVC: SchedulerController {
             let tuple = result as! (schedulerList:[[SchedulerData]],dateArr:[String])
             if tuple.dateArr.count == 0
             {
-                let nodataV = THActivityView(emptyDataWarnViewWithString: "您还没有收藏活动", withImage: "noSchedulerData", withSuperView: wself!.view)
-                nodataV.translatesAutoresizingMaskIntoConstraints  = true
-                nodataV.frame = (wself?.view.bounds)!
+                _ = THActivityView(emptyDataWarnViewWithString: "您还没有收藏活动", withImage: "noSchedulerData", withSuperView: wself!.view)
+//                nodataV.translatesAutoresizingMaskIntoConstraints  = true
+//                nodataV.frame = (wself?.view.bounds)!
 //                let back = UIView(frame: wself!.view.bounds)
 //                back.backgroundColor = UIColor.redColor()
 //                self.view.addSubview(back)
@@ -160,13 +165,15 @@ class MyExhibitorList: Exhibitor {
     override func setNavgationBarAttribute(change: Bool) {
         
     }
+    
     override func setupRefresh(){
     
      self.fetchExhibitorData()
     }
+    
    override func fetchExhibitorData(){
     
-        let loadView = THActivityView(activityViewWithSuperView: self.navigationController!.view )
+        let loadView = THActivityView(activityViewWithSuperView: self.view)
         weak var wself = self
         net = NetWorkData()
         net.myFavoriteExhibitor { (result, status) -> (Void) in
@@ -176,7 +183,7 @@ class MyExhibitorList: Exhibitor {
             {
                 if result == nil
                 {
-                    let errView = THActivityView(netErrorWithSuperView: wself?.tableView.superview)
+                    let errView = THActivityView(netErrorWithSuperView: wself?.view)
                     weak var werr = errView
                     errView.setErrorBk({ () -> Void in
                         wself?.fetchExhibitorData()
@@ -222,19 +229,19 @@ class MyExhibitorList: Exhibitor {
     
     //    滑动删除 部分
     
-     override func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+    override func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
         return .Delete
     }
     
-     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+override     
+    func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return true
     }
     
-     override func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
-    }
-    
-     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
     
          if (editingStyle != .Delete) {
             return
@@ -271,7 +278,7 @@ class MyExhibitorList: Exhibitor {
     }
     
     
-     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         var cellData:ExhibitorData!

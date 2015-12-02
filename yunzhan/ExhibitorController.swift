@@ -8,7 +8,8 @@
 
 import Foundation
 //typealias ExhibitorData = (urlIcon:String,idNu:String,name:String,address:String)
-class Exhibitor: UITableViewController,UISearchDisplayDelegate,UISearchBarDelegate {
+
+class Exhibitor: PullDownTableViewController,UISearchDisplayDelegate,UISearchBarDelegate {
     
     var net:NetWorkData!
 //    var table:UITableView!
@@ -62,53 +63,52 @@ class Exhibitor: UITableViewController,UISearchDisplayDelegate,UISearchBarDelega
         
         self.navigationController?.tabBarItem.selectedImage = UIImage(named: "root-2_selected")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationController?.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
+
+        self.creatTable()
+        self.setupRefresh()
         
-        
-//        table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
-//        table.delegate = self
-//        table.dataSource = self
+    }
+    
+    func creatTable(){
+    
+        self.tableView = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
         self.tableView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
-//        table.translatesAutoresizingMaskIntoConstraints = false
-         self.tableView.separatorColor = Profile.rgb(243, g: 243, b: 243)
+        self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        self.tableView.separatorColor = Profile.rgb(243, g: 243, b: 243)
         self.tableView.sectionIndexBackgroundColor = UIColor.clearColor()
-//        self.tableView.sectionIndexColor = Profile.NavBarColor()
+        self.view.addSubview(self.tableView)
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
+        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.tableView))
+
+
+        
         let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
         searchBar.delegate = self
         let searchBack = UIView(frame: CGRectMake(0,0,Profile.width(),45))
         searchBack.addSubview(searchBar)
         self.tableView.tableHeaderView = searchBack
-        
-        
         self.tableView.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
-//        self.view.addSubview(table)
-//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
-//        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
-        
-        
         searchCV = UISearchDisplayController(searchBar: searchBar, contentsController: self)
         searchCV.searchResultsDelegate = self
         searchCV.searchResultsDataSource = self
         searchCV.delegate = self
-        
-        
-
-        self.setupRefresh()
-//        searchCV.searchResultsTitle = "dd"
-//        self.fetchExhibitorData()
+       
+    
     }
     
     
     func setupRefresh(){
         
        weak var wself = self
+      let height = Profile.height() - 113
         
-        
-       self.tableView.addHeaderWithCallback { () -> Void in
-          wself?.fetchExhibitorData()
+        self.addHeadViewWithTableEdge(UIEdgeInsetsMake(64, 0, 49, 0), withFrame: CGRectMake(0.0, 0 - height,Profile.width(),height)) { () -> Void in
+            wself?.fetchExhibitorData()
         }
-        self.tableView.headerBeginRefreshing()
-//                self.refreshControl = UIRefreshControl()
-//                self.refreshControl?.addTarget(self, action: "refreshBegin", forControlEvents: .ValueChanged)
+        
+        self.headViewBeginLoading()
 
     }
     
@@ -120,9 +120,8 @@ class Exhibitor: UITableViewController,UISearchDisplayDelegate,UISearchBarDelega
         weak var wself = self
         net = NetWorkData()
         net.getExhibitorList { (result, status) -> (Void) in
-            wself?.tableView.headerEndRefreshing()
-//            wself?.tableView?.endRefreshing()
-//            loadView.removeFromSuperview()
+            wself?.headViewEndLoading()
+            
             if status == .NetWorkStatusError
             {
                 if result == nil
@@ -167,7 +166,7 @@ class Exhibitor: UITableViewController,UISearchDisplayDelegate,UISearchBarDelega
         net.start()
         
     }
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+   override  func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
         if  self.tableView != tableView
         {
@@ -180,7 +179,7 @@ class Exhibitor: UITableViewController,UISearchDisplayDelegate,UISearchBarDelega
         return (prefixArr?.count)!
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
+  override  func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int{
     
         if tableView !=  self.tableView
         {
@@ -195,7 +194,7 @@ class Exhibitor: UITableViewController,UISearchDisplayDelegate,UISearchBarDelega
     }
     
     
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+   override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
         if tableView != self.tableView
         {
@@ -209,11 +208,11 @@ class Exhibitor: UITableViewController,UISearchDisplayDelegate,UISearchBarDelega
     }
     
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+  override  func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 60
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+   override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell =  self.tableView.dequeueReusableCellWithIdentifier("ExhibitorCell") as! ExhibitorCell
         
@@ -233,8 +232,9 @@ class Exhibitor: UITableViewController,UISearchDisplayDelegate,UISearchBarDelega
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
+   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    
+//    print(NSStringFromUIEdgeInsets(self.tableView.contentInset))
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         var cellData:ExhibitorData!
         if tableView !=  self.tableView
@@ -255,11 +255,13 @@ class Exhibitor: UITableViewController,UISearchDisplayDelegate,UISearchBarDelega
     }
     
     
-    override func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
+  override  func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
         
         return prefixArr
     }// return list of section titles to display in section index view (e.g. "ABCD...Z#")
    
+    
+    
     override func tableView(tableView: UITableView, sectionForSectionIndexTitle title: String, atIndex index: Int) -> Int {
         
         let s = prefixArr!.indexOf(title)
@@ -287,7 +289,11 @@ class Exhibitor: UITableViewController,UISearchDisplayDelegate,UISearchBarDelega
     
     
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
-        searchBar.frame = CGRectMake(0,0,Profile.width(),43)
+        
+//        NSLog(@"%@",NSStringFromUIEdgeInsets(self.tableView.contentInset));
+        print(NSStringFromUIEdgeInsets(self.tableView.contentInset))
+        
+//        searchBar.frame = CGRectMake(0,0,Profile.width(),43)
     }
     
     

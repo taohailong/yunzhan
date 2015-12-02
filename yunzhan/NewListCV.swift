@@ -7,7 +7,7 @@
 //
 
 import Foundation
-class NewsListVC:UITableViewController {
+class NewsListVC:PullDownTableViewController {
     
     var net:NetWorkData!
     var dataArr:[NewsData]!
@@ -27,40 +27,39 @@ class NewsListVC:UITableViewController {
         
         super.viewDidLoad()
         
-//        table = UITableView(frame: CGRectZero, style: .Plain)
-//        table.dataSource = self
-//        table.delegate = self
-        tableView.registerClass(NewCell.self , forCellReuseIdentifier: "NewCell")
-        tableView.tableFooterView = UIView()
-        self.refreshControl = UIRefreshControl()
-        self.refreshControl?.addTarget(self, action: "newsRefreshBegin", forControlEvents: .ValueChanged)
-
+        self.tableView = UITableView(frame: CGRectZero, style: .Plain)
+        self.tableView.dataSource = self
+        self.tableView.delegate = self
+        self.tableView.registerClass(NewCell.self , forCellReuseIdentifier: "NewCell")
+        self.tableView.tableFooterView = UIView()
+        self.view.addSubview(self.tableView)
+        self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
+        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.tableView))
         
-//        self.view.addSubview(table)
-//        table.translatesAutoresizingMaskIntoConstraints = false
-//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
-//        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
-        
-        self.fetchData()
+        self.newsRefresh()
     }
 
-    func newsRefreshBegin(){
+    func newsRefresh(){
         
-        self.fetchData()
+        weak var wself = self
+        let height = Profile.height() - 153
         
+        self.addHeadViewWithTableEdge(UIEdgeInsetsMake(0, 0, 0, 0), withFrame: CGRectMake(0.0, 0 - height,Profile.width(),height)) { () -> Void in
+            wself?.fetchData()
+        }
+        
+        self.headViewBeginLoading()
     }
 
     
     func fetchData(){
         
-        self.refreshControl?.beginRefreshing()
-        let loadView = THActivityView(activityViewWithSuperView: self.navigationController?.view)
         weak var wself = self
         net = NetWorkData()
         net.getNewsList { (result, status) -> (Void) in
             
-            wself?.refreshControl?.endRefreshing()
-            loadView.removeFromSuperview()
+            wself?.headViewEndLoading()
             if status == .NetWorkStatusError
             {
                 if result == nil
@@ -92,17 +91,13 @@ class NewsListVC:UITableViewController {
             
             if arr.count == 0
             {
-                let empty = THActivityView(emptyDataWarnViewWithString: "没有相关新闻哦", withImage: "noNewData", withSuperView: wself?.tableView)
-                
-                empty.translatesAutoresizingMaskIntoConstraints = true
-                empty.frame = (wself?.tableView.bounds)!
+                _ = THActivityView(emptyDataWarnViewWithString: "没有相关新闻哦", withImage: "noNewData", withSuperView: wself?.view)
                 wself?.dataArr = [NewsData]()
                 wself?.tableView.reloadData()
                 return
 
             }
            
-            
             wself?.dataArr = arr
             wself?.tableView.reloadData()
         }

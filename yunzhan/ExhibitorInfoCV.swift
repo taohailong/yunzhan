@@ -241,6 +241,10 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
+        if elementData == nil
+        {
+          return 0
+        }
         let nu = 4
         return nu
     }
@@ -273,7 +277,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             return 1
         }
         
-        if section == 3
+        else if section == 3
         {
             if introductArr == nil
             {
@@ -281,13 +285,28 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             }
            return 2
         }
-        
-        if personArr == nil
+        else
         {
-            return 0
+        
+            if personArr == nil && elementData.addressMap == nil
+            {
+                return 0
+            }
+            else if personArr == nil && elementData.addressMap != nil
+            {
+                return 2
+            }
+            else if personArr != nil && elementData.addressMap != nil
+            {
+                return personArr.count + 2
+            }
+            else
+            {
+               return personArr.count + 1
+            }
         }
-
-        return personArr.count + 2
+        
+//        return
     }
     
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
@@ -326,7 +345,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             return 14
         }
         
-        if personArr == nil
+        if personArr == nil && elementData?.addressMap == nil
         {
             return 0.5
         }
@@ -391,6 +410,11 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             {
 //                头部
               return 35
+            }
+            else if personArr == nil
+            {
+                //                地图
+               return 150
             }
             else if indexPath.row == (personArr.count + 1)
             {
@@ -480,6 +504,17 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
                 let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorMoreCell") as! ExhibitorMoreCell
 
                 cell.iconImage.image = UIImage(named: "exhibitorInfoHead")
+                return cell
+            }
+                
+            else if personArr == nil
+            {
+                weak var wself = self
+                let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorMapCell") as! ExhibitorMapCell
+                cell.block  = {
+                    wself?.showZoomMap(wself?.elementData.addressMap)
+                }
+                cell.fillData(elementData.location, locationUrl: elementData.addressMap)
                 return cell
             }
             else if indexPath.row == personArr.count+1
@@ -754,7 +789,7 @@ class ExhibitorInfoHeadCell: UITableViewCell {
 
         if addre != nil
         {
-          addressL.text = "地址：\(addre!)"
+          addressL.text = "地址:\(addre!)"
         }
         
 //        locationL.text = location

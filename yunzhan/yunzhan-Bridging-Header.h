@@ -13,8 +13,8 @@
 #import "UIImage+ZoomImage.h"
 #import "ShareCoverageView.h"
 #import "CommentScoreView.h"
-//#import "EGORefreshTableHeaderView.h"
-
+#import "PullDownTableViewController.h"
+#import "NSString+ZhengZe.h"
 
 #import "UIScrollView+MJRefresh.h"
 #import "MJRefreshHeaderView.h"
