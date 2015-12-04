@@ -457,7 +457,7 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     
     func registerNoticOfKeyboard(){
     
-       NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardShown:", name: UIKeyboardWillShowNotification, object: nil)
+       NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardShown:", name: UIKeyboardDidShowNotification, object: nil)
        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardHidden:", name: UIKeyboardWillHideNotification, object: nil)
 
@@ -469,12 +469,13 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         let dic = notic.userInfo
         let sizeValue = dic![UIKeyboardFrameEndUserInfoKey]
         let keyboardSize = sizeValue?.CGRectValue.size
-        self.accessViewAnimate(CGRectGetMaxY(accessView.frame) - (keyboardSize?.height)! - 49.0)
+        let y = Profile.height() - (keyboardSize?.height)! - CGRectGetHeight(self.accessView.frame)
+        self.accessViewAnimate(y)
     }
     
     
     func keyboardHidden(let notification:NSNotification){
-        self.accessViewAnimate(Profile.height() - 49.0)
+        self.accessViewAnimate(Profile.height() - CGRectGetHeight(self.accessView.frame))
     }
     
     

@@ -11,6 +11,20 @@ class UserData:NSObject {
     
     var name:String?
     var title:String?
+    var deviceToken:String?{
+    
+        get{
+            let userDefault = NSUserDefaults.standardUserDefaults()
+            let tokenT = userDefault.objectForKey("deviceToken") as? String
+            return tokenT
+        }
+        set{
+            let userDefault = NSUserDefaults.standardUserDefaults()
+            userDefault.setObject(newValue, forKey: "deviceToken")
+            userDefault.synchronize()
+        }
+    
+    }
     var phone:String?{
         
         get {
@@ -26,7 +40,6 @@ class UserData:NSObject {
             userDefault.setObject(newValue, forKey: "phone")
             userDefault.synchronize()
         }
-    
     }
     var _name:String?
     var isLogIn:Bool = false
@@ -57,6 +70,7 @@ class UserData:NSObject {
       let userDefault = NSUserDefaults.standardUserDefaults()
         userDefault.removeObjectForKey("token")
         userDefault.removeObjectForKey("phone")
+        userDefault.removeObjectForKey("deviceToken")
     }
     
     struct Inner {
@@ -70,5 +84,15 @@ class UserData:NSObject {
             Inner.instance = UserData()
         }
         return Inner.instance!
+    }
+    
+    func sendDeviceToken(){
+       
+        if self.token != nil && self.deviceToken != nil
+        {
+           let new = NetWorkData()
+            new.sendDeviceToken(self.deviceToken!)
+           new.start()
+        }
     }
 }

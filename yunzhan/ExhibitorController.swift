@@ -71,6 +71,14 @@ class Exhibitor: PullDownTableViewController,UISearchDisplayDelegate,UISearchBar
     
     func creatTable(){
     
+        let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
+        searchBar.delegate = self
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(searchBar)
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(searchBar))
+        self.view.addConstraint(NSLayoutConstraint(item: searchBar, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1.0, constant: 0))
+        
+        
         self.tableView = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -80,31 +88,26 @@ class Exhibitor: PullDownTableViewController,UISearchDisplayDelegate,UISearchBar
         self.tableView.sectionIndexBackgroundColor = UIColor.clearColor()
         self.view.addSubview(self.tableView)
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
-        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.tableView))
-
-
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[searchBar]-0-[tableView]-0-|", options: [], metrics: nil, views: ["searchBar":searchBar,"tableView":tableView]))
         
-        let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
-        searchBar.delegate = self
-        let searchBack = UIView(frame: CGRectMake(0,0,Profile.width(),45))
-        searchBack.addSubview(searchBar)
-        self.tableView.tableHeaderView = searchBack
+        
+        
+//        self.tableView.tableHeaderView = searchBar
         self.tableView.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
         searchCV = UISearchDisplayController(searchBar: searchBar, contentsController: self)
         searchCV.searchResultsDelegate = self
         searchCV.searchResultsDataSource = self
         searchCV.delegate = self
        
-    
     }
     
     
     func setupRefresh(){
         
        weak var wself = self
-      let height = Profile.height() - 113
+      let height = Profile.height() - 158
         
-        self.addHeadViewWithTableEdge(UIEdgeInsetsMake(64, 0, 49, 0), withFrame: CGRectMake(0.0, 0 - height,Profile.width(),height)) { () -> Void in
+        self.addHeadViewWithTableEdge(UIEdgeInsetsMake(0, 0, 49, 0), withFrame: CGRectMake(0.0, 0 - height,Profile.width(),height)) { () -> Void in
             wself?.fetchExhibitorData()
         }
         
@@ -115,7 +118,6 @@ class Exhibitor: PullDownTableViewController,UISearchDisplayDelegate,UISearchBar
     
     func fetchExhibitorData(){
 
-//        self.refreshControl?.beginRefreshing()
 //        let loadView = THActivityView(activityViewWithSuperView: self.tableView.superview)
         weak var wself = self
         net = NetWorkData()

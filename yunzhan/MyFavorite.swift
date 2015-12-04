@@ -8,6 +8,12 @@
 
 import Foundation
 class MySchedulerListVC: SchedulerController {
+   
+    
+    override func setNavgationBarAttribute(change: Bool) {
+        
+    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,12 +25,36 @@ class MySchedulerListVC: SchedulerController {
     }
     
     
-    override func setNavgationBarAttribute(change: Bool) {
+    
+    
+    override func creatSchedulerTable(){
+        
+        
+        self.tableView = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        self.tableView.separatorStyle = .None
+        //        self.tableView.tableHeaderView = searchBar
+        self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        self.tableView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        self.tableView.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
+        self.tableView.registerClass(TableHeadView.self , forHeaderFooterViewReuseIdentifier: "TableHeadView")
+        self.tableView.registerClass(SchedulerCell.self , forCellReuseIdentifier: "SchedulerCell")
+        self.view.addSubview(self.tableView)
+        
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
+
+        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.tableView))
         
     }
+
+    
     override func schedulerRefresh() {
         
     }
+    
+    
+    
     
     override func fetchData() {
         
@@ -153,6 +183,11 @@ override
 
 class MyExhibitorList: Exhibitor {
     
+    
+    override func setNavgationBarAttribute(change: Bool) {
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
@@ -161,10 +196,22 @@ class MyExhibitorList: Exhibitor {
         self.tableView.tableHeaderView = nil
     }
 
-    
-    override func setNavgationBarAttribute(change: Bool) {
+    override func creatTable(){
+        
+        self.tableView = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        self.tableView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        self.tableView.translatesAutoresizingMaskIntoConstraints = false
+        self.tableView.separatorColor = Profile.rgb(243, g: 243, b: 243)
+        self.tableView.sectionIndexBackgroundColor = UIColor.clearColor()
+        self.tableView.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
+        self.view.addSubview(self.tableView)
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
+        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.tableView))
         
     }
+
     
     override func setupRefresh(){
     
@@ -210,11 +257,10 @@ class MyExhibitorList: Exhibitor {
             {
                 if wself != nil
                 {
-                    let nodataV = THActivityView(emptyDataWarnViewWithString: "您还没有收藏展商", withImage: "noExhibitorData", withSuperView: wself?.view)
-                    nodataV.translatesAutoresizingMaskIntoConstraints  = true
-                    nodataV.frame = (wself?.view.bounds)!
+                    _ = THActivityView(emptyDataWarnViewWithString: "您还没有收藏展商", withImage: "noExhibitorData", withSuperView: wself?.view)
+//                    nodataV.translatesAutoresizingMaskIntoConstraints  = true
+//                    nodataV.frame = (wself?.view.bounds)!
                 }
-               //                nodataV.tag = 10
                 return
             }
             
@@ -223,7 +269,6 @@ class MyExhibitorList: Exhibitor {
             wself?.tableView.reloadData()
         }
         net.start()
-        
     }
     
     

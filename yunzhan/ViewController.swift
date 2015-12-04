@@ -62,10 +62,9 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         self.view.backgroundColor = Profile.rgb(240, g: 0, b: 0)
         
         let flowLayout = UICollectionViewFlowLayout()
+            
         collection = UICollectionView(frame: CGRectMake(0, 0, Profile.width(), Profile.height()),
         collectionViewLayout: flowLayout)
-//        collection.translatesAutoresizingMaskIntoConstraints = false
-            
         collection.alwaysBounceVertical = true
         collection.registerClass(CommonHeadView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "CommonHeadView")
         
@@ -83,8 +82,9 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         self.view.addSubview(collection)
             
         collection.translatesAutoresizingMaskIntoConstraints = false
-//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(collection))
-//            self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(collection))
+//        self.view.addConstraint(NSLayoutConstraint(item: collection, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1.0, constant: 0))
+//         self.view.addConstraint(NSLayoutConstraint(item: collection, attribute: .Bottom, relatedBy: .Equal, toItem: self.bottomLayoutGuide, attribute: .Top, multiplier: 1.0, constant: 0))
+            
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[collection]-0-|", options: [], metrics: nil, views: ["collection" : collection]))
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[collection]-0-|", options: [], metrics: nil, views: ["collection" : collection]))
             
@@ -93,7 +93,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             self.addHead()
             
          self.fetchUserData()
-//         self.fetchData()
+
         // Do any additional setup after loading the view, typically from a nib.
     }
 

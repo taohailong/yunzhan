@@ -322,6 +322,7 @@
              user.name = dataDic[@"name"];
              user.phone = dataDic[@"mobile"];
              user.token = dataDic[@"user_token"];
+             [user sendDeviceToken];
             [wSelf logViewDismiss];
          }
          else

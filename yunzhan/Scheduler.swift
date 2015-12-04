@@ -58,31 +58,42 @@ class SchedulerController: PullDownTableViewController,UISearchDisplayDelegate {
         self.navigationController?.tabBarItem.selectedImage = UIImage(named: "root-3_selected")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationController?.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
         
-//        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-//        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
-//        self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
-        
         let dict = [NSFontAttributeName: Profile.font(18)]
         self.navigationController!.navigationBar.titleTextAttributes = dict
         
-        
         self.title = "日程"
+        self.creatSchedulerTable()
+        self.schedulerRefresh()
+    }
+    
+    
+    func creatSchedulerTable(){
+    
         let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(searchBar)
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(searchBar))
+        self.view.addConstraint(NSLayoutConstraint(item: searchBar, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1.0, constant: 0))
+        
+        
         
         self.tableView = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
         self.tableView.delegate = self
         self.tableView.dataSource = self
         self.tableView.separatorStyle = .None
-        self.tableView.tableHeaderView = searchBar
+//        self.tableView.tableHeaderView = searchBar
         self.tableView.translatesAutoresizingMaskIntoConstraints = false
         self.tableView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         self.tableView.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
         self.tableView.registerClass(TableHeadView.self , forHeaderFooterViewReuseIdentifier: "TableHeadView")
-        self.view.addSubview(self.tableView)
         self.tableView.registerClass(SchedulerCell.self , forCellReuseIdentifier: "SchedulerCell")
+        self.view.addSubview(self.tableView)
         
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
-        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.tableView))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[searchBar]-0-[tableView]", options: [], metrics: nil, views: ["searchBar":searchBar,"tableView":tableView]))
+        self.view.addConstraint(NSLayoutConstraint(item: self.tableView, attribute: .Bottom, relatedBy: .Equal, toItem: self.bottomLayoutGuide, attribute: .Top, multiplier: 1.0, constant: 0))
+//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
+//        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.tableView))
         
         
         searchCV = UISearchDisplayController(searchBar: searchBar, contentsController: self)
@@ -90,8 +101,7 @@ class SchedulerController: PullDownTableViewController,UISearchDisplayDelegate {
         searchCV.searchResultsDataSource = self
         searchCV.delegate = self
         searchCV.searchResultsTableView.registerClass(ExhibitorCell.self, forCellReuseIdentifier: "ExhibitorCell")
-        
-        self.schedulerRefresh()
+    
     }
     
     
@@ -99,9 +109,9 @@ class SchedulerController: PullDownTableViewController,UISearchDisplayDelegate {
     func schedulerRefresh(){
     
         weak var wself = self
-        let height = Profile.height() - 113
+        let height = Profile.height() - 158
         
-        self.addHeadViewWithTableEdge(UIEdgeInsetsMake(64, 0, 49, 0), withFrame: CGRectMake(0.0, 0 - height,Profile.width(),height)) { () -> Void in
+        self.addHeadViewWithTableEdge(UIEdgeInsetsMake(0, 0, 0, 0), withFrame: CGRectMake(0.0, 0 - height,Profile.width(),height)) { () -> Void in
             wself?.fetchData()
         }
         
