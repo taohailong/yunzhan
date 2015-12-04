@@ -82,6 +82,12 @@
 		C7848F541BFDDA4500339623 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F511BFDDA2300339623 /* libz.tbd */; };
 		C7848F551BFDDEC400339623 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F4F1BFDDA0800339623 /* SystemConfiguration.framework */; };
 		C7848F571BFDDEDC00339623 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F561BFDDEDC00339623 /* libc++.tbd */; };
+		C78EA5521C1189A2007798E2 /* THLRefeshView_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C78EA54D1C1189A2007798E2 /* THLRefeshView_arrow@2x.png */; };
+		C78EA5531C1189A2007798E2 /* THLRefeshView_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C78EA54D1C1189A2007798E2 /* THLRefeshView_arrow@2x.png */; };
+		C78EA5541C1189A2007798E2 /* THLRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78EA54F1C1189A2007798E2 /* THLRefreshView.m */; };
+		C78EA5551C1189A2007798E2 /* THLRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78EA54F1C1189A2007798E2 /* THLRefreshView.m */; };
+		C78EA5561C1189A2007798E2 /* THLScrollLoadView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78EA5511C1189A2007798E2 /* THLScrollLoadView.m */; };
+		C78EA5571C1189A2007798E2 /* THLScrollLoadView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78EA5511C1189A2007798E2 /* THLScrollLoadView.m */; };
 		C79285711BEAF65B00287A24 /* NewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79285701BEAF65B00287A24 /* NewsView.swift */; };
 		C79285721BEAF65B00287A24 /* NewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79285701BEAF65B00287A24 /* NewsView.swift */; };
 		C79285751BEB06A400287A24 /* THActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = C79285741BEB06A400287A24 /* THActivityView.m */; };
@@ -194,6 +200,11 @@
 		C7848F4F1BFDDA0800339623 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		C7848F511BFDDA2300339623 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		C7848F561BFDDEDC00339623 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		C78EA54D1C1189A2007798E2 /* THLRefeshView_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "THLRefeshView_arrow@2x.png"; sourceTree = "<group>"; };
+		C78EA54E1C1189A2007798E2 /* THLRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THLRefreshView.h; sourceTree = "<group>"; };
+		C78EA54F1C1189A2007798E2 /* THLRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THLRefreshView.m; sourceTree = "<group>"; };
+		C78EA5501C1189A2007798E2 /* THLScrollLoadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THLScrollLoadView.h; sourceTree = "<group>"; };
+		C78EA5511C1189A2007798E2 /* THLScrollLoadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THLScrollLoadView.m; sourceTree = "<group>"; };
 		C79285701BEAF65B00287A24 /* NewsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsView.swift; sourceTree = "<group>"; };
 		C79285731BEB06A400287A24 /* THActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THActivityView.h; sourceTree = "<group>"; };
 		C79285741BEB06A400287A24 /* THActivityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THActivityView.m; sourceTree = "<group>"; };
@@ -374,6 +385,7 @@
 				C763D3EF1C049945005E3921 /* ShareCoverageView.m */,
 				C77E8FA31C06DB48003832BA /* CommentScoreView.h */,
 				C77E8FA41C06DB48003832BA /* CommentScoreView.m */,
+				C78EA54C1C1189A2007798E2 /* THLScrollRefreshLoad */,
 				C77A28911C087C39001CF153 /* MJRefresh */,
 				C77A28531C08686A001CF153 /* RefreshTableHeaderView */,
 				C7848F411BFDD8F400339623 /* weixin */,
@@ -396,6 +408,18 @@
 				C7848F461BFDD8F400339623 /* WXApiObject.h */,
 			);
 			path = weixin;
+			sourceTree = SOURCE_ROOT;
+		};
+		C78EA54C1C1189A2007798E2 /* THLScrollRefreshLoad */ = {
+			isa = PBXGroup;
+			children = (
+				C78EA54D1C1189A2007798E2 /* THLRefeshView_arrow@2x.png */,
+				C78EA54E1C1189A2007798E2 /* THLRefreshView.h */,
+				C78EA54F1C1189A2007798E2 /* THLRefreshView.m */,
+				C78EA5501C1189A2007798E2 /* THLScrollLoadView.h */,
+				C78EA5511C1189A2007798E2 /* THLScrollLoadView.m */,
+			);
+			path = THLScrollRefreshLoad;
 			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
@@ -486,6 +510,7 @@
 				C77E1DA41BE09EDA00B8F444 /* Assets.xcassets in Resources */,
 				C78001C01C0E9F4B0097FD8E /* refreshArrow@2x.png in Resources */,
 				C77A289C1C087C39001CF153 /* MJRefresh.bundle in Resources */,
+				C78EA5521C1189A2007798E2 /* THLRefeshView_arrow@2x.png in Resources */,
 				C7848F491BFDD8F400339623 /* read_me.txt in Resources */,
 				C77E1DA21BE09EDA00B8F444 /* Main.storyboard in Resources */,
 			);
@@ -499,6 +524,7 @@
 				C7F0AE441BE210C70056C06B /* Assets.xcassets in Resources */,
 				C78001C11C0E9F4B0097FD8E /* refreshArrow@2x.png in Resources */,
 				C77A289D1C087C39001CF153 /* MJRefresh.bundle in Resources */,
+				C78EA5531C1189A2007798E2 /* THLRefeshView_arrow@2x.png in Resources */,
 				C7848F4A1BFDD8F400339623 /* read_me.txt in Resources */,
 				C7F0AE451BE210C70056C06B /* Main.storyboard in Resources */,
 			);
@@ -581,6 +607,7 @@
 				C77A289E1C087C39001CF153 /* MJRefreshBaseView.m in Sources */,
 				C7811B961C0C905A00E5A637 /* ZoomView.swift in Sources */,
 				C7A9629C1BF32F01003B883A /* WebHtml.swift in Sources */,
+				C78EA5541C1189A2007798E2 /* THLRefreshView.m in Sources */,
 				C7C0EABC1BF09CA2004711BF /* ContactsController.swift in Sources */,
 				C71067451C0DB193003396F7 /* PullDownTableViewController.m in Sources */,
 				C7AEDEDD1C05A938009C196C /* MyRegist.swift in Sources */,
@@ -613,6 +640,7 @@
 				C79546E51BFEC3D80080CD46 /* TSegmentedControl.m in Sources */,
 				C763D3EC1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */,
 				C79285711BEAF65B00287A24 /* NewsView.swift in Sources */,
+				C78EA5561C1189A2007798E2 /* THLScrollLoadView.m in Sources */,
 				C78001C41C0EEFEA0097FD8E /* NSString+ZhengZe.m in Sources */,
 				C76E08EF1C09E17200AAFF7B /* About.swift in Sources */,
 				C77A28A01C087C39001CF153 /* MJRefreshConst.m in Sources */,
@@ -633,6 +661,7 @@
 				C77A289F1C087C39001CF153 /* MJRefreshBaseView.m in Sources */,
 				C7811B971C0C905A00E5A637 /* ZoomView.swift in Sources */,
 				C79285791BEB322700287A24 /* SettingController.swift in Sources */,
+				C78EA5551C1189A2007798E2 /* THLRefreshView.m in Sources */,
 				C7F0AE3C1BE210C70056C06B /* ViewController.swift in Sources */,
 				C71067461C0DB193003396F7 /* PullDownTableViewController.m in Sources */,
 				C7AEDEDE1C05A938009C196C /* MyRegist.swift in Sources */,
@@ -665,6 +694,7 @@
 				C79546E61BFEC3D80080CD46 /* TSegmentedControl.m in Sources */,
 				C763D3ED1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */,
 				C7A9629D1BF32F01003B883A /* WebHtml.swift in Sources */,
+				C78EA5571C1189A2007798E2 /* THLScrollLoadView.m in Sources */,
 				C78001C51C0EEFEA0097FD8E /* NSString+ZhengZe.m in Sources */,
 				C76E08F01C09E17200AAFF7B /* About.swift in Sources */,
 				C77A28A11C087C39001CF153 /* MJRefreshConst.m in Sources */,

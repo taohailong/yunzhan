@@ -15,6 +15,7 @@
 #import "CommentScoreView.h"
 #import "PullDownTableViewController.h"
 #import "NSString+ZhengZe.h"
-
+#import "THLRefreshView.h"
+//#import "THLScrollLoadView.h"
 #import "UIScrollView+MJRefresh.h"
 #import "MJRefreshHeaderView.h"

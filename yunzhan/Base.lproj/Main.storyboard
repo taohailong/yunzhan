@@ -64,7 +64,7 @@
         <!--View Controller-->
         <scene sceneID="dWE-jY-FP3">
             <objects>
-                <viewController id="6Ji-ha-b0z" customClass="ViewController" customModule="yunzhan" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="6Ji-ha-b0z" customClass="ViewController" customModule="yunzhan" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="dPU-6R-Gfx"/>
                         <viewControllerLayoutGuide type="bottom" id="iUE-NC-1aC"/>

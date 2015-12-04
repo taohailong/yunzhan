@@ -13,7 +13,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
     var net:NetWorkData!
     var pics:[PicData]!
     var news:[NewsData]!,exhibitor:[ExhibitorData]!,scheduler:[SchedulerData]!
-    
+    var refreshHeadView:THLRefreshView!
     var collection:UICollectionView!
     
     override func viewWillAppear(animated: Bool) {
@@ -59,7 +59,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             
         
 
-        self.view.backgroundColor = Profile.rgb(240, g: 0, b: 0)
+//        self.view.backgroundColor = Profile.rgb(240, g: 0, b: 0)
         
         let flowLayout = UICollectionViewFlowLayout()
             
@@ -82,11 +82,11 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         self.view.addSubview(collection)
             
         collection.translatesAutoresizingMaskIntoConstraints = false
-//        self.view.addConstraint(NSLayoutConstraint(item: collection, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1.0, constant: 0))
-//         self.view.addConstraint(NSLayoutConstraint(item: collection, attribute: .Bottom, relatedBy: .Equal, toItem: self.bottomLayoutGuide, attribute: .Top, multiplier: 1.0, constant: 0))
+        self.view.addConstraint(NSLayoutConstraint(item: collection, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1.0, constant: 0))
+        self.view.addConstraint(NSLayoutConstraint(item: collection, attribute: .Bottom, relatedBy: .Equal, toItem: self.bottomLayoutGuide, attribute: .Top, multiplier: 1.0, constant: 0))
             
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[collection]-0-|", options: [], metrics: nil, views: ["collection" : collection]))
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[collection]-0-|", options: [], metrics: nil, views: ["collection" : collection]))
+//        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[collection]-0-|", options: [], metrics: nil, views: ["collection" : collection]))
             
             
 //         self.addRefreshTableHead()
@@ -118,7 +118,8 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         weak var wself = self
         net = NetWorkData()
         net.getRootData { (result, status) -> (Void) in
-            wself?.collection.headerEndRefreshing()
+//            wself?.collection.headerEndRefreshing()
+            wself?.refreshHeadView.endRefreshing()
 //            loadView.removeFromSuperview()
             if status == .NetWorkStatusError
             {
@@ -388,10 +389,19 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
     func addHead(){
     
         weak var wself = self
-        collection.addHeaderWithCallback { () -> Void in
+        
+        refreshHeadView = THLRefreshView()
+         refreshHeadView.isManuallyRefreshing = true
+        refreshHeadView.addToScrollView(collection);
+       
+        refreshHeadView.setBeginRefreshBlock { () -> Void in
             wself?.fetchData()
         }
-        collection.headerBeginRefreshing()
+        
+//        collection.addHeaderWithCallback { () -> Void in
+//            wself?.fetchData()
+//        }
+//        collection.headerBeginRefreshing()
     
     }
     
