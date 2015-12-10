@@ -216,129 +216,45 @@ class CollectionNewCell: UICollectionViewCell {
 
 
 
-class AdRootCollectionView: UICollectionReusableView,UIScrollViewDelegate {
+class AdRootCollectionView: UICollectionReusableView {
     
     typealias Blok = (link:String) ->Void
     var tapBlock:Blok!
-    var timer:NSTimer!
+    let scrollV:RepeatScrollView
     var imageArr:[PicData]?
-    var scroll: UIScrollView!
-    var page:UIPageControl!
     func loadData(imageData:[PicData]?,tapBlock:Blok?){
         
-        if scroll != nil{ return}
         
         if tapBlock != nil && imageData != nil
         {
             self.tapBlock = tapBlock!
             self.imageArr = imageData
+            scrollV.setDataSource(self.imageArr)
         }
-            
-        else
-        {
-            return
-        }
-        scroll = UIScrollView(frame: CGRectMake(0,0,CGRectGetWidth(frame),CGRectGetHeight(frame)))
-        scroll.pagingEnabled = true
-        scroll.showsHorizontalScrollIndicator = false
-        scroll.delegate = self
-        self.addSubview(scroll)
-        
-        
-        page = UIPageControl(frame: CGRectMake(0, 0, 15, 20))
-        page.pageIndicatorTintColor = Profile.rgb(222 , g: 227, b: 223);
-        page.currentPageIndicatorTintColor = UIColor.whiteColor();
-        self.addSubview(page);
-        
-        
-        timer = NSTimer.scheduledTimerWithTimeInterval(6, target: self, selector: "changeSrcollView", userInfo: nil, repeats: true)
-        self.creatImageView()
-        
     }
     
     override init(frame: CGRect) {
+        
+        
+        scrollV = RepeatScrollView(frame: CGRectMake(0,0,frame.width,frame.height))
+    
         super.init(frame: frame)
         self.backgroundColor = UIColor.whiteColor()
-    }
-    
-    
-    func creatImageView(){
         
-        var frame = CGRectMake(0,0,CGRectGetWidth(scroll.bounds),CGRectGetHeight(scroll.bounds))
-        
-        var i = 0
-        for (index ,imageData) in imageArr!.enumerate(){
+        self.addSubview(scrollV);
+        scrollV.setAutoRepeat()
+        weak var wself = self
+        scrollV.setTapCallBack { (index:Int,data:RepeatScrollProtocol!) -> Void in
             
-            let image = UIImageView(frame: frame)
-            image.tag = index
-            scroll.addSubview(image)
-            image.backgroundColor = Profile.rgb(243, g: 243, b: 243)
-            
-            image.contentMode = .Center
-            
-            if imageData.url != nil
+            if let imageData = data as? PicData
             {
-                weak var wimage = image
-                image.sd_setImageWithURL(NSURL(string: imageData.url!)!, placeholderImage: UIImage(named: "default_big"), completed: { (let image:UIImage!,err:NSError!, type:SDImageCacheType, url:NSURL!) -> Void in
-                    if err == nil
-                    {
-                        wimage?.contentMode = .ScaleToFill
-                    }
-                })
+              if wself!.tapBlock != nil
+              {
+                    wself!.tapBlock(link: imageData.id!)
+                }
+             
             }
-            else
-            {
-               image.image = UIImage(named: "default_big")
-            }
- //            image.sd_setImageWithURL(NSURL(string: imageData.url)!,  placeholderImage:UIImage(named: "default_big"))
-            frame = CGRectMake(frame.origin.x + frame.size.width, 0, CGRectGetWidth(frame), CGRectGetHeight(frame))
-            image.userInteractionEnabled = true
-            let tap = UITapGestureRecognizer(target: self, action: "imageTap:")
-            image.addGestureRecognizer(tap)
-            i = index
         }
-        scroll.contentSize = CGSizeMake(scroll.bounds.size.width * CGFloat(i+1), scroll.bounds.height)
-        
-        
-        let width = 15 * CGFloat(imageArr!.count)
-        
-        page.frame = CGRectMake((CGRectGetWidth(self.frame)/2 - width/2), CGRectGetHeight(self.frame)-20,width , 20);
-        
-        page.numberOfPages = imageArr!.count;
-
-    }
-    
-    
-    func changeSrcollView(){
-//      
-       var nu = ceil(scroll.contentOffset.x / scroll.bounds.size.width)
-       nu = nu+1
-       var point = scroll.contentOffset
-      if Int(nu) < imageArr!.count
-      {
-        page.currentPage = Int(nu);
-         point.x = scroll.bounds.size.width*nu
-      }
-        else
-      {
-        page.currentPage = 0
-         point.x = 0
-      }
-      scroll.setContentOffset(point, animated: true)
-        
-    }
-    
-    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        
-        let nu = scrollView.contentOffset.x/scrollView.frame.size.width;
-        page.currentPage = Int(nu);
-    }
-    
-    func imageTap(let tap:UITapGestureRecognizer){
-        
-        let tag = tap.view?.tag
-        let imageData = imageArr![tag!]
-        tapBlock(link: imageData.id!)
     }
     
     required init?(coder aDecoder: NSCoder) {

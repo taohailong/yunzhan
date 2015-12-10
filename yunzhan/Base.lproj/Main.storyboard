@@ -83,7 +83,7 @@
         <!--Exhibitor-->
         <scene sceneID="EKV-hM-tJ0">
             <objects>
-                <viewController id="GaT-1V-2w8" customClass="Exhibitor" customModule="yunzhan" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="GaT-1V-2w8" customClass="Exhibitor" customModule="yunzhan" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="84b-gz-5u5"/>
                         <viewControllerLayoutGuide type="bottom" id="dob-84-ppE"/>

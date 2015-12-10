@@ -8,13 +8,17 @@
 
 import Foundation
 
-class PicData {
+class PicData:NSObject,RepeatScrollProtocol {
+    
     let id:String?
     let  url:String?
     init(id:String?, url:String?)
     {
         self.id = id
         self.url = url
+    }
+    @objc func getImageUrl() -> String! {
+        return self.url
     }
 }
 

@@ -28,6 +28,7 @@ class Profile
     
     static let NavBarColor = { return  UIColor(red: 219/255.0, green: 0/255.0, blue: 52/255.0, alpha: 1.0) }
     static let domain =  "www.zhangzhantong.com"
+//    static let domain = ""
     static let NavTitleColor = {return UIColor.whiteColor() }
 //    static let 
     class func rgb(let r:CGFloat,let g:CGFloat, let b:CGFloat) ->UIColor{

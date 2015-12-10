@@ -8,6 +8,17 @@
 
 import Foundation
 class UserData:NSObject {
+//    static let shared:UserData = UserData()
+    
+    
+    
+//    private let sharedKraken = TheOneAndOnlyKraken()
+//    class TheOneAndOnlyKraken {
+//        class var sharedInstance: TheOneAndOnlyKraken {
+//            return sharedKraken
+//        }
+//    }
+    
     
     var name:String?
     var title:String?
@@ -67,11 +78,26 @@ class UserData:NSObject {
        phone  = nil
         title = nil
        name = nil
-      let userDefault = NSUserDefaults.standardUserDefaults()
+       let userDefault = NSUserDefaults.standardUserDefaults()
+        print(userDefault.objectForKey("token"))
         userDefault.removeObjectForKey("token")
+        print(userDefault.objectForKey("token"))
         userDefault.removeObjectForKey("phone")
         userDefault.removeObjectForKey("deviceToken")
     }
+    
+    
+    func sendDeviceToken(){
+        
+        if self.token != nil && self.deviceToken != nil
+        {
+            let new = NetWorkData()
+            new.sendDeviceToken(self.deviceToken!)
+            new.start()
+        }
+    }
+
+
     
     struct Inner {
         static var instance:UserData?
@@ -86,13 +112,4 @@ class UserData:NSObject {
         return Inner.instance!
     }
     
-    func sendDeviceToken(){
-       
-        if self.token != nil && self.deviceToken != nil
-        {
-           let new = NetWorkData()
-            new.sendDeviceToken(self.deviceToken!)
-           new.start()
-        }
-    }
-}
+   }

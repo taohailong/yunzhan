@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate {
         // Override point for customization after application launch.
         
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
-        
+        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
 //        application.statusBarStyle = UIStatusBarStyleLightContent
         if #available(iOS 8.0,*)
         {

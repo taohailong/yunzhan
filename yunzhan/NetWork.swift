@@ -1152,8 +1152,6 @@ class NetWorkData {
               }
               element.personName = temp["name"] as? String
               element.personTitle = temp["title"] as? String
-//            element.personName = "啦啦啦"
-//            element.personTitle = "总监"
 
               listArr.append(element)
             }
@@ -1306,7 +1304,6 @@ class NetWorkData {
         
         if url.isEmpty
         {
-//            print(url)
             return
         }
 //        print(url)
@@ -1318,7 +1315,21 @@ class NetWorkData {
             {
                 if let json = try?  NSJSONSerialization.JSONObjectWithData(jsonData, options: [])
                 {
-                    completeBlock(result: json, status: .NetWorkStatusSucess)
+                    if let code = json["code"] as? Int,let msg = json["msg"]
+                    {
+                        if code == 1
+                        {
+                            completeBlock(result: msg, status: .NetWorkStatusError)
+                        }
+                        else
+                        {
+                           completeBlock(result: json, status: .NetWorkStatusSucess)
+                        }
+                    }
+                    else
+                    {
+                       completeBlock(result: json, status: .NetWorkStatusSucess)
+                    }
                 }
             }
             

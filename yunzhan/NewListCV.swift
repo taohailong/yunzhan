@@ -7,12 +7,12 @@
 //
 
 import Foundation
-class NewsListVC:PullDownTableViewController {
+class NewsListVC:UIViewController,UITableViewDataSource,UITableViewDelegate {
     
     var net:NetWorkData!
     var dataArr:[NewsData]!
-//    var table: UITableView!
-    
+    var table: UITableView!
+    var refreshV:THLRefreshView!
 //    override func viewWillAppear(animated: Bool) {
 //        super.viewWillAppear(animated)
 //        if dataArr == nil
@@ -27,15 +27,15 @@ class NewsListVC:PullDownTableViewController {
         
         super.viewDidLoad()
         
-        self.tableView = UITableView(frame: CGRectZero, style: .Plain)
-        self.tableView.dataSource = self
-        self.tableView.delegate = self
-        self.tableView.registerClass(NewCell.self , forCellReuseIdentifier: "NewCell")
-        self.tableView.tableFooterView = UIView()
-        self.view.addSubview(self.tableView)
-        self.tableView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
-        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.tableView))
+        table = UITableView(frame: CGRectZero, style: .Plain)
+        table.dataSource = self
+        table.delegate = self
+        table.registerClass(NewCell.self , forCellReuseIdentifier: "NewCell")
+        table.tableFooterView = UIView()
+        self.view.addSubview(table)
+        table.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
+        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         
         self.newsRefresh()
     }
@@ -43,13 +43,14 @@ class NewsListVC:PullDownTableViewController {
     func newsRefresh(){
         
         weak var wself = self
-        let height = Profile.height() - 153
         
-        self.addHeadViewWithTableEdge(UIEdgeInsetsMake(0, 0, 0, 0), withFrame: CGRectMake(0.0, 0 - height,Profile.width(),height)) { () -> Void in
-            wself?.fetchData()
+        refreshV = THLRefreshView()
+        refreshV.isManuallyRefreshing = true
+        refreshV.setBeginRefreshBlock { () -> Void in
+             wself?.fetchData()
         }
-        
-        self.headViewBeginLoading()
+        refreshV.addToScrollView(table);
+
     }
 
     
@@ -59,7 +60,7 @@ class NewsListVC:PullDownTableViewController {
         net = NetWorkData()
         net.getNewsList { (result, status) -> (Void) in
             
-            wself?.headViewEndLoading()
+            wself?.refreshV.endRefreshing()
             if status == .NetWorkStatusError
             {
                 if result == nil
@@ -93,23 +94,23 @@ class NewsListVC:PullDownTableViewController {
             {
                 _ = THActivityView(emptyDataWarnViewWithString: "没有相关新闻哦", withImage: "noNewData", withSuperView: wself?.view)
                 wself?.dataArr = [NewsData]()
-                wself?.tableView.reloadData()
+                wself?.table.reloadData()
                 return
 
             }
            
             wself?.dataArr = arr
-            wself?.tableView.reloadData()
+            wself?.table.reloadData()
         }
         net.start()
         
     }
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
     
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
        
         if dataArr == nil
         {
@@ -118,7 +119,7 @@ class NewsListVC:PullDownTableViewController {
         return dataArr.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("NewCell") as! NewCell
         let new = dataArr[indexPath.row]
         cell.fillData(new)
@@ -126,10 +127,10 @@ class NewsListVC:PullDownTableViewController {
     }
     
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 75
     }
-override     
+    
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)

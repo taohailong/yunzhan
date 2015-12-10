@@ -316,6 +316,9 @@
         
          if ([dataDic[@"code"] intValue]== 0) {
         
+//             c5f6f92df9c340e2966f37a50dec0c9b_285
+//             6f54b6da455248d6803f9418bcd23861_285
+//             NSLog(@"login %@",dataDic);
              dataDic = dataDic[@"data"];
              UserData* user = [UserData shared];
              user.title = dataDic[@"title"];

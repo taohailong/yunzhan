@@ -7,12 +7,13 @@
 //
 
 import Foundation
-class SchedulerController: PullDownTableViewController,UISearchDisplayDelegate {
+class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataSource,UISearchDisplayDelegate {
     var net:NetWorkData!
 //    var test:[T]?
     var dataArr:[[SchedulerData]]!
     var dateArr:[String]!
-//    var table:UITableView!
+    var table:UITableView!
+    var refreshView:THLRefreshView!
     var searchArr:[SchedulerData]!
     var searchCV:UISearchDisplayController!
     
@@ -77,21 +78,21 @@ class SchedulerController: PullDownTableViewController,UISearchDisplayDelegate {
         
         
         
-        self.tableView = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.tableView.separatorStyle = .None
+        table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
+        table.delegate = self
+        table.dataSource = self
+        table.separatorStyle = .None
 //        self.tableView.tableHeaderView = searchBar
-        self.tableView.translatesAutoresizingMaskIntoConstraints = false
-        self.tableView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
-        self.tableView.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
-        self.tableView.registerClass(TableHeadView.self , forHeaderFooterViewReuseIdentifier: "TableHeadView")
-        self.tableView.registerClass(SchedulerCell.self , forCellReuseIdentifier: "SchedulerCell")
-        self.view.addSubview(self.tableView)
+        table.translatesAutoresizingMaskIntoConstraints = false
+        table.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        table.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
+        table.registerClass(TableHeadView.self , forHeaderFooterViewReuseIdentifier: "TableHeadView")
+        table.registerClass(SchedulerCell.self , forCellReuseIdentifier: "SchedulerCell")
+        self.view.addSubview(table)
         
-        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[searchBar]-0-[tableView]", options: [], metrics: nil, views: ["searchBar":searchBar,"tableView":tableView]))
-        self.view.addConstraint(NSLayoutConstraint(item: self.tableView, attribute: .Bottom, relatedBy: .Equal, toItem: self.bottomLayoutGuide, attribute: .Top, multiplier: 1.0, constant: 0))
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[searchBar]-0-[table]", options: [], metrics: nil, views: ["searchBar":searchBar,"table":table]))
+        self.view.addConstraint(NSLayoutConstraint(item: table, attribute: .Bottom, relatedBy: .Equal, toItem: self.bottomLayoutGuide, attribute: .Top, multiplier: 1.0, constant: 0))
 //        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
 //        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.tableView))
         
@@ -109,13 +110,20 @@ class SchedulerController: PullDownTableViewController,UISearchDisplayDelegate {
     func schedulerRefresh(){
     
         weak var wself = self
-        let height = Profile.height() - 158
         
-        self.addHeadViewWithTableEdge(UIEdgeInsetsMake(0, 0, 0, 0), withFrame: CGRectMake(0.0, 0 - height,Profile.width(),height)) { () -> Void in
-            wself?.fetchData()
+        refreshView = THLRefreshView(frame: CGRectMake(0,0,Profile.width(),65))
+        refreshView.isManuallyRefreshing = true
+        refreshView.addToScrollView(table)
+        refreshView.setBeginRefreshBlock { () -> Void in
+           wself?.fetchData()
         }
         
-        self.headViewBeginLoading()
+//        let height = Profile.height() - 158
+//        self.addHeadViewWithTableEdge(UIEdgeInsetsMake(0, 0, 0, 0), withFrame: CGRectMake(0.0, 0 - height,Profile.width(),height)) { () -> Void in
+//            wself?.fetchData()
+//        }
+//        
+//        self.headViewBeginLoading()
     }
     
     
@@ -125,7 +133,7 @@ class SchedulerController: PullDownTableViewController,UISearchDisplayDelegate {
         weak var wself = self
         net = NetWorkData()
         net.getSchedulList { (result, status) -> (Void) in
-            wself?.headViewEndLoading()
+            wself?.refreshView.endRefreshing()
 //            wself!.refreshControl?.endRefreshing()
             if status == .NetWorkStatusError
             {
@@ -156,15 +164,15 @@ class SchedulerController: PullDownTableViewController,UISearchDisplayDelegate {
             let tuple = result as! (schedulerList:[[SchedulerData]],dateArr:[String])
             wself?.dataArr = tuple.schedulerList
             wself?.dateArr = tuple.dateArr
-            wself?.tableView.reloadData()
+            wself?.table.reloadData()
         }
         net.start()
     
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
-        if tableView != self.tableView
+        if table != tableView
         {
            return 1
         }
@@ -176,9 +184,9 @@ class SchedulerController: PullDownTableViewController,UISearchDisplayDelegate {
         return dataArr.count
     }
     
-   override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        if tableView != self.tableView
+        if table != tableView
         {
             if searchArr == nil
             {
@@ -191,7 +199,7 @@ class SchedulerController: PullDownTableViewController,UISearchDisplayDelegate {
         return subArr.count
     }
     
-   override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     
     return 90
 //      var cellData:SchedulerData? = nil
@@ -210,9 +218,9 @@ class SchedulerController: PullDownTableViewController,UISearchDisplayDelegate {
 //        return 80 + (cellData?.height)!
     }
     
-    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
-        if tableView != self.tableView
+        if table != tableView
         {
             return nil
         }
@@ -225,9 +233,9 @@ class SchedulerController: PullDownTableViewController,UISearchDisplayDelegate {
         return head
     }
     
-   override  func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
-        if tableView != self.tableView
+        if table != tableView
         {
             return 0
         }
@@ -235,10 +243,10 @@ class SchedulerController: PullDownTableViewController,UISearchDisplayDelegate {
         return 40
     }
     
-   override  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
         var cellData:SchedulerData? = nil
-        if tableView != self.tableView
+        if table != tableView
         {
             cellData = searchArr![indexPath.row]
         }
@@ -248,18 +256,18 @@ class SchedulerController: PullDownTableViewController,UISearchDisplayDelegate {
             cellData = subArr[indexPath.row]
         }
         
-        let cell = self.tableView.dequeueReusableCellWithIdentifier("SchedulerCell") as! SchedulerCell
+        let cell = table.dequeueReusableCellWithIdentifier("SchedulerCell") as! SchedulerCell
         cell.fullDataToCell(cellData!)
         
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
         var data:SchedulerData!
-        if tableView != self.tableView
+        if table != tableView
         {
            data = searchArr[indexPath.row]
         }

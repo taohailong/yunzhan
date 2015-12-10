@@ -8,8 +8,9 @@
 
 import Foundation
 
-class TimeLineVC: PullDownTableViewController,ShareCoverageProtocol {
-//    var table:UITableView!
+class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UITableViewDataSource {
+    var table:UITableView!
+    var refreshV:THLRefreshView!
     var dataArr:[TimeMessage]!
     var net:NetWorkData!
     var shareElement:TimeMessage!
@@ -25,29 +26,25 @@ class TimeLineVC: PullDownTableViewController,ShareCoverageProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.tableView = UITableView(frame: CGRectZero, style: .Grouped)
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.tableView.translatesAutoresizingMaskIntoConstraints = false
-        self.tableView.registerClass(TimeLineContentCell.self , forCellReuseIdentifier: "TimeLineContentCell")
-        self.tableView.registerClass(TimeLinePicCell.self , forCellReuseIdentifier: "TimeLinePicCell")
-        self.tableView.registerClass(TimeLinePersonCell.self, forCellReuseIdentifier: "TimeLinePersonCell")
-        self.tableView.registerClass(TimeLineStatusCell.self , forCellReuseIdentifier: "TimeLineStatusCell")
-        self.tableView.separatorColor = Profile.rgb(243, g: 243, b: 243)
+        table = UITableView(frame: CGRectZero, style: .Grouped)
+        table.delegate = self
+        table.dataSource = self
+        table.translatesAutoresizingMaskIntoConstraints = false
+        table.registerClass(TimeLineContentCell.self , forCellReuseIdentifier: "TimeLineContentCell")
+        table.registerClass(TimeLinePicCell.self , forCellReuseIdentifier: "TimeLinePicCell")
+        table.registerClass(TimeLinePersonCell.self, forCellReuseIdentifier: "TimeLinePersonCell")
+        table.registerClass(TimeLineStatusCell.self , forCellReuseIdentifier: "TimeLineStatusCell")
+        table.separatorColor = Profile.rgb(243, g: 243, b: 243)
         
-//        self.refreshControl = UIRefreshControl()
-//        self.refreshControl?.addTarget(self, action: "timeLineRefreshBegin", forControlEvents: .ValueChanged)
-        
-        
-        
-        self.view.addSubview(self.tableView)
-        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
-        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.tableView))
+    
+        self.view.addSubview(table)
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
+        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         
         
-        self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        table.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
         if #available(iOS 8.0, *) {
-            self.tableView.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0)
+            table.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0)
         } else {
             // Fallback on earlier versions
         }
@@ -60,20 +57,15 @@ class TimeLineVC: PullDownTableViewController,ShareCoverageProtocol {
     func timeLineRefresh(){
     
         weak var wself = self
-        let height = Profile.height() - 153
-        
-        self.addHeadViewWithTableEdge(UIEdgeInsetsMake(0, 0, 0, 0), withFrame: CGRectMake(0.0, 0 - height,Profile.width(),height)) { () -> Void in
-            wself?.fetchTimeLineList()
+        refreshV = THLRefreshView()
+        refreshV.isManuallyRefreshing = true
+        refreshV.setBeginRefreshBlock { () -> Void in
+          wself?.fetchTimeLineList()
         }
+        refreshV.addToScrollView(table);
         
-        self.headViewBeginLoading()
     }
     
-//    func timeLineRefreshBegin(){
-//    
-//        self.fetchTimeLineList()
-//        
-//    }
 
     
     func fetchTimeLineList(){
@@ -85,10 +77,8 @@ class TimeLineVC: PullDownTableViewController,ShareCoverageProtocol {
 //        self.refreshControl?.beginRefreshing()
         net = NetWorkData()
         net.getTimeLineList(index) { (result, status) -> (Void) in
-            
-            wself?.headViewEndLoading()
-//            wself?.refreshControl?.endRefreshing()
-//            loadView.removeFromSuperview()
+            wself?.refreshV.endRefreshing()
+ 
             if status == .NetWorkStatusError
             {
                 if result == nil
@@ -122,12 +112,12 @@ class TimeLineVC: PullDownTableViewController,ShareCoverageProtocol {
                 
                    _ = THActivityView(emptyDataWarnViewWithString: "快来互动，上传图片吧", withImage: "noPicData", withSuperView: wself?.view)
                     wself?.dataArr = [TimeMessage]()
-                    wself?.tableView.reloadData()
+                    wself?.table.reloadData()
                     return
                 }
                 
                (wself?.dataArr = list)!
-               wself?.tableView.reloadData()
+               wself?.table.reloadData()
                wself?.addLoadMoreView(list.count)
             }
             
@@ -175,7 +165,7 @@ class TimeLineVC: PullDownTableViewController,ShareCoverageProtocol {
             if let list = result as? [TimeMessage]{
             
                 wself?.dataArr.appendContentsOf(list)
-                wself?.tableView.reloadData()
+                wself?.table.reloadData()
                 wself?.addLoadMoreView(list.count)
             }
             
@@ -187,17 +177,17 @@ class TimeLineVC: PullDownTableViewController,ShareCoverageProtocol {
     
         if count < 20{
         
-         self.tableView.tableFooterView = UIView()
+         self.table.tableFooterView = UIView()
         }
         else
         {
-           self.tableView.tableFooterView = MoreTableFootView(frame: CGRectMake(0, 0, Profile.width(), 50))
+           self.table.tableFooterView = MoreTableFootView(frame: CGRectMake(0, 0, Profile.width(), 50))
         }
     
     }
     
     
-   override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
         if dataArr == nil
         {
@@ -206,12 +196,12 @@ class TimeLineVC: PullDownTableViewController,ShareCoverageProtocol {
         return dataArr.count
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 4
     }
     
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
         if indexPath.row == 0
         {
@@ -239,15 +229,15 @@ class TimeLineVC: PullDownTableViewController,ShareCoverageProtocol {
         }
     }
     
-    override func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
         return 10
     }
     
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 0.5
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         
         let element = dataArr[indexPath.section]
@@ -302,7 +292,8 @@ class TimeLineVC: PullDownTableViewController,ShareCoverageProtocol {
             return cell
         }
     }
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
         if indexPath.row == 0 || indexPath.row == 1
@@ -311,7 +302,7 @@ class TimeLineVC: PullDownTableViewController,ShareCoverageProtocol {
             
             weak var wself = self
             let commentInfo = TimeLineInfoVC()
-            commentInfo.block = { wself?.tableView.reloadData() }
+            commentInfo.block = { wself?.table.reloadData() }
             commentInfo.timeData = element
             commentInfo.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(commentInfo, animated: true)
@@ -321,9 +312,9 @@ class TimeLineVC: PullDownTableViewController,ShareCoverageProtocol {
     }
     
     
-    override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         
-        guard let view = self.tableView.tableFooterView
+        guard let view = self.table.tableFooterView
             else{
           return
         }
@@ -375,7 +366,7 @@ class TimeLineVC: PullDownTableViewController,ShareCoverageProtocol {
                     {
                         message.favorited = true
                     }
-                    wself?.tableView.reloadData()
+                    wself?.table.reloadData()
                 }
                
             }
@@ -428,13 +419,12 @@ class TimeLineVC: PullDownTableViewController,ShareCoverageProtocol {
             if let nu = result as? Int
             {
                 wself?.shareElement.forwardNu = nu
-                wself?.tableView.reloadData()
+                wself?.table.reloadData()
             }
         }
         shareNet.start()
         
     }
-    
     
     
     deinit{

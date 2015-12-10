@@ -16,6 +16,7 @@
    TRefreshViewStatus _refreshStatus;
    BeginRefresh _refreshBlock;
    BOOL _hasLayoutedForManuallyRefreshing;
+   BOOL _hasSetFrame;
 }
 @synthesize textIndicator,activityView,stateIndicatorView;
 //@synthesize refreshStatus;
@@ -75,17 +76,26 @@
 {
     [super layoutSubviews];
     
+    if (_hasSetFrame == NO) {
+        
+        _hasSetFrame = YES;
+        self.bounds = CGRectMake(0, 0, _scrollView.bounds.size.width, 65);
+        NSLog(@"frame is %@",NSStringFromCGRect(_scrollView.frame));
+        self.scrollViewEdgeInsets = UIEdgeInsetsMake(self.frame.size.height, 0, 0, 0);
+    }
+    
+    
     CGFloat height_half = self.frame.size.height/2;
     self.center = CGPointMake(self.frame.size.width/2, -height_half);
     self.activityView.center = CGPointMake(self.center.x-40, height_half);
     self.stateIndicatorView.center = CGPointMake(self.center.x-40, height_half);
     self.textIndicator.center = CGPointMake(self.center.x+20, height_half);
-     NSLog(@"layout subView offset %@ contented%@",NSStringFromCGPoint(_scrollView.contentOffset),NSStringFromUIEdgeInsets(_scrollView.contentInset));
+    
+    NSLog(@"scroll layoutsubView frame %@",NSStringFromCGRect(_scrollView.frame));
+//     NSLog(@"layout subView offset %@ contented%@",NSStringFromCGPoint(_scrollView.contentOffset),NSStringFromUIEdgeInsets(_scrollView.contentInset));
     if(self.isManuallyRefreshing&&_scrollView.contentInset.top>=0&& !_hasLayoutedForManuallyRefreshing)
     {
-       
         _hasLayoutedForManuallyRefreshing = YES;
-//        self.activityView.hidden = NO;
         [self.activityView startAnimating];
         CGPoint temp = _scrollView.contentOffset;
         temp.y -= self.frame.size.height * 2;
@@ -100,13 +110,14 @@
     
 }
 
--(void)didMoveToSuperview
-{
-    [super didMoveToSuperview];
-    self.bounds = CGRectMake(0, 0, _scrollView.bounds.size.width, 65);
-    self.scrollViewEdgeInsets = UIEdgeInsetsMake(self.frame.size.height, 0, 0, 0);
-//    NSLog(NSStringFromUIEdgeInsets(_scrollView.contentInset));
-}
+//-(void)didMoveToSuperview
+//{
+//    [super didMoveToSuperview];
+////    self.bounds = CGRectMake(0, 0, _scrollView.bounds.size.width, 65);
+////    NSLog(@"frame is %@",NSStringFromCGRect(_scrollView.frame));
+//    self.scrollViewEdgeInsets = UIEdgeInsetsMake(self.frame.size.height, 0, 0, 0);
+////    NSLog(NSStringFromUIEdgeInsets(_scrollView.contentInset));
+//}
 
 -(void)willMoveToSuperview:(UIView *)newSuperview
 {
@@ -172,7 +183,7 @@
                 self.stateIndicatorView.transform = CGAffineTransformMakeRotation(M_PI);
             }];
             
-            self.textIndicator.text = @"松开刷新数据";
+            self.textIndicator.text = @"释放更新数据";
             self.activityView.hidden = YES;
            [self.activityView stopAnimating];
         }

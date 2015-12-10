@@ -20,7 +20,7 @@ class MySchedulerListVC: SchedulerController {
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.tintColor = Profile.rgb(102, g: 102, b: 102)
         self.title = "我的活动"
-        self.tableView.tableHeaderView = nil
+        table.tableHeaderView = nil
         self.fetchData()
     }
     
@@ -30,21 +30,21 @@ class MySchedulerListVC: SchedulerController {
     override func creatSchedulerTable(){
         
         
-        self.tableView = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.tableView.separatorStyle = .None
+        table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
+        table.delegate = self
+        table.dataSource = self
+        table.separatorStyle = .None
         //        self.tableView.tableHeaderView = searchBar
-        self.tableView.translatesAutoresizingMaskIntoConstraints = false
-        self.tableView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
-        self.tableView.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
-        self.tableView.registerClass(TableHeadView.self , forHeaderFooterViewReuseIdentifier: "TableHeadView")
-        self.tableView.registerClass(SchedulerCell.self , forCellReuseIdentifier: "SchedulerCell")
-        self.view.addSubview(self.tableView)
+        table.translatesAutoresizingMaskIntoConstraints = false
+        table.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        table.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
+        table.registerClass(TableHeadView.self , forHeaderFooterViewReuseIdentifier: "TableHeadView")
+        table.registerClass(SchedulerCell.self , forCellReuseIdentifier: "SchedulerCell")
+        self.view.addSubview(table)
         
-        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
 
-        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.tableView))
+        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         
     }
 
@@ -59,8 +59,6 @@ class MySchedulerListVC: SchedulerController {
     override func fetchData() {
         
         let loadView = THActivityView(activityViewWithSuperView: self.view)
-        loadView.translatesAutoresizingMaskIntoConstraints = true
-        loadView.center = self.tableView.center
         weak var wself = self
         net = NetWorkData()
         net.myFavoriteScheduler { (result, status) -> (Void) in
@@ -96,17 +94,12 @@ class MySchedulerListVC: SchedulerController {
             if tuple.dateArr.count == 0
             {
                 _ = THActivityView(emptyDataWarnViewWithString: "您还没有收藏活动", withImage: "noSchedulerData", withSuperView: wself!.view)
-//                nodataV.translatesAutoresizingMaskIntoConstraints  = true
-//                nodataV.frame = (wself?.view.bounds)!
-//                let back = UIView(frame: wself!.view.bounds)
-//                back.backgroundColor = UIColor.redColor()
-//                self.view.addSubview(back)
                 return
             }
         
             wself?.dataArr = tuple.schedulerList
             wself?.dateArr = tuple.dateArr
-            wself?.tableView.reloadData()
+            wself?.table.reloadData()
         }
         net.start()
     
@@ -115,20 +108,20 @@ class MySchedulerListVC: SchedulerController {
     
     //    滑动删除 部分
     
-    override func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
         return .Delete
     }
     
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return true
     }
     
-override
-         func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+
+    func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return true
     }
     
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
         var subArr = dataArr[indexPath.section]
         let p = subArr[indexPath.row]
@@ -154,7 +147,7 @@ override
                wself?.dateArr.removeAtIndex(indexPath.section)
             }
 
-            wself?.tableView.reloadData()
+            wself?.table.reloadData()
             
         })
         
@@ -193,22 +186,21 @@ class MyExhibitorList: Exhibitor {
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.tintColor = Profile.rgb(102, g: 102, b: 102)
         self.title = "我的展商"
-        self.tableView.tableHeaderView = nil
     }
 
     override func creatTable(){
         
-        self.tableView = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
-        self.tableView.delegate = self
-        self.tableView.dataSource = self
-        self.tableView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
-        self.tableView.translatesAutoresizingMaskIntoConstraints = false
-        self.tableView.separatorColor = Profile.rgb(243, g: 243, b: 243)
-        self.tableView.sectionIndexBackgroundColor = UIColor.clearColor()
-        self.tableView.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
-        self.view.addSubview(self.tableView)
-        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
-        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.tableView))
+        table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
+        table.delegate = self
+        table.dataSource = self
+        table.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        table.translatesAutoresizingMaskIntoConstraints = false
+        table.separatorColor = Profile.rgb(243, g: 243, b: 243)
+        table.sectionIndexBackgroundColor = UIColor.clearColor()
+        table.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
+        self.view.addSubview(table)
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.table))
+        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.table))
         
     }
 
@@ -224,7 +216,7 @@ class MyExhibitorList: Exhibitor {
         weak var wself = self
         net = NetWorkData()
         net.myFavoriteExhibitor { (result, status) -> (Void) in
-            wself?.tableView.headerEndRefreshing()
+           
             loadView.removeFromSuperview()
             if status == .NetWorkStatusError
             {
@@ -266,7 +258,7 @@ class MyExhibitorList: Exhibitor {
             
             wself?.dataArr = list.list
             wself?.prefixArr = list.prefixArr
-            wself?.tableView.reloadData()
+            wself?.table.reloadData()
         }
         net.start()
     }
@@ -274,19 +266,19 @@ class MyExhibitorList: Exhibitor {
     
     //    滑动删除 部分
     
-    override func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+    func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
         return .Delete
     }
     
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return true
     }
-override     
+    
     func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return true
     }
     
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
     
          if (editingStyle != .Delete) {
             return
@@ -316,7 +308,7 @@ override
                wself?.prefixArr?.removeAtIndex(indexPath.section)
             }
             
-            wself?.tableView.reloadData()
+            wself?.table.reloadData()
         })
         
         delectNet.start()
