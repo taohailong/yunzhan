@@ -72,7 +72,7 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         
             if list.prefixArr.count == 0
             {
-                let nodataV = THActivityView(emptyDataWarnViewWithString: "您还没有收藏活动", withImage: "noContactData", withSuperView: wself!.view)
+                let nodataV = THActivityView(emptyDataWarnViewWithString: "您还没有收藏联系人", withImage: "noContactData", withSuperView: wself!.view)
                 nodataV.tag = 10
                 return
             }

@@ -494,7 +494,11 @@ class CommonWebController:UIViewController,UIWebViewDelegate {
         loadV = THActivityView(activityViewWithSuperView: self.view)
         if webLink != nil
         {
-          web.loadRequest( NSURLRequest(URL: NSURL(string: webLink!)!))
+          if let url = NSURL(string: webLink!)
+          {
+            web.loadRequest( NSURLRequest(URL: url))
+          }
+          
         }
         if webHtml != nil
         {

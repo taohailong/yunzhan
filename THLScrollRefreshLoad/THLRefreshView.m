@@ -80,7 +80,7 @@
         
         _hasSetFrame = YES;
         self.bounds = CGRectMake(0, 0, _scrollView.bounds.size.width, 65);
-        NSLog(@"frame is %@",NSStringFromCGRect(_scrollView.frame));
+//        NSLog(@"frame is %@",NSStringFromCGRect(_scrollView.frame));
         self.scrollViewEdgeInsets = UIEdgeInsetsMake(self.frame.size.height, 0, 0, 0);
     }
     
@@ -91,7 +91,7 @@
     self.stateIndicatorView.center = CGPointMake(self.center.x-40, height_half);
     self.textIndicator.center = CGPointMake(self.center.x+20, height_half);
     
-    NSLog(@"scroll layoutsubView frame %@",NSStringFromCGRect(_scrollView.frame));
+//    NSLog(@"scroll layoutsubView frame %@",NSStringFromCGRect(_scrollView.frame));
 //     NSLog(@"layout subView offset %@ contented%@",NSStringFromCGPoint(_scrollView.contentOffset),NSStringFromUIEdgeInsets(_scrollView.contentInset));
     if(self.isManuallyRefreshing&&_scrollView.contentInset.top>=0&& !_hasLayoutedForManuallyRefreshing)
     {
