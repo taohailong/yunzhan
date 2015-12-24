@@ -16,6 +16,8 @@
 		C763D3ED1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */ = {isa = PBXBuildFile; fileRef = C763D3EB1C0468FC005E3921 /* UIImage+ZoomImage.m */; };
 		C763D3F01C049945005E3921 /* ShareCoverageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C763D3EF1C049945005E3921 /* ShareCoverageView.m */; };
 		C763D3F11C049945005E3921 /* ShareCoverageView.m in Sources */ = {isa = PBXBuildFile; fileRef = C763D3EF1C049945005E3921 /* ShareCoverageView.m */; };
+		C76429B41C2B93FF00F34888 /* SeachVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76429B31C2B93FF00F34888 /* SeachVC.swift */; };
+		C76429B51C2B93FF00F34888 /* SeachVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76429B31C2B93FF00F34888 /* SeachVC.swift */; };
 		C76E08EF1C09E17200AAFF7B /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76E08EE1C09E17200AAFF7B /* About.swift */; };
 		C76E08F01C09E17200AAFF7B /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76E08EE1C09E17200AAFF7B /* About.swift */; };
 		C779C0FB1BF42D35008D625F /* LogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C779C0F81BF42D35008D625F /* LogViewController.m */; };
@@ -60,6 +62,8 @@
 		C7848F541BFDDA4500339623 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F511BFDDA2300339623 /* libz.tbd */; };
 		C7848F551BFDDEC400339623 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F4F1BFDDA0800339623 /* SystemConfiguration.framework */; };
 		C7848F571BFDDEDC00339623 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F561BFDDEDC00339623 /* libc++.tbd */; };
+		C78509961C1FBF2600D3C7D1 /* OrientationTabBarControll.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78509951C1FBF2600D3C7D1 /* OrientationTabBarControll.swift */; };
+		C78509971C1FBF2600D3C7D1 /* OrientationTabBarControll.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78509951C1FBF2600D3C7D1 /* OrientationTabBarControll.swift */; };
 		C78EA5521C1189A2007798E2 /* THLRefeshView_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C78EA54D1C1189A2007798E2 /* THLRefeshView_arrow@2x.png */; };
 		C78EA5531C1189A2007798E2 /* THLRefeshView_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C78EA54D1C1189A2007798E2 /* THLRefeshView_arrow@2x.png */; };
 		C78EA5541C1189A2007798E2 /* THLRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78EA54F1C1189A2007798E2 /* THLRefreshView.m */; };
@@ -121,6 +125,7 @@
 		C763D3EB1C0468FC005E3921 /* UIImage+ZoomImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ZoomImage.m"; sourceTree = "<group>"; };
 		C763D3EE1C049945005E3921 /* ShareCoverageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareCoverageView.h; sourceTree = "<group>"; };
 		C763D3EF1C049945005E3921 /* ShareCoverageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareCoverageView.m; sourceTree = "<group>"; };
+		C76429B31C2B93FF00F34888 /* SeachVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeachVC.swift; sourceTree = "<group>"; };
 		C76E08EE1C09E17200AAFF7B /* About.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
 		C779C0F71BF42D35008D625F /* LogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogViewController.h; sourceTree = "<group>"; };
 		C779C0F81BF42D35008D625F /* LogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogViewController.m; sourceTree = "<group>"; };
@@ -159,6 +164,7 @@
 		C7848F4F1BFDDA0800339623 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		C7848F511BFDDA2300339623 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		C7848F561BFDDEDC00339623 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		C78509951C1FBF2600D3C7D1 /* OrientationTabBarControll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrientationTabBarControll.swift; sourceTree = "<group>"; };
 		C78EA54D1C1189A2007798E2 /* THLRefeshView_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "THLRefeshView_arrow@2x.png"; sourceTree = "<group>"; };
 		C78EA54E1C1189A2007798E2 /* THLRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THLRefreshView.h; sourceTree = "<group>"; };
 		C78EA54F1C1189A2007798E2 /* THLRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THLRefreshView.m; sourceTree = "<group>"; };
@@ -267,12 +273,12 @@
 			isa = PBXGroup;
 			children = (
 				C77E1D9C1BE09EDA00B8F444 /* AppDelegate.swift */,
+				C78509951C1FBF2600D3C7D1 /* OrientationTabBarControll.swift */,
 				C77E1D9E1BE09EDA00B8F444 /* ViewController.swift */,
 				C79E545E1BE9DCB800E4A514 /* RootCollectionCells.swift */,
 				C77C14721BE8B02B00DCC670 /* ExhibitorController.swift */,
 				C78200201BEC800F002BBDB7 /* ExhibitorInfoCV.swift */,
 				C7811B951C0C905A00E5A637 /* ZoomView.swift */,
-				C79E545B1BE9B79100E4A514 /* Scheduler.swift */,
 				C71A3A821BF1954B0081F7E6 /* SchedulerInfo.swift */,
 				C79285701BEAF65B00287A24 /* NewsView.swift */,
 				C79546DD1BFEBC8F0080CD46 /* NewListCV.swift */,
@@ -280,7 +286,9 @@
 				C77C402D1C040284005596E0 /* TimeLineInfo.swift */,
 				C763D3E71C045FE2005E3921 /* TimeLineCommit.swift */,
 				C79285771BEB322700287A24 /* SettingController.swift */,
+				C76429B31C2B93FF00F34888 /* SeachVC.swift */,
 				C76E08EE1C09E17200AAFF7B /* About.swift */,
+				C79E545B1BE9B79100E4A514 /* Scheduler.swift */,
 				C7AEDEDC1C05A938009C196C /* MyRegist.swift */,
 				C7AEDEE21C05C341009C196C /* MyCompany.swift */,
 				C779C1021BF48A92008D625F /* MyFavorite.swift */,
@@ -548,11 +556,13 @@
 				C779C0FB1BF42D35008D625F /* LogViewController.m in Sources */,
 				C779C1031BF48A92008D625F /* MyFavorite.swift in Sources */,
 				C71A3A831BF1954B0081F7E6 /* SchedulerInfo.swift in Sources */,
+				C76429B41C2B93FF00F34888 /* SeachVC.swift in Sources */,
 				C79546DE1BFEBC8F0080CD46 /* NewListCV.swift in Sources */,
 				C79E545F1BE9DCB800E4A514 /* RootCollectionCells.swift in Sources */,
 				C78200211BEC800F002BBDB7 /* ExhibitorInfoCV.swift in Sources */,
 				C77C402E1C040285005596E0 /* TimeLineInfo.swift in Sources */,
 				C79546E51BFEC3D80080CD46 /* TSegmentedControl.m in Sources */,
+				C78509961C1FBF2600D3C7D1 /* OrientationTabBarControll.swift in Sources */,
 				C763D3EC1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */,
 				C79285711BEAF65B00287A24 /* NewsView.swift in Sources */,
 				C78EA5561C1189A2007798E2 /* THLScrollLoadView.m in Sources */,
@@ -594,11 +604,13 @@
 				C779C0FC1BF42D35008D625F /* LogViewController.m in Sources */,
 				C779C1041BF48A92008D625F /* MyFavorite.swift in Sources */,
 				C779C1011BF43917008D625F /* Singleton.swift in Sources */,
+				C76429B51C2B93FF00F34888 /* SeachVC.swift in Sources */,
 				C79546DF1BFEBC8F0080CD46 /* NewListCV.swift in Sources */,
 				C79285761BEB06A400287A24 /* THActivityView.m in Sources */,
 				C79E54631BE9E47400E4A514 /* DataModel.swift in Sources */,
 				C77C402F1C040285005596E0 /* TimeLineInfo.swift in Sources */,
 				C79546E61BFEC3D80080CD46 /* TSegmentedControl.m in Sources */,
+				C78509971C1FBF2600D3C7D1 /* OrientationTabBarControll.swift in Sources */,
 				C763D3ED1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */,
 				C7A9629D1BF32F01003B883A /* WebHtml.swift in Sources */,
 				C78EA5571C1189A2007798E2 /* THLScrollLoadView.m in Sources */,
@@ -725,6 +737,10 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: Weiyuan Huang (QJZJLZ48TX)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Weiyuan Huang (QJZJLZ48TX)";
 				ENABLE_BITCODE = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"COCOAPODS=1",
+					"DEBUG=1",
+				);
 				INFOPLIST_FILE = yunzhan/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -775,9 +791,9 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Weiyuan Huang (QJZJLZ48TX)";
 				ENABLE_BITCODE = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
 					"COCOAPODS=1",
 					"ENTERPISE=1",
+					"DEBUG=1",
 				);
 				INFOPLIST_FILE = "yunzhan copy-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;

@@ -442,7 +442,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
                 cell.fillData(elementData.iconUrl, name: elementData.name, company: elementData.remark, addre: elementData.address, location: elementData.location, content: elementData.introduct)
                 weak var wself = self
                 cell.tapBlock = {
-                    wself?.showZoomMap(wself?.elementData.addressMap)
+                    wself?.showZoomMap(wself?.elementData.addressMap,imageView: nil)
                 }
                 return cell
             }
@@ -512,7 +512,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
                 weak var wself = self
                 let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorMapCell") as! ExhibitorMapCell
                 cell.block  = {
-                    wself?.showZoomMap(wself?.elementData.addressMap)
+                    wself?.showZoomMap(wself?.elementData.addressMap,imageView: cell.mapImageView)
                 }
                 cell.fillData(elementData.location, locationUrl: elementData.addressMap)
                 return cell
@@ -522,7 +522,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
                  weak var wself = self
                 let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorMapCell") as! ExhibitorMapCell
                 cell.block  = {
-                    wself?.showZoomMap(wself?.elementData.addressMap)
+                    wself?.showZoomMap(wself?.elementData.addressMap,imageView: cell.mapImageView)
                 }
                 cell.fillData(elementData.location, locationUrl: elementData.addressMap)
                 return cell
@@ -570,10 +570,31 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
     }
     
     
-    func showZoomMap(url:String?){
+    func showZoomMap(url:String?,imageView:UIImageView?){
+        
         let zoom = ZoomVC()
         zoom.url = url
-        self.navigationController?.pushViewController(zoom, animated: true)
+        
+        if imageView?.image == UIImage(named: "default")
+        {
+          
+        }
+        else if imageView == nil
+        {
+            
+        }
+        else
+        {
+           let frame = imageView?.superview?.superview!.convertRect(imageView!.frame, toView: self.navigationController?.view)
+            zoom.targetImageV = imageView
+            zoom.centerPoint = CGPointMake(self.view.center.x, (frame?.origin.y)! + (imageView?.frame.size.height)!/2)
+        }
+        
+        self.presentViewController(zoom, animated: false) { () -> Void in
+            
+        }
+
+        //        self.navigationController?.pushViewController(zoom, animated: true)
     }
     
     

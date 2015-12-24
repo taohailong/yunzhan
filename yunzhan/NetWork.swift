@@ -102,7 +102,18 @@ class NetWorkData {
                 }
                 
                 
-                let tuple:(pics:[PicData], news:[NewsData],exhibitor:[ExhibitorData],scheduler:[SchedulerData]) = (pics,newArr,exhibitorArr,schedulerArr)
+                var moduleArr = [ActivityData]()
+                if let modle = data["modules"] as? [[String:AnyObject]]
+                {
+                  for temp in modle
+                  {
+                    let a = ActivityData(dataDic: temp)
+                    moduleArr.append(a)
+                  }
+                    
+                }
+                    
+                let tuple:(pics:[PicData], news:[NewsData],exhibitor:[ExhibitorData],scheduler:[SchedulerData],activityArr:[ActivityData]) = (pics,newArr,exhibitorArr,schedulerArr,moduleArr)
                 block(result: tuple , status: status)
             }
         }
@@ -968,7 +979,7 @@ class NetWorkData {
                 }
 
                 m.comment = temp["content"] as? String
-                m.figureOutContentHeight(CGSizeMake(Profile.width()-30, 1000), font: Profile.font(12))
+                m.figureOutContentHeight(CGSizeMake(Profile.width()-46, 1000), font: Profile.font(12))
                 if let time = temp["create_time"] as? Int
                 {
                     m.time = time.toTimeString("MM/dd-HH:mm")
@@ -984,7 +995,8 @@ class NetWorkData {
                 m.feedBackNu = temp["commentCount"] as? Int
                 m.personName = temp["name"] as? String
                 m.personTitle = temp["title"] as? String
-                
+                m.picThumbUrl = temp["ppic_url"] as? String
+                print(m.picThumbUrl)
 //                m.personName = "啦啦啦"
 //                m.personTitle = "总监"
  
@@ -1298,6 +1310,94 @@ class NetWorkData {
         }
     
     }
+    
+    
+    
+    func getGlobalSearchResult(let search:String,block:NetBlock){
+    
+        var url = "http://\(Profile.domain)/api/app/exhibition/search?eid=1&name=\(search)&chn=ios"
+        
+        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: .NetWorkStatusError)
+                return
+            }
+            guard let data = result as? [String:AnyObject],let dataDic = data["data"] as? [String:AnyObject] else {
+                block(result: "数据参数错误", status: .NetWorkStatusError)
+                return
+            }
+          
+            
+            var exhibitorArr:[ExhibitorData]? = nil
+            var schedulerArr:[SchedulerData]? = nil
+            
+            if let exhibitorDic = dataDic["buzs"] as? [[String:AnyObject]]
+            {
+                exhibitorArr = [ExhibitorData]()
+                for temp in exhibitorDic
+                {
+                   let exhibitorData = ExhibitorData(rootDic: temp)
+                    
+                    let name = exhibitorData.name! as NSString
+                    let rang = name.rangeOfString(search)
+                    let att = NSMutableAttributedString(string: exhibitorData.name!, attributes: [NSForegroundColorAttributeName:UIColor.blackColor(),NSFontAttributeName: Profile.font(16)])
+        
+                    att.addAttributes([NSForegroundColorAttributeName:UIColor.redColor()], range: rang)
+                    exhibitorData.searchAttribute = att
+                    exhibitorArr?.append(exhibitorData)
+                }
+            }
+            
+            
+            if let schedulesDic = dataDic["schedules"] as? [[String:AnyObject]]
+            {
+                schedulerArr = [SchedulerData]()
+                for temp in schedulesDic
+                {
+                    let schedulerData = SchedulerData(rootDic: temp)
+                    
+                    if schedulerData == nil
+                    {
+                      continue
+                    }
+                    let name = schedulerData!.title! as NSString
+                    let rang = name.rangeOfString(search)
+                    let att = NSMutableAttributedString(string: (schedulerData?.title!)!, attributes: [NSForegroundColorAttributeName:UIColor.blackColor(),NSFontAttributeName: Profile.font(15)])
+                    
+                    att.addAttributes([NSForegroundColorAttributeName:UIColor.redColor()], range: rang)
+                    schedulerData?.searchAttribute = att
+                    schedulerArr?.append(schedulerData!)
+                }
+            }
+
+           
+            var compound = [[AnyObject]]()
+            if exhibitorArr != nil
+            {
+                if exhibitorArr!.count != 0
+                {
+                   compound.append(exhibitorArr!)
+                }
+              
+            }
+            
+            if schedulerArr != nil
+            {
+                if schedulerArr!.count != 0
+                {
+                    compound.append(schedulerArr!)
+                }
+            }
+            block(result: compound, status: .NetWorkStatusSucess)
+        }
+
+    
+    
+    }
+    
     
     
     func getMethodRequest(url:String,completeBlock:NetBlock){

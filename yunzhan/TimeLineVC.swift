@@ -26,6 +26,7 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         table = UITableView(frame: CGRectZero, style: .Grouped)
         table.delegate = self
         table.dataSource = self
@@ -35,20 +36,20 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
         table.registerClass(TimeLinePersonCell.self, forCellReuseIdentifier: "TimeLinePersonCell")
         table.registerClass(TimeLineStatusCell.self , forCellReuseIdentifier: "TimeLineStatusCell")
         table.separatorColor = Profile.rgb(243, g: 243, b: 243)
-        
     
         self.view.addSubview(table)
-        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
+//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[table]-15-|", options: [], metrics: nil, views: ["table":table]))
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         
-        
+        table.showsVerticalScrollIndicator = false
         table.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
         if #available(iOS 8.0, *) {
             table.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0)
         } else {
             // Fallback on earlier versions
         }
-        
+        self.view.backgroundColor = table.backgroundColor
         self.timeLineRefresh()
 //        self.fetchTimeLineList()
     }
@@ -85,14 +86,6 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
                 {
                     let warnV = THActivityView(string: "网络错误")
                     warnV.show()
-//                    let errView = THActivityView(netErrorWithSuperView: wself!.view)
-//                    errView.translatesAutoresizingMaskIntoConstraints = true
-//                    errView.frame = (wself?.tableView.bounds)!
-//                    weak var werr = errView
-//                    errView.setErrorBk({ () -> Void in
-//                        wself?.fetchTimeLineList()
-//                        werr?.removeFromSuperview()
-//                    })
                 }
                 else
                 {
@@ -145,12 +138,12 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
             index = dataArr.count
         }
         
-        let loadView = THActivityView(activityViewWithSuperView: self.view)
+//        let loadView = THActivityView(activityViewWithSuperView: self.view)
         net = NetWorkData()
         net.getTimeLineList(index) { (result, status) -> (Void) in
             
             wself?.loading = false
-            loadView.removeFromSuperview()
+//            loadView.removeFromSuperview()
             if status == .NetWorkStatusError
             {
                 if let warnStr = result as? String
@@ -181,7 +174,7 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
         }
         else
         {
-           self.table.tableFooterView = MoreTableFootView(frame: CGRectMake(0, 0, Profile.width(), 50))
+           self.table.tableFooterView = MoreTableFootView(frame: CGRectMake(0, 0, Profile.width(), 40))
         }
     
     }
@@ -205,22 +198,21 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
         
         if indexPath.row == 0
         {
-            let element = dataArr[indexPath.section]
-            return CGFloat(element.picHeight)
+            return 46
         }
         else if indexPath.row == 1
-        {
-          return 46
-        }
-        else if indexPath.row == 2
         {
             let element = dataArr[indexPath.section]
             if element.contentHeight == 0
             {
-              return 1
+                return 1
             }
             //评论内容
-          return  CGFloat(Float(12.0) + element.contentHeight!)
+            return  CGFloat(Float(12.0) + element.contentHeight!)
+        }
+        else if indexPath.row == 2
+        {
+            return (Profile.width() - 46)/2 + 15
         }
         else
         {
@@ -230,11 +222,16 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
     }
     
     func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 10
+        
+        if dataArr.count - 1 == section
+        {
+          return 10
+        }
+        return 0.5
     }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 0.5
+        return 10
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -243,23 +240,27 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
         let element = dataArr[indexPath.section]
         if indexPath.row == 0
         {
-             let cell = tableView.dequeueReusableCellWithIdentifier("TimeLinePicCell") as! TimeLinePicCell
-            
-             cell.loadPicUrl(element.picUrl,height: element.picHeight)
-             return cell
-        }
-        else if indexPath.row == 1
-        {
             let cell = tableView.dequeueReusableCellWithIdentifier("TimeLinePersonCell") as! TimeLinePersonCell
             
             cell.filPersonInfo(nil, name: element.personName, title: element.personTitle, time: element.time)
             return cell
+
         }
-        else if indexPath.row == 2
+        else if indexPath.row == 1
         {
+            
             let cell = tableView.dequeueReusableCellWithIdentifier("TimeLineContentCell") as! TimeLineContentCell
             cell.contentL.text = element.comment
             return cell
+
+        }
+        else if indexPath.row == 2
+        {
+            let cell = tableView.dequeueReusableCellWithIdentifier("TimeLinePicCell") as! TimeLinePicCell
+            
+            cell.loadPicUrl(element.picThumbUrl,height: element.picHeight)
+            return cell
+
         }
         else
         {
@@ -296,7 +297,7 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        if indexPath.row == 0 || indexPath.row == 1
+        if indexPath.row == 2
         {
             let element = dataArr[indexPath.section]
             
@@ -325,7 +326,7 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
         let y = scrollView.bounds.size.height - inset.bottom
         let h = size.height
         
-        if (h - offset.y - y < 50 && view.bounds.size.height>10)
+        if (h - offset.y - y < 40 && view.bounds.size.height>10)
         {
            self.loadMoreData()
         }
@@ -450,17 +451,26 @@ class TimeLinePicCell:UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.contentView.addSubview(picImageV)
-        self.contentView.addConstraints(NSLayoutConstraint.layoutVerticalFull(picImageV))
-        self.contentView.addConstraints(NSLayoutConstraint.layoutHorizontalFull(picImageV))
+        self.setSubViewLayout()
+//        self.contentView.addConstraints(NSLayoutConstraint.layoutVerticalFull(picImageV))
+    }
+    
+    
+    func setSubViewLayout(){
+    
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[picImageV]-15-|", options: [], metrics: nil, views: ["picImageV":picImageV]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-8-[picImageV]-8-|", options: [], metrics: nil, views: ["picImageV":picImageV]))
+        //        self.contentView.addConstraints(NSLayoutConstraint.layoutHorizontalFull(picImageV))
         self.selectionStyle = .None
-        self.separatorInset = UIEdgeInsetsMake(0, Profile.width(), 0, 0)
+        //        self.separatorInset = UIEdgeInsetsMake(0, Profile.width(), 0, 0)
+        self.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
         if #available(iOS 8.0, *) {
             self.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0)
         } else {
             // Fallback on earlier versions
         }
-
     }
+    
     func loadPicUrl(url:String?,height:Double?)
     {
        if url != nil
@@ -647,20 +657,15 @@ class TimeLinePersonCell: UITableViewCell {
         timeL.font = Profile.font(11)
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.contentView.addSubview(userPicV)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[userPicV(33)]", options: [], metrics: nil, views: ["userPicV":userPicV]))
-        
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[userPicV(33)]", options: [], metrics: nil, views: ["userPicV":userPicV]))
         
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(userPicV, toItem: self.contentView))
         
         self.contentView.addSubview(nameL)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[userPicV]-10-[nameL]", aView: userPicV, bView: nameL))
-        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(nameL, toItem: self.contentView))
+       
         
         
         self.contentView.addSubview(timeL)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[timeL]-15-|", aView: timeL, bView: nil))
-        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(timeL, toItem: self.contentView))
+       
         
         self.separatorInset = UIEdgeInsetsMake(0, Profile.width(), 0, 0)
         if #available(iOS 8.0, *) {
@@ -668,7 +673,23 @@ class TimeLinePersonCell: UITableViewCell {
         } else {
             // Fallback on earlier versions
         }
+         self.setSubViewLayout()
+    }
+    
+    func setSubViewLayout(){
+    
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-8-[userPicV(33)]", options: [], metrics: nil, views: ["userPicV":userPicV]))
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[userPicV(33)]", options: [], metrics: nil, views: ["userPicV":userPicV]))
+        
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[userPicV]-10-[nameL]", aView: userPicV, bView: nameL))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(nameL, toItem: self.contentView))
 
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[timeL]-8-|", aView: timeL, bView: nil))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(timeL, toItem: self.contentView))
+    
     }
     
     func filPersonInfo(pic:String?,name:String?,title:String?,time:String?)
@@ -712,8 +733,6 @@ class TimeLineContentCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.contentView.addSubview(contentL)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[contentL]-15-|", aView: contentL, bView: nil))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-2-[contentL]-5-|", aView: contentL, bView: nil))
         
         self.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
         if #available(iOS 8.0, *) {
@@ -721,7 +740,14 @@ class TimeLineContentCell: UITableViewCell {
         } else {
             // Fallback on earlier versions
         }
-
+        self.setSubViewLayout()
+    }
+    
+    
+    func setSubViewLayout(){
+    
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-8-[contentL]-8-|", aView: contentL, bView: nil))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-2-[contentL]-5-|", aView: contentL, bView: nil))
     }
     
     required init?(coder aDecoder: NSCoder) {

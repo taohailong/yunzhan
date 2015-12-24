@@ -27,8 +27,14 @@ class Profile
 //    static let NavBarColor = { return  UIColor(red: 223/255.0, green: 32/255.0, blue: 82/255.0, alpha: 1.0) }
     
     static let NavBarColor = { return  UIColor(red: 219/255.0, green: 0/255.0, blue: 52/255.0, alpha: 1.0) }
-    static let domain =  "www.zhangzhantong.com"
-//    static let domain = ""
+    
+    #if DEBUG
+//    #if ENTERPISE
+    static let domain = "www.zhangzhantong.com"
+    #else
+    static let domain = "123.56.102.224"
+    #endif
+    
     static let NavTitleColor = {return UIColor.whiteColor() }
 //    static let 
     class func rgb(let r:CGFloat,let g:CGFloat, let b:CGFloat) ->UIColor{
@@ -42,6 +48,7 @@ class Profile
 
 extension NSLayoutConstraint
 {
+    
     class func layoutHorizontalFull(subView:UIView) ->[NSLayoutConstraint] {
       return  NSLayoutConstraint.constraintsWithVisualFormat("H:|[subView]|", options: [], metrics: nil, views: ["subView":subView])
     }
@@ -184,6 +191,61 @@ extension Int {
 
 extension String {
 
+    func toColor()->UIColor?{
+        
+      let temp = self as NSString
+        
+       var  cString = temp.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()).uppercaseString   as NSString
+        
+        // String should be 6 or 8 characters
+        if cString.length < 6
+        {
+            return UIColor.clearColor()
+        }
+        // strip 0X if it appears
+        //如果是0x开头的，那么截取字符串，字符串从索引为2的位置开始，一直到末尾
+        if cString.hasPrefix("0X")
+        {
+            cString = cString.substringFromIndex(2)
+        }
+        //如果是#开头的，那么截取字符串，字符串从索引为1的位置开始，一直到末尾
+        if cString.hasPrefix("#")
+        {
+            cString = cString.substringFromIndex(1)
+        }
+        if cString.length != 6
+        {
+            return UIColor.clearColor()
+        }
+        
+        // Separate into r, g, b substrings
+        var range:NSRange = NSMakeRange(0, 0)
+        range.location = 0
+        range.length = 2
+        //r
+        let rString = cString.substringWithRange(range)
+        //g
+        range.location = 2;
+        let gString = cString.substringWithRange(range)
+        //b
+        range.location = 4;
+        let bString = cString.substringWithRange(range)
+        
+        // Scan values
+        var r = 0.0
+        var g = 0.0
+        var b = 0.0
+        
+        NSScanner(string: rString).scanDouble(&r)
+         NSScanner(string: gString).scanDouble(&g)
+         NSScanner(string: bString).scanDouble(&b)
+        
+        r = r/255.0
+        g = g/255.0
+        b = b/255.0
+        return UIColor(red: CGFloat(r), green: CGFloat(g) , blue: CGFloat(b), alpha: 1)
+    }
+    
     
     func toAttribute(font:UIFont,color:UIColor)->NSMutableAttributedString{
     
@@ -231,19 +293,6 @@ extension String {
     }
 }
 
-extension Dictionary {
-    
-    func fecth<T>(key:Key,type:T) ->T?
-        {
-            if let values = self[key] as? T
-            {
-                return values
-            }
-            else
-            {
-                return nil
-            }
-        }
-}
+
 
 

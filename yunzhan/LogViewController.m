@@ -13,10 +13,16 @@
 
 #if ENTERPISE
 #import "yunzhan_copy-Swift.h"
-#define PORT "www.zhangzhantong.com"
+
+#else
+
+#import "yunzhan-Swift.h"
+#endif
+
+#if DEBUG
+#define PORT "123.56.102.224"
 #else
 #define PORT "www.zhangzhantong.com"
-#import "yunzhan-Swift.h"
 #endif
 
 

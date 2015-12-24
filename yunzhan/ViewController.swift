@@ -12,7 +12,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
     var userNet:NetWorkData!
     var net:NetWorkData!
     var pics:[PicData]!
-    var news:[NewsData]!,exhibitor:[ExhibitorData]!,scheduler:[SchedulerData]!
+    var news:[NewsData]!,exhibitor:[ExhibitorData]!,scheduler:[SchedulerData]!,activityArr:[ActivityData]!
     var refreshHeadView:THLRefreshView!
     var collection:UICollectionView!
     
@@ -90,7 +90,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             
             
 //         self.addRefreshTableHead()
-            self.addHead()
+         self.addHead()
             
          self.fetchUserData()
 
@@ -145,7 +145,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
                  return
             }
             
-            guard let data = result as? (pics:[PicData], news:[NewsData],exhibitor:[ExhibitorData],scheduler:[SchedulerData])
+            guard let data = result as? (pics:[PicData], news:[NewsData],exhibitor:[ExhibitorData],scheduler:[SchedulerData],activityArr:[ActivityData])
                 
                 else{
                     return
@@ -155,7 +155,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             wself?.news = data.news
             wself?.exhibitor = data.exhibitor
             wself?.scheduler = data.scheduler
-            
+            wself?.activityArr = data.activityArr
             wself?.collection.reloadData()
             //            print(result)
         }
@@ -164,7 +164,15 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
     }
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        return 4
+        
+//        if activityArr != nil
+//        {
+//           if activityArr.count != 0
+//           {
+//             return 5
+//           }
+//        }
+        return 5
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -175,13 +183,21 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         }
         if section == 1
         {
+            if activityArr == nil
+            {
+                return 0
+            }
+            return activityArr.count
+        }
+        if section == 2
+        {
             if exhibitor == nil
             {
                 return 0
             }
           return exhibitor.count
         }
-        else if section == 2
+        else if section == 3
         {
             if scheduler == nil
             {
@@ -199,12 +215,30 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         
+        
         if indexPath.section == 1
         {
+            switch  activityArr.count
+            {
+                case 1:
+                return  CGSizeMake(Profile.width(), 60)
+                
+               case 2:
+                return  CGSizeMake(Profile.width()/2-0.5, 60)
+                
+               case 3:
+                return  CGSizeMake((Profile.width()-2)/3, 100)
+              default:
+                return  CGSizeMake(Profile.width()/4, 80)
+            }
+        }
+        else if indexPath.section == 2
+        {
+//            展商
             let lenth = (Profile.width()-2)/5
            return CGSizeMake(lenth, lenth)
         }
-        else if indexPath.section == 2
+        else if indexPath.section == 3
         {
 //            活动
            return CGSizeMake(Profile.width(), 90)
@@ -226,12 +260,26 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
     
 //    水平间距
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
+        
+        if section == 1
+        {
+          return 10
+        }
         return 0.5
     }
      
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
     
+        
         if indexPath.section == 1
+        {
+            
+            
+            
+        }
+            
+
+        else if indexPath.section == 2
         {
             let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CommonCell", forIndexPath: indexPath) as! CommonCell
             
@@ -241,7 +289,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             cell.backgroundColor = UIColor.whiteColor()
             return cell
         }
-        else if indexPath.section == 2
+        else if indexPath.section == 3
         {
             let cell:CollectionActView = collectionView.dequeueReusableCellWithReuseIdentifier("CollectionActView", forIndexPath: indexPath) as! CollectionActView
              cell.backgroundColor = UIColor.whiteColor()
@@ -262,12 +310,17 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
     
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        if section == 0{
         
+        if section == 0
+        {
           return CGSizeMake(Profile.width(),Profile.width()*0.4)
         }
         
-        if section == 1
+         if section == 1
+         {
+           return CGSizeZero
+         }
+        else if section == 2
         {
             if exhibitor == nil || exhibitor.count==0
             {
@@ -275,7 +328,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             }
 //            return exhibitor.count
         }
-        else if section == 2
+        else if section == 3
         {
             if scheduler == nil || scheduler.count==0
             {
@@ -312,7 +365,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             })
             return head
         }
-        else if indexPath.section == 1{
+        else if indexPath.section == 2{
         
             weak var wself = self
             let head = collection.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionHeader , withReuseIdentifier: "CommonHeadView", forIndexPath: indexPath) as! CommonHeadView
@@ -324,7 +377,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
 
         
         }
-        else if indexPath.section == 2{
+        else if indexPath.section == 3{
             
            weak var wself = self
            let head = collection.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionHeader , withReuseIdentifier: "CommonHeadView", forIndexPath: indexPath) as! CommonHeadView
@@ -352,6 +405,12 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         
         if indexPath.section == 1
         {
+        
+        
+        }
+        
+       else if indexPath.section == 2
+        {
             let data = exhibitor[indexPath.row]
             let exView = ExhibitorController()
             exView.title = data.name
@@ -359,7 +418,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             exView.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(exView, animated: true)
         }
-        else if indexPath.section == 2
+        else if indexPath.section == 3
         {
             let data = scheduler[indexPath.row]
             let schedulerInfo = SchedulerInfoVC()
@@ -391,7 +450,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         weak var wself = self
         
         refreshHeadView = THLRefreshView()
-         refreshHeadView.isManuallyRefreshing = true
+        refreshHeadView.isManuallyRefreshing = true
         refreshHeadView.addToScrollView(collection);
        
         refreshHeadView.setBeginRefreshBlock { () -> Void in

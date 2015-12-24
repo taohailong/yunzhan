@@ -7,31 +7,81 @@
 //
 
 import Foundation
-class MyCompanyVC: UITableViewController {
+class MyCompanyVC: UIViewController {
     
     var dataArr:[[CompanyData]]!
     var net:NetWorkData!
+    var hotelCompany:CompanyVC!
+    var constructionCompany:CompanyVC!
+    var segmentV:TSegmentedControl!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.title = "相关推荐"
-//        self.refreshControl = UIRefreshControl()
-//        self.refreshControl?.addTarget(self, action: "refreshBegin", forControlEvents: .ValueChanged)
-        tableView.separatorColor = Profile.rgb(243, g: 243, b: 243)
-        tableView.registerClass(MoreTableHeadView.self, forHeaderFooterViewReuseIdentifier: "MoreTableHeadView")
-        self.tableView.registerClass(CompanyCell.self , forCellReuseIdentifier: "CompanyCell")
-        self.tableView.registerClass(HotelCell.self, forCellReuseIdentifier: "HotelCell")
+
+        segmentV = TSegmentedControl(sectionTitles: ["装修公司","酒店住宿"])
+        segmentV.addTarget(self, action: "segmentChange", forControlEvents: .ValueChanged)
+        segmentV.frame = CGRectMake(0, 64, Profile.width(), 40)
+        segmentV.selectionIndicatorColor = Profile.rgb(223, g: 32, b: 82)
+        segmentV.textColor = Profile.rgb(102, g: 102, b: 102)
+        segmentV.selectionIndicatorHeight = 1
+        segmentV.font = Profile.font(15.0)
+        segmentV.selectionIndicatorColor = Profile.rgb(223, g: 32, b: 82)
+        segmentV.selectionIndicatorMode = HMSelectionIndicatorFillsTop
+        //        segmentV.backgroundColor = UIColor.blueColor()
+        self.view.addSubview(segmentV)
+
+        
+        constructionCompany = CompanyVC()
+        constructionCompany.view.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(constructionCompany.view)
+        var  tempView = constructionCompany.view
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-104-[tempView]-0-|", options: [], metrics: nil, views: ["tempView":tempView]))
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(constructionCompany.view))
+        self.addChildViewController(constructionCompany)
+        
+        
+        
+        hotelCompany = CompanyVC()
+        hotelCompany.view.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(hotelCompany.view)
+        tempView = hotelCompany.view
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-104-[tempView]-0-|", options: [], metrics: nil, views: ["tempView":tempView]))
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(hotelCompany.view))
+        self.addChildViewController(hotelCompany)
+        
+        tempView.hidden = true
+
+        
         self.fetchData()
+
     }
+    
+    func segmentChange()
+    {
+        if segmentV.selectedIndex == 0
+        {
+            hotelCompany.view.hidden = true
+            constructionCompany.view.hidden = false
+            
+        }
+        else
+        {
+            hotelCompany.view.hidden = false
+            constructionCompany.view.hidden = true
+        }
+    }
+
     
         func fetchData(){
      
         weak var wself =  self
         
-        let loadV = THActivityView(activityViewWithSuperView: self.tableView.superview)
+        let loadV = THActivityView(activityViewWithSuperView: self.view)
         net = NetWorkData()
         net.getCompanyOfExhibitor { (result, status) -> (Void) in
-//            wself?.refreshControl?.endRefreshing()
+
             loadV.removeFromSuperview()
             if status == NetStatus.NetWorkStatusError
             {
@@ -41,76 +91,192 @@ class MyCompanyVC: UITableViewController {
             if let arr = result as? [[CompanyData]]{
             
                 wself?.dataArr = arr
-                wself?.tableView.reloadData()
+                
+                if arr.count == 2
+                {
+                  wself?.constructionCompany.setCompanyData(wself?.dataArr[0])
+                  wself?.hotelCompany.setCompanyData(wself?.dataArr[1])
+                }
+                else
+                {
+                    if arr.count == 0
+                    {
+                       return
+                    }
+                    
+                    let subArr = arr[0]
+                    if subArr.count == 0
+                    {
+                      return
+                    }
+                    let element = subArr[0]
+                    
+                    if element.type == .Hotel
+                    {
+                       wself?.hotelCompany.setCompanyData(subArr)
+                    }
+                    else
+                    {
+                        wself?.constructionCompany.setCompanyData(subArr)
+                    }
+                }
+                
             }
 
         }
         net.start()
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+//    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+//        
+//        if dataArr == nil
+//        {
+//          return 0
+//        }
+//        
+//        return dataArr.count
+//    }
+//    
+//    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        
+//        let subArr = dataArr[section]
+//        return subArr.count
+//    }
+//    
+//    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+//        
+//        let subArr = dataArr[indexPath.section]
+//        let element = subArr[indexPath.row]
+//        
+//        if element.type == .Hotel
+//        {
+//           let height = element.figureOutContentHeight(CGSizeMake(Profile.width() - 30, 1000), font: Profile.font(12))
+//           return 105 + height
+//        }
+//        else
+//        {
+//           return 90
+//        }
+//   }
+//    
+//    
+//    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        return 45
+//    }
+//    
+//    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        
+//        let head = tableView.dequeueReusableHeaderFooterViewWithIdentifier("MoreTableHeadView") as! MoreTableHeadView
+//        
+//        let subArr = dataArr[section]
+//        let element = subArr[0]
+//        
+//        if element.type == .Hotel
+//        {
+//            head.iconImage.image = UIImage(named: "hotelHead")
+//        }
+//        else
+//        {
+//            head.iconImage.image = UIImage(named: "companyHead")
+//        }
+//
+//        return head
+//    }
+//    
+//    
+//    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+//        
+//        
+//        let subArr = dataArr[indexPath.section]
+//        let temp = subArr[indexPath.row]
+//        
+//        if temp.type == .Hotel
+//        {
+//            let cell = tableView.dequeueReusableCellWithIdentifier("HotelCell") as! HotelCell
+//            cell.fillHotelData(temp.name, roomNu: temp.roomNu, scroe: temp.score, phoneNu: temp.phone, address: temp.address, route: temp.route)
+//            return cell
+//        }
+//        else
+//        {
+//            let cell = tableView.dequeueReusableCellWithIdentifier("CompanyCell") as! CompanyCell
+//            cell.fillCompanyData(temp.name, phone: temp.phone , mobile: temp.mobile, personName: temp.contact)
+//            return cell
+//        }
+//    }
+//    
+//    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+//        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+//    }
+}
+
+
+
+class CompanyVC: UIViewController,UITableViewDataSource,UITableViewDelegate {
+    var table:UITableView!
+    var dataArr:[CompanyData]!
+    var net:NetWorkData!
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        table = UITableView(frame: CGRectZero, style: .Plain)
+        table.delegate = self
+        table.dataSource = self
+        self.view.addSubview(table)
+        table.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
+        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
+        
+        table.separatorColor = Profile.rgb(243, g: 243, b: 243)
+//        table.registerClass(MoreTableHeadView.self, forHeaderFooterViewReuseIdentifier: "MoreTableHeadView")
+        table.registerClass(CompanyCell.self , forCellReuseIdentifier: "CompanyCell")
+        table.registerClass(HotelCell.self, forCellReuseIdentifier: "HotelCell")
+
+    }
+    
+    func setCompanyData(data:[CompanyData]?)
+    {
+       if data == nil
+       {
+         return
+        }
+        dataArr = data!
+        table.reloadData()
+    }
+    
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         
         if dataArr == nil
         {
-          return 0
+            return 0
         }
+        
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return dataArr.count
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         
-        let subArr = dataArr[section]
-        return subArr.count
-    }
-    
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        
-        let subArr = dataArr[indexPath.section]
-        let element = subArr[indexPath.row]
+        let element = dataArr[indexPath.row]
         
         if element.type == .Hotel
         {
-           let height = element.figureOutContentHeight(CGSizeMake(Profile.width() - 30, 1000), font: Profile.font(12))
-           return 105 + height
+            let height = element.figureOutContentHeight(CGSizeMake(Profile.width() - 30, 1000), font: Profile.font(12))
+            return 105 + height
         }
         else
         {
-           return 90
+            return 90
         }
-   }
-    
-    
-    override func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 45
     }
     
-    override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        let head = tableView.dequeueReusableHeaderFooterViewWithIdentifier("MoreTableHeadView") as! MoreTableHeadView
-        
-        let subArr = dataArr[section]
-        let element = subArr[0]
-        
-        if element.type == .Hotel
-        {
-            head.iconImage.image = UIImage(named: "hotelHead")
-        }
-        else
-        {
-            head.iconImage.image = UIImage(named: "companyHead")
-        }
+     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
-        return head
-    }
-    
-    
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        
-        let subArr = dataArr[indexPath.section]
-        let temp = subArr[indexPath.row]
-        
+        let temp = dataArr[indexPath.row]
         if temp.type == .Hotel
         {
             let cell = tableView.dequeueReusableCellWithIdentifier("HotelCell") as! HotelCell
@@ -125,10 +291,19 @@ class MyCompanyVC: UITableViewController {
         }
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
+    
 }
+
+
+
+
+
+
+
+
 
 class HotelCell: UITableViewCell,UIAlertViewDelegate {
     

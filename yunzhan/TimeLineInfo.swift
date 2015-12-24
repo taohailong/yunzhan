@@ -37,9 +37,9 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         table.dataSource = self
         table.translatesAutoresizingMaskIntoConstraints = false
         
-        table.registerClass(TimeLineContentCell.self , forCellReuseIdentifier: "TimeLineContentCell")
-        table.registerClass(TimeLinePicCell.self , forCellReuseIdentifier: "TimeLinePicCell")
-        table.registerClass(TimeLinePersonCell.self, forCellReuseIdentifier: "TimeLinePersonCell")
+        table.registerClass(TimeInfoContentCell.self , forCellReuseIdentifier: "TimeInfoContentCell")
+        table.registerClass(TimeInfoPicCell.self , forCellReuseIdentifier: "TimeInfoPicCell")
+        table.registerClass(TimeInfoPersonCell.self, forCellReuseIdentifier: "TimeInfoPersonCell")
         table.registerClass(TimeLineStatusCell.self , forCellReuseIdentifier: "TimeLineStatusCell")
         table.registerClass(ExhibitorMoreCell.self , forCellReuseIdentifier: "ExhibitorMoreCell")
         table.registerClass(TimeCommentCell.self, forCellReuseIdentifier: "TimeCommentCell")
@@ -184,14 +184,17 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         else
         {
             let element = commentArr[indexPath.row]
-             if element.contentHeight == nil
+             if element.contentHeight == nil || element.contentHeight == 0
              {
                return 60.0
              }
-            let height = CGFloat(65) + CGFloat(element.contentHeight!)
-//            print(height)
-//            print(element.comment)
-              return height
+            else
+            {
+                let contentHeight = element.comment!.boundingRectWithSize(CGSizeMake(Profile.width()-30, 1000), options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName: Profile.font(12)], context: nil).height
+                let height = CGFloat(65) + contentHeight
+                return height
+            }
+            
         }
     
     }
@@ -203,19 +206,19 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
             let element = timeData
             if indexPath.row == 0
             {
-                let cell = tableView.dequeueReusableCellWithIdentifier("TimeLinePicCell") as! TimeLinePicCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("TimeInfoPicCell") as! TimeLinePicCell
                 cell.loadPicUrl(element.picUrl,height: element.picHeight)
                 return cell
             }
             else if indexPath.row == 1
             {
-                let cell = tableView.dequeueReusableCellWithIdentifier("TimeLinePersonCell") as! TimeLinePersonCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("TimeInfoPersonCell") as! TimeLinePersonCell
                 cell.filPersonInfo(nil, name: element.personName, title: element.personTitle, time: element.time)
                 return cell
             }
             else if indexPath.row == 2
             {
-                let cell = tableView.dequeueReusableCellWithIdentifier("TimeLineContentCell") as! TimeLineContentCell
+                let cell = tableView.dequeueReusableCellWithIdentifier("TimeInfoContentCell") as! TimeLineContentCell
                 cell.contentL.text = element.comment
                 return cell
             }
@@ -496,6 +499,53 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
 
     
 }
+
+
+
+class TimeInfoPicCell: TimeLinePicCell {
+    override func setSubViewLayout(){
+    
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[picImageV]-0-|", options: [], metrics: nil, views: ["picImageV":picImageV]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[picImageV]-0-|", options: [], metrics: nil, views: ["picImageV":picImageV]))
+        //        self.contentView.addConstraints(NSLayoutConstraint.layoutHorizontalFull(picImageV))
+        self.selectionStyle = .None
+        self.separatorInset = UIEdgeInsetsMake(0, Profile.width(), 0, 0)
+        
+        if #available(iOS 8.0, *) {
+            self.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0)
+        } else {
+            // Fallback on earlier versions
+        }
+
+    }
+}
+
+
+class TimeInfoPersonCell: TimeLinePersonCell {
+    override func setSubViewLayout() {
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[userPicV(33)]", options: [], metrics: nil, views: ["userPicV":userPicV]))
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[userPicV(33)]", options: [], metrics: nil, views: ["userPicV":userPicV]))
+        
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[userPicV]-10-[nameL]", aView: userPicV, bView: nameL))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(nameL, toItem: self.contentView))
+        
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[timeL]-15-|", aView: timeL, bView: nil))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(timeL, toItem: self.contentView))
+    }
+}
+
+
+class TimeInfoContentCell: TimeLineContentCell {
+    override func setSubViewLayout() {
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[contentL]-15-|", aView: contentL, bView: nil))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-2-[contentL]-5-|", aView: contentL, bView: nil))
+    }
+}
+
+
 
 class TimeCommentCell: UITableViewCell {
     

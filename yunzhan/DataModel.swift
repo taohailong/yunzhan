@@ -113,6 +113,7 @@ class SchedulerData {
     var company:String?
     var time:String,date:String,title:String?,introduce:String?,address:String,type:SchedulerType ,id:String
     var height:CGFloat = 0.0
+    var searchAttribute:NSMutableAttributedString!
     var typeName:String = ""
     init(time:String,date:String,title:String?,introduce:String?,address:String,id:String,type:SchedulerType = .UnKnow)
     {
@@ -162,7 +163,8 @@ extension SchedulerData{
 
 class ExhibitorData {
     var address:String?, addressMap:String?, id:String, iconUrl:String?, name:String?,webLink:String?,remark:String?,location:String?,introduct:String?
-
+    var searchAttribute:NSMutableAttributedString!
+    
     init(address:String?, id:String, name:String?, iconUrl:String?,addressMap:String?,webLink:String? = nil)
     {
         self.address = address
@@ -233,6 +235,7 @@ class PersonData {
 class TimeMessage {
     var picHeight = 0.0
     var picUrl:String?
+    var picThumbUrl:String?
     var personName:String?
     var personTitle:String?
     var time:String?
@@ -295,4 +298,24 @@ class CompanyData {
 }
 
 
+class ActivityData {
+    var iconUrl:String?
+    var name:String?
+    var detail:String?
+    var link:String?
+    var color:UIColor?
+}
+
+extension ActivityData{
+
+    convenience init(dataDic:[String:AnyObject]){
+       
+       self.init()
+        self.name = dataDic["name"] as? String
+        self.link = dataDic["link"] as? String
+        self.iconUrl = dataDic["icon_url"] as? String
+        self.detail = dataDic["descr"] as? String
+        self.color = (dataDic["ftcolor"] as? String)?.toColor()
+    }
+}
 

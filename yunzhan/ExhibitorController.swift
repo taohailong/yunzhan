@@ -67,16 +67,34 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
 
         self.creatTable()
         self.setupRefresh()
+        self.creatRightBar()
+    }
+    
+    func creatRightBar(){
         
+        let rightBar = UIBarButtonItem(image: UIImage(named: "global_search"), style: .Plain, target: self, action: "showGlobalSearchVC")
+        self.navigationItem.rightBarButtonItem = rightBar
+    }
+
+    func showGlobalSearchVC(){
+    
+       let search = GlobalSearchVC()
+        
+        let nav = UINavigationController(rootViewController: search)
+        
+        self.presentViewController(nav, animated: true) { () -> Void in
+            
+        }
+    
     }
     
     func creatTable(){
     
-        let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(searchBar)
-        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(searchBar))
-        self.view.addConstraint(NSLayoutConstraint(item: searchBar, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1.0, constant: 0))
+//        let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
+//        searchBar.translatesAutoresizingMaskIntoConstraints = false
+//        self.view.addSubview(searchBar)
+//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(searchBar))
+//        self.view.addConstraint(NSLayoutConstraint(item: searchBar, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1.0, constant: 0))
         
         
         table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
@@ -89,16 +107,16 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
         self.view.addSubview(table)
 //        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[table]-0-|", options: [], metrics: nil, views: ["table":table]))
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[searchBar]-0-[tableView]-49-|", options: [], metrics: nil, views: ["searchBar":searchBar,"tableView":table]))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-64-[tableView]-49-|", options: [], metrics: nil, views: ["tableView":table]))
         
         
         
 //        self.tableView.tableHeaderView = searchBar
         table.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
-        searchCV = UISearchDisplayController(searchBar: searchBar, contentsController: self)
-        searchCV.searchResultsDelegate = self
-        searchCV.searchResultsDataSource = self
-        searchCV.delegate = self
+//        searchCV = UISearchDisplayController(searchBar: searchBar, contentsController: self)
+//        searchCV.searchResultsDelegate = self
+//        searchCV.searchResultsDataSource = self
+//        searchCV.delegate = self
        
     }
     
@@ -348,6 +366,7 @@ class ExhibitorCell: UITableViewCell {
         contentImage.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         
         titleL = UILabel()
+        titleL.font = Profile.font(16)
         titleL.translatesAutoresizingMaskIntoConstraints = false
         
         addressL = UILabel()

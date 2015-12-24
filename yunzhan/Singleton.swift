@@ -79,9 +79,9 @@ class UserData:NSObject {
         title = nil
        name = nil
        let userDefault = NSUserDefaults.standardUserDefaults()
-        print(userDefault.objectForKey("token"))
+//        print(userDefault.objectForKey("token"))
         userDefault.removeObjectForKey("token")
-        print(userDefault.objectForKey("token"))
+//        print(userDefault.objectForKey("token"))
         userDefault.removeObjectForKey("phone")
         userDefault.removeObjectForKey("deviceToken")
     }
