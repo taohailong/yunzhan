@@ -65,17 +65,37 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         self.title = "日程"
         self.creatSchedulerTable()
         self.schedulerRefresh()
+        self.creatRightBar()
     }
+    
+    
+    func creatRightBar(){
+        
+        let rightBar = UIBarButtonItem(image: UIImage(named: "global_search"), style: .Plain, target: self, action: "showGlobalSearchVC")
+        self.navigationItem.rightBarButtonItem = rightBar
+    }
+    
+    func showGlobalSearchVC(){
+        
+        let search = GlobalSearchVC()
+        
+        let nav = UINavigationController(rootViewController: search)
+        
+        self.presentViewController(nav, animated: true) { () -> Void in
+            
+        }
+    }
+
     
     
     func creatSchedulerTable(){
     
-        let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(searchBar)
-        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(searchBar))
-        self.view.addConstraint(NSLayoutConstraint(item: searchBar, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1.0, constant: 0))
-        
+//        let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
+//        searchBar.translatesAutoresizingMaskIntoConstraints = false
+//        self.view.addSubview(searchBar)
+//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(searchBar))
+//        self.view.addConstraint(NSLayoutConstraint(item: searchBar, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1.0, constant: 0))
+//        
         
         
         table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
@@ -91,17 +111,17 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         self.view.addSubview(table)
         
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[searchBar]-0-[table]", options: [], metrics: nil, views: ["searchBar":searchBar,"table":table]))
-        self.view.addConstraint(NSLayoutConstraint(item: table, attribute: .Bottom, relatedBy: .Equal, toItem: self.bottomLayoutGuide, attribute: .Top, multiplier: 1.0, constant: 0))
+//        self.view.addConstraint(NSLayoutConstraint(item: table, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1.0, constant: 0))
+//        self.view.addConstraint(NSLayoutConstraint(item: table, attribute: .Bottom, relatedBy: .Equal, toItem: self.bottomLayoutGuide, attribute: .Top, multiplier: 1.0, constant: 0))
 //        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
-//        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.tableView))
+        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         
         
-        searchCV = UISearchDisplayController(searchBar: searchBar, contentsController: self)
-        searchCV.searchResultsDelegate = self
-        searchCV.searchResultsDataSource = self
-        searchCV.delegate = self
-        searchCV.searchResultsTableView.registerClass(ExhibitorCell.self, forCellReuseIdentifier: "ExhibitorCell")
+//        searchCV = UISearchDisplayController(searchBar: searchBar, contentsController: self)
+//        searchCV.searchResultsDelegate = self
+//        searchCV.searchResultsDataSource = self
+//        searchCV.delegate = self
+//        searchCV.searchResultsTableView.registerClass(ExhibitorCell.self, forCellReuseIdentifier: "ExhibitorCell")
     
     }
     

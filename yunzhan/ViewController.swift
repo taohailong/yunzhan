@@ -49,6 +49,25 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             application.setStatusBarStyle(.Default, animated: true)
         }
     }
+    
+    func creatRightBar(){
+        
+        let rightBar = UIBarButtonItem(image: UIImage(named: "global_search"), style: .Plain, target: self, action: "showGlobalSearchVC")
+        self.navigationItem.rightBarButtonItem = rightBar
+    }
+    
+    func showGlobalSearchVC(){
+        
+        let search = GlobalSearchVC()
+        
+        let nav = UINavigationController(rootViewController: search)
+        
+        self.presentViewController(nav, animated: true) { () -> Void in
+            
+        }
+    }
+
+    
         override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "首页"
@@ -67,14 +86,18 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         collectionViewLayout: flowLayout)
         collection.alwaysBounceVertical = true
         collection.registerClass(CommonHeadView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "CommonHeadView")
-        
+        collection.registerClass(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "UICollectionReusableView")
+    
         collection.registerClass(AdRootCollectionView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "AdRootCollectionView")
         
         
         collection.registerClass(CommonCell.self, forCellWithReuseIdentifier: "CommonCell")
         
         collection.registerClass(CollectionActView.self, forCellWithReuseIdentifier: "CollectionActView")
-        
+        collection.registerClass(ActiCollectionCell_One.self, forCellWithReuseIdentifier: "ActiCollectionCell_One")
+        collection.registerClass(ActiCollectionCell_Two.self, forCellWithReuseIdentifier: "ActiCollectionCell_Two")
+        collection.registerClass(ActiCollectionCell_Three.self, forCellWithReuseIdentifier: "ActiCollectionCell_Three")
+         collection.registerClass(ActiCollectionCell_Fourth.self, forCellWithReuseIdentifier: "ActiCollectionCell_Fourth")
         collection.registerClass(CollectionNewCell.self, forCellWithReuseIdentifier: "CollectionNewCell")
         collection.delegate = self
         collection.dataSource = self
@@ -89,7 +112,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
 //        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[collection]-0-|", options: [], metrics: nil, views: ["collection" : collection]))
             
             
-//         self.addRefreshTableHead()
+         self.creatRightBar()
          self.addHead()
             
          self.fetchUserData()
@@ -165,13 +188,6 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         
-//        if activityArr != nil
-//        {
-//           if activityArr.count != 0
-//           {
-//             return 5
-//           }
-//        }
         return 5
     }
     
@@ -224,12 +240,12 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
                 return  CGSizeMake(Profile.width(), 60)
                 
                case 2:
-                return  CGSizeMake(Profile.width()/2-0.5, 60)
+                return  CGSizeMake(Profile.width()/2-0.25, 60)
                 
                case 3:
-                return  CGSizeMake((Profile.width()-2)/3, 100)
+                return  CGSizeMake(Profile.width()/3 - 0.34, 100)
               default:
-                return  CGSizeMake(Profile.width()/4, 80)
+                return  CGSizeMake(Profile.width()/4-0.5, 80)
             }
         }
         else if indexPath.section == 2
@@ -241,7 +257,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         else if indexPath.section == 3
         {
 //            活动
-           return CGSizeMake(Profile.width(), 90)
+           return CGSizeMake(Profile.width(), 40)
         }
         else
         {
@@ -261,10 +277,10 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
 //    水平间距
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
         
-        if section == 1
-        {
-          return 10
-        }
+//        if section == 1
+//        {
+//          return 10
+//        }
         return 0.5
     }
      
@@ -273,8 +289,31 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         
         if indexPath.section == 1
         {
-            
-            
+            let element =  activityArr[indexPath.row]
+            if activityArr.count == 1
+            {
+               let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ActiCollectionCell_One", forIndexPath: indexPath) as! ActiCollectionCell_One
+                cell.setActivityData(element)
+                return cell
+            }
+            else if activityArr.count == 2
+            {
+                let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ActiCollectionCell_Two", forIndexPath: indexPath) as! ActiCollectionCell_Two
+                cell.setActivityData(element)
+                return cell
+            }
+            else if activityArr.count == 3
+            {
+                let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ActiCollectionCell_Three", forIndexPath: indexPath) as! ActiCollectionCell_Three
+                cell.setActivityData(element)
+                return cell
+            }
+            else
+            {
+                let cell = collectionView.dequeueReusableCellWithReuseIdentifier("ActiCollectionCell_Fourth", forIndexPath: indexPath) as! ActiCollectionCell_Fourth
+                cell.setActivityData(element)
+                return cell
+            }
             
         }
             
@@ -318,7 +357,12 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         
          if section == 1
          {
-           return CGSizeZero
+            if activityArr == nil || activityArr.count==0
+            {
+                return CGSizeZero
+            }
+
+           return CGSizeMake(Profile.width(), 10)
          }
         else if section == 2
         {
@@ -365,6 +409,13 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             })
             return head
         }
+            
+        else if indexPath.section == 1
+        {
+           let head = collection.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionHeader, withReuseIdentifier: "UICollectionReusableView", forIndexPath: indexPath) 
+           return head
+        }
+            
         else if indexPath.section == 2{
         
             weak var wself = self

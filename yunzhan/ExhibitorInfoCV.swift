@@ -217,6 +217,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             return
          }
             wself?.elementData = tuple.data
+            wself?.title = wself?.elementData.name
             if tuple.personArr.count != 0
             {
                 wself?.personArr = tuple.personArr

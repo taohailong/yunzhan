@@ -267,123 +267,143 @@ class AdRootCollectionView: UICollectionReusableView {
 
 class CollectionActView: UICollectionViewCell {
     
-    let timeL:UILabel
-    let dateL:UILabel
+//    let timeL:UILabel
+//    let dateL:UILabel
     
     let titleL:UILabel
     let introduce:UILabel
-    let address:UILabel
-    let spot : UIView
+//    let address:UILabel
+//    let spot : UIView
     override init(frame: CGRect) {
         
       
-        timeL = UILabel()
-        timeL.font = Profile.font(11)
-        timeL.translatesAutoresizingMaskIntoConstraints = false
-        
-        dateL = UILabel()
-        dateL.font = Profile.font(10)
-        dateL.translatesAutoresizingMaskIntoConstraints = false
+//        timeL = UILabel()
+//        timeL.font = Profile.font(11)
+//        timeL.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        dateL = UILabel()
+//        dateL.font = Profile.font(10)
+//        dateL.translatesAutoresizingMaskIntoConstraints = false
         
         titleL = UILabel()
-        titleL.font = Profile.font(10)
+        titleL.font = Profile.font(13)
         titleL.translatesAutoresizingMaskIntoConstraints = false
         
         introduce = UILabel()
-        introduce.font = Profile.font(10)
+        introduce.font = Profile.font(15)
         introduce.translatesAutoresizingMaskIntoConstraints = false
         
-        address = UILabel()
-        address.font = Profile.font(10)
-        address.translatesAutoresizingMaskIntoConstraints = false
-        
-        
-        spot = UIView()
+//        address = UILabel()
+//        address.font = Profile.font(10)
+//        address.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        
+//        spot = UIView()
         super.init(frame: frame)
         
-        
-        timeL.textColor = Profile.rgb(51, g: 51, b: 51)
-        timeL.font = Profile.font(15)
-        self.contentView.addSubview(timeL)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[timeL]", options: [], metrics: nil, views: ["timeL":timeL]))
-        self.contentView.addConstraint(NSLayoutConstraint(item: timeL, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: -15))
-        
-        
-        let upView = UIView()
-        upView.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addSubview(upView)
-        upView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-0-[upView]-0-|", aView: upView, bView: nil))
-         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-74-[upView(0.5)]", options: [], metrics: nil, views: ["upView":upView,"timeL":timeL]))
-
-        
-        spot.layer.masksToBounds = true
-        spot.layer.cornerRadius = 4.0
-        
-        spot.backgroundColor = Profile.rgb(254, g: 167, b: 84)
-        spot.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addSubview(spot)
-        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(spot, toItem: self.contentView))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-70-[spot(8)]", options: [], metrics: nil, views: ["spot":spot]))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[spot(8)]", options: [], metrics: nil, views: ["spot":spot]))
-        
-        
-        dateL.textColor = Profile.rgb(153, g: 153, b: 153)
-        dateL.font = Profile.font(13)
-
-        self.contentView.addSubview(dateL)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-17-[dateL]", options: [], metrics: nil, views: ["dateL":dateL]))
-        self.contentView.addConstraint(NSLayoutConstraint(item: dateL, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: 10))
-        
-        
-        introduce.textColor = Profile.rgb(102, g: 102, b: 102)
-        introduce.font = Profile.font(13)
+        self.contentView.addSubview(titleL)
         self.contentView.addSubview(introduce)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[timeL]-40-[introduce]-(>=2)-|", options: [], metrics: nil, views: ["introduce":introduce,"timeL":timeL]))
+        
+        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(titleL, toItem: self.contentView))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[titleL]", aView: titleL, bView: nil))
+        titleL.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Horizontal)
+        
+        
         
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(introduce, toItem: self.contentView))
-        introduce.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: UILayoutConstraintAxis.Horizontal)
-        
-        
-        titleL.textColor = Profile.rgb(51, g: 51, b: 51)
-        titleL.font = Profile.font(15)
-        self.contentView.addSubview(titleL)
-        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(titleL, toItem: introduce))
-        self.contentView.addConstraint(NSLayoutConstraint(item: titleL, attribute: NSLayoutAttribute.Bottom, relatedBy: NSLayoutRelation.Equal, toItem: introduce, attribute: NSLayoutAttribute.Top, multiplier: 1.0, constant: -7))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[titleL]-(>=15)-|", aView: titleL, bView: nil))
-         titleL.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: .Horizontal)
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[titleL]-30-[introduce]-15-|", options: [], metrics: nil, views: ["introduce":introduce,"titleL":titleL]))
+        self.backgroundColor = UIColor.whiteColor()
+
         
         
         
-        address.textColor = Profile.rgb(153, g: 153, b: 153)
-        address.font = Profile.font(13)
-        self.contentView.addSubview(address)
-        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(address, toItem: introduce))
-        self.contentView.addConstraint(NSLayoutConstraint(item: address, attribute: NSLayoutAttribute.Top, relatedBy: NSLayoutRelation.Equal, toItem: introduce, attribute: NSLayoutAttribute.Bottom, multiplier: 1.0, constant: 5))
+        
+//        timeL.textColor = Profile.rgb(51, g: 51, b: 51)
+//        timeL.font = Profile.font(15)
+//        self.contentView.addSubview(timeL)
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[timeL]", options: [], metrics: nil, views: ["timeL":timeL]))
+//        self.contentView.addConstraint(NSLayoutConstraint(item: timeL, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: -15))
+        
+        
+//        let upView = UIView()
+//        upView.translatesAutoresizingMaskIntoConstraints = false
+//        self.contentView.addSubview(upView)
+//        upView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+//        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-0-[upView]-0-|", aView: upView, bView: nil))
+//         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-74-[upView(0.5)]", options: [], metrics: nil, views: ["upView":upView,"timeL":timeL]))
+//
+//        
+//        spot.layer.masksToBounds = true
+//        spot.layer.cornerRadius = 4.0
+//        
+//        spot.backgroundColor = Profile.rgb(254, g: 167, b: 84)
+//        spot.translatesAutoresizingMaskIntoConstraints = false
+//        self.contentView.addSubview(spot)
+//        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(spot, toItem: self.contentView))
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-70-[spot(8)]", options: [], metrics: nil, views: ["spot":spot]))
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[spot(8)]", options: [], metrics: nil, views: ["spot":spot]))
+//        
+//        
+//        dateL.textColor = Profile.rgb(153, g: 153, b: 153)
+//        dateL.font = Profile.font(13)
+//
+//        self.contentView.addSubview(dateL)
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-17-[dateL]", options: [], metrics: nil, views: ["dateL":dateL]))
+//        self.contentView.addConstraint(NSLayoutConstraint(item: dateL, attribute: NSLayoutAttribute.CenterY, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: NSLayoutAttribute.CenterY, multiplier: 1.0, constant: 10))
+        
+//        
+//        introduce.textColor = Profile.rgb(102, g: 102, b: 102)
+//        introduce.font = Profile.font(13)
+//        self.contentView.addSubview(introduce)
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[timeL]-40-[introduce]-(>=2)-|", options: [], metrics: nil, views: ["introduce":introduce,"timeL":timeL]))
+//        
+//        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(introduce, toItem: self.contentView))
+//        introduce.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: UILayoutConstraintAxis.Horizontal)
+//        
+//        
+//        titleL.textColor = Profile.rgb(51, g: 51, b: 51)
+//        titleL.font = Profile.font(15)
+//        self.contentView.addSubview(titleL)
+//        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(titleL, toItem: introduce))
+//        self.contentView.addConstraint(NSLayoutConstraint(item: titleL, attribute: NSLayoutAttribute.Bottom, relatedBy: NSLayoutRelation.Equal, toItem: introduce, attribute: NSLayoutAttribute.Top, multiplier: 1.0, constant: -7))
+//        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[titleL]-(>=15)-|", aView: titleL, bView: nil))
+//         titleL.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: .Horizontal)
+//        
+//        
+//        
+//        address.textColor = Profile.rgb(153, g: 153, b: 153)
+//        address.font = Profile.font(13)
+//        self.contentView.addSubview(address)
+//        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(address, toItem: introduce))
+//        self.contentView.addConstraint(NSLayoutConstraint(item: address, attribute: NSLayoutAttribute.Top, relatedBy: NSLayoutRelation.Equal, toItem: introduce, attribute: NSLayoutAttribute.Bottom, multiplier: 1.0, constant: 5))
+        
+        
+        
+        
     }
     
     
     func fullDataToCell(data:SchedulerData){
         
-        if data.type == .PublicMeeting || data.type == .UnPublicMeeting
-        {
-            spot.backgroundColor = Profile.rgb(110, g: 233, b: 194)
-        }
-        else if data.type == .UnPublicDiscuss || data.type == .PublicDiscuss
-        {
-            spot.backgroundColor = Profile.rgb(193, g: 129, b: 220)
-        }
-        else
-        {
-            spot.backgroundColor = Profile.rgb(254, g: 167, b: 84)
-        }
-
-        
-        timeL.text = data.time
-        dateL.text = data.date
-        titleL.text = data.title
-        introduce.text = data.introduce
-        address.text = data.address
+//        if data.type == .PublicMeeting || data.type == .UnPublicMeeting
+//        {
+//            spot.backgroundColor = Profile.rgb(110, g: 233, b: 194)
+//        }
+//        else if data.type == .UnPublicDiscuss || data.type == .PublicDiscuss
+//        {
+//            spot.backgroundColor = Profile.rgb(193, g: 129, b: 220)
+//        }
+//        else
+//        {
+//            spot.backgroundColor = Profile.rgb(254, g: 167, b: 84)
+//        }
+//
+//        
+//        timeL.text = data.time
+//        dateL.text = data.date
+        titleL.text = "\(data.date)-\(data.time)"
+        introduce.text = data.title
+//        address.text = data.address
     }
     
     
@@ -399,16 +419,20 @@ class ActiCollectionCell_One: UICollectionViewCell {
     let iconView:UIImageView
     override init(frame: CGRect) {
         titleL = UILabel()
+        titleL.translatesAutoresizingMaskIntoConstraints = false
+        
         detailL = UILabel()
+        detailL.translatesAutoresizingMaskIntoConstraints = false
         detailL.font = Profile.font(10)
         detailL.textColor = Profile.rgb(102, g: 102, b: 102)
         iconView = UIImageView()
-        
+        iconView.translatesAutoresizingMaskIntoConstraints = false
         super.init(frame: frame)
-        self.addSubview(titleL)
-        self.addSubview(detailL)
-        self.addSubview(iconView)
+        self.contentView.addSubview(titleL)
+        self.contentView.addSubview(detailL)
+        self.contentView.addSubview(iconView)
         self.setSubViewLayout()
+        self.contentView.backgroundColor = UIColor.whiteColor()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -417,18 +441,19 @@ class ActiCollectionCell_One: UICollectionViewCell {
     
     func setSubViewLayout(){
     
-       self.addConstraint(NSLayoutConstraint.layoutVerticalCenter(titleL, toItem: self))
-       self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[iconView(44)]-15-|", options: [], metrics: nil, views: ["iconView":iconView]))
-       self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
+       self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[iconView(44)]-15-|", options: [], metrics: nil, views: ["iconView":iconView]))
+       self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
+       self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(iconView, toItem: self.contentView))
+        
         
         titleL.font = Profile.font(12)
         
-        self.addConstraint(NSLayoutConstraint(item: titleL, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1, constant: -5))
-        self.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[titleL]", aView: titleL, bView: nil))
+        self.contentView.addConstraint(NSLayoutConstraint(item: titleL, attribute: .Bottom, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1, constant: -5))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[titleL]", aView: titleL, bView: nil))
         
     
-        self.addConstraint(NSLayoutConstraint(item: detailL, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1, constant: 5))
-        self.addConstraint(NSLayoutConstraint.layoutLeftEqual(detailL, toItem: titleL))
+        self.contentView.addConstraint(NSLayoutConstraint(item: detailL, attribute: .Top, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1, constant: 5))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(detailL, toItem: titleL))
     }
     
     
@@ -447,20 +472,22 @@ class ActiCollectionCell_One: UICollectionViewCell {
 
 class ActiCollectionCell_Two: ActiCollectionCell_One
 {
-    override func setSubViewLayout(){
     
+    override func setSubViewLayout(){
+//    self.backgroundColor = UIColor.redColor()
         titleL.font = Profile.font(12)
-        self.addConstraint(NSLayoutConstraint.layoutVerticalCenter(titleL, toItem: self))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[iconView(44)]-15-|", options: [], metrics: nil, views: ["iconView":iconView]))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[iconView(44)]-15-|", options: [], metrics: nil, views: ["iconView":iconView]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(iconView, toItem: self.contentView))
+
+        
+        self.contentView.addConstraint(NSLayoutConstraint(item: titleL, attribute: .Bottom, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1, constant: -5))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[titleL]", aView: titleL, bView: nil))
         
         
-        self.addConstraint(NSLayoutConstraint(item: titleL, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1, constant: -5))
-        self.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[titleL]", aView: titleL, bView: nil))
-        
-        
-        self.addConstraint(NSLayoutConstraint(item: detailL, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1, constant: 5))
-        self.addConstraint(NSLayoutConstraint.layoutLeftEqual(detailL, toItem: titleL))
+        self.contentView.addConstraint(NSLayoutConstraint(item: detailL, attribute: .Top, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1, constant: 5))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(detailL, toItem: titleL))
  
     }
 }
@@ -471,21 +498,49 @@ class ActiCollectionCell_Three: ActiCollectionCell_One
     override func setSubViewLayout(){
         
         titleL.font = Profile.font(12)
-        self.addConstraint(NSLayoutConstraint.layoutVerticalCenter(titleL, toItem: self))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[iconView(44)]-15-|", options: [], metrics: nil, views: ["iconView":iconView]))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(iconView, toItem: self.contentView))
+
         
         
-        self.addConstraint(NSLayoutConstraint(item: titleL, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1, constant: -5))
-        self.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[titleL]", aView: titleL, bView: nil))
+        
+        self.contentView.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(titleL, toItem: self.contentView))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[iconView]-8-[titleL]", aView: iconView, bView: titleL))
         
         
-        self.addConstraint(NSLayoutConstraint(item: detailL, attribute: .Bottom, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1, constant: 5))
-        self.addConstraint(NSLayoutConstraint.layoutLeftEqual(detailL, toItem: titleL))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(detailL, toItem: self.contentView))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-5-[detailL]", aView: titleL, bView: detailL))
+
         
     }
 }
 
 
 
+class ActiCollectionCell_Fourth: ActiCollectionCell_One
+{
+    override func setSubViewLayout(){
+        
+        titleL.font = Profile.font(11)
+        titleL.textColor = Profile.rgb(51, g: 51, b: 51)
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-9-[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(iconView, toItem: self.contentView))
+        
+        
+        
+        
+        self.contentView.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(titleL, toItem: self.contentView))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[iconView]-8-[titleL]", aView: iconView, bView: titleL))
+        
+         detailL.removeFromSuperview()
+//        self.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(detailL, toItem: self))
+//        self.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-5-[detailL]", aView: titleL, bView: detailL))
+        
+        
+    }
+}
 

@@ -20,17 +20,24 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         super.viewDidAppear(animated)
         let application = UIApplication.sharedApplication()
         application.setStatusBarStyle(.Default, animated: true)
+        searchBar.becomeFirstResponder()
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        searchBar.resignFirstResponder()
+    }
     override func viewDidLoad() {
         
         super.viewDidLoad()
         
         self.view.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         
-        
         let navBack = UIView(frame: CGRectMake(0,0,Profile.width()-30,30))
         searchBar = UITextField(frame: CGRectMake(0,0,Profile.width()-80,30))
+//        searchBar.keyboardType = .WebSearch
+        searchBar.returnKeyType = .Search
+        searchBar.font = Profile.font(15)
         searchBar.backgroundColor = UIColor.whiteColor()
         searchBar.delegate = self
 
@@ -86,7 +93,7 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     }
 
     func textFieldTextDidChangeNotification(){
-    
+      print("change \(searchBar.text)")
        self.fetchSearchData(searchBar.text!)
     }
     
@@ -96,6 +103,13 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         return true
     }
     
+
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        
+        print("s \(string) text \(textField.text)  return type \(textField.returnKeyType.rawValue)")
+        
+        return true
+    }
     
     func fetchSearchData(search:String){
        
@@ -270,7 +284,7 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         {
              let element = subArr[indexPath.row] as! SchedulerData
             let cell =  tableView.dequeueReusableCellWithIdentifier("SearchSchedulerCell") as! SearchSchedulerCell
-            cell.titleL.text = element.time
+            cell.titleL.text = "\(element.date)-\(element.time)"
             cell.contentL.attributedText = element.searchAttribute
             return cell
 
@@ -282,7 +296,7 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
         let subArr = list[indexPath.section]
-        if indexPath.row == 5
+        if indexPath.row == 4
         {
             let subVC = SearchListVC()
             
@@ -311,7 +325,15 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
 
 
     }
-    
+    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        
+        if searchBar.isFirstResponder() == true
+        {
+            searchBar.resignFirstResponder()
+        }
+        
+    }
+
     
 }
 
@@ -431,6 +453,7 @@ class SearchListVC: UIViewController,UITextFieldDelegate,UITableViewDataSource,U
         searchBar = UITextField(frame: CGRectMake(0,0,Profile.width()-115,30))
         searchBar.backgroundColor = UIColor.whiteColor()
         searchBar.delegate = self
+        searchBar.font = Profile.font(15)
         self.view.addSubview(searchBar)
         
         let leftView = UIImageView(frame: CGRectMake(5, 0, 15, 15))
@@ -646,7 +669,7 @@ class SearchListVC: UIViewController,UITextFieldDelegate,UITableViewDataSource,U
         {
             let element = subArr[indexPath.row] as! SchedulerData
             let cell =  tableView.dequeueReusableCellWithIdentifier("SearchSchedulerCell") as! SearchSchedulerCell
-            cell.titleL.text = element.time
+            cell.titleL.text = "\(element.date)-\(element.time)"
             cell.contentL.attributedText = element.searchAttribute
             return cell
             
@@ -681,6 +704,15 @@ class SearchListVC: UIViewController,UITextFieldDelegate,UITableViewDataSource,U
             let schedulerVc = SchedulerInfoVC()
             schedulerVc.schedulerID = element.id
             self.navigationController?.pushViewController(schedulerVc, animated: true)
+        }
+        
+    }
+
+    func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        
+        if searchBar.isFirstResponder() == true
+        {
+            searchBar.resignFirstResponder()
         }
         
     }

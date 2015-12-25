@@ -85,7 +85,6 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
         self.presentViewController(nav, animated: true) { () -> Void in
             
         }
-    
     }
     
     func creatTable(){
