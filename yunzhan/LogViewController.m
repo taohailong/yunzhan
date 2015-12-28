@@ -19,7 +19,8 @@
 #import "yunzhan-Swift.h"
 #endif
 
-#if DEBUG
+//#if DEBUG
+#if 1
 #define PORT "123.56.102.224"
 #else
 #define PORT "www.zhangzhantong.com"
@@ -28,7 +29,7 @@
 
 @interface LogViewController ()<UITableViewDataSource,UITableViewDelegate,UINavigationControllerDelegate>
 {
-    
+ 
     UITableView* _table;
     __weak UITextField* _phoneField;
     __weak UITextField* _pwField;

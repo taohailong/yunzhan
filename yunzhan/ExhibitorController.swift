@@ -103,6 +103,7 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
         table.translatesAutoresizingMaskIntoConstraints = false
         table.separatorColor = Profile.rgb(243, g: 243, b: 243)
         table.sectionIndexBackgroundColor = UIColor.clearColor()
+        
         self.view.addSubview(table)
 //        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[table]-0-|", options: [], metrics: nil, views: ["table":table]))
@@ -111,6 +112,7 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
         
         
 //        self.tableView.tableHeaderView = searchBar
+        table.registerClass(TableNoSeparateHeadView.self, forHeaderFooterViewReuseIdentifier: "TableNoSeparateHeadView")
         table.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
 //        searchCV = UISearchDisplayController(searchBar: searchBar, contentsController: self)
 //        searchCV.searchResultsDelegate = self
@@ -156,19 +158,6 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
                     
                      let warnV = THActivityView(string: "网络错误")
                      warnV.show()
-//                    let time =  dispatch_time(DISPATCH_TIME_NOW, Int64(0.5 * Double(NSEC_PER_SEC)))
-//                    dispatch_after(time, dispatch_get_main_queue()) { () -> Void in
-//                        
-//                        let errView = THActivityView(netErrorWithSuperView: wself!.tableView)
-//                        errView.translatesAutoresizingMaskIntoConstraints = true
-//                        errView.frame = (wself?.tableView.bounds)!
-//                        
-//                        weak var werr = errView
-//                        errView.setErrorBk({ () -> Void in
-//                            wself?.fetchExhibitorData()
-//                            werr?.removeFromSuperview()
-//                        })
-//                    }
                }
                 else
                 {
@@ -220,19 +209,49 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
         return subArr.count
     }
     
-    
-    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         
         if tableView != table
         {
-          return nil
+            return 0.0
         }
         if  dataArr[section].count == 0
         {
-          return nil
+            return 0.0
         }
-        return prefixArr![section]
+        return 25
+
     }
+    
+    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if tableView != table
+        {
+            return nil
+        }
+        if  dataArr[section].count == 0
+        {
+            return nil
+        }
+        
+        let head = tableView.dequeueReusableHeaderFooterViewWithIdentifier("TableNoSeparateHeadView") as! TableNoSeparateHeadView
+        head.contentView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        head.contentL.text = prefixArr![section]
+        
+        return head
+
+    }
+//    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        
+//        if tableView != table
+//        {
+//          return nil
+//        }
+//        if  dataArr[section].count == 0
+//        {
+//          return nil
+//        }
+//        return prefixArr![section]
+//    }
     
     
    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {

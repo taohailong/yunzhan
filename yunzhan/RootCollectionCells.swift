@@ -423,7 +423,7 @@ class ActiCollectionCell_One: UICollectionViewCell {
         
         detailL = UILabel()
         detailL.translatesAutoresizingMaskIntoConstraints = false
-        detailL.font = Profile.font(10)
+        detailL.font = Profile.font(11)
         detailL.textColor = Profile.rgb(102, g: 102, b: 102)
         iconView = UIImageView()
         iconView.translatesAutoresizingMaskIntoConstraints = false
@@ -446,13 +446,13 @@ class ActiCollectionCell_One: UICollectionViewCell {
        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(iconView, toItem: self.contentView))
         
         
-        titleL.font = Profile.font(12)
+        titleL.font = Profile.font(13)
         
-        self.contentView.addConstraint(NSLayoutConstraint(item: titleL, attribute: .Bottom, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1, constant: -5))
+        self.contentView.addConstraint(NSLayoutConstraint(item: titleL, attribute: .Bottom, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1, constant: -1))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[titleL]", aView: titleL, bView: nil))
         
     
-        self.contentView.addConstraint(NSLayoutConstraint(item: detailL, attribute: .Top, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1, constant: 5))
+        self.contentView.addConstraint(NSLayoutConstraint(item: detailL, attribute: .Top, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1, constant: 1))
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(detailL, toItem: titleL))
     }
     
@@ -475,18 +475,18 @@ class ActiCollectionCell_Two: ActiCollectionCell_One
     
     override func setSubViewLayout(){
 //    self.backgroundColor = UIColor.redColor()
-        titleL.font = Profile.font(12)
+        titleL.font = Profile.font(13)
         
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[iconView(44)]-15-|", options: [], metrics: nil, views: ["iconView":iconView]))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(iconView, toItem: self.contentView))
 
         
-        self.contentView.addConstraint(NSLayoutConstraint(item: titleL, attribute: .Bottom, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1, constant: -5))
+        self.contentView.addConstraint(NSLayoutConstraint(item: titleL, attribute: .Bottom, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1, constant: -1))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[titleL]", aView: titleL, bView: nil))
         
         
-        self.contentView.addConstraint(NSLayoutConstraint(item: detailL, attribute: .Top, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1, constant: 5))
+        self.contentView.addConstraint(NSLayoutConstraint(item: detailL, attribute: .Top, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1, constant: 1))
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(detailL, toItem: titleL))
  
     }
@@ -511,7 +511,7 @@ class ActiCollectionCell_Three: ActiCollectionCell_One
         
         
         self.contentView.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(detailL, toItem: self.contentView))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-5-[detailL]", aView: titleL, bView: detailL))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-1-[detailL]", aView: titleL, bView: detailL))
 
         
     }
@@ -523,24 +523,29 @@ class ActiCollectionCell_Fourth: ActiCollectionCell_One
 {
     override func setSubViewLayout(){
         
-        titleL.font = Profile.font(11)
+        titleL.font = Profile.font(12)
         titleL.textColor = Profile.rgb(51, g: 51, b: 51)
         
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-9-[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
         self.contentView.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(iconView, toItem: self.contentView))
         
-        
-        
-        
         self.contentView.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(titleL, toItem: self.contentView))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[iconView]-8-[titleL]", aView: iconView, bView: titleL))
         
          detailL.removeFromSuperview()
-//        self.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(detailL, toItem: self))
-//        self.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-5-[detailL]", aView: titleL, bView: detailL))
         
         
     }
+    
+    override func setActivityData(acti: ActivityData) {
+       
+            titleL.text = acti.name
+            if acti.iconUrl != nil
+            {
+                iconView.sd_setImageWithURL(NSURL(string: acti.iconUrl!), placeholderImage: nil)
+            }
+            detailL.text = acti.detail
+        }
 }
 

@@ -7,14 +7,14 @@
 //
 
 import Foundation
-class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate {
+class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UISearchBarDelegate {
     
     var net:NetWorkData!
     var exhibitorArr : [ExhibitorData]!
     var schedulerArr : [SchedulerData]!
     var emptyView:THActivityView?
     var list:[[AnyObject]]!
-    var searchBar:UITextField!
+    var searchBar:UISearchBar!
     var table:UITableView!
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -34,24 +34,28 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         self.view.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         
         let navBack = UIView(frame: CGRectMake(0,0,Profile.width()-30,30))
-        searchBar = UITextField(frame: CGRectMake(0,0,Profile.width()-80,30))
-//        searchBar.keyboardType = .WebSearch
-        searchBar.returnKeyType = .Search
-        searchBar.font = Profile.font(15)
-        searchBar.backgroundColor = UIColor.whiteColor()
+        searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width()-80,30))
         searchBar.delegate = self
-
-        self.view.addSubview(searchBar)
+        searchBar.changeSearchBarBackColor(UIColor.whiteColor())
         
-        let leftView = UIImageView(frame: CGRectMake(5, 0, 15, 15))
-        leftView.image = UIImage(named: "searchVC_search")
         
-        let backLeft = UIView(frame: CGRectMake(0, 0, 25, 15))
-        backLeft.addSubview(leftView)
-        searchBar.leftView = backLeft
-        searchBar.leftViewMode = .Always
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "textFieldTextDidChangeNotification", name: UITextFieldTextDidChangeNotification, object: nil)
+//        searchBar = UITextField(frame: CGRectMake(0,0,Profile.width()-80,30))
+////        searchBar.keyboardType = .WebSearch
+//        searchBar.returnKeyType = .Search
+//        searchBar.font = Profile.font(15)
+//        searchBar.backgroundColor = UIColor.whiteColor()
+//        searchBar.delegate = self
+//        
+//        let leftView = UIImageView(frame: CGRectMake(5, 0, 15, 15))
+//        leftView.image = UIImage(named: "searchVC_search")
+//        
+//        let backLeft = UIView(frame: CGRectMake(0, 0, 25, 15))
+//        backLeft.addSubview(leftView)
+//        searchBar.leftView = backLeft
+//        searchBar.leftViewMode = .Always
+//        
+//        NSNotificationCenter.defaultCenter().addObserver(self, selector: "textFieldTextDidChangeNotification", name: UITextFieldTextDidChangeNotification, object: nil)
         
         navBack.addSubview(searchBar)
         
@@ -66,15 +70,6 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         
         
          self.navigationItem.titleView = navBack
-//        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[searchBar]-70-|", options: [], metrics: nil, views: ["searchBar":searchBar]))
-//        
-//        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-25-[searchBar(30)]", options: [], metrics: nil, views: ["searchBar":searchBar]))
-//        
-       
-//
-//        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[searchBar]-10-[cancelBt]-15-|", options: [], metrics: nil , views: ["searchBar":searchBar,"cancelBt":cancelBt]))
-//        self.view.addConstraint(NSLayoutConstraint.layoutVerticalCenter(cancelBt, toItem: searchBar))
-//        
         
         table = UITableView(frame: CGRectZero, style: .Plain)
         table.delegate = self
@@ -82,34 +77,29 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         table.separatorColor = Profile.rgb(243, g: 243, b: 243)
         table.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         table.registerClass(SearchTableFootCell.self , forCellReuseIdentifier: "SearchTableFootCell")
+        table.registerClass(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "UITableViewHeaderFooterView")
         table.registerClass(TableHeadView.self , forHeaderFooterViewReuseIdentifier: "TableHeadView")
         table.registerClass(SearchExhibitorCell.self, forCellReuseIdentifier: "SearchExhibitorCell")
         table.registerClass(SearchSchedulerCell.self, forCellReuseIdentifier: "SearchSchedulerCell")
         self.view.addSubview(table)
+        
+//        let foot = UIView(frame: CGRectMake(0,Profile.width)
+//        table.tableFooterView =
         table.translatesAutoresizingMaskIntoConstraints = false
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
 //        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[searchBar]-5-[table]-0-|", options: [], metrics: nil, views: ["searchBar":searchBar,"table":table]))
     }
-
-    func textFieldTextDidChangeNotification(){
-      print("change \(searchBar.text)")
-       self.fetchSearchData(searchBar.text!)
-    }
     
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+   
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         self.fetchSearchData(searchBar.text!)
-        return true
     }
-    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        self.fetchSearchData(searchBar.text!)
+        searchBar.resignFirstResponder()
+    }
 
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-        
-        print("s \(string) text \(textField.text)  return type \(textField.returnKeyType.rawValue)")
-        
-        return true
-    }
     
     func fetchSearchData(search:String){
        
@@ -187,7 +177,7 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         
         if indexPath.row == 4
         {
-           return 30
+           return 35
         }
 
         
@@ -207,35 +197,18 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         return 10
     }
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 30
+        return 35
     }
     
     
-//    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-//        
-//        let subArr = list[section]
-//        
-//        if subArr.count < 5
-//        {
-//            return nil
-//        }
-//        
-//        let foot = tableView.dequeueReusableHeaderFooterViewWithIdentifier("SearchTableFootView") as! SearchTableFootView
-//        
-//        if subArr is [ExhibitorData]{
-//        
-//           foot.title.text = "查看更多展商"
-//        }
-//        else
-//        {
-//           foot.title.text = "查看更多日程"
-//        }
-//        
-//        return foot
-//    }
+    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        
+        let foot = tableView.dequeueReusableHeaderFooterViewWithIdentifier("UITableViewHeaderFooterView")
+        foot?.contentView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        return foot
+    }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
         
         let head = tableView.dequeueReusableHeaderFooterViewWithIdentifier("TableHeadView") as! TableHeadView
         head.contentL.textColor = Profile.rgb(153, g: 153, b: 153)
@@ -300,8 +273,6 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         {
             let subVC = SearchListVC()
             
-            let backBt = UIBarButtonItem(title: "", style:.Plain, target: nil, action: nil)
-            self.navigationItem.backBarButtonItem = backBt
             subVC.list = subArr
             self.navigationController?.pushViewController(subVC, animated: true)
               return
@@ -409,7 +380,7 @@ class SearchTableFootCell: UITableViewCell {
         self.contentView.addSubview(title)
         title.translatesAutoresizingMaskIntoConstraints = false
         title.textColor = Profile.rgb(116, g: 158, b: 197)
-        title.font = Profile.font(10)
+        title.font = Profile.font(11)
         
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(title, toItem: self.contentView))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[searchImage]-5-[title]", aView: searchImage, bView: title ))
@@ -421,10 +392,10 @@ class SearchTableFootCell: UITableViewCell {
     }
 }
 
-class SearchListVC: UIViewController,UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate {
+class SearchListVC: UIViewController,UISearchBarDelegate,UITableViewDataSource,UITableViewDelegate {
     var list:[AnyObject]!
     var table:UITableView!
-     var searchBar:UITextField!
+     var searchBar:UISearchBar!
     var searchArr:[AnyObject]!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -434,38 +405,26 @@ class SearchListVC: UIViewController,UITextFieldDelegate,UITableViewDataSource,U
         table.delegate = self
         table.dataSource = self
         table.separatorColor = Profile.rgb(243, g: 243, b: 243)
-        table.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+//        table.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         table.registerClass(SearchTableFootCell.self , forCellReuseIdentifier: "SearchTableFootCell")
         table.registerClass(TableHeadView.self , forHeaderFooterViewReuseIdentifier: "TableHeadView")
         table.registerClass(SearchExhibitorCell.self, forCellReuseIdentifier: "SearchExhibitorCell")
         table.registerClass(SearchSchedulerCell.self, forCellReuseIdentifier: "SearchSchedulerCell")
+        table.registerClass(UITableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "UITableViewHeaderFooterView")
         self.view.addSubview(table)
         table.translatesAutoresizingMaskIntoConstraints = false
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
-
+        table.tableFooterView = UIView()
     }
     
     func creatSearchView()
     {
         let navBack = UIView(frame: CGRectMake(0,0,Profile.width()-60,30))
 //        navBack.backgroundColor = UIColor.redColor()
-        searchBar = UITextField(frame: CGRectMake(0,0,Profile.width()-115,30))
-        searchBar.backgroundColor = UIColor.whiteColor()
+        searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width()-110,30))
         searchBar.delegate = self
-        searchBar.font = Profile.font(15)
-        self.view.addSubview(searchBar)
-        
-        let leftView = UIImageView(frame: CGRectMake(5, 0, 15, 15))
-        leftView.image = UIImage(named: "searchVC_search")
-        
-        let backLeft = UIView(frame: CGRectMake(0, 0, 25, 15))
-        backLeft.addSubview(leftView)
-        searchBar.leftView = backLeft
-        searchBar.leftViewMode = .Always
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "textFieldTextDidChangeNotification", name: UITextFieldTextDidChangeNotification, object: nil)
-        
+        searchBar.changeSearchBarBackColor(UIColor.whiteColor())
         navBack.addSubview(searchBar)
         
         
@@ -476,19 +435,30 @@ class SearchListVC: UIViewController,UITextFieldDelegate,UITableViewDataSource,U
         cancelBt.setTitle("取消", forState: .Normal)
         cancelBt.setTitleColor(Profile.rgb(51, g: 51, b: 51), forState: .Normal)
         cancelBt.addTarget(self, action: "cancelAction", forControlEvents: .TouchUpInside)
-        
+
         
         self.navigationItem.titleView = navBack
+        
+        
+        
+        let backBt = UIBarButtonItem(image: UIImage(named: "nav_back"), style: .Plain, target: self, action: "navPopOut")
+        self.navigationItem.leftBarButtonItem = backBt
+        //            self.navigationItem.backBarButtonItem
+
+    }
+
+    func navPopOut(){
+    
+       self.navigationController?.popViewControllerAnimated(true)
     }
     
-    func textFieldTextDidChangeNotification(){
+    
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
         self.fetchSearchArr(searchBar.text!)
     }
-    
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
         self.fetchSearchArr(searchBar.text!)
-        return true
     }
 
     func fetchSearchArr(searchStr:String){
@@ -558,10 +528,10 @@ class SearchListVC: UIViewController,UITextFieldDelegate,UITableViewDataSource,U
         
         if list == nil
         {
-            tableView.separatorStyle = .None
+//            tableView.separatorStyle = .None
             return 0
         }
-        tableView.separatorStyle = .SingleLine
+//        tableView.separatorStyle = .SingleLine
         return 1
     }
     
@@ -608,12 +578,20 @@ class SearchListVC: UIViewController,UITextFieldDelegate,UITableViewDataSource,U
         
     }
     
-    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 10
-    }
+//    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+//        return 10
+//    }
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 30
+        return 35
     }
+    
+//    func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+//        
+//        let foot = tableView.dequeueReusableHeaderFooterViewWithIdentifier("UITableViewHeaderFooterView")
+//        foot?.contentView.backgroundColor = UIColor.whiteColor()
+//        return foot
+//    }
+
     
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {

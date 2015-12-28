@@ -315,6 +315,7 @@ extension ActivityData{
         self.link = dataDic["link"] as? String
         self.iconUrl = dataDic["icon_url"] as? String
         self.detail = dataDic["descr"] as? String
+//        print(dataDic)
         self.color = (dataDic["ftcolor"] as? String)?.toColor()
     }
 }

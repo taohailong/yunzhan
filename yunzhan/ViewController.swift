@@ -245,7 +245,18 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
                case 3:
                 return  CGSizeMake(Profile.width()/3 - 0.34, 100)
               default:
-                return  CGSizeMake(Profile.width()/4-0.5, 80)
+                
+                
+                let width = Profile.width()/4
+                let f = width - floor(width)
+                if indexPath.row/2 == 0
+                {
+                  return CGSizeMake(width - f , 83)
+                }
+                else
+                {
+                  return CGSizeMake(width + f , 83)
+                }
             }
         }
         else if indexPath.section == 2
@@ -277,13 +288,28 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
 //    水平间距
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
         
-//        if section == 1
-//        {
-//          return 10
-//        }
+        if section == 1 && activityArr != nil
+        {
+         if activityArr.count == 4
+         {
+             return 0.0
+         }
+         
+        }
         return 0.5
     }
-     
+    
+//    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+//     
+//        if section == 1
+//        {
+//            return UIEdgeInsetsZero
+//          return UIEdgeInsetsMake(0, 10, 0, 0)
+//        }
+//        return UIEdgeInsetsZero
+//    }
+    
+    
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell{
     
         

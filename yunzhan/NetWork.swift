@@ -107,10 +107,10 @@ class NetWorkData {
                 {
                   for temp in modle
                   {
-//                    if moduleArr.count == 4
-//                    {
-//                        break
-//                    }
+                    if moduleArr.count == 3
+                    {
+                        break
+                    }
                     let a = ActivityData(dataDic: temp)
                     moduleArr.append(a)
                   }

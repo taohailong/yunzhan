@@ -8,6 +8,28 @@
 
 import Foundation
 
+
+class TableNoSeparateHeadView: UITableViewHeaderFooterView {
+    
+    let contentL:UILabel
+    
+    override init(reuseIdentifier: String?) {
+        contentL = UILabel()
+        contentL.translatesAutoresizingMaskIntoConstraints = false
+        super.init(reuseIdentifier: reuseIdentifier)
+        self.contentView.addSubview(contentL)
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[contentL]", aView: contentL, bView: nil))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(contentL, toItem: self.contentView))
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+
+
 class TableHeadView: UITableViewHeaderFooterView {
     let contentL:UILabel
     override init(reuseIdentifier: String?) {
@@ -18,7 +40,15 @@ class TableHeadView: UITableViewHeaderFooterView {
         
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[contentL]", aView: contentL, bView: nil))
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(contentL, toItem: self.contentView))
-
+        
+        let separateView = UIView(frame: CGRectMake(15,self.contentView.frame.size.height-1,0.5,self.contentView.frame.width - 15))
+        separateView.translatesAutoresizingMaskIntoConstraints = false
+        separateView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        self.contentView.addSubview(separateView)
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[separateView]-0-|", options: [], metrics: nil, views: ["separateView":separateView]))
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[separateView(0.5)]-1-|", options: [], metrics: nil, views: ["separateView":separateView]))
     }
 
     required init?(coder aDecoder: NSCoder) {

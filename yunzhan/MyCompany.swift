@@ -17,7 +17,7 @@ class MyCompanyVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.view.backgroundColor = UIColor.whiteColor()
         self.title = "相关推荐"
 
         segmentV = TSegmentedControl(sectionTitles: ["装修公司","酒店住宿"])
@@ -227,6 +227,7 @@ class CompanyVC: UIViewController,UITableViewDataSource,UITableViewDelegate {
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         
         table.separatorColor = Profile.rgb(243, g: 243, b: 243)
+        table.tableFooterView = UIView(frame: CGRectMake(0,0,0,0))
 //        table.registerClass(MoreTableHeadView.self, forHeaderFooterViewReuseIdentifier: "MoreTableHeadView")
         table.registerClass(CompanyCell.self , forCellReuseIdentifier: "CompanyCell")
         table.registerClass(HotelCell.self, forCellReuseIdentifier: "HotelCell")

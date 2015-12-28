@@ -30,6 +30,7 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
         table = UITableView(frame: CGRectZero, style: .Grouped)
         table.delegate = self
         table.dataSource = self
+        table.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         table.translatesAutoresizingMaskIntoConstraints = false
         table.registerClass(TimeLineContentCell.self , forCellReuseIdentifier: "TimeLineContentCell")
         table.registerClass(TimeLinePicCell.self , forCellReuseIdentifier: "TimeLinePicCell")
@@ -241,7 +242,10 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
         if indexPath.row == 0
         {
             let cell = tableView.dequeueReusableCellWithIdentifier("TimeLinePersonCell") as! TimeLinePersonCell
-            
+//            cell.contentView.layer.shadowColor = UIColor.redColor().CGColor
+//            cell.contentView.layer.shadowOffset = CGSizeMake(0, 1)
+//            cell.contentView.layer.shadowOpacity = 1
+//            cell.contentView.clipsToBounds = false
             cell.filPersonInfo(nil, name: element.personName, title: element.personTitle, time: element.time)
             return cell
 
@@ -250,6 +254,13 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
         {
             
             let cell = tableView.dequeueReusableCellWithIdentifier("TimeLineContentCell") as! TimeLineContentCell
+            cell.separatorInset = UIEdgeInsetsMake(0, Profile.width(), 0, 0)
+            if #available(iOS 8.0, *) {
+                cell.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0)
+            } else {
+                // Fallback on earlier versions
+            }
+
             cell.contentL.text = element.comment
             return cell
 
@@ -307,7 +318,6 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
             commentInfo.timeData = element
             commentInfo.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(commentInfo, animated: true)
-            
         }
         
     }
@@ -458,7 +468,16 @@ class TimeLinePicCell:UITableViewCell {
     
     func setSubViewLayout(){
     
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[picImageV]-15-|", options: [], metrics: nil, views: ["picImageV":picImageV]))
+        
+        let shaw = UIView()
+        shaw.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(shaw)
+        shaw.backgroundColor = Profile.rgb(229, g: 229, b: 229)
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[shaw]-0-|", options: [], metrics: nil, views: ["shaw":shaw]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[shaw(0.5)]-0-|", options: [], metrics: nil, views: ["shaw":shaw]))
+        
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[picImageV]-10-|", options: [], metrics: nil, views: ["picImageV":picImageV]))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-8-[picImageV]-8-|", options: [], metrics: nil, views: ["picImageV":picImageV]))
         //        self.contentView.addConstraints(NSLayoutConstraint.layoutHorizontalFull(picImageV))
         self.selectionStyle = .None
@@ -595,7 +614,51 @@ class TimeLineStatusCell: UITableViewCell {
         } else {
                         // Fallback on earlier versions
         }
+//
+        let bottomCA = CALayer()
+        bottomCA.frame = CGRectMake(3, 40, Profile.width()-3, 0.5)
+        bottomCA.backgroundColor = Profile.rgb(229, g: 229, b: 229).CGColor
+        self.contentView.layer.addSublayer(bottomCA)
+        
+        
+        
+        let shaw = UIView()
+        shaw.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(shaw)
+        shaw.backgroundColor = Profile.rgb(229, g: 229, b: 229)
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[shaw]-0-|", options: [], metrics: nil, views: ["shaw":shaw]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[shaw(0.5)]-0-|", options: [], metrics: nil, views: ["shaw":shaw]))
 
+        
+        
+//        bottomCA.shadowColor = UIColor.blackColor().CGColor
+//        bottomCA.shadowOffset = CGSizeMake(1, 1)
+//        bottomCA.shadowRadius = 1
+//        bottomCA.shadowOpacity = 0.2
+        
+        
+//        let leftCA = CALayer()
+//        leftCA.frame = CGRectMake(<#T##x: CGFloat##CGFloat#>, <#T##y: CGFloat##CGFloat#>, <#T##width: CGFloat##CGFloat#>, <#T##height: CGFloat##CGFloat#>)
+        
+        
+        
+//        let leftCA = CALayer()
+//        leftCA.frame = CGRectMake(Profile.width, <#T##y: CGFloat##CGFloat#>, <#T##width: CGFloat##CGFloat#>, <#T##height: CGFloat##CGFloat#>)
+        
+//        self.contentView.layer.shadowColor = UIColor.blackColor().CGColor
+////        self.contentView.layer.shadowOffset = CGSizeMake(<#T##width: CGFloat##CGFloat#>, <#T##height: CGFloat##CGFloat#>)
+//        self.contentView.layer.shadowRadius = 1
+//        self.contentView.layer.shadowOpacity = 0.5
+//        let path = UIBezierPath(rect: CGRectMake(3, 40, Profile.width(), 0.5))
+//        let left_bottom = CGPointMake(0, 40)
+//        let right_bottom = CGPointMake(Profile.width(), 40)
+//        let right_top = CGPointMake(Profile.width(), 0)
+//        
+//        path.moveToPoint(left_bottom)
+//        path.addLineToPoint(right_bottom)
+//        path.addLineToPoint(right_top)
+//        self.contentView.layer.shadowPath = path.CGPath
+        
     }
 
     func favoriteAction(){
@@ -678,6 +741,16 @@ class TimeLinePersonCell: UITableViewCell {
     
     func setSubViewLayout(){
     
+        
+        
+        let shaw = UIView()
+        shaw.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(shaw)
+        shaw.backgroundColor = Profile.rgb(229, g: 229, b: 229)
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-3-[shaw]-0-|", options: [], metrics: nil, views: ["shaw":shaw]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[shaw(0.5)]-0-|", options: [], metrics: nil, views: ["shaw":shaw]))
+
+        
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-8-[userPicV(33)]", options: [], metrics: nil, views: ["userPicV":userPicV]))
         
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[userPicV(33)]", options: [], metrics: nil, views: ["userPicV":userPicV]))
@@ -705,7 +778,7 @@ class TimeLinePersonCell: UITableViewCell {
             
             if title != nil
             {
-              attribute.appendAttributedString(NSAttributedString(string:" -\(title!)" , attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)]))
+              attribute.appendAttributedString(NSAttributedString(string:" -\(title!)" , attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(250, g: 250, b: 250)]))
             }
             
             nameL.attributedText = attribute
@@ -725,7 +798,7 @@ class TimeLineContentCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         contentL = UILabel()
-        contentL.textColor = Profile.rgb(153, g: 153, b: 153)
+        contentL.textColor = Profile.rgb(102, g: 102, b: 102)
 //        contentL.backgroundColor = UIColor.redColor()
         contentL.font = Profile.font(12)
         contentL.numberOfLines = 0
@@ -746,6 +819,14 @@ class TimeLineContentCell: UITableViewCell {
     
     func setSubViewLayout(){
     
+        let shaw = UIView()
+        shaw.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(shaw)
+        shaw.backgroundColor = Profile.rgb(229, g: 229, b: 229)
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[shaw]-0-|", options: [], metrics: nil, views: ["shaw":shaw]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[shaw(0.5)]-0-|", options: [], metrics: nil, views: ["shaw":shaw]))
+
+        
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-8-[contentL]-8-|", aView: contentL, bView: nil))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-2-[contentL]-5-|", aView: contentL, bView: nil))
     }

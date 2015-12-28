@@ -28,11 +28,11 @@ class Profile
     
     static let NavBarColor = { return  UIColor(red: 219/255.0, green: 0/255.0, blue: 52/255.0, alpha: 1.0) }
     
-    #if DEBUG
-//    #if ENTERPISE
-    static let domain = "www.zhangzhantong.com"
-    #else
+//    #if DEBUG
+    #if true
     static let domain = "123.56.102.224"
+    #else
+    static let domain = "www.zhangzhantong.com"
     #endif
     
     static let NavTitleColor = {return UIColor.whiteColor() }
@@ -232,18 +232,17 @@ extension String {
         let bString = cString.substringWithRange(range)
         
         // Scan values
-        var r = 0.0
-        var g = 0.0
-        var b = 0.0
+        var r:UInt32 = 0
+        var g:UInt32 = 0
+        var b:UInt32 = 0
+        NSScanner(string: rString).scanHexInt(&r)
+        NSScanner(string: gString).scanHexInt(&g)
+        NSScanner(string: bString).scanHexInt(&b)
         
-        NSScanner(string: rString).scanDouble(&r)
-         NSScanner(string: gString).scanDouble(&g)
-         NSScanner(string: bString).scanDouble(&b)
-        
-        r = r/255.0
-        g = g/255.0
-        b = b/255.0
-        return UIColor(red: CGFloat(r), green: CGFloat(g) , blue: CGFloat(b), alpha: 1)
+       let r_6 =  Double(UInt64(r))/255.0
+       let g_6 = Double(UInt64(g))/255.0
+       let b_6 = Double(UInt64(b))/255.0
+        return UIColor(red: CGFloat(r_6), green: CGFloat(g_6) , blue: CGFloat(b_6), alpha: 1)
     }
     
     
@@ -293,6 +292,27 @@ extension String {
     }
 }
 
+
+
+
+extension UISearchBar {
+
+    func changeSearchBarBackColor(let color:UIColor){
+        
+        let subViews = self.subviews[0].subviews
+        let first = subViews[0]
+        first.removeFromSuperview()
+        
+        let textV = subViews[subViews.count - 1]
+        
+        if textV is UITextField
+        {
+            textV.backgroundColor = color
+        }
+        
+    }
+
+}
 
 
 
