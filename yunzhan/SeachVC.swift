@@ -16,10 +16,15 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     var list:[[AnyObject]]!
     var searchBar:UISearchBar!
     var table:UITableView!
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         let application = UIApplication.sharedApplication()
         application.setStatusBarStyle(.Default, animated: true)
+    }
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.navigationController?.navigationBar.tintColor = Profile.rgb(102, g: 102, b: 102)
         searchBar.becomeFirstResponder()
     }
     
@@ -39,23 +44,6 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         searchBar.changeSearchBarBackColor(UIColor.whiteColor())
         
         
-        
-//        searchBar = UITextField(frame: CGRectMake(0,0,Profile.width()-80,30))
-////        searchBar.keyboardType = .WebSearch
-//        searchBar.returnKeyType = .Search
-//        searchBar.font = Profile.font(15)
-//        searchBar.backgroundColor = UIColor.whiteColor()
-//        searchBar.delegate = self
-//        
-//        let leftView = UIImageView(frame: CGRectMake(5, 0, 15, 15))
-//        leftView.image = UIImage(named: "searchVC_search")
-//        
-//        let backLeft = UIView(frame: CGRectMake(0, 0, 25, 15))
-//        backLeft.addSubview(leftView)
-//        searchBar.leftView = backLeft
-//        searchBar.leftViewMode = .Always
-//        
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector: "textFieldTextDidChangeNotification", name: UITextFieldTextDidChangeNotification, object: nil)
         
         navBack.addSubview(searchBar)
         
@@ -397,6 +385,7 @@ class SearchListVC: UIViewController,UISearchBarDelegate,UITableViewDataSource,U
     var table:UITableView!
      var searchBar:UISearchBar!
     var searchArr:[AnyObject]!
+    var emptyView:THActivityView?
     override func viewDidLoad() {
         super.viewDidLoad()
         self.creatSearchView()
@@ -463,59 +452,81 @@ class SearchListVC: UIViewController,UISearchBarDelegate,UITableViewDataSource,U
 
     func fetchSearchArr(searchStr:String){
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
-            
-            if let tempArr = self.list as? [ExhibitorData]
-            {
-               var allData = [ExhibitorData]()
-               for element in tempArr
-               {
-                   let name = element.name! as NSString
-                   let rang = name.rangeOfString(searchStr)
-                   if rang.location == NSNotFound
-                   {
-                      continue
-                   }
-                   let att = NSMutableAttributedString(string: element.name!, attributes: [NSForegroundColorAttributeName:UIColor.blackColor(),NSFontAttributeName: Profile.font(16)])
+        if searchStr.isEmpty == true
+        {
+          return
+        }
+        
+        
+        if list is [ExhibitorData]
+        {
+          weak var wself = self
+          let net = NetWorkData()
+            net.searchExhibitor(searchStr, block: { (result, status) -> (Void) in
                 
-                   att.addAttributes([NSForegroundColorAttributeName:UIColor.redColor()], range: rang)
-                   element.searchAttribute = att
-                   allData.append(element)
-                }
-                self.searchArr = allData
-            }
-            else
-            {
-                let tempArr = self.list as! [SchedulerData]
-                var allData = [SchedulerData]()
-                
-                for element in tempArr
+                if wself?.emptyView?.superview != nil
                 {
-                    let name = element.title! as NSString
-                    let rang = name.rangeOfString(searchStr)
-                    if rang.location == NSNotFound
-                    {
-                        continue
-                    }
-                    let att = NSMutableAttributedString(string: element.title!, attributes: [NSForegroundColorAttributeName:UIColor.blackColor(),NSFontAttributeName: Profile.font(15)])
-                    
-                    att.addAttributes([NSForegroundColorAttributeName:UIColor.redColor()], range: rang)
-                    element.searchAttribute = att
-                    allData.append(element)
+                    wself?.emptyView?.removeFromSuperview()
                 }
 
-                self.searchArr = allData
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            
-                if self.searchArr.count == 0{
                 
-                
+                if status == .NetWorkStatusError
+                {
+                    if let string = result as? String
+                    {
+                        let warnV = THActivityView(string: string)
+                        warnV.show()
+                    }
                 }
-                self.table.reloadData()
+
+                if let earr = result as? [ExhibitorData]
+                {
+                   wself?.getSearchDataBack(earr)
+                }
             })
+            net.start()
         }
+        else
+        {
+            
+            weak var wself = self
+            let net = NetWorkData()
+            net.searchScheduler(searchStr, block: { (result, status) -> (Void) in
+                
+                if status == .NetWorkStatusError
+                {
+                    if let string = result as? String
+                    {
+                        let warnV = THActivityView(string: string)
+                        warnV.show()
+                    }
+                }
+                
+                if let earr = result as? [SchedulerData]
+                {
+                    wself?.getSearchDataBack(earr)
+                }
+            })
+            net.start()
+
+        }
+    }
+    
+    func getSearchDataBack(arr:[AnyObject])
+    {
+        
+        if self.emptyView?.superview != nil
+        {
+            self.emptyView?.removeFromSuperview()
+        }
+
+        if arr.count == 0
+        {
+           self.emptyView = THActivityView(emptyDataWarnViewWithString: "没有搜索到相关内容", withImage: "noSearchData", withSuperView: self.view)
+        }
+        
+        self.searchArr = arr
+        self.table.reloadData()
     }
     
     func cancelAction(){

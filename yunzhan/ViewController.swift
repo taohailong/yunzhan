@@ -482,7 +482,13 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         
         if indexPath.section == 1
         {
-        
+            let act = activityArr[indexPath.row]
+            if act.name == "展位图"
+            {
+               let mapVC = ExhibitorMapVC()
+                mapVC.hidesBottomBarWhenPushed = true
+               self.navigationController?.pushViewController(mapVC, animated: true)
+            }
         
         }
         

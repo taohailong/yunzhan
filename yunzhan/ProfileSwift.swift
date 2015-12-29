@@ -314,5 +314,20 @@ extension UISearchBar {
 
 }
 
+extension UINavigationBar{
 
+    func navBarWhiteBackGround(){
+    
+        self.tintColor = Profile.rgb(102, g: 102, b: 102)
+        self.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor(),NSFontAttributeName:Profile.font(18)]
+        self.barTintColor = UIColor.whiteColor()
+    }
+
+    func navBarGenuineBackGround(){
+      
+        self.tintColor = UIColor.whiteColor()
+        self.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor(),NSFontAttributeName:Profile.font(18)]
+        self.barTintColor = Profile.NavBarColor()
+    }
+}
 

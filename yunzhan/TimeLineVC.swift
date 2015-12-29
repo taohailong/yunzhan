@@ -117,9 +117,7 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
             
         }
         net.start()
-        
   }
-    
     
     func loadMoreData(){
        
@@ -456,8 +454,7 @@ class TimeLinePicCell:UITableViewCell {
         picImageV.image = UIImage(named: "default_big")
         picImageV.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         picImageV.contentMode = .Center
-        
-        
+    
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.contentView.addSubview(picImageV)
@@ -494,7 +491,6 @@ class TimeLinePicCell:UITableViewCell {
     {
        if url != nil
        {
-//           picImageV.sd_setImageWithURL(NSURL(string: url!), placeholderImage: nil ,complete)
         weak var wimage = picImageV
         picImageV.contentMode = .Center
         

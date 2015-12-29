@@ -250,8 +250,6 @@ class MyExhibitorList: Exhibitor {
                 if wself != nil
                 {
                     _ = THActivityView(emptyDataWarnViewWithString: "您还没有收藏展商", withImage: "noExhibitorData", withSuperView: wself?.view)
-//                    nodataV.translatesAutoresizingMaskIntoConstraints  = true
-//                    nodataV.frame = (wself?.view.bounds)!
                 }
                 return
             }

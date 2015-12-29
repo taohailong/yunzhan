@@ -401,7 +401,7 @@ class CollectionActView: UICollectionViewCell {
 //        
 //        timeL.text = data.time
 //        dateL.text = data.date
-        titleL.text = "\(data.date)-\(data.time)"
+        titleL.text = "\(data.date) \(data.time)"
         introduce.text = data.title
 //        address.text = data.address
     }

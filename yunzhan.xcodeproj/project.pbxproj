@@ -85,6 +85,8 @@
 		C79546E71BFF0D0A0080CD46 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F4B1BFDD99C00339623 /* CoreTelephony.framework */; };
 		C79546E81BFF0D730080CD46 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F4F1BFDDA0800339623 /* SystemConfiguration.framework */; };
 		C79546E91BFF0DCF0080CD46 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F561BFDDEDC00339623 /* libc++.tbd */; };
+		C79880511C3221D700557880 /* ExhibitorMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79880501C3221D700557880 /* ExhibitorMap.swift */; };
+		C79880521C3221D700557880 /* ExhibitorMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79880501C3221D700557880 /* ExhibitorMap.swift */; };
 		C79E545C1BE9B79100E4A514 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79E545B1BE9B79100E4A514 /* Scheduler.swift */; };
 		C79E545D1BE9B79100E4A514 /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79E545B1BE9B79100E4A514 /* Scheduler.swift */; };
 		C79E545F1BE9DCB800E4A514 /* RootCollectionCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79E545E1BE9DCB800E4A514 /* RootCollectionCells.swift */; };
@@ -178,6 +180,7 @@
 		C79546E01BFEBCE30080CD46 /* TimeLineVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineVC.swift; sourceTree = "<group>"; };
 		C79546E31BFEC3D80080CD46 /* TSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSegmentedControl.h; sourceTree = "<group>"; };
 		C79546E41BFEC3D80080CD46 /* TSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSegmentedControl.m; sourceTree = "<group>"; };
+		C79880501C3221D700557880 /* ExhibitorMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitorMap.swift; sourceTree = "<group>"; };
 		C79E545B1BE9B79100E4A514 /* Scheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Scheduler.swift; sourceTree = "<group>"; };
 		C79E545E1BE9DCB800E4A514 /* RootCollectionCells.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootCollectionCells.swift; sourceTree = "<group>"; };
 		C79E54611BE9E47400E4A514 /* DataModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataModel.swift; sourceTree = "<group>"; };
@@ -296,6 +299,7 @@
 				C7A9629B1BF32F01003B883A /* WebHtml.swift */,
 				C77E1DB21BE0AEE600B8F444 /* ProfileSwift.swift */,
 				C79E54641BE9FED500E4A514 /* NetWork.swift */,
+				C79880501C3221D700557880 /* ExhibitorMap.swift */,
 				C79E54611BE9E47400E4A514 /* DataModel.swift */,
 				C7C0EABB1BF09CA2004711BF /* ContactsController.swift */,
 				C779C0FF1BF43917008D625F /* Singleton.swift */,
@@ -563,6 +567,7 @@
 				C77C402E1C040285005596E0 /* TimeLineInfo.swift in Sources */,
 				C79546E51BFEC3D80080CD46 /* TSegmentedControl.m in Sources */,
 				C78509961C1FBF2600D3C7D1 /* OrientationTabBarControll.swift in Sources */,
+				C79880511C3221D700557880 /* ExhibitorMap.swift in Sources */,
 				C763D3EC1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */,
 				C79285711BEAF65B00287A24 /* NewsView.swift in Sources */,
 				C78EA5561C1189A2007798E2 /* THLScrollLoadView.m in Sources */,
@@ -611,6 +616,7 @@
 				C77C402F1C040285005596E0 /* TimeLineInfo.swift in Sources */,
 				C79546E61BFEC3D80080CD46 /* TSegmentedControl.m in Sources */,
 				C78509971C1FBF2600D3C7D1 /* OrientationTabBarControll.swift in Sources */,
+				C79880521C3221D700557880 /* ExhibitorMap.swift in Sources */,
 				C763D3ED1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */,
 				C7A9629D1BF32F01003B883A /* WebHtml.swift in Sources */,
 				C78EA5571C1189A2007798E2 /* THLScrollLoadView.m in Sources */,

@@ -10,6 +10,7 @@ import Foundation
 
 class PicData:NSObject,RepeatScrollProtocol {
     
+    var title:String?
     let id:String?
     let  url:String?
     init(id:String?, url:String?)
@@ -246,6 +247,27 @@ class TimeMessage {
     var contentHeight:Float?
     var id:String?
     var favorited:Bool?
+    
+    func setPicSize(heigth_p:Double?,width_p:Double?)
+    {
+        var scale = 0.0
+        if let width = width_p
+        {
+            if let height = heigth_p
+            {
+                if width != 0
+                {
+                    scale =  height / width
+                    self.picHeight = Double(Profile.width()) * scale
+                }
+                else
+                {
+                    //                            当width 为0时
+                    self.picHeight = 300.0
+                }
+            }
+        }
+    }
     func figureOutContentHeight(size:CGSize,font:UIFont) ->Float{
         
         if comment?.isEmpty == true

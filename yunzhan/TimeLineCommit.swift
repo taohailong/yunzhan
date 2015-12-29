@@ -114,7 +114,7 @@ class TimeLineCommitVC: UIViewController,UIActionSheetDelegate,UIImagePickerCont
         
        weak var wself = self
         net = NetWorkData()
-        net.loadUpImage(UIImagePNGRepresentation(scaleImage)!, comment: textV.text!, block: { (result, status) -> (Void) in
+        net.loadUpImage(UIImageJPEGRepresentation(scaleImage, 1)!, comment: textV.text!, block: { (result, status) -> (Void) in
             loadV.removeFromSuperview()
            if status == .NetWorkStatusError
            {

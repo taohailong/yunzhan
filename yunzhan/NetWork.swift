@@ -30,8 +30,82 @@ class NetWorkData {
         //      net = AFHTTPRequestOperation()
     }
     
-    
+    func searchScheduler(searchStr:String,block:NetBlock)
+    {
+       var url = "http://\(Profile.domain)/api/app/schedule/search?eid=1&name=\(searchStr)"
+        
+       url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: .NetWorkStatusError)
+                return
+            }
+            guard let data = result as? [String:AnyObject],let t  = data["data"] as? [[String:AnyObject]]  else {
+                block(result: "数据参数错误", status: .NetWorkStatusError)
+                return
+            }
+            print(result)
+            var schedulerArr = [SchedulerData]()
+            
+            for temp in t
+            {
+                let s = SchedulerData(rootDic: temp)
+                if s != nil
+                {
+                    let name = s!.title! as NSString
+                    let rang = name.rangeOfString(searchStr)
+                    let att = NSMutableAttributedString(string: (s?.title!)!, attributes: [NSForegroundColorAttributeName:UIColor.blackColor(),NSFontAttributeName: Profile.font(15)])
+                    
+                    att.addAttributes([NSForegroundColorAttributeName:UIColor.redColor()], range: rang)
+                    s?.searchAttribute = att
+                    schedulerArr.append(s!)
+                }
+            }
+            block(result: schedulerArr, status: .NetWorkStatusSucess)
+        }
 
+    }
+
+    
+    func searchExhibitor(searchStr:String,block:NetBlock){
+    
+        var url = "http://\(Profile.domain)/api/app/buz/search?eid=1&name=\(searchStr)"
+        
+        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: .NetWorkStatusError)
+                return
+            }
+            guard let data = result as? [String:AnyObject],let t  = data["data"] as? [[String:AnyObject]]  else {
+                block(result: "数据参数错误", status: .NetWorkStatusError)
+                return
+            }
+            
+            var exhibitorArr = [ExhibitorData]()
+            
+            for temp in t
+            {
+                let e = ExhibitorData(rootDic: temp)
+                let name = e.name! as NSString
+                let rang = name.rangeOfString(searchStr)
+                let att = NSMutableAttributedString(string: e.name!, attributes: [NSForegroundColorAttributeName:UIColor.blackColor(),NSFontAttributeName: Profile.font(16)])
+                
+                att.addAttributes([NSForegroundColorAttributeName:UIColor.redColor()], range: rang)
+                e.searchAttribute = att
+                exhibitorArr.append(e)
+            }
+
+            block(result: exhibitorArr, status: .NetWorkStatusSucess)
+        }
+
+    }
+    
+    
     
     func getRootData(block: NetBlock){
     
@@ -57,7 +131,7 @@ class NetWorkData {
                 var exhibitorArr = [ExhibitorData]()
                 for temp in list
                 {
-                     let data = ExhibitorData(rootDic: temp)
+                    let data = ExhibitorData(rootDic: temp)
                     exhibitorArr.append(data)
                 }
                 
@@ -107,10 +181,10 @@ class NetWorkData {
                 {
                   for temp in modle
                   {
-                    if moduleArr.count == 3
-                    {
-                        break
-                    }
+//                    if moduleArr.count == 3
+//                    {
+//                        break
+//                    }
                     let a = ActivityData(dataDic: temp)
                     moduleArr.append(a)
                   }
@@ -977,6 +1051,7 @@ class NetWorkData {
                         }
                         else
                         {
+//                            当width 为0时
                           m.picHeight = 300.0
                         }
                     }
@@ -986,7 +1061,7 @@ class NetWorkData {
                 m.figureOutContentHeight(CGSizeMake(Profile.width()-46, 1000), font: Profile.font(12))
                 if let time = temp["create_time"] as? Int
                 {
-                    m.time = time.toTimeString("MM/dd-HH:mm")
+                    m.time = time.toTimeString("MM/dd HH:mm")
                 }
                 if let id = temp["id"] as? Int
                 {
@@ -1317,6 +1392,36 @@ class NetWorkData {
     
     
     
+    func getExhibitorMap(block:NetBlock){
+    
+       let url = "http://\(Profile.domain)/api/app/exhibition/boothpics?eid=1&chn=ios"
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: .NetWorkStatusError)
+                return
+            }
+            guard let data = result as? [String:AnyObject],let dataDic = data["data"] as? [[String:AnyObject]] else {
+                block(result: "数据参数错误", status: .NetWorkStatusError)
+                return
+            }
+            
+            var mapArr = [TimeMessage]()
+            for temp in dataDic
+            {
+                let m = TimeMessage()
+                m.personTitle = temp["name"] as? String
+                m.setPicSize(temp["height"] as? Double, width_p: temp["width"] as? Double)
+                m.picThumbUrl = temp["pic_url"] as? String
+                mapArr.append(m)
+            }
+            
+            block(result: mapArr, status: .NetWorkStatusSucess)
+        }
+    
+    }
+    
     func getGlobalSearchResult(let search:String,block:NetBlock){
     
         var url = "http://\(Profile.domain)/api/app/exhibition/search?eid=1&name=\(search)&chn=ios"
@@ -1397,12 +1502,9 @@ class NetWorkData {
             }
             block(result: compound, status: .NetWorkStatusSucess)
         }
-
-    
-    
     }
     
-    
+
     
     func getMethodRequest(url:String,completeBlock:NetBlock){
         
