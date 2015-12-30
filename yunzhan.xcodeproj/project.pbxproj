@@ -107,6 +107,8 @@
 		C7C0EABD1BF09CA2004711BF /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C0EABB1BF09CA2004711BF /* ContactsController.swift */; };
 		C7C3C35C1C195A1E0083F3A1 /* RepeatScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C3C35B1C195A1E0083F3A1 /* RepeatScrollView.m */; };
 		C7C3C35D1C195A1E0083F3A1 /* RepeatScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C3C35B1C195A1E0083F3A1 /* RepeatScrollView.m */; };
+		C7DC59911C33CD4800EFED5A /* OrderFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DC59901C33CD4800EFED5A /* OrderFile.swift */; };
+		C7DC59921C33CD4800EFED5A /* OrderFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DC59901C33CD4800EFED5A /* OrderFile.swift */; };
 		C7F0AE3C1BE210C70056C06B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77E1D9E1BE09EDA00B8F444 /* ViewController.swift */; };
 		C7F0AE3D1BE210C70056C06B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77E1D9C1BE09EDA00B8F444 /* AppDelegate.swift */; };
 		C7F0AE3E1BE210C70056C06B /* test.m in Sources */ = {isa = PBXBuildFile; fileRef = C77E1DB01BE0ADD400B8F444 /* test.m */; };
@@ -194,6 +196,7 @@
 		C7C0EABB1BF09CA2004711BF /* ContactsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsController.swift; sourceTree = "<group>"; };
 		C7C3C35A1C195A1E0083F3A1 /* RepeatScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepeatScrollView.h; sourceTree = "<group>"; };
 		C7C3C35B1C195A1E0083F3A1 /* RepeatScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepeatScrollView.m; sourceTree = "<group>"; };
+		C7DC59901C33CD4800EFED5A /* OrderFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderFile.swift; sourceTree = "<group>"; };
 		C7F0AE4A1BE210C70056C06B /* yunzhan copy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "yunzhan copy.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7F0AE4B1BE210C80056C06B /* yunzhan copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "yunzhan copy-Info.plist"; path = "/Users/taohailong/Desktop/yunzhan/yunzhan copy-Info.plist"; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
@@ -299,6 +302,7 @@
 				C7A9629B1BF32F01003B883A /* WebHtml.swift */,
 				C77E1DB21BE0AEE600B8F444 /* ProfileSwift.swift */,
 				C79E54641BE9FED500E4A514 /* NetWork.swift */,
+				C7DC59901C33CD4800EFED5A /* OrderFile.swift */,
 				C79880501C3221D700557880 /* ExhibitorMap.swift */,
 				C79E54611BE9E47400E4A514 /* DataModel.swift */,
 				C7C0EABB1BF09CA2004711BF /* ContactsController.swift */,
@@ -568,6 +572,7 @@
 				C79546E51BFEC3D80080CD46 /* TSegmentedControl.m in Sources */,
 				C78509961C1FBF2600D3C7D1 /* OrientationTabBarControll.swift in Sources */,
 				C79880511C3221D700557880 /* ExhibitorMap.swift in Sources */,
+				C7DC59911C33CD4800EFED5A /* OrderFile.swift in Sources */,
 				C763D3EC1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */,
 				C79285711BEAF65B00287A24 /* NewsView.swift in Sources */,
 				C78EA5561C1189A2007798E2 /* THLScrollLoadView.m in Sources */,
@@ -617,6 +622,7 @@
 				C79546E61BFEC3D80080CD46 /* TSegmentedControl.m in Sources */,
 				C78509971C1FBF2600D3C7D1 /* OrientationTabBarControll.swift in Sources */,
 				C79880521C3221D700557880 /* ExhibitorMap.swift in Sources */,
+				C7DC59921C33CD4800EFED5A /* OrderFile.swift in Sources */,
 				C763D3ED1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */,
 				C7A9629D1BF32F01003B883A /* WebHtml.swift in Sources */,
 				C78EA5571C1189A2007798E2 /* THLScrollLoadView.m in Sources */,
@@ -748,7 +754,7 @@
 					"DEBUG=1",
 				);
 				INFOPLIST_FILE = yunzhan/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -773,7 +779,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Wuxi Chestnut Company Limited (F86GF7VY4V)";
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = yunzhan/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -802,7 +808,7 @@
 					"DEBUG=1",
 				);
 				INFOPLIST_FILE = "yunzhan copy-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -832,7 +838,7 @@
 					"ENTERPISE=1",
 				);
 				INFOPLIST_FILE = "yunzhan copy-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

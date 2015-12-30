@@ -80,3 +80,57 @@ class MoreTableFootView: UIView {
 }
 
 
+class THTextView: UITextView {
+    private let placeHoderL:UILabel
+    var placeHolder:String?
+    var placeHolderColor:UIColor = UIColor.lightGrayColor()
+    override init(frame: CGRect, textContainer: NSTextContainer?) {
+        
+        placeHoderL = UILabel(frame: CGRectMake(0,0,0,0))
+        placeHoderL.textColor = UIColor.clearColor()
+        placeHoderL.font = UIFont.systemFontOfSize(15)
+        super.init(frame: frame, textContainer: textContainer)
+        self.addSubview(placeHoderL)
+        
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "textChanged:", name: UITextViewTextDidChangeNotification , object: self)
+        
+    }
+
+
+    
+    func textChanged(let textV:UITextView)
+    {
+//       if self != textV
+//       {
+//         return
+//       }
+       if self.text.isEmpty != true
+       {
+          placeHoderL.hidden = true
+        }
+        else
+       {
+          placeHoderL.hidden = false
+        }
+    }
+    
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.placeHoderL.frame = CGRectMake(8, 5, self.frame.size.width - 16, 18)
+        placeHoderL.text = placeHolder
+        placeHoderL.textColor = placeHolderColor
+    }
+    
+    deinit
+    {
+       NSNotificationCenter.defaultCenter().removeObserver(self)
+    
+    }
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+}
+

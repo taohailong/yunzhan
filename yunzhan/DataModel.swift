@@ -202,10 +202,13 @@ extension ExhibitorData{
 
 
 class ProductData {
+    var exhibitorID:String?
     let imageUrl:String?
     let productId:String?
     let name:String?
     var introduce:String?
+    var remark:String?
+    var createrName:String?
     var picArr:[PicData]?
     init(imageUrl:String?,id:String?,name:String?)
     {
@@ -341,4 +344,14 @@ extension ActivityData{
         self.color = (dataDic["ftcolor"] as? String)?.toColor()
     }
 }
+
+
+//class ProductData {
+//    var exhibitorName:String?
+//    var productName:String?
+//    var remark:String?
+//    var picUrl:String?
+//    var productIntroduct:String?
+////    override init()
+//}
 

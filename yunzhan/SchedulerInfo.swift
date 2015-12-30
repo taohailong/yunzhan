@@ -635,10 +635,16 @@ class CommonOneLabelCell: UITableViewCell {
         titleL.numberOfLines = 0
         titleL.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(titleL)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-33-[titleL]-5-|", aView: titleL, bView: nil))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-5-[titleL]-5-|", aView: titleL, bView: nil))
+        self.setSubViewLayout()
     }
 
+    func setSubViewLayout(){
+    
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-33-[titleL]-5-|", aView: titleL, bView: nil))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-5-[titleL]-5-|", aView: titleL, bView: nil))
+    
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

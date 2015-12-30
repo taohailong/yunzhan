@@ -40,6 +40,8 @@ class ProductListVC: UIViewController,UITableViewDataSource,UITableViewDelegate 
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("ProductListCell") as! ProductListCell
         let data = products[indexPath.row]
+        weak var wself = self
+        cell.bookBlock = { wself?.showBookVC(data) }
         cell.fillData(data.imageUrl, title: data.name, introduce: data.introduce)
         return cell
     }
@@ -55,12 +57,37 @@ class ProductListVC: UIViewController,UITableViewDataSource,UITableViewDelegate 
         web.title = "产品详情"
         self.navigationController?.pushViewController(web, animated: true)
     }
+    
+    
+    func showBookVC(let data:ProductData)
+    {
+        
+        if UserData.shared.token == nil
+        {
+            self.showLoginVC()
+            return
+        }
+
+       let bookVC = BookVC()
+        bookVC.productData = data
+        self.navigationController?.pushViewController(bookVC, animated: true)
+    }
+    
+    func showLoginVC(){
+        
+        let logVC = LogViewController()
+        logVC.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(logVC, animated: true)
+        
+    }
+
 }
 
 class ProductListCell: UITableViewCell {
     let imageV:UIImageView
     let titleL:UILabel
     let contentL:UILabel
+    var bookBlock:(Void -> Void)!
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         imageV = UIImageView()
@@ -73,38 +100,73 @@ class ProductListCell: UITableViewCell {
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.contentView.addSubview(imageV)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[imageV(125)]", options: [], metrics: nil, views: ["imageV":imageV]))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-15-[imageV]-15-|", options: [], metrics: nil, views: ["imageV":imageV]))
-//        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[imageV]", aView: imageV, bView: nil))
-//        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-10-[imageV]-10-|", aView: imageV, bView: nil))
-
-//        self.contentView.addConstraint(NSLayoutConstraint(item: imageV, attribute: .Width, relatedBy: .Equal, toItem: imageV, attribute: .Height, multiplier: 1.0, constant: 0))
+        
         
         titleL.translatesAutoresizingMaskIntoConstraints = false
         titleL.font = Profile.font(15)
         titleL.textColor = Profile.rgb(51, g: 51, b: 51)
         
         self.contentView.addSubview(titleL)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[imageV]-15-[titleL]", aView: imageV, bView: titleL))
-//        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-15-[titleL]", aView: titleL, bView: nil))
-        self.contentView.addConstraint(NSLayoutConstraint.layoutTopEqual(titleL, toItem: imageV))
-//        titleL.setContentCompressionResistancePriority(UILayoutPriorityFittingSizeLevel, forAxis: .Vertical)
-        titleL.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Vertical)
-//        contentL.backgroundColor = UIColor.redColor()
+        //        contentL.backgroundColor = UIColor.redColor()
         contentL.numberOfLines = 0
-        contentL.textAlignment = .Justified
+        contentL.textAlignment = .Left
         contentL.translatesAutoresizingMaskIntoConstraints = false
         contentL.font = Profile.font(11)
         contentL.textColor = Profile.rgb(153, g: 153, b: 153)
+//        contentL.backgroundColor = UIColor.redColor()
         self.contentView.addSubview(contentL)
 //        contentL.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Vertical)
 //        contentL.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: .Vertical)
-        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(contentL, toItem: titleL))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-7-[contentL]-15-|", aView: titleL, bView: contentL))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[contentL]-10-|", aView: contentL, bView: nil))
+        
+        self.setSubViewLayout()
+        self.creatBookBt()
 
     }
    
+    
+    func setSubViewLayout(){
+    
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[imageV(125)]", options: [], metrics: nil, views: ["imageV":imageV]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[imageV]-10-|", options: [], metrics: nil, views: ["imageV":imageV]))
+    
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[imageV]-15-[titleL]", aView: imageV, bView: titleL))
+        
+        
+        
+        self.contentView.addConstraint(NSLayoutConstraint.layoutTopEqual(titleL, toItem: imageV))
+        //        titleL.setContentCompressionResistancePriority(UILayoutPriorityFittingSizeLevel, forAxis: .Vertical)
+        titleL.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Vertical)
+        
+        
+        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(contentL, toItem: titleL))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-5-[contentL]-40-|", aView: titleL, bView: contentL))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[contentL]-10-|", aView: contentL, bView: nil))
+    }
+    
+    func creatBookBt()
+    {
+        let bt = UIButton(type: .Custom)
+        bt.translatesAutoresizingMaskIntoConstraints = false
+        bt.titleLabel?.font = Profile.font(12)
+        bt.setBackgroundImage(UIImage(named: "login_tap"), forState: .Normal)
+        bt.setTitle("预约购买", forState: .Normal)
+        bt.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        self.contentView.addSubview(bt)
+        bt.addTarget(self, action: "ProductListBookAction", forControlEvents: .TouchUpInside)
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[bt(65)]-15-|", options: [], metrics: nil, views: ["bt":bt]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[bt(20)]-10-|", options: [], metrics: nil, views: ["bt":bt]))
+    }
+    
+    func ProductListBookAction()
+    {
+       if bookBlock != nil
+       {
+         bookBlock()
+        }
+    
+    }
+    
+    
     func fillData(imageUrl:String?,title:String?,introduce:String?){
        
         if imageUrl != nil
@@ -120,6 +182,7 @@ class ProductListCell: UITableViewCell {
         }
         titleL.text = title
         contentL.text = introduce
+
     }
     
     required init?(coder aDecoder: NSCoder) {

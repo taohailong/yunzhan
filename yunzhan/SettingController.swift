@@ -79,7 +79,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         }
         else if section == 1
         {
-          return 3
+          return 4
         }
         else if section == 2
         {
@@ -137,6 +137,12 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
                 imageName = "settingMyConnect"
                 title = "我的联系人"
     
+            case let s where s.section == 1 && s.row == 3:
+                
+                imageName = "settingMyOrder"
+                title = "我的订单"
+                
+                
             case let s where s.section == 2 && s.row == 1:
                 imageName = "settingMyHotel"
                 title = "相关推荐"
@@ -224,6 +230,13 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
                 contactList.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(contactList, animated: true)
             }
+            else
+            {
+               let orderList = MyOrderListVC()
+                orderList.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(orderList, animated: true)
+            
+            }
             
         }
         else if indexPath.section == 2
@@ -262,7 +275,6 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         }
         else
         {
-            
             if user.token == nil
             {
                 self.showLoginVC()

@@ -16,7 +16,7 @@ class CommonCell: UICollectionViewCell {
         
         label = UIImageView()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.contentMode = .Center
+        label.contentMode = .ScaleAspectFit
         label.image = UIImage(named: "default")
         label.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         
@@ -48,7 +48,7 @@ class CommonCell: UICollectionViewCell {
 //            let req = NSURL(string: "http:www.baidu.com")
             label.sd_setImageWithURL(req!, placeholderImage: UIImage(named: "default"), completed: { (image: UIImage!, err: NSError!, type:SDImageCacheType, url:NSURL!) -> Void in
                 if err == nil {
-                  wiamge?.contentMode = .ScaleAspectFill
+//                  wiamge?.contentMode = .ScaleAspectFill
                  
                 }
                  wiamge?.backgroundColor = UIColor.whiteColor()

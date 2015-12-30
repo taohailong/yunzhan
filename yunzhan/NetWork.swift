@@ -349,7 +349,6 @@ class NetWorkData {
 //            print(result)
             if status == NetStatus.NetWorkStatusError
             {
-                
                 block(result: result, status: status)
                 return
             }
@@ -404,10 +403,10 @@ class NetWorkData {
                        purl = purls[0]["url"]
                     }
                     
-                    
-                    let p = ProductData(imageUrl: purl, id: dic["id"] as? String, name: dic["name_zh"] as? String)
+                    let p = ProductData(imageUrl: purl, id: String(dic["id"] as! Int), name: dic["name_zh"] as? String)
                     p.introduce = dic["intro"] as? String
-                    
+                    p.exhibitorID = String(id)
+                    p.createrName = exhibitor.name
                     var picArr = [PicData]()
                     for t in purls
                     {
@@ -1505,6 +1504,63 @@ class NetWorkData {
     }
     
 
+    func orderProduct(let exhibitorID:String,let productID:String, let remark:String,block:NetBlock){
+    
+        weak var user = UserData.shared
+        var url = "http://\(Profile.domain)/api/app/product/order?chn=ios&token=\(user!.token!)&eid=1&bid=\(exhibitorID)&pid=\(productID)&remark=\(remark)"
+        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: status)
+                return
+            }
+            
+            block(result:0 , status: status)
+        }
+
+    }
+    
+    
+    
+    func getMyOrderList(block:NetBlock)
+    {
+    
+        weak var user = UserData.shared
+        let url = "http://\(Profile.domain)/api/app/personal/orders?chn=ios&token=\(user!.token!)&eid=1"
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: status)
+                return
+            }
+            
+            guard let data = result as? [String:AnyObject],let list = data["data"] as? [[String:AnyObject]] else {
+                return
+            }
+            
+            var orderList = [ProductData]()
+            
+            for dic in list
+            {
+                print(list)
+                let ids = dic["product_id"] as? Int
+                let p = ProductData(imageUrl: dic["product_pic_url"] as? String, id:String(ids) , name: dic["product_name_zh"] as? String)
+                p.remark = dic["remark"] as? String
+                p.introduce = dic["product_intro"] as? String
+                p.createrName = dic["buz_name_zh"] as? String
+                orderList.append(p)
+            }
+            
+            block(result:orderList , status: status)
+        }
+
+    }
+    
+    
     
     func getMethodRequest(url:String,completeBlock:NetBlock){
         
@@ -1512,9 +1568,8 @@ class NetWorkData {
         {
             return
         }
-//        print(url)
+
         net = AFHTTPRequestOperation(request: NSURLRequest(URL: NSURL(string: url)!))
-        
         net.setCompletionBlockWithSuccess({ (operation:AFHTTPRequestOperation!, result:AnyObject!) -> Void in
             
             if let jsonData = result as? NSData
