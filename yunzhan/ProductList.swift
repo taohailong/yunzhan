@@ -17,6 +17,7 @@ class ProductListVC: UIViewController,UITableViewDataSource,UITableViewDelegate 
         table.delegate = self
         table.dataSource = self
         table.separatorColor = Profile.rgb(243, g: 243, b: 243)
+        table.tableFooterView = UIView()
         table.registerClass(ProductListCell.self , forCellReuseIdentifier: "ProductListCell")
         table.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(table)
@@ -61,7 +62,6 @@ class ProductListVC: UIViewController,UITableViewDataSource,UITableViewDelegate 
     
     func showBookVC(let data:ProductData)
     {
-        
         if UserData.shared.token == nil
         {
             self.showLoginVC()
@@ -74,11 +74,9 @@ class ProductListVC: UIViewController,UITableViewDataSource,UITableViewDelegate 
     }
     
     func showLoginVC(){
-        
         let logVC = LogViewController()
         logVC.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(logVC, animated: true)
-        
     }
 
 }
@@ -92,9 +90,10 @@ class ProductListCell: UITableViewCell {
         
         imageV = UIImageView()
         imageV.translatesAutoresizingMaskIntoConstraints = false
-        imageV.contentMode = .Center
+//        imageV.contentMode = .Center
         imageV.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         imageV.image = UIImage(named: "default")
+//        imageV.backgroundColor = UIColor.redColor()
         titleL = UILabel()
         contentL = UILabel()
         
@@ -103,7 +102,7 @@ class ProductListCell: UITableViewCell {
         
         
         titleL.translatesAutoresizingMaskIntoConstraints = false
-        titleL.font = Profile.font(15)
+        titleL.font = Profile.font(14)
         titleL.textColor = Profile.rgb(51, g: 51, b: 51)
         
         self.contentView.addSubview(titleL)
@@ -139,7 +138,8 @@ class ProductListCell: UITableViewCell {
         
         
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(contentL, toItem: titleL))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-5-[contentL]-40-|", aView: titleL, bView: contentL))
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-5-[contentL(<=30)]", options: [], metrics: nil, views: ["titleL":titleL,"contentL":contentL]))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[contentL]-10-|", aView: contentL, bView: nil))
     }
     
@@ -147,14 +147,18 @@ class ProductListCell: UITableViewCell {
     {
         let bt = UIButton(type: .Custom)
         bt.translatesAutoresizingMaskIntoConstraints = false
-        bt.titleLabel?.font = Profile.font(12)
-        bt.setBackgroundImage(UIImage(named: "login_tap"), forState: .Normal)
-        bt.setTitle("预约购买", forState: .Normal)
-        bt.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        bt.setImage(UIImage(named: "bookBt"), forState: .Normal)
+//        bt.titleLabel?.font = Profile.font(12)
+//        bt.setBackgroundImage(Profile.rgb(223, g: 32, b: 82).convertToImage(), forState: .Normal)
+//        bt.setBackgroundImage(Profile.rgb(219, g: 21, b: 58).convertToImage(), forState: .Highlighted)
+//        bt.setTitle("预约购买", forState: .Normal)
+//        bt.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         self.contentView.addSubview(bt)
         bt.addTarget(self, action: "ProductListBookAction", forControlEvents: .TouchUpInside)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[bt(65)]-15-|", options: [], metrics: nil, views: ["bt":bt]))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[bt(20)]-10-|", options: [], metrics: nil, views: ["bt":bt]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[bt]-15-|", options: [], metrics: nil, views: ["bt":bt]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[bt]-10-|", options: [], metrics: nil, views: ["bt":bt]))
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[bt(65)]-15-|", options: [], metrics: nil, views: ["bt":bt]))
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[bt(20)]-10-|", options: [], metrics: nil, views: ["bt":bt]))
     }
     
     func ProductListBookAction()

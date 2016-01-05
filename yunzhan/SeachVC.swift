@@ -41,10 +41,8 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         let navBack = UIView(frame: CGRectMake(0,0,Profile.width()-30,30))
         searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width()-80,30))
         searchBar.delegate = self
+        searchBar.placeholder = "搜索展商、活动"
         searchBar.changeSearchBarBackColor(UIColor.whiteColor())
-        
-        
-        
         navBack.addSubview(searchBar)
         
         
@@ -77,6 +75,8 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
 //        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[searchBar]-5-[table]-0-|", options: [], metrics: nil, views: ["searchBar":searchBar,"table":table]))
+        
+         self.emptyView = THActivityView(emptyDataWarnViewWithString: "未搜索内容", withImage: "noSearchData", withSuperView: self.view)
     }
     
    
@@ -469,7 +469,6 @@ class SearchListVC: UIViewController,UISearchBarDelegate,UITableViewDataSource,U
                     wself?.emptyView?.removeFromSuperview()
                 }
 
-                
                 if status == .NetWorkStatusError
                 {
                     if let string = result as? String

@@ -20,6 +20,8 @@
 		C76429B51C2B93FF00F34888 /* SeachVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76429B31C2B93FF00F34888 /* SeachVC.swift */; };
 		C76E08EF1C09E17200AAFF7B /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76E08EE1C09E17200AAFF7B /* About.swift */; };
 		C76E08F01C09E17200AAFF7B /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76E08EE1C09E17200AAFF7B /* About.swift */; };
+		C77481091C34C33400144427 /* MyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77481081C34C33400144427 /* MyInfo.swift */; };
+		C774810A1C34C33400144427 /* MyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77481081C34C33400144427 /* MyInfo.swift */; };
 		C779C0FB1BF42D35008D625F /* LogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C779C0F81BF42D35008D625F /* LogViewController.m */; };
 		C779C0FC1BF42D35008D625F /* LogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C779C0F81BF42D35008D625F /* LogViewController.m */; };
 		C779C0FD1BF42D35008D625F /* LogInCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C779C0FA1BF42D35008D625F /* LogInCell.m */; };
@@ -131,6 +133,7 @@
 		C763D3EF1C049945005E3921 /* ShareCoverageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareCoverageView.m; sourceTree = "<group>"; };
 		C76429B31C2B93FF00F34888 /* SeachVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeachVC.swift; sourceTree = "<group>"; };
 		C76E08EE1C09E17200AAFF7B /* About.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
+		C77481081C34C33400144427 /* MyInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyInfo.swift; sourceTree = "<group>"; };
 		C779C0F71BF42D35008D625F /* LogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogViewController.h; sourceTree = "<group>"; };
 		C779C0F81BF42D35008D625F /* LogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogViewController.m; sourceTree = "<group>"; };
 		C779C0F91BF42D35008D625F /* LogInCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogInCell.h; sourceTree = "<group>"; };
@@ -292,6 +295,7 @@
 				C77C402D1C040284005596E0 /* TimeLineInfo.swift */,
 				C763D3E71C045FE2005E3921 /* TimeLineCommit.swift */,
 				C79285771BEB322700287A24 /* SettingController.swift */,
+				C77481081C34C33400144427 /* MyInfo.swift */,
 				C76429B31C2B93FF00F34888 /* SeachVC.swift */,
 				C76E08EE1C09E17200AAFF7B /* About.swift */,
 				C79E545B1BE9B79100E4A514 /* Scheduler.swift */,
@@ -543,6 +547,7 @@
 				C779C1001BF43917008D625F /* Singleton.swift in Sources */,
 				C7811B961C0C905A00E5A637 /* ZoomView.swift in Sources */,
 				C7A9629C1BF32F01003B883A /* WebHtml.swift in Sources */,
+				C77481091C34C33400144427 /* MyInfo.swift in Sources */,
 				C78EA5541C1189A2007798E2 /* THLRefreshView.m in Sources */,
 				C7C0EABC1BF09CA2004711BF /* ContactsController.swift in Sources */,
 				C7AEDEDD1C05A938009C196C /* MyRegist.swift in Sources */,
@@ -593,6 +598,7 @@
 				C7C0EABD1BF09CA2004711BF /* ContactsController.swift in Sources */,
 				C7811B971C0C905A00E5A637 /* ZoomView.swift in Sources */,
 				C79285791BEB322700287A24 /* SettingController.swift in Sources */,
+				C774810A1C34C33400144427 /* MyInfo.swift in Sources */,
 				C78EA5551C1189A2007798E2 /* THLRefreshView.m in Sources */,
 				C7F0AE3C1BE210C70056C06B /* ViewController.swift in Sources */,
 				C7AEDEDE1C05A938009C196C /* MyRegist.swift in Sources */,
@@ -744,7 +750,6 @@
 			baseConfigurationReference = A80FDAACCEBB8A18BFE651DC /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Weiyuan Huang (QJZJLZ48TX)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Weiyuan Huang (QJZJLZ48TX)";
@@ -773,7 +778,6 @@
 			baseConfigurationReference = 6A23C94284D64802DC2E07B8 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Wuxi Chestnut Company Limited (F86GF7VY4V)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Wuxi Chestnut Company Limited (F86GF7VY4V)";

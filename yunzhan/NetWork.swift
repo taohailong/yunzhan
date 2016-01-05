@@ -1519,7 +1519,6 @@ class NetWorkData {
             
             block(result:0 , status: status)
         }
-
     }
     
     
@@ -1546,9 +1545,10 @@ class NetWorkData {
             
             for dic in list
             {
-                print(list)
                 let ids = dic["product_id"] as? Int
                 let p = ProductData(imageUrl: dic["product_pic_url"] as? String, id:String(ids) , name: dic["product_name_zh"] as? String)
+                let time = dic["create_time"] as? Int
+                p.time = time?.toTimeString("yy-MM-dd HH:mm")
                 p.remark = dic["remark"] as? String
                 p.introduce = dic["product_intro"] as? String
                 p.createrName = dic["buz_name_zh"] as? String
@@ -1558,6 +1558,60 @@ class NetWorkData {
             block(result:orderList , status: status)
         }
 
+    }
+    
+    
+    func updateUserInfo(let name:String?,let job:String?,block:NetBlock){
+    
+        weak var user = UserData.shared
+        var genuineName:String! = ""
+        
+        if name == nil
+        {
+            if user?.name != nil
+            {
+               genuineName = user?.name
+            }
+           
+        }
+        else
+        {
+           genuineName = name!
+        }
+        
+        var genuineTitle:String! = job
+//        if job == nil 
+//        {
+//            if user?.title != nil
+//            {
+//               genuineTitle = user?.title
+//            }
+//        }
+//        else
+//        {
+//            genuineTitle = job!
+//        }
+
+
+        var url = "http://\(Profile.domain)/api/app/personal/setting?chn=ios&token=\(user!.token!)&eid=1&name=\(genuineName)&title=\(genuineTitle)"
+        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: status)
+                return
+            }
+            
+            guard let dic = result as? [String:AnyObject] ,let data = dic["data"] as? [String:AnyObject]
+                else {
+              return
+            }
+            user?.name = data["name"] as? String
+            user?.title = data["title"] as? String
+            block(result:0 , status: status)
+        }
+      
     }
     
     

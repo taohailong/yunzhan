@@ -88,7 +88,7 @@ class THTextView: UITextView {
         
         placeHoderL = UILabel(frame: CGRectMake(0,0,0,0))
         placeHoderL.textColor = UIColor.clearColor()
-        placeHoderL.font = UIFont.systemFontOfSize(15)
+        placeHoderL.font = UIFont.systemFontOfSize(12)
         super.init(frame: frame, textContainer: textContainer)
         self.addSubview(placeHoderL)
         

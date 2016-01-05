@@ -206,10 +206,24 @@ class ProductData {
     let imageUrl:String?
     let productId:String?
     let name:String?
+    var time:String?
     var introduce:String?
     var remark:String?
     var createrName:String?
     var picArr:[PicData]?
+//    var remarkHeight:CGFloat?
+    
+    func figureoutStringHeight(str:String!,font:UIFont,size:CGSize)->CGFloat{
+        
+        var height:CGFloat = 0
+        if str != nil
+        {
+            height = str.boundingRectWithSize(size, options: .UsesLineFragmentOrigin, attributes: [NSFontAttributeName:font], context: nil).height
+        }
+        
+        return height
+    }
+ 
     init(imageUrl:String?,id:String?,name:String?)
     {
       self.imageUrl = imageUrl

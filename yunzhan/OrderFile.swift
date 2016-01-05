@@ -7,7 +7,7 @@
 //
 
 import Foundation
-class BookVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
+class BookVC: UIViewController,UITableViewDelegate,UITableViewDataSource ,UITextViewDelegate{
     var productData:ProductData!
     var table:UITableView!
     var textV:THTextView!
@@ -23,6 +23,7 @@ class BookVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
         table.separatorStyle = .None
         table.backgroundColor = UIColor.whiteColor()
         table.translatesAutoresizingMaskIntoConstraints = false
+        table.allowsSelection = false
         table.tableHeaderView = self.creatTextView()
         table.registerClass( MoreTableHeadView.self , forHeaderFooterViewReuseIdentifier: "MoreTableHeadView")
         table.registerClass(BookOneLabelCell.self, forCellReuseIdentifier: "BookOneLabelCell")
@@ -36,7 +37,7 @@ class BookVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
         
         let separate = UIView()
         separate.translatesAutoresizingMaskIntoConstraints = false
-        separate.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        separate.backgroundColor = Profile.rgb(210, g: 210, b: 210)
         self.view.addSubview(separate)
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(separate))
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[table]-1-[separate(0.5)]", options: [], metrics: nil, views: ["separate":separate,"table":table]))
@@ -46,9 +47,12 @@ class BookVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
         let bookBt = UIButton(type: .Custom)
         bookBt.addTarget(self, action: "bookAction", forControlEvents: .TouchUpInside)
         bookBt.setTitle("确认", forState: .Normal)
-        bookBt.titleLabel?.font = Profile.font(15)
+        bookBt.layer.cornerRadius = 4
+        bookBt.layer.masksToBounds = true
+        bookBt.titleLabel?.font = Profile.font(16)
         bookBt.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        bookBt.setBackgroundImage(UIImage(named: "login_hight"), forState: .Normal)
+        bookBt.setBackgroundImage(Profile.rgb(223, g: 32, b: 82).convertToImage(), forState: .Normal)
+        bookBt.setBackgroundImage(Profile.rgb(219, g: 21, b: 58).convertToImage(), forState: .Highlighted)
         bookBt.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(bookBt)
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[bookBt]-15-|", options: [], metrics: nil, views: ["bookBt":bookBt]))
@@ -61,16 +65,36 @@ class BookVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
         backView.backgroundColor = UIColor.whiteColor()
         textV = THTextView(frame: CGRectMake(15, 10, Profile.width()-30, 105), textContainer: nil)
         textV.layer.cornerRadius = 4
-        textV.layer.borderColor = Profile.rgb(243, g: 243, b: 243).CGColor
+        textV.textContainerInset = UIEdgeInsetsMake(8, 5, 5, 5)
+        textV.layer.borderColor = Profile.rgb(210, g: 210, b: 210).CGColor
         textV.layer.borderWidth = 1
-        textV.placeHolder = "请输入您要预定的数量，销售人员会与您联系"
+        textV.returnKeyType = .Done
+        textV.delegate = self
+        textV.placeHolder = "请输入您要预定的产品数量及其他说明"
+        
         backView.addSubview(textV)
         
        return backView
     }
     
+    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+        
+        if text == "\n"
+        {
+          textView.resignFirstResponder()
+        }
+        return true
+    }
+    
+    
     func bookAction()
     {
+        if textV.text.isEmpty == true
+        {
+           let loadView = THActivityView(string: "请输入订单信息")
+            loadView.show()
+           return
+        }
         weak var wself = self
        let net = NetWorkData()
         let load = THActivityView(activityViewWithSuperView: self.view)
@@ -98,30 +122,61 @@ class BookVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      return   4
+        
+        if productData.picArr == nil
+        {
+           return 3
+        }
+        
+      return   4 + (productData.picArr?.count)!
     }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 45
     }
-    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        if indexPath.row == 0
+        {
+          return 25
+        }
+        else if indexPath.row == 1
+        {
+          return 25
+        }
+        else if indexPath.row == 2
+        {
+            let heigt = productData.figureoutStringHeight(productData.introduce, font: Profile.font(13), size: CGSizeMake(Profile.width() - 70, 1000))
+            if heigt > 26
+            {
+               return 38
+            }
+        
+            
+          return heigt + 8
+        }
+        else if indexPath.row == 3
+        {
+          return 25
+        }
+        else
+        {
+           return 155
+        }
+    }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let head = tableView.dequeueReusableHeaderFooterViewWithIdentifier("MoreTableHeadView") as! MoreTableHeadView
         head.contentView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
-//        head.iconImage.image = UIImage(named: "orderTableHeadIcon")
-         head.iconImage.image = UIImage(named: "exhibitorIntroduct")
-        
+        head.iconImage.image = UIImage(named: "orderTableHeadIcon")
         return head
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        
         if indexPath.row == 0
         {
            let cell = tableView.dequeueReusableCellWithIdentifier("BookOneLabelSpecialCell") as! BookOneLabelSpecialCell
-            cell.titleL.font = Profile.font(12)
+            cell.titleL.font = Profile.font(13)
             cell.titleL.textColor = Profile.rgb(51, g: 51, b: 51)
             if productData.createrName != nil
             {
@@ -133,7 +188,7 @@ class BookVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
         if indexPath.row == 1
         {
             let cell = tableView.dequeueReusableCellWithIdentifier("BookOneLabelCell") as! BookOneLabelCell
-            cell.titleL.font = Profile.font(12)
+            cell.titleL.font = Profile.font(13)
             cell.titleL.textColor = Profile.rgb(51, g: 51, b: 51)
             if productData.name != nil
             {
@@ -150,23 +205,33 @@ class BookVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
             cell.oneL.text = "产品介绍："
             return cell
         }
+        else if indexPath.row == 3
+        {
+            let cell = tableView.dequeueReusableCellWithIdentifier("BookOneLabelCell") as! BookOneLabelCell
+            cell.titleL.font = Profile.font(13)
+            cell.titleL.textColor = Profile.rgb(51, g: 51, b: 51)
+            cell.titleL.text = "产品图片:"
+            return cell
+        }
+            
         else
         {
             let cell = tableView.dequeueReusableCellWithIdentifier("BookPicTableCell") as! BookPicTableCell
+            let pic = productData.picArr![indexPath.row - 4].url
             
-            let url = NSURL(string: productData.imageUrl!)
+            let url = NSURL(string: pic!)
             if url != nil
             {
-              cell.pImage.sd_setImageWithURL(url!)
+              cell.pImage.contentMode = .ScaleAspectFit
+              cell.pImage.sd_setImageWithURL(url!, placeholderImage: UIImage(named: "default"))
             }
-            
-            cell.title.text = "产品图片"
             return cell
-
         }
     }
     
-    
+     func scrollViewWillBeginDragging(scrollView: UIScrollView) {
+        textV.resignFirstResponder()
+    }
 }
 
 
@@ -182,7 +247,7 @@ class BookOneLabelSpecialCell: CommonOneLabelCell {
 class BookOneLabelCell: CommonOneLabelCell {
     override func setSubViewLayout() {
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[titleL]-15-|", aView: titleL, bView: nil))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-5-[titleL]-5-|", aView: titleL, bView: nil))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-4-[titleL]-4-|", aView: titleL, bView: nil))
     }
 }
 
@@ -197,7 +262,7 @@ class CommonTwoLabelCell: UITableViewCell {
         
         twoL = UILabel()
         twoL.translatesAutoresizingMaskIntoConstraints = false
-        
+        twoL.numberOfLines = 0
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.contentView.addSubview(oneL)
         self.contentView.addSubview(twoL)
@@ -206,18 +271,22 @@ class CommonTwoLabelCell: UITableViewCell {
 
     func setSubViewLayout(){
         
-        twoL.font = Profile.font(12)
+        twoL.font = Profile.font(13)
         twoL.textColor = Profile.rgb(51, g: 51, b: 51)
+        
         oneL.numberOfLines = 0
         oneL.font = twoL.font
         oneL.textColor = twoL.textColor
-        
+//        twoL.backgroundColor = UIColor.redColor()
+        twoL.textAlignment = .Left
+//        oneL.setContentCompressionResistancePriority(UILayoutPriorityRequired, forAxis: .Horizontal)
+//        twoL.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Vertical)
         oneL.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Horizontal)
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[oneL]", options: [], metrics: nil, views: ["oneL":oneL]))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-5-[oneL]", options: [], metrics: nil, views: ["oneL":oneL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-4-[oneL]", options: [], metrics: nil, views: ["oneL":oneL]))
         
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[oneL]-1-[twoL]-15-|", options: [], metrics: nil, views: ["oneL":oneL,"twoL":twoL]))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-5-[twoL]-5-|", options: [], metrics: nil, views: ["twoL":twoL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-4-[twoL(<=32)]", options: [], metrics: nil, views: ["twoL":twoL]))
     
     }
     
@@ -228,29 +297,27 @@ class CommonTwoLabelCell: UITableViewCell {
 
 
 class BookPicTableCell:UITableViewCell {
-    let title:UILabel
+    let separateView:UIView
     let pImage:UIImageView
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
-        title = UILabel()
-        title.font = Profile.font(12)
-        title.textColor = Profile.rgb(51, g: 51, b: 51)
-        title.translatesAutoresizingMaskIntoConstraints = false
+        separateView = UIView()
+        separateView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        separateView.translatesAutoresizingMaskIntoConstraints = false
         
         pImage = UIImageView()
         pImage.translatesAutoresizingMaskIntoConstraints = false
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        self.contentView.addSubview(title)
+        self.contentView.addSubview(separateView)
         self.contentView.addSubview(pImage)
         
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[title]", aView: title, bView: nil))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-5-[title]", aView: title, bView: nil))
-        
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[separateView]-15-|", aView: separateView, bView: nil))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[separateView(0.5)]-0-|", options: [], metrics: nil, views: ["separateView":separateView]))
         
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[pImage(200)]", options: [], metrics: nil, views: ["pImage":pImage]))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[title]-10-[pImage(125)]-0-|", options: [], metrics: nil, views: ["pImage":pImage,"title":title]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-8-[pImage]-8-|", options: [], metrics: nil, views: ["pImage":pImage]))
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -267,7 +334,7 @@ class MyOrderListVC: UIViewController,UITableViewDataSource,UITableViewDelegate 
        super.viewDidLoad()
         
         self.title = "我的订单"
-        table = UITableView(frame: CGRectZero, style: .Plain)
+        table = UITableView(frame: CGRectZero, style: .Grouped)
         table.separatorColor = Profile.rgb(243, g: 243, b: 243)
         table.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(table)
@@ -275,8 +342,9 @@ class MyOrderListVC: UIViewController,UITableViewDataSource,UITableViewDelegate 
         table.delegate = self
         table.dataSource = self
         table.tableFooterView = UIView()
+        table.registerClass(BookOneLabelCell.self , forCellReuseIdentifier: "BookOneLabelCell")
         table.registerClass(OrderListProductCell.self, forCellReuseIdentifier: "OrderListProductCell")
-        table.registerClass(BookOneLabelCell.self, forCellReuseIdentifier: "BookOneLabelCell")
+        table.registerClass(OrderListFirstCell.self, forCellReuseIdentifier: "OrderListFirstCell")
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         self.fetchNetData()
@@ -291,7 +359,6 @@ class MyOrderListVC: UIViewController,UITableViewDataSource,UITableViewDelegate 
       net.getMyOrderList { (result, status) -> (Void) in
         load.removeFromSuperview()
         
-        
         if status == NetStatus.NetWorkStatusError
         {
             if let str = result as? String
@@ -304,7 +371,13 @@ class MyOrderListVC: UIViewController,UITableViewDataSource,UITableViewDelegate 
         
         if let arr = result as? [ProductData]
         {
-           wself?.dataArr = arr
+            if arr.count == 0
+            {
+              _ = THActivityView(emptyDataWarnViewWithString: "您还没有订单", withImage: "noOrderListData", withSuperView: wself?.view)
+                return
+            }
+            
+            wself?.dataArr = arr
             wself?.table.reloadData()
         }
      }
@@ -323,10 +396,32 @@ class MyOrderListVC: UIViewController,UITableViewDataSource,UITableViewDelegate 
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 10
     }
+    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0.5
+    }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 3
     }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        
+        if indexPath.row == 0
+        {
+            return 30
+        }
+        else if indexPath.row == 1
+        {
+            return 100
+        }
+        else
+        {
+            let data = dataArr[indexPath.section]
+            let height = data.figureoutStringHeight(data.remark, font: Profile.font(11), size: CGSizeMake(Profile.width()-30, 1000))
+           return height + 10
+        }
+    }
+    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let pro = dataArr[indexPath.section]
@@ -334,20 +429,26 @@ class MyOrderListVC: UIViewController,UITableViewDataSource,UITableViewDelegate 
         {
           let cell = tableView.dequeueReusableCellWithIdentifier("OrderListProductCell") as! OrderListProductCell
           cell.fillData(pro.imageUrl, title: pro.name, introduce: pro.introduce)
+            cell.selectionStyle = .None
           return cell
         }
         else if indexPath.row == 0
         {
-           let cell = tableView.dequeueReusableCellWithIdentifier("BookOneLabelCell") as! BookOneLabelCell
-            cell.titleL.font = Profile.font(13)
-            cell.titleL.textColor = Profile.rgb(51, g: 51, b: 51)
-             cell.titleL.text = pro.createrName
+           let cell = tableView.dequeueReusableCellWithIdentifier("OrderListFirstCell") as! OrderListFirstCell
+            cell.selectionStyle = .None
+            cell.oneL.font = Profile.font(14)
+            cell.oneL.textColor = Profile.rgb(51, g: 51, b: 51)
+             cell.oneL.text = pro.createrName
+            cell.twoL.font = Profile.font(11)
+            cell.twoL.textColor = Profile.rgb(153, g: 153, b: 153)
+            cell.twoL.text = pro.time
             return cell
         }
         else
         {
            let cell = tableView.dequeueReusableCellWithIdentifier("BookOneLabelCell") as! BookOneLabelCell
             cell.titleL.font = Profile.font(11)
+            cell.selectionStyle = .None
             cell.titleL.textColor = Profile.rgb(153, g: 153, b: 153)
             cell.titleL.text = pro.remark
             return cell
@@ -357,6 +458,19 @@ class MyOrderListVC: UIViewController,UITableViewDataSource,UITableViewDelegate 
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
 }
+
+
+class OrderListFirstCell:CommonTwoLabelCell {
+    override func setSubViewLayout() {
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[oneL]", aView: oneL, bView: nil))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(oneL, toItem: self.contentView))
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[twoL]-15-|", options: [], metrics: nil, views: ["oneL":oneL,"twoL":twoL]))
+         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(twoL, toItem: self.contentView))
+    }
+}
+
 
 class OrderListProductCell: ProductListCell {
     
@@ -375,7 +489,7 @@ class OrderListProductCell: ProductListCell {
         
         
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(contentL, toItem: titleL))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-5-[contentL]-40-|", aView: titleL, bView: contentL))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-5-[contentL(<=30)]", options: [], metrics: nil, views: ["titleL":titleL,"contentL":contentL]))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[contentL]-10-|", aView: contentL, bView: nil))
     }
 

@@ -201,6 +201,10 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
                 self.showLoginVC()
                 return
             }
+            
+            let updateInfoVC = MyInfoVC()
+            updateInfoVC.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(updateInfoVC, animated: true)
             return
         }
         else if indexPath.section == 1

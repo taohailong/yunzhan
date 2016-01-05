@@ -20,7 +20,7 @@
 #endif
 
 //#if DEBUG
-#if 1
+#if 0
 #define PORT "123.56.102.224"
 #else
 #define PORT "www.zhangzhantong.com"
