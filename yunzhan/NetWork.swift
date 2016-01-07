@@ -374,13 +374,23 @@ class NetWorkData {
                 personArr = [PersonData]()
                 for dic in connectArr
                 {
-                    //               print(dic)
-//                    break
-                    let person = PersonData(name: dic["name"] as?String, title: dic["title"] as? String, phone: dic["phone"] as? String)
-                    if let id = dic["id"] as? Int
-                    {
-                        person.id = String(id)
-                    }
+                    let person = PersonData(netData: dic)
+                        print(dic)
+//                    let person = PersonData(name: dic["name"] as?String, title: dic["title"] as? String, phone: dic["phone"] as? String)
+//                    if let id = dic["id"] as? Int
+//                    {
+//                        person.id = String(id)
+//                    }
+//                    if let favorite = dic["favorite"] as? Int
+//                    {
+//                        person.favorite = favorite == 0 ? false:true
+//                    }
+//                    
+//                    if let chat = dic["chat"] as? String
+//                    {
+//                        person.chatID = chat
+//                    }
+
                     personArr.append(person)
                 }
             
@@ -482,19 +492,19 @@ class NetWorkData {
             {
                 for dic in contactArr
                 {
-                   let p = PersonData(name: dic["name"] as? String, title: dic["title"] as? String , phone: dic["phone"] as? String)
-//                    print(dic)
-                    
+                    let p = PersonData(netData: dic)
+//                   let p = PersonData(name: dic["name"] as? String, title: dic["title"] as? String , phone: dic["phone"] as? String)
+////                    print(dic)
+//                    
+//
+//                    if let id = dic["id"] as? Int
+//                    {
+//                        p.id = String(id)
+//                    }
                     if let exhibitorID = dic["exhibition_id"] as? Int
                     {
-                      p.exhibitorID = String(exhibitorID)
+                        p.exhibitorID = String(exhibitorID)
                     }
-                    
-                    if let id = dic["id"] as? Int
-                    {
-                        p.id = String(id)
-                    }
-
                     contacts.append(p)
                 }
             }
@@ -506,6 +516,16 @@ class NetWorkData {
                 for dic in guestsArr
                 {
                     let p = PersonData(name: dic["name"] as? String, title: dic["title"] as? String , phone: nil)
+                    if let favorite = dic["favorite"] as? Int
+                    {
+                        p.favorite = favorite == 0 ? false:true
+                    }
+                    
+                    if let chat = dic["chat"] as? String
+                    {
+                        p.chatID = chat
+                    }
+
                     guests.append(p)
                 }
             }
@@ -603,9 +623,7 @@ class NetWorkData {
                 }
 
                 let first = temp["name_first"] as! String
-                
-//                let test = temp.fecth("dd", type: String)
-                
+                                
                 if let index = prefixArr.indexOf(first)
                 {
                     subArr = personArr[index]
@@ -642,10 +660,18 @@ class NetWorkData {
                 return
             }
             
-            guard let data = result as? [String:AnyObject],let list = data["code"] as? Int,let msg = data["msg"] else {
+            guard let data = result as? [String:AnyObject],let code = data["code"] as? Int,let msg = data["msg"] else {
                 return
             }
-            block(result: msg, status: status)
+            if code == 0
+            {
+                block(result: msg, status: status)
+            }
+            else
+            {
+                block(result: msg, status: .NetWorkStatusError)
+            }
+
         }
     
     }
@@ -665,10 +691,17 @@ class NetWorkData {
                 return
             }
             
-            guard let data = result as? [String:AnyObject],let list = data["code"] as? Int,let msg = data["msg"] else {
+            guard let data = result as? [String:AnyObject],let code = data["code"] as? Int,let msg = data["msg"] else {
                 return
             }
-            block(result: msg, status: status)
+            if code == 0
+            {
+               block(result: msg, status: status)
+            }
+            else
+            {
+                block(result: msg, status: .NetWorkStatusError)
+            }
         }
 
     
@@ -689,10 +722,18 @@ class NetWorkData {
                 return
             }
             
-            guard let data = result as? [String:AnyObject],let list = data["code"] as? Int,let msg = data["msg"] else {
+            guard let data = result as? [String:AnyObject],let code = data["code"] as? Int,let msg = data["msg"] else {
                 return
             }
-            block(result: msg, status: status)
+            if code == 0
+            {
+                block(result: msg, status: status)
+            }
+            else
+            {
+                block(result: msg, status: .NetWorkStatusError)
+            }
+
         }
         
     }
@@ -1579,7 +1620,7 @@ class NetWorkData {
            genuineName = name!
         }
         
-        var genuineTitle:String! = job
+        let genuineTitle:String! = job
 //        if job == nil 
 //        {
 //            if user?.title != nil

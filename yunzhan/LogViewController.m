@@ -20,7 +20,7 @@
 #endif
 
 //#if DEBUG
-#if 0
+#if 1
 #define PORT "123.56.102.224"
 #else
 #define PORT "www.zhangzhantong.com"
@@ -323,16 +323,16 @@
         
          if ([dataDic[@"code"] intValue]== 0) {
         
-//             c5f6f92df9c340e2966f37a50dec0c9b_285
-//             6f54b6da455248d6803f9418bcd23861_285
-//             NSLog(@"login %@",dataDic);
              dataDic = dataDic[@"data"];
              UserData* user = [UserData shared];
              user.title = dataDic[@"title"];
              user.name = dataDic[@"name"];
              user.phone = dataDic[@"mobile"];
              user.token = dataDic[@"user_token"];
+             user.messID = @"thl";
+             user.password_huanxin = @"123456";
              [user sendDeviceToken];
+             [user logOutHuanxin];
             [wSelf logViewDismiss];
          }
          else

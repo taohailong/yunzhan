@@ -8,6 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		992C42617DC41C9282A5E10D /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2B0B27D84BE8C3C370A017F5 /* libPods.a */; };
+		C705050E1C3CB9F3007F8C72 /* ApplyListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C705050D1C3CB9F3007F8C72 /* ApplyListView.swift */; };
+		C705050F1C3CB9F3007F8C72 /* ApplyListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C705050D1C3CB9F3007F8C72 /* ApplyListView.swift */; };
+		C70505111C3CC5C5007F8C72 /* MessMaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70505101C3CC5C5007F8C72 /* MessMaster.swift */; };
+		C70505121C3CC5C5007F8C72 /* MessMaster.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70505101C3CC5C5007F8C72 /* MessMaster.swift */; };
+		C70505151C3CDF3D007F8C72 /* EaseSDKHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = C70505141C3CDF3D007F8C72 /* EaseSDKHelper.m */; };
+		C70505161C3CDF3D007F8C72 /* EaseSDKHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = C70505141C3CDF3D007F8C72 /* EaseSDKHelper.m */; };
+		C70505191C3CE03C007F8C72 /* EaseConvertToCommonEmoticonsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = C70505181C3CE03C007F8C72 /* EaseConvertToCommonEmoticonsHelper.m */; };
+		C705051A1C3CE03C007F8C72 /* EaseConvertToCommonEmoticonsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = C70505181C3CE03C007F8C72 /* EaseConvertToCommonEmoticonsHelper.m */; };
+		C705051D1C3CE311007F8C72 /* NSObject+EaseMob.m in Sources */ = {isa = PBXBuildFile; fileRef = C705051C1C3CE311007F8C72 /* NSObject+EaseMob.m */; };
+		C705051E1C3CE311007F8C72 /* NSObject+EaseMob.m in Sources */ = {isa = PBXBuildFile; fileRef = C705051C1C3CE311007F8C72 /* NSObject+EaseMob.m */; };
+		C70505241C3D29F8007F8C72 /* MessageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70505231C3D29F8007F8C72 /* MessageVC.swift */; };
+		C70505251C3D29F8007F8C72 /* MessageVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C70505231C3D29F8007F8C72 /* MessageVC.swift */; };
 		C71A3A831BF1954B0081F7E6 /* SchedulerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71A3A821BF1954B0081F7E6 /* SchedulerInfo.swift */; };
 		C71A3A841BF1954B0081F7E6 /* SchedulerInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C71A3A821BF1954B0081F7E6 /* SchedulerInfo.swift */; };
 		C763D3E81C045FE2005E3921 /* TimeLineCommit.swift in Sources */ = {isa = PBXBuildFile; fileRef = C763D3E71C045FE2005E3921 /* TimeLineCommit.swift */; };
@@ -125,6 +137,15 @@
 		2B0B27D84BE8C3C370A017F5 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A23C94284D64802DC2E07B8 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		A80FDAACCEBB8A18BFE651DC /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		C705050D1C3CB9F3007F8C72 /* ApplyListView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplyListView.swift; sourceTree = "<group>"; };
+		C70505101C3CC5C5007F8C72 /* MessMaster.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessMaster.swift; sourceTree = "<group>"; };
+		C70505131C3CDF3D007F8C72 /* EaseSDKHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EaseSDKHelper.h; sourceTree = "<group>"; };
+		C70505141C3CDF3D007F8C72 /* EaseSDKHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EaseSDKHelper.m; sourceTree = "<group>"; };
+		C70505171C3CE03C007F8C72 /* EaseConvertToCommonEmoticonsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EaseConvertToCommonEmoticonsHelper.h; sourceTree = "<group>"; };
+		C70505181C3CE03C007F8C72 /* EaseConvertToCommonEmoticonsHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EaseConvertToCommonEmoticonsHelper.m; sourceTree = "<group>"; };
+		C705051B1C3CE311007F8C72 /* NSObject+EaseMob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+EaseMob.h"; sourceTree = "<group>"; };
+		C705051C1C3CE311007F8C72 /* NSObject+EaseMob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+EaseMob.m"; sourceTree = "<group>"; };
+		C70505231C3D29F8007F8C72 /* MessageVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageVC.swift; sourceTree = "<group>"; };
 		C71A3A821BF1954B0081F7E6 /* SchedulerInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SchedulerInfo.swift; sourceTree = "<group>"; };
 		C763D3E71C045FE2005E3921 /* TimeLineCommit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeLineCommit.swift; sourceTree = "<group>"; };
 		C763D3EA1C0468FC005E3921 /* UIImage+ZoomImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ZoomImage.h"; sourceTree = "<group>"; };
@@ -258,6 +279,22 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		C70505081C3CB50A007F8C72 /* huanxin */ = {
+			isa = PBXGroup;
+			children = (
+				C70505101C3CC5C5007F8C72 /* MessMaster.swift */,
+				C705050D1C3CB9F3007F8C72 /* ApplyListView.swift */,
+				C70505231C3D29F8007F8C72 /* MessageVC.swift */,
+				C70505131C3CDF3D007F8C72 /* EaseSDKHelper.h */,
+				C70505141C3CDF3D007F8C72 /* EaseSDKHelper.m */,
+				C705051B1C3CE311007F8C72 /* NSObject+EaseMob.h */,
+				C705051C1C3CE311007F8C72 /* NSObject+EaseMob.m */,
+				C70505171C3CE03C007F8C72 /* EaseConvertToCommonEmoticonsHelper.h */,
+				C70505181C3CE03C007F8C72 /* EaseConvertToCommonEmoticonsHelper.m */,
+			);
+			path = huanxin;
+			sourceTree = "<group>";
+		};
 		C77E1D901BE09EDA00B8F444 = {
 			isa = PBXGroup;
 			children = (
@@ -333,6 +370,7 @@
 				C763D3EF1C049945005E3921 /* ShareCoverageView.m */,
 				C77E8FA31C06DB48003832BA /* CommentScoreView.h */,
 				C77E8FA41C06DB48003832BA /* CommentScoreView.m */,
+				C70505081C3CB50A007F8C72 /* huanxin */,
 				C78EA54C1C1189A2007798E2 /* THLScrollRefreshLoad */,
 				C7848F411BFDD8F400339623 /* weixin */,
 				C77E1DA01BE09EDA00B8F444 /* Main.storyboard */,
@@ -542,11 +580,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C705051D1C3CE311007F8C72 /* NSObject+EaseMob.m in Sources */,
 				C77C14731BE8B02B00DCC670 /* ExhibitorController.swift in Sources */,
 				C779C1061BF48E9C008D625F /* Suggestion.swift in Sources */,
 				C779C1001BF43917008D625F /* Singleton.swift in Sources */,
 				C7811B961C0C905A00E5A637 /* ZoomView.swift in Sources */,
 				C7A9629C1BF32F01003B883A /* WebHtml.swift in Sources */,
+				C70505191C3CE03C007F8C72 /* EaseConvertToCommonEmoticonsHelper.m in Sources */,
 				C77481091C34C33400144427 /* MyInfo.swift in Sources */,
 				C78EA5541C1189A2007798E2 /* THLRefreshView.m in Sources */,
 				C7C0EABC1BF09CA2004711BF /* ContactsController.swift in Sources */,
@@ -556,11 +596,13 @@
 				C79E545C1BE9B79100E4A514 /* Scheduler.swift in Sources */,
 				C763D3E81C045FE2005E3921 /* TimeLineCommit.swift in Sources */,
 				C79E54651BE9FED500E4A514 /* NetWork.swift in Sources */,
+				C70505241C3D29F8007F8C72 /* MessageVC.swift in Sources */,
 				C77E1D9F1BE09EDA00B8F444 /* ViewController.swift in Sources */,
 				C77E8FA51C06DB48003832BA /* CommentScoreView.m in Sources */,
 				C79285751BEB06A400287A24 /* THActivityView.m in Sources */,
 				C7C3C35C1C195A1E0083F3A1 /* RepeatScrollView.m in Sources */,
 				C779C0FD1BF42D35008D625F /* LogInCell.m in Sources */,
+				C705050E1C3CB9F3007F8C72 /* ApplyListView.swift in Sources */,
 				C79285781BEB322700287A24 /* SettingController.swift in Sources */,
 				C77E1D9D1BE09EDA00B8F444 /* AppDelegate.swift in Sources */,
 				C79E54621BE9E47400E4A514 /* DataModel.swift in Sources */,
@@ -572,6 +614,7 @@
 				C76429B41C2B93FF00F34888 /* SeachVC.swift in Sources */,
 				C79546DE1BFEBC8F0080CD46 /* NewListCV.swift in Sources */,
 				C79E545F1BE9DCB800E4A514 /* RootCollectionCells.swift in Sources */,
+				C70505111C3CC5C5007F8C72 /* MessMaster.swift in Sources */,
 				C78200211BEC800F002BBDB7 /* ExhibitorInfoCV.swift in Sources */,
 				C77C402E1C040285005596E0 /* TimeLineInfo.swift in Sources */,
 				C79546E51BFEC3D80080CD46 /* TSegmentedControl.m in Sources */,
@@ -581,6 +624,7 @@
 				C763D3EC1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */,
 				C79285711BEAF65B00287A24 /* NewsView.swift in Sources */,
 				C78EA5561C1189A2007798E2 /* THLScrollLoadView.m in Sources */,
+				C70505151C3CDF3D007F8C72 /* EaseSDKHelper.m in Sources */,
 				C78001C41C0EEFEA0097FD8E /* NSString+ZhengZe.m in Sources */,
 				C76E08EF1C09E17200AAFF7B /* About.swift in Sources */,
 				C7A962991BF32354003B883A /* ProductList.swift in Sources */,
@@ -593,11 +637,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C705051E1C3CE311007F8C72 /* NSObject+EaseMob.m in Sources */,
 				C71A3A841BF1954B0081F7E6 /* SchedulerInfo.swift in Sources */,
 				C779C1071BF48E9C008D625F /* Suggestion.swift in Sources */,
 				C7C0EABD1BF09CA2004711BF /* ContactsController.swift in Sources */,
 				C7811B971C0C905A00E5A637 /* ZoomView.swift in Sources */,
 				C79285791BEB322700287A24 /* SettingController.swift in Sources */,
+				C705051A1C3CE03C007F8C72 /* EaseConvertToCommonEmoticonsHelper.m in Sources */,
 				C774810A1C34C33400144427 /* MyInfo.swift in Sources */,
 				C78EA5551C1189A2007798E2 /* THLRefreshView.m in Sources */,
 				C7F0AE3C1BE210C70056C06B /* ViewController.swift in Sources */,
@@ -607,11 +653,13 @@
 				C7F0AE3D1BE210C70056C06B /* AppDelegate.swift in Sources */,
 				C763D3E91C045FE2005E3921 /* TimeLineCommit.swift in Sources */,
 				C79E54601BE9DCB800E4A514 /* RootCollectionCells.swift in Sources */,
+				C70505251C3D29F8007F8C72 /* MessageVC.swift in Sources */,
 				C79285721BEAF65B00287A24 /* NewsView.swift in Sources */,
 				C77E8FA61C06DB48003832BA /* CommentScoreView.m in Sources */,
 				C77C14741BE8B02B00DCC670 /* ExhibitorController.swift in Sources */,
 				C7C3C35D1C195A1E0083F3A1 /* RepeatScrollView.m in Sources */,
 				C79E545D1BE9B79100E4A514 /* Scheduler.swift in Sources */,
+				C705050F1C3CB9F3007F8C72 /* ApplyListView.swift in Sources */,
 				C7A9629A1BF32354003B883A /* ProductList.swift in Sources */,
 				C78200221BEC800F002BBDB7 /* ExhibitorInfoCV.swift in Sources */,
 				C779C0FE1BF42D35008D625F /* LogInCell.m in Sources */,
@@ -623,6 +671,7 @@
 				C76429B51C2B93FF00F34888 /* SeachVC.swift in Sources */,
 				C79546DF1BFEBC8F0080CD46 /* NewListCV.swift in Sources */,
 				C79285761BEB06A400287A24 /* THActivityView.m in Sources */,
+				C70505121C3CC5C5007F8C72 /* MessMaster.swift in Sources */,
 				C79E54631BE9E47400E4A514 /* DataModel.swift in Sources */,
 				C77C402F1C040285005596E0 /* TimeLineInfo.swift in Sources */,
 				C79546E61BFEC3D80080CD46 /* TSegmentedControl.m in Sources */,
@@ -632,6 +681,7 @@
 				C763D3ED1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */,
 				C7A9629D1BF32F01003B883A /* WebHtml.swift in Sources */,
 				C78EA5571C1189A2007798E2 /* THLScrollLoadView.m in Sources */,
+				C70505161C3CDF3D007F8C72 /* EaseSDKHelper.m in Sources */,
 				C78001C51C0EEFEA0097FD8E /* NSString+ZhengZe.m in Sources */,
 				C76E08F01C09E17200AAFF7B /* About.swift in Sources */,
 				C7F0AE3E1BE210C70056C06B /* test.m in Sources */,
@@ -753,7 +803,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Weiyuan Huang (QJZJLZ48TX)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Weiyuan Huang (QJZJLZ48TX)";
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"COCOAPODS=1",
 					"DEBUG=1",
@@ -764,6 +814,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/weixin",
+					"$(PROJECT_DIR)/yunzhan/huanxin/DeviceHelper/VoiceConvert/opencore-amrnb",
+					"$(PROJECT_DIR)/yunzhan/huanxin/DeviceHelper/VoiceConvert/opencore-amrwb",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.miaomiao.bike;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -781,13 +833,15 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Wuxi Chestnut Company Limited (F86GF7VY4V)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Wuxi Chestnut Company Limited (F86GF7VY4V)";
-				ENABLE_BITCODE = YES;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = yunzhan/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/weixin",
+					"$(PROJECT_DIR)/yunzhan/huanxin/DeviceHelper/VoiceConvert/opencore-amrnb",
+					"$(PROJECT_DIR)/yunzhan/huanxin/DeviceHelper/VoiceConvert/opencore-amrwb",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.miaomiao.bike;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -801,7 +855,6 @@
 			baseConfigurationReference = A80FDAACCEBB8A18BFE651DC /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Wuxi Chestnut Company Limited";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Weiyuan Huang (QJZJLZ48TX)";
@@ -817,6 +870,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/weixin",
+					"$(PROJECT_DIR)/yunzhan/huanxin/DeviceHelper/VoiceConvert/opencore-amrnb",
+					"$(PROJECT_DIR)/yunzhan/huanxin/DeviceHelper/VoiceConvert/opencore-amrwb",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.miaomiao.enterprisebike;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -831,7 +886,6 @@
 			baseConfigurationReference = 6A23C94284D64802DC2E07B8 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Wuxi Chestnut Company Limited";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Wuxi Chestnut Company Limited (F86GF7VY4V)";
@@ -847,6 +901,8 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/weixin",
+					"$(PROJECT_DIR)/yunzhan/huanxin/DeviceHelper/VoiceConvert/opencore-amrnb",
+					"$(PROJECT_DIR)/yunzhan/huanxin/DeviceHelper/VoiceConvert/opencore-amrwb",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.miaomiao.enterprisebike;
 				PRODUCT_NAME = "$(TARGET_NAME)";

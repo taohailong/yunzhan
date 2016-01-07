@@ -239,11 +239,36 @@ class PersonData {
     var phone:String?
     var id:String?
     var exhibitorID:String?
+    var favorite:Bool = false
+    var chatID:String?
     init(name:String?,title:String?,phone:String?)
     {
-      self.name = name
+        self.name = name
         self.title = title
         self.phone = phone
+    }
+}
+
+
+extension PersonData{
+
+    convenience init(let netData:[String:AnyObject])
+    {
+        self.init(name: netData["name"] as?String, title: netData["title"] as? String, phone: netData["phone"] as? String)
+        if let id = netData["id"] as? Int
+        {
+            self.id = String(id)
+        }
+        if let favorite = netData["favorite"] as? Int
+        {
+            self.favorite = favorite == 0 ? false:true
+        }
+        
+        if let chat = netData["chat"] as? String
+        {
+            self.chatID = chat
+        }
+ 
     }
 }
 

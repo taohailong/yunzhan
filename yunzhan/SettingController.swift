@@ -10,7 +10,15 @@ import Foundation
 class SettingViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
     
     @IBOutlet weak var table: UITableView!
+    private var isNewMess = false
     
+    func newMessReloadTabel(new:Bool){
+       isNewMess = new
+        if table != nil
+        {
+            table.reloadData()
+        }
+    }
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         table.reloadData()
@@ -65,11 +73,12 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         
         self.title = "我的"
         table.registerClass(SettingHeadCell.self , forCellReuseIdentifier: "SettingHeadCell")
+        table.registerClass(SettingCommonCell.self , forCellReuseIdentifier: "SettingCommonCell")
         table.separatorColor = Profile.rgb(243, g: 243, b: 243)
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 5
+        return 6
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -79,9 +88,13 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         }
         else if section == 1
         {
-          return 4
+          return 3
         }
         else if section == 2
+        {
+          return 2
+        }
+        else if section == 3
         {
           return 2
         }
@@ -117,6 +130,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         {
            let cell = tableView.dequeueReusableCellWithIdentifier("SettingCommonCell") as! SettingCommonCell
             cell.textLabel?.font = Profile.font(15)
+            cell.messageSpot.hidden = true
             cell.textLabel?.textColor = Profile.rgb(102, g: 102, b: 102)
             
             var imageName:String?, title:String
@@ -126,32 +140,36 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
                 imageName = "settingMyExhibitor"
                 title = "我的展商"
                 
+               
            case let s where s.section == 1 && s.row == 1:
                 
-              imageName = "settingActivty"
-              title = "我的活动"
-
+               imageName = "settingActivty"
+               title = "我的活动"
                 
             case let s where s.section == 1 && s.row == 2:
                 
-                imageName = "settingMyConnect"
-                title = "我的联系人"
-    
-            case let s where s.section == 1 && s.row == 3:
-                
                 imageName = "settingMyOrder"
                 title = "我的订单"
-                
+    
+            case let s where s.section == 2 && s.row == 0:
+                imageName = "settingMyConnect"
+                title = "我的联系人"
                 
             case let s where s.section == 2 && s.row == 1:
+                imageName = "setting_chat"
+                title = "我的消息"
+                cell.messageSpot.hidden = !isNewMess
+                
+            case let s where s.section == 3 && s.row == 0:
+                
+                imageName = "settingMyRegist"
+                title = "预约报名"
+    
+            case let s where s.section == 3 && s.row == 1:
                 imageName = "settingMyHotel"
                 title = "相关推荐"
                 
-            case let s where s.section == 2 && s.row == 0:
-                imageName = "settingMyRegist"
-                title = "预约报名"
-                
-             case let s where s.section == 3:
+             case let s where s.section == 4:
                 
                 imageName = "settingSuggestion"
                 title = "反馈"
@@ -228,12 +246,6 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
                 schedulerList.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(schedulerList, animated: true)
             }
-            else if indexPath.row == 2
-            {
-                let contactList = ContactsListVC()
-                contactList.hidesBottomBarWhenPushed = true
-                self.navigationController?.pushViewController(contactList, animated: true)
-            }
             else
             {
                let orderList = MyOrderListVC()
@@ -251,6 +263,23 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
                 return
             }
 
+            
+            if indexPath.row == 0
+            {
+                let contactList = ContactsListVC()
+                contactList.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(contactList, animated: true)
+            }
+            else
+            {
+                let messList = ApplyListViewController()
+                messList.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(messList, animated: true)
+            }
+        }
+            
+        else if indexPath.section == 3
+        {
             if indexPath.row == 1
             {
                 let companyVC = MyCompanyVC()
@@ -263,9 +292,9 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
                 registVC.hidesBottomBarWhenPushed = true
                 self.navigationController?.pushViewController(registVC, animated: true)
             }
-
         }
-        else if indexPath.section == 3
+            
+        else if indexPath.section == 4
         {
             if user.token == nil
             {
@@ -525,8 +554,26 @@ class SettingHeadCell: UITableViewCell {
 }
 
 class SettingCommonCell: UITableViewCell {
-    @IBOutlet weak var titleL: UILabel!
-    @IBOutlet weak var iconImage: UIImageView!
+//    @IBOutlet weak var titleL: UILabel!
+//    @IBOutlet weak var iconImage: UIImageView!
+    var messageSpot:UIView!
+    override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        messageSpot = UIView()
+        messageSpot.hidden = true
+        messageSpot.backgroundColor = Profile.rgb(252, g: 58, b: 62)
+        messageSpot.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(messageSpot)
+        messageSpot.layer.masksToBounds = true
+        messageSpot.layer.cornerRadius = 3.5
+        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(messageSpot, toItem: self.contentView))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-117-[messageSpot(7)]", options: [], metrics: nil, views: ["messageSpot":messageSpot]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[messageSpot(7)]", options: [], metrics: nil, views: ["messageSpot":messageSpot]))
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     func fillData(imageName:String?,title:String){
        
         if imageName != nil
@@ -537,7 +584,6 @@ class SettingCommonCell: UITableViewCell {
 //            self.imageView?.backgroundColor = UIColor.redColor()
         }
         
-//        titleL.text = title
     }
 }
 

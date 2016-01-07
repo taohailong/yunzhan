@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface UIImage (ZoomImage)
+
 + (UIImage*)imageByScalingAndCroppingForSize:(CGSize)targetSize  and:(UIImage*)Image;
 -(UIImage*)scaleToSize:(CGSize)size;
 -(UIImage*)imageCompressScale:(float)scale;

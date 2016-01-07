@@ -20,16 +20,28 @@ PODS:
   - AFNetworking/UIKit (2.5.4):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - EaseMobSDKFull (2.2.1.2)
   - SDWebImage (3.7.3):
     - SDWebImage/Core (= 3.7.3)
   - SDWebImage/Core (3.7.3)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.5.4)
+  - EaseMobSDKFull (from `https://github.com/easemob/sdk-ios-cocoapods-integration.git`)
   - SDWebImage (~> 3.7.3)
+
+EXTERNAL SOURCES:
+  EaseMobSDKFull:
+    :git: https://github.com/easemob/sdk-ios-cocoapods-integration.git
+
+CHECKOUT OPTIONS:
+  EaseMobSDKFull:
+    :commit: f27db4da9c6285f91a71811c2d55af8427368dbf
+    :git: https://github.com/easemob/sdk-ios-cocoapods-integration.git
 
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  EaseMobSDKFull: f8d6281b9b58b90d5594fe7d40e1529790035d65
   SDWebImage: 1d2b1a1efda1ade1b00b6f8498865f8ddedc8a84
 
 COCOAPODS: 0.37.2

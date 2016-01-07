@@ -52,23 +52,54 @@ class UserData:NSObject {
             userDefault.synchronize()
         }
     }
-    var _name:String?
-    var isLogIn:Bool = false
+    
     var token:String? {
         
         get {
             
             let userDefault = NSUserDefaults.standardUserDefaults()
             let tokenT = userDefault.objectForKey("token") as? String
-           return tokenT
+            return tokenT
         }
-    
-        set {
         
-          let userDefault = NSUserDefaults.standardUserDefaults()
+        set {
+            
+            let userDefault = NSUserDefaults.standardUserDefaults()
             userDefault.setObject(newValue, forKey: "token")
         }
     }
+
+    var messID:String?{
+    
+        get{
+            let userDefault = NSUserDefaults.standardUserDefaults()
+            let tokenT = userDefault.objectForKey("messID") as? String
+            return tokenT
+
+        }
+        set{
+            let userDefault = NSUserDefaults.standardUserDefaults()
+            userDefault.setObject(newValue, forKey: "messID")
+        }
+    }
+    
+    var password_huanxin:String?{
+    
+        get{
+            let userDefault = NSUserDefaults.standardUserDefaults()
+            let tokenT = userDefault.objectForKey("huanxin_ps") as? String
+            return tokenT
+            
+        }
+        set{
+            let userDefault = NSUserDefaults.standardUserDefaults()
+            userDefault.setObject(newValue, forKey: "huanxin_ps")
+        }
+    }
+    
+    
+    var _name:String?
+    var isLogIn:Bool = false
     
     
     
@@ -79,11 +110,12 @@ class UserData:NSObject {
         title = nil
        name = nil
        let userDefault = NSUserDefaults.standardUserDefaults()
-//        print(userDefault.objectForKey("token"))
         userDefault.removeObjectForKey("token")
-//        print(userDefault.objectForKey("token"))
         userDefault.removeObjectForKey("phone")
         userDefault.removeObjectForKey("deviceToken")
+        userDefault.removeObjectForKey("messID")
+        userDefault.removeObjectForKey("huanxin_ps")
+        self.logOutHuanxin()
     }
     
     
@@ -110,6 +142,54 @@ class UserData:NSObject {
             Inner.instance = UserData()
         }
         return Inner.instance!
+    }
+    
+    
+    
+    func logInHuanxin()
+    {
+        if self.messID == nil
+        {
+          return
+        }
+        
+        if EaseMob.sharedInstance().chatManager.isLoggedIn == true
+        {
+           return
+        }
+        
+        EaseMob.sharedInstance().chatManager.asyncLoginWithUsername(self.messID, password: self.password_huanxin, completion: { (loginInfo:[NSObject : AnyObject]!, err:EMError!) -> Void in
+        
+            if err == nil
+            {
+//               EaseMob.sharedInstance().chatManager.isAutoLoginEnabled = true
+               EaseMob.sharedInstance().chatManager.loadDataFromDatabase()
+                NSNotificationCenter.defaultCenter().postNotificationName("loginStateChange", object: true)
+//                EaseMob.sharedInstance().chatManager.asyncFetch
+            }
+            
+            
+        }, onQueue: nil)
+    
+    }
+    
+    
+    func logOutHuanxin()
+    {
+        if self.messID == nil
+        {
+            return
+        }
+        
+        if EaseMob.sharedInstance().chatManager.isLoggedIn == false
+        {
+            return
+        }
+
+        self.clearUserData()
+        EaseMob.sharedInstance().chatManager.asyncLogoffWithUnbindDeviceToken(false, completion: { (info: [NSObject : AnyObject]!, err: EMError!) -> Void in
+        
+        }, onQueue: nil)
     }
     
    }

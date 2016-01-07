@@ -450,6 +450,7 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
             cell.fillData(person.title, name: person.name, phone: person.phone)
             weak var wself = self
             weak var wperson = person
+            cell.chatBlock = {wself?.showChatView()}
             cell.tapBlock = { wself?.addMyContact(wperson!) }
 
             return cell
@@ -460,27 +461,71 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
     
     func addMyContact(person: PersonData)
     {
+        weak var wself = self
         if UserData.shared.token == nil
         {
             let loginVC = LogViewController()
+            loginVC.setLogResturnBk({ (let success:Bool) -> Void in
+                
+                if success == true
+                {
+                    wself?.fetchNetData()
+                }
+            })
             self.navigationController?.pushViewController(loginVC, animated: true)
             return
         }
+        
+        
         let loadV = THActivityView(activityViewWithSuperView: self.view)
         
         let tempNet = NetWorkData()
-        tempNet.addSchedulerContact(schedulerID, personID: person.id!) { (result, status) -> (Void) in
-            loadV.removeFromSuperview()
-            
-            if let warnStr = result as? String
-            {
-                let showV = THActivityView(string: warnStr)
-                showV.show()
+        
+        
+        if person.favorite == true
+        {
+            tempNet.delectContact(person.exhibitorID!, personID: person.id!) { (result, status) -> (Void) in
+                
+                loadV.removeFromSuperview()
+                if let warnStr = result as? String
+                {
+                    let showV = THActivityView(string: warnStr)
+                    showV.show()
+                }
+                if status == .NetWorkStatusSucess
+                {
+                    person.favorite = false
+                    wself?.table.reloadData()
+                }
             }
         }
+        else
+        {
+             tempNet.addSchedulerContact(schedulerID, personID: person.id!) { (result, status) -> (Void) in
+                
+                loadV.removeFromSuperview()
+                if let warnStr = result as? String
+                {
+                    let showV = THActivityView(string: warnStr)
+                    showV.show()
+                }
+                if status == .NetWorkStatusSucess
+                {
+                    person.favorite = true
+                    wself?.table.reloadData()
+                }
+            }
+        }
+        
         tempNet.start()
     }
 
+    func showChatView(){
+    
+    
+    
+    }
+    
     
     deinit{
         net = nil

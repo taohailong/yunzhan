@@ -17,3 +17,6 @@
 #import "NSString+ZhengZe.h"
 #import "THLRefreshView.h"
 //#import "THLScrollLoadView.h"
+//#import "EMSDKFull.h"
+#import "EaseMob.h"
+#import "EaseSDKHelper.h"

@@ -9,7 +9,7 @@
 import UIKit
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate,IChatManagerDelegate {
 
     var window: UIWindow?
     var net :NetWorkData!
@@ -19,7 +19,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate {
         
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0
-//        application.statusBarStyle = UIStatusBarStyleLightContent
+        
+        
+        self.easemob(application, didFinishLaunchingWithOptions: launchOptions, appKey: "easemob-demo#chatdemoui", certName: "null")
+        let u = UserData.shared
+        u.messID = "tfy"
+        u.password_huanxin = "123456"
+        u.logInHuanxin()
         if #available(iOS 8.0,*)
         {
 //           let action1 = UIMutableUserNotificationAction()
@@ -45,7 +51,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate {
         deviceToken = deviceToken.substringWithRange(NSMakeRange(1, deviceToken.length-2))
     
         deviceToken = deviceToken.stringByReplacingOccurrencesOfString(" ", withString: "")
-//        app = [app stringByReplacingOccurrencesOfString:@" " withString:@""];
 //        print(deviceToken)
         
         net = NetWorkData()
@@ -59,15 +64,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate {
     
     func onResp(resp: BaseResp!) {
         
-        
         if resp.errCode == 0
         {
            
            
         }
-//        print(resp.errCode)
-////        print(resp.errStr)
-//        print(resp.type)
     }
     
     
@@ -103,7 +104,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
+    
 }
-

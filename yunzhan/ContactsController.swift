@@ -8,12 +8,12 @@
 
 import Foundation
 
-class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate,UIAlertViewDelegate {
+class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate {
     var net:NetWorkData!
     var prefixArr:[String]!
     var table :UITableView!
     var dataArr:[[PersonData]]!
-    var phoneNu:String!
+//    var phoneNu:String!
     override func viewDidLoad() {
         
         self.title = "我的联系人"
@@ -113,6 +113,8 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         let p = arr[indexPath.row]
         cell.fillData(p.title, name: p.name, phone: p.phone)
         cell.separatorInset = UIEdgeInsetsZero
+        weak var wself = self
+        cell.chatBlock = {  }
         if #available(iOS 8.0, *) {
             cell.layoutMargins = UIEdgeInsetsZero
         } else {
@@ -163,7 +165,6 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
             {
                return
             }
-            
             let subA = wself?.dataArr[indexPath.section]
             subArr.removeAtIndex(indexPath.row)
             wself?.prefixArr.removeAtIndex(indexPath.section)
@@ -173,7 +174,6 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
             {
                 wself?.dataArr.insert(subA!, atIndex: indexPath.section)
             }
-//            wself?.dataArr.insert(subA!, atIndex: indexPath.section)
 
             wself?.table.reloadData()
         }
@@ -181,44 +181,32 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     }
     
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        let subA = self.dataArr[indexPath.section]
-        let person = subA[indexPath.row]
-        
-       
-        if let url = person.phone
-        {
-             phoneNu = url
-             let alert = UIAlertView(title: "提示", message: "拨打：\(person.phone!)", delegate: self, cancelButtonTitle: "取消", otherButtonTitles: "确定")
-            alert.show()
-          
-        }
-        
-    }
+//    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+//        
+//        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+//        let subA = self.dataArr[indexPath.section]
+//        let person = subA[indexPath.row]
+//        
+//       
+//        if let url = person.phone
+//        {
+//             phoneNu = url
+//            
+//        }
+//        
+//    }
     
-    func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
-        
-        if buttonIndex == alertView.cancelButtonIndex
-        {
-            return
-        }
-        
-         let url = NSURL(string: "tel://\(phoneNu)")
-         UIApplication.sharedApplication().openURL(url!)
-    }
     
 }
 
 
 
 
-class ContactsPersonCell: UITableViewCell {
+class ContactsPersonCell: UITableViewCell,UIAlertViewDelegate {
     let nameL:UILabel
     let titleL:UILabel
     var phoneBt:UIButton
-
+    var chatBlock:(Void->Void)?
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
@@ -227,7 +215,7 @@ class ContactsPersonCell: UITableViewCell {
         phoneBt = UIButton(type: .Custom)
 
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
+        self.selectionStyle = .None
         titleL.textColor = Profile.rgb(153, g: 153, b: 153)
         titleL.font = Profile.font(13)
         self.contentView.addSubview(titleL)
@@ -245,25 +233,67 @@ class ContactsPersonCell: UITableViewCell {
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-10-[nameL]", options: [], metrics: nil, views: ["nameL":nameL,"titleL":titleL]))
         
         
+        let chatBt = UIButton(type: .Custom)
+//        chatBt.backgroundColor = UIColor.redColor()
+        chatBt.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(chatBt)
+        chatBt.addTarget(self, action: "chatBlockAction", forControlEvents: .TouchUpInside)
+        chatBt.setImage(UIImage(named: "exhibitorChat"), forState: .Normal)
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[nameL]-30-[chatBt(25)]", options: [], metrics: nil , views: ["nameL":nameL,"chatBt":chatBt]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[chatBt(20)]", options: [], metrics: nil, views: ["chatBt":chatBt]))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(chatBt, toItem: nameL))
         
-        phoneBt.setTitleColor(Profile.rgb(51, g: 51, b: 51), forState: .Disabled)
-        phoneBt.titleLabel?.font = Profile.font(15)
+        
+        phoneBt.setTitleColor(Profile.rgb(51, g: 51, b: 51), forState: .Normal)
+        phoneBt.titleLabel?.font = Profile.font(13)
         phoneBt.translatesAutoresizingMaskIntoConstraints = false
-        phoneBt.setImage(UIImage(named: "exhibitorPhone"), forState: .Disabled)
-        phoneBt.imageEdgeInsets = UIEdgeInsetsMake(0, -5, 0, 0)
+        phoneBt.addTarget(self, action: "makeCall", forControlEvents: .TouchUpInside)
+        phoneBt.setImage(UIImage(named: "contactsPhone"), forState: .Normal)
+        phoneBt.imageEdgeInsets = UIEdgeInsetsMake(0, -6, 0, 0)
         self.contentView.addSubview(phoneBt)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[nameL]-35-[phoneBt]", options: [], metrics: nil, views: ["phoneBt":phoneBt,"nameL":nameL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[chatBt]-25-[phoneBt]", options: [], metrics: nil, views: ["phoneBt":phoneBt,"chatBt":chatBt]))
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(phoneBt, toItem: nameL))
-        phoneBt.enabled = false
     }
 
     func fillData(title: String?,name: String? ,phone: String?)
     {
         titleL.text = title
         nameL.text =  name
-        phoneBt.setTitle(phone, forState: UIControlState.Normal)
+        if phone != nil
+        {
+            phoneBt.setTitle(phone, forState: UIControlState.Normal)
+        }
     }
 
+    
+    func chatBlockAction(){
+        
+        if chatBlock != nil
+        {
+           chatBlock!()
+        }
+    
+    }
+    
+    func makeCall(){
+    
+        let alert = UIAlertView(title: "提示", message: "拨打：\(phoneBt.currentTitle!)", delegate: self, cancelButtonTitle: "取消", otherButtonTitles: "确定")
+        alert.show()
+
+    }
+    
+    func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
+        
+        if buttonIndex == alertView.cancelButtonIndex
+        {
+            return
+        }
+        
+        let url = NSURL(string: "tel://\(phoneBt.currentTitle!)")
+        UIApplication.sharedApplication().openURL(url!)
+    }
+
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

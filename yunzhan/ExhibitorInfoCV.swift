@@ -533,9 +533,11 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
                 let person = personArr[indexPath.row-1]
                 let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorPerson") as! ExhibitorPerson
                 cell.fillData(person.title  , name:person.name, phone: person.phone)
-                 weak var wself = self
+                cell.addBt.selected = person.favorite
+                weak var wself = self
                 weak var wperson = person
                 cell.tapBlock = { wself?.addMyContact(wperson!) }
+                cell.chatBlock = { wself?.showChatView()}
                 return cell
 
             }
@@ -601,24 +603,60 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
     
     func addMyContact(person: PersonData)
     {
+        weak var wself = self
         if UserData.shared.token == nil
         {
             let loginVC = LogViewController()
+            loginVC.setLogResturnBk({ (let success:Bool) -> Void in
+                
+                if success == true
+                {
+                  wself?.fetchData()
+                }
+            })
             self.navigationController?.pushViewController(loginVC, animated: true)
             return
         }
         let loadV = THActivityView(activityViewWithSuperView: self.view)
         
         let tempNet = NetWorkData()
-        tempNet.addExhibitorContact(id!, personID: person.id!) { (result, status) -> (Void) in
-            
-            loadV.removeFromSuperview()
-            if let warnStr = result as? String
-            {
-                let showV = THActivityView(string: warnStr)
-                showV.show()
+        
+        if person.favorite == true
+        {
+            tempNet.delectContact(id!, personID: person.id!) { (result, status) -> (Void) in
+                
+                loadV.removeFromSuperview()
+                if let warnStr = result as? String
+                {
+                    let showV = THActivityView(string: warnStr)
+                    showV.show()
+                }
+                if status == .NetWorkStatusSucess
+                {
+                    person.favorite = false
+                    wself?.table.reloadData()
+                }
+            }
+
+        }
+        else
+        {
+            tempNet.addExhibitorContact(id!, personID: person.id!) { (result, status) -> (Void) in
+                
+                loadV.removeFromSuperview()
+                if let warnStr = result as? String
+                {
+                    let showV = THActivityView(string: warnStr)
+                    showV.show()
+                }
+                if status == .NetWorkStatusSucess
+                {
+                    person.favorite = true
+                    wself?.table.reloadData()
+                }
             }
         }
+        
         tempNet.start()
     }
     
@@ -631,9 +669,14 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
     }
     
     
+    func showChatView(){
+    
+    
+    }
+    
+    
     func showExhibitorImage()
     {
-    
         var picHtml = ""
         
         let width = Int(Profile.width()) - 16
@@ -1083,14 +1126,17 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
     
     let nameL:UILabel
     let titleL:UILabel
+    let addBt:UIButton
 //    let phoneL:UILabel
-    var phoneBt:UIButton
+    let phoneBt:UIButton
     var tapBlock:((Void)->Void)?
+    var chatBlock:(Void ->Void)?
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         nameL = UILabel()
         titleL = UILabel()
         phoneBt = UIButton(type: .Custom)
+        addBt = UIButton(type: .Custom)
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.selectionStyle = .None
@@ -1112,28 +1158,35 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(nameL, toItem: titleL))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-10-[nameL]", options: [], metrics: nil, views: ["nameL":nameL,"titleL":titleL]))
 
-    
-        
-        phoneBt.setTitleColor(Profile.rgb(102, g: 102, b: 102), forState: .Normal)
-        phoneBt.titleLabel?.font = Profile.font(14)
-        phoneBt.translatesAutoresizingMaskIntoConstraints = false
-        phoneBt.setImage(UIImage(named: "exhibitorPhone"), forState: .Normal)
-        phoneBt.imageEdgeInsets = UIEdgeInsetsMake(0, -8, 0, 0)
-        phoneBt.addTarget(self, action: "makeACall", forControlEvents: .TouchUpInside)
-        self.contentView.addSubview(phoneBt)
-        self.contentView.addConstraint(NSLayoutConstraint(item: phoneBt, attribute: .Left, relatedBy: .Equal, toItem: self.contentView, attribute: .Left, multiplier: 1.0, constant: 76))
-//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-72-[phoneBt]", options: [], metrics: nil, views: ["phoneBt":phoneBt,"nameL":nameL]))
-        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(phoneBt, toItem: nameL))
-        
-        
-        let addBt = UIButton(type: .Custom)
+//        addBt.backgroundColor = UIColor.greenColor()
+        addBt.setTitle("收藏", forState: .Normal)
+        addBt.titleLabel?.font = Profile.font(10)
+        addBt.setTitleColor(Profile.rgb(102, g: 102, b: 102), forState: .Normal)
+        addBt.imageEdgeInsets = UIEdgeInsetsMake(0, 8, 9, 0)
+        addBt.titleEdgeInsets = UIEdgeInsetsMake(15, -15, 0, 0)
         addBt.setImage(UIImage(named: "addPhoneBt"), forState: .Normal)
+        addBt.setImage(UIImage(named: "addPhoneBt_select"), forState: .Selected)
         addBt.translatesAutoresizingMaskIntoConstraints = false
         addBt.addTarget(self, action: "addContact", forControlEvents: .TouchUpInside)
         self.contentView.addSubview(addBt)
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(addBt , toItem: self.contentView))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[addBt]-15-|", options: [], metrics: nil, views: ["addBt":addBt]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[addBt(30)]-15-|", options: [], metrics: nil, views: ["addBt":addBt]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[addBt(25)]", options: [], metrics: nil, views: ["addBt":addBt]))
         
+//        phoneBt.backgroundColor = UIColor.greenColor()
+        phoneBt.setTitleColor(Profile.rgb(102, g: 102, b: 102), forState: .Normal)
+        phoneBt.titleLabel?.font = Profile.font(10)
+        phoneBt.translatesAutoresizingMaskIntoConstraints = false
+        phoneBt.setTitle("发送消息", forState: .Normal)
+        phoneBt.setImage(UIImage(named: "exhibitorChat"), forState: .Normal)
+        phoneBt.imageEdgeInsets = UIEdgeInsetsMake(0, 8, 11, 0)
+        phoneBt.titleEdgeInsets = UIEdgeInsetsMake(15, -17, 0, 0)
+        phoneBt.addTarget(self, action: "makeChat", forControlEvents: .TouchUpInside)
+        self.contentView.addSubview(phoneBt)
+
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[phoneBt(40)]-30-[addBt]", options: [], metrics: nil, views: ["phoneBt":phoneBt,"addBt":addBt]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[phoneBt(25)]", options: [], metrics: nil, views: ["phoneBt":phoneBt]))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(phoneBt, toItem: self.contentView))
         self.bottomSeparateView()
     }
 
@@ -1145,26 +1198,14 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
         self.contentView.addSubview(separateV)
         separateV.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[separateV(0.5)]-0-|", options: [], metrics: nil, views: ["separateV":separateV]))
-        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(separateV, toItem: phoneBt))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[separateV]-0-|", aView: separateV, bView: nil))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[separateV]-0-|", aView: separateV, bView: nil))
     }
     
-    func makeACall()
+    func makeChat()
     {
-       let alert = UIAlertView(title: "提示", message: "是否拨打电话", delegate: self, cancelButtonTitle: "取消", otherButtonTitles: "确定")
-        alert.show()
-    
-    }
-    func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
-        
-        if alertView.cancelButtonIndex == buttonIndex
+        if chatBlock != nil
         {
-           return
-        }
-        if let nu = phoneBt.currentTitle
-        {
-            let url = NSURL(string: "tel://\(nu)")
-            UIApplication.sharedApplication().openURL(url!)
+            chatBlock!()
         }
     }
     
@@ -1178,9 +1219,9 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
     }
     func fillData(title:String? ,name:String?,phone:String?)
     {
-       titleL.text = title
+        titleL.text = title
         nameL.text =  name
-       phoneBt.setTitle(phone, forState: UIControlState.Normal)
+//       phoneBt.setTitle(phone, forState: UIControlState.Normal)
     }
     
     required init?(coder aDecoder: NSCoder) {

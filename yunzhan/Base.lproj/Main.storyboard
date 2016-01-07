@@ -27,7 +27,7 @@
         <!--Orientation Tab Bar-->
         <scene sceneID="4HH-tq-o6j">
             <objects>
-                <tabBarController id="Df1-5m-kBG" customClass="OrientationTabBar" customModule="yunzhan" customModuleProvider="target" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="tabbar" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Df1-5m-kBG" customClass="OrientationTabBar" customModule="yunzhan" customModuleProvider="target" sceneMemberID="viewController">
                     <simulatedOrientationMetrics key="simulatedOrientationMetrics"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="5zk-cb-IuK">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
@@ -261,7 +261,7 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="487"/>
                                 <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="SettingCommonCell" rowHeight="50" id="tK3-5B-ctv" customClass="SettingCommonCell" customModule="yunzhan" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="SettingCommonCell" rowHeight="50" id="tK3-5B-ctv">
                                         <rect key="frame" x="0.0" y="50" width="600" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" tableViewCell="tK3-5B-ctv" id="Agd-It-L2V">
@@ -289,10 +289,6 @@
                                                 <constraint firstItem="jIZ-e8-dha" firstAttribute="top" secondItem="Agd-It-L2V" secondAttribute="top" constant="8" id="tUF-xJ-5Ce"/>
                                             </constraints>
                                         </tableViewCellContentView>
-                                        <connections>
-                                            <outlet property="iconImage" destination="jIZ-e8-dha" id="Grz-b3-CIV"/>
-                                            <outlet property="titleL" destination="PxE-fa-ljP" id="8Du-SR-2ra"/>
-                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                                 <connections>

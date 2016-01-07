@@ -29,7 +29,7 @@ class Profile
     static let NavBarColor = { return  UIColor(red: 219/255.0, green: 0/255.0, blue: 52/255.0, alpha: 1.0) }
     
 //    #if DEBUG
-    #if false
+    #if true
     static let domain = "123.56.102.224"
     #else
     static let domain = "www.zhangzhantong.com"

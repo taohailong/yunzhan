@@ -71,8 +71,8 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "首页"
-            
-         self.navigationController?.tabBarItem.selectedImage = UIImage(named: "root-1")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+
+        self.navigationController?.tabBarItem.selectedImage = UIImage(named: "root-1")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationController?.tabBarItem.image = UIImage(named: "root-1_selected")
         self.navigationController?.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
             

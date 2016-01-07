@@ -8,37 +8,31 @@
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>2</integer>
 		</dict>
 		<key>Pods-SDWebImage.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>3</integer>
 		</dict>
 		<key>Pods.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
-			<key>orderHint</key>
-			<integer>1</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>419280D680C94DBEA0ABCD2D</key>
+		<key>0F9964AA8D2A85330C8D06CA</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>7429D70D50105FE9155C5516</key>
+		<key>809CB529EA0E316D2323DCB7</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>F8DC00A77D958D357C0FD13B</key>
+		<key>E3D1B510B878CEDB72EF8DC7</key>
 		<dict>
 			<key>primary</key>
 			<true/>

@@ -7,7 +7,62 @@
 //
 
 import Foundation
-class OrientationTabBar: UITabBarController {
+class OrientationTabBar: UITabBarController,IChatManagerDelegate {
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        EaseMob.sharedInstance().chatManager.removeDelegate(self)
+        EaseMob.sharedInstance().chatManager.addDelegate(self, delegateQueue: nil)
+    }
+    
+    func didLoginFromOtherDevice() {
+        UserData.shared.logOutHuanxin()
+    }
+    
+    func didUpdateConversationList(conversationList: [AnyObject]!) {
+        
+        self.changeBadge()
+    }
+    
+    func didUnreadMessagesCountChanged(){
+        
+        self.changeBadge()
+        
+    }
+    
+    func changeBadge(){
+        
+        let conversation = EaseMob.sharedInstance().chatManager.conversations as? [EMConversation]
+        
+        if conversation == nil
+        {
+           return
+        }
+        
+        
+        var nu:UInt = 0
+        for temp in conversation!
+        {
+          nu += temp.unreadMessagesCount()
+        }
+        
+         let f = self.viewControllers![4] as! UINavigationController
+         let rootView = f.viewControllers[0] as! SettingViewController
+        if nu > 0
+        {
+            f.tabBarItem.image = UIImage(named: "root-5_new")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+            f.tabBarItem.selectedImage = UIImage(named: "root-5_selected_new")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+            rootView.newMessReloadTabel(true)
+        }
+        else
+        {
+             f.tabBarItem.image = UIImage(named: "root-5")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+            f.tabBarItem.selectedImage = UIImage(named: "root-5_selected")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+             rootView.newMessReloadTabel(false)
+        }
+    }
+
     
     override func shouldAutorotate() -> Bool {
         return false

@@ -59,7 +59,6 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         self.title = "展商"
         
         self.navigationController?.tabBarItem.selectedImage = UIImage(named: "root-2_selected")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
