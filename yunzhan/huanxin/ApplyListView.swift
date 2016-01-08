@@ -19,8 +19,6 @@ class ConversionData: NSObject {
     let conversionType:EMMessageType
     init(model:EMMessage) {
     
-//        self.message = model.messageBodies.last
-        self.name = model.from
         self.userID = model.to
         
         self.new = !model.isRead
@@ -28,11 +26,17 @@ class ConversionData: NSObject {
         self.time = time.toTimeString("yy-MM-dd HH:mm")
         self.conversionID = model.conversationChatter
         self.conversionType = model.messageType
+        
         if let dic = model.ext as? [String:String]
         {
-           self.workTitle = dic["job"]
+           self.name = dic[Profile.nickKey]!
+           self.workTitle = dic[Profile.jobKey]
         }
-        
+        else
+        {
+          self.name = ""
+            self.workTitle = ""
+        }
         
         let m = model.messageBodies[model.messageBodies.count - 1] as! EMTextMessageBody
         
@@ -59,10 +63,12 @@ class ApplyListViewController: UIViewController,UITableViewDataSource,UITableVie
     var table:UITableView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        self.title = "我的消息"
         table = UITableView(frame: CGRectZero, style: .Plain)
         table.dataSource = self
         table.delegate = self
+        table.tableFooterView = UIView()
+        table.separatorColor = Profile.rgb(243, g: 243, b: 243)
         table.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(table)
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
@@ -103,6 +109,18 @@ class ApplyListViewController: UIViewController,UITableViewDataSource,UITableVie
             let mess1 = c1.latestMessage()
             let mess2 = c2.latestMessage()
             
+            if  mess1 == nil
+            {
+                 EaseMob.sharedInstance().chatManager.removeConversationByChatter!(c1.chatter, deleteMessages: true, append2Chat: true)
+                return NSComparisonResult.OrderedAscending
+            }
+            
+            if mess2 ==  nil
+            {
+                EaseMob.sharedInstance().chatManager.removeConversationByChatter!(c2.chatter, deleteMessages: true, append2Chat: true)
+                return NSComparisonResult.OrderedAscending
+            }
+            
             if mess1.timestamp > mess2.timestamp{
                 return NSComparisonResult.OrderedAscending
             }
@@ -119,6 +137,10 @@ class ApplyListViewController: UIViewController,UITableViewDataSource,UITableVie
             if temp.conversationType == .eConversationTypeChat
             {
                 let last = temp.latestMessage()
+                if last == nil
+                {
+                  continue
+                }
                 let element = ConversionData(model: last)
                 element.userID = temp.chatter
             
@@ -171,6 +193,7 @@ class ApplyListViewController: UIViewController,UITableViewDataSource,UITableVie
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         let element = dataSource[indexPath.row]
         let chatView = MessageVC()
+        chatView.title = element.name
         chatView.conversationChatter = element.conversionID
         chatView.conversationType = .eConversationTypeChat
         self.navigationController?.pushViewController(chatView, animated: true)

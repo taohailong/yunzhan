@@ -62,7 +62,7 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         let dict = [NSFontAttributeName: Profile.font(18)]
         self.navigationController!.navigationBar.titleTextAttributes = dict
         
-        self.title = "日程"
+        self.title = "活动"
         self.creatSchedulerTable()
         self.schedulerRefresh()
         self.creatRightBar()

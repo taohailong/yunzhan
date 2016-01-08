@@ -46,11 +46,11 @@
             </objects>
             <point key="canvasLocation" x="-581" y="-131"/>
         </scene>
-        <!--日程-->
+        <!--活动-->
         <scene sceneID="SUa-8l-1pe">
             <objects>
                 <navigationController id="vPN-kt-m4t" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="日程" image="root-3" id="dqk-G1-RWq"/>
+                    <tabBarItem key="tabBarItem" title="活动" image="root-3" id="dqk-G1-RWq"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="pIc-wr-UxH">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>

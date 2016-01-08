@@ -537,7 +537,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
                 weak var wself = self
                 weak var wperson = person
                 cell.tapBlock = { wself?.addMyContact(wperson!) }
-                cell.chatBlock = { wself?.showChatView()}
+                cell.chatBlock = { wself?.showChatView(wperson!)}
                 return cell
 
             }
@@ -601,7 +601,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
     }
     
     
-    func addMyContact(person: PersonData)
+    func checkLogStatus()->Bool
     {
         weak var wself = self
         if UserData.shared.token == nil
@@ -611,51 +611,45 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
                 
                 if success == true
                 {
-                  wself?.fetchData()
+                    wself?.fetchData()
                 }
             })
             self.navigationController?.pushViewController(loginVC, animated: true)
+            return false
+        }
+
+        return true
+    }
+    
+    
+    func addMyContact(person: PersonData)
+    {
+        if self.checkLogStatus() == false
+        {
             return
         }
+        
+        let isFavorite = person.favorite
+        weak var wself = self
         let loadV = THActivityView(activityViewWithSuperView: self.view)
+        
         
         let tempNet = NetWorkData()
         
-        if person.favorite == true
-        {
-            tempNet.delectContact(id!, personID: person.id!) { (result, status) -> (Void) in
-                
-                loadV.removeFromSuperview()
-                if let warnStr = result as? String
-                {
-                    let showV = THActivityView(string: warnStr)
-                    showV.show()
-                }
-                if status == .NetWorkStatusSucess
-                {
-                    person.favorite = false
-                    wself?.table.reloadData()
-                }
+        tempNet.modifyExhibitorContact(id!, personID: person.id!, isAdd: !isFavorite, block: { (result, status) -> (Void) in
+            
+            loadV.removeFromSuperview()
+            if let warnStr = result as? String
+            {
+                let showV = THActivityView(string: warnStr)
+                showV.show()
             }
-
-        }
-        else
-        {
-            tempNet.addExhibitorContact(id!, personID: person.id!) { (result, status) -> (Void) in
-                
-                loadV.removeFromSuperview()
-                if let warnStr = result as? String
-                {
-                    let showV = THActivityView(string: warnStr)
-                    showV.show()
-                }
-                if status == .NetWorkStatusSucess
-                {
-                    person.favorite = true
-                    wself?.table.reloadData()
-                }
+            if status == .NetWorkStatusSucess
+            {
+                person.favorite = !isFavorite
+                wself?.table.reloadData()
             }
-        }
+        })
         
         tempNet.start()
     }
@@ -669,9 +663,16 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
     }
     
     
-    func showChatView(){
+    func showChatView(person :PersonData){
     
-    
+        if self.checkLogStatus() == false
+        {
+            return
+        }
+        let chatView = MessageVC()
+        chatView.title = person.name
+        chatView.conversationChatter = person.chatID
+        self.navigationController?.pushViewController(chatView, animated: true)
     }
     
     
@@ -684,7 +685,6 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         {
             if p.url != nil
             {
-//                picHtml = picHtml+"<img src=\"\(p.url!)\" style=\"max-width:100%; margin-bottom:8px\"/><br>"
                 let s = "<img onload =  \"{if(this.width>\(width)){ this.height= \(width)/ this.width*this.height} else{ this.width = \(width)} }\" src=\"\(p.url!)\" style=\"margin-bottom:8px\"/>"
                 picHtml = picHtml + s
                 
@@ -789,41 +789,7 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(locationBt, toItem: titleL))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[addressL]-8-[locationBt]", options: [], metrics: nil, views: ["locationBt":locationBt,"addressL":addressL]))
         
-//        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(locationView, toItem: locationBt))
-//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[locationView]-8-[locationL]", options: [], metrics: nil, views: ["locationView":locationView,"locationL":locationL]))
 
-        
-//        let separateView = UIView()
-//        separateView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
-//        separateView.translatesAutoresizingMaskIntoConstraints = false
-//        self.contentView.addSubview(separateView)
-//        self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(separateView, toItem: titleL))
-//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[locationView]-10-[separateView(0.5)]", options: [], metrics: nil, views: ["locationView":locationView,"separateView":separateView]))
-//         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[separateView]-0-|", options: [], metrics: nil, views: ["separateView":separateView]))
-//        
-//        
-//        
-//        contentL.translatesAutoresizingMaskIntoConstraints = false
-//        self.contentView.addSubview(contentL)
-////        contentL.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Vertical)
-//        contentL.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: .Vertical)
-//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[contentL]-15-|", options: [], metrics: nil, views: ["contentL":contentL]))
-//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[separateView]-8-[contentL]-30-|", options: [], metrics: nil, views: ["contentL":contentL,"separateView":separateView]))
-        
-        
-//        moreBt = UIButton(type: .Custom)
-//        moreBt.translatesAutoresizingMaskIntoConstraints = false
-//        self.contentView.addSubview(moreBt)
-//        moreBt.titleLabel?.font = Profile.font(11)
-//        moreBt.setTitle("查看全部", forState: .Normal)
-//        moreBt.setTitleColor(Profile.rgb(153, g: 153, b: 153), forState: .Normal)
-//        moreBt.titleLabel?.font = Profile.font(11)
-//        moreBt.setImage(UIImage(named: "narrowLeft"), forState: .Normal)
-//        moreBt.titleEdgeInsets = UIEdgeInsetsMake(0, -20, 0, 0)
-//        moreBt.imageEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -90)
-//        moreBt.addTarget(self, action: "moreBtAction:", forControlEvents: .TouchUpInside)
-//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[moreBt]-10-|", options: [], metrics: nil, views: ["moreBt":moreBt]))
-//         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[moreBt]-15-|", options: [], metrics: nil, views: ["moreBt":moreBt]))
     }
 
     func locationAction(button:UIButton)

@@ -24,7 +24,7 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = "日程详情"
+        self.title = "活动详情"
         
         let favoriteBt = UIButton(type: .Custom)
         favoriteBt.frame = CGRectMake(0, 0, 35, 35)
@@ -450,7 +450,7 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
             cell.fillData(person.title, name: person.name, phone: person.phone)
             weak var wself = self
             weak var wperson = person
-            cell.chatBlock = {wself?.showChatView()}
+            cell.chatBlock = {wself?.showChatView(wperson!)}
             cell.tapBlock = { wself?.addMyContact(wperson!) }
 
             return cell
@@ -459,7 +459,7 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
     }
     
     
-    func addMyContact(person: PersonData)
+    func checkLogStatus()->Bool
     {
         weak var wself = self
         if UserData.shared.token == nil
@@ -473,56 +473,53 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
                 }
             })
             self.navigationController?.pushViewController(loginVC, animated: true)
+            return false
+        }
+            return true
+     }
+
+    
+    
+    func addMyContact(person: PersonData)
+    {
+        if self.checkLogStatus() == false
+        {
             return
         }
-        
-        
+        let isFavorite = person.favorite
+        weak var wself = self
         let loadV = THActivityView(activityViewWithSuperView: self.view)
-        
         let tempNet = NetWorkData()
         
-        
-        if person.favorite == true
-        {
-            tempNet.delectContact(person.exhibitorID!, personID: person.id!) { (result, status) -> (Void) in
-                
-                loadV.removeFromSuperview()
-                if let warnStr = result as? String
-                {
-                    let showV = THActivityView(string: warnStr)
-                    showV.show()
-                }
-                if status == .NetWorkStatusSucess
-                {
-                    person.favorite = false
-                    wself?.table.reloadData()
-                }
+        tempNet.modifySchedulerContact(person.exhibitorID!, personID: person.id!, isAdd: !isFavorite) { (result, status) -> (Void) in
+            
+            loadV.removeFromSuperview()
+            if let warnStr = result as? String
+            {
+                let showV = THActivityView(string: warnStr)
+                showV.show()
             }
-        }
-        else
-        {
-             tempNet.addSchedulerContact(schedulerID, personID: person.id!) { (result, status) -> (Void) in
-                
-                loadV.removeFromSuperview()
-                if let warnStr = result as? String
-                {
-                    let showV = THActivityView(string: warnStr)
-                    showV.show()
-                }
-                if status == .NetWorkStatusSucess
-                {
-                    person.favorite = true
-                    wself?.table.reloadData()
-                }
+            if status == .NetWorkStatusSucess
+            {
+                person.favorite = !isFavorite
+                wself?.table.reloadData()
             }
+
         }
         
         tempNet.start()
     }
 
-    func showChatView(){
+    func showChatView(person:PersonData){
     
-    
+        if self.checkLogStatus() == false
+        {
+            return
+        }
+        let chatView = MessageVC()
+        chatView.title = person.name
+        chatView.conversationChatter = person.chatID
+        self.navigationController?.pushViewController(chatView, animated: true)
     
     }
     

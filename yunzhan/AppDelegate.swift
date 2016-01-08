@@ -21,10 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate,IChatManager
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0
         
         
-        self.easemob(application, didFinishLaunchingWithOptions: launchOptions, appKey: "easemob-demo#chatdemoui", certName: "null")
+        self.easemob(application, didFinishLaunchingWithOptions: launchOptions, appKey: "zhangzhantong#zhangzhantong", certName: "null")
         let u = UserData.shared
-        u.messID = "tfy"
-        u.password_huanxin = "123456"
+//        u.messID = "tfy"
+//        u.password_huanxin = "123456"
         u.logInHuanxin()
         if #available(iOS 8.0,*)
         {

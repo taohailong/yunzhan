@@ -264,7 +264,7 @@ extension PersonData{
             self.favorite = favorite == 0 ? false:true
         }
         
-        if let chat = netData["chat"] as? String
+        if let chat = netData["hxin_id"] as? String
         {
             self.chatID = chat
         }

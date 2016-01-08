@@ -114,7 +114,7 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         cell.fillData(p.title, name: p.name, phone: p.phone)
         cell.separatorInset = UIEdgeInsetsZero
         weak var wself = self
-        cell.chatBlock = {  }
+        cell.chatBlock = { wself?.showChatView(p) }
         if #available(iOS 8.0, *) {
             cell.layoutMargins = UIEdgeInsetsZero
         } else {
@@ -181,20 +181,13 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     }
     
     
-//    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-//        
-//        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-//        let subA = self.dataArr[indexPath.section]
-//        let person = subA[indexPath.row]
-//        
-//       
-//        if let url = person.phone
-//        {
-//             phoneNu = url
-//            
-//        }
-//        
-//    }
+    func showChatView(person :PersonData){
+        
+        let chatView = MessageVC()
+        chatView.title = person.name
+        chatView.conversationChatter = person.chatID
+        self.navigationController?.pushViewController(chatView, animated: true)
+    }
     
     
 }

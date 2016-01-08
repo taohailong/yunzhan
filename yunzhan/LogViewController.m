@@ -329,10 +329,11 @@
              user.name = dataDic[@"name"];
              user.phone = dataDic[@"mobile"];
              user.token = dataDic[@"user_token"];
-             user.messID = @"thl";
+             user.messID = dataDic[@"hxin_id"];
+//             user.messID = @"thl";
              user.password_huanxin = @"123456";
              [user sendDeviceToken];
-             [user logOutHuanxin];
+             [user logInHuanxin];
             [wSelf logViewDismiss];
          }
          else

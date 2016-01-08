@@ -7,7 +7,7 @@
 //
 
 import Foundation
-class SettingViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
+class SettingViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,IChatManagerDelegate {
     
     @IBOutlet weak var table: UITableView!
     private var isNewMess = false
@@ -62,7 +62,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         
         super.viewDidLoad()
         
-        self.navigationController?.tabBarItem.selectedImage = UIImage(named: "root-5_selected")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+//        self.navigationController?.tabBarItem.selectedImage = UIImage(named: "root-5_selected")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
         self.navigationController?.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
@@ -75,6 +75,8 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         table.registerClass(SettingHeadCell.self , forCellReuseIdentifier: "SettingHeadCell")
         table.registerClass(SettingCommonCell.self , forCellReuseIdentifier: "SettingCommonCell")
         table.separatorColor = Profile.rgb(243, g: 243, b: 243)
+        
+        self.registerHunxinNotic()
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -325,9 +327,23 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
        let logVC = LogViewController()
        logVC.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(logVC, animated: true)
-    
     }
     
+// MARK: 环信登出代理通知
+    func registerHunxinNotic()
+    {
+        EaseMob.sharedInstance().chatManager.addDelegate(self, delegateQueue: nil)
+    }
+    func didLoginFromOtherDevice() {
+        UserData.shared.logOutHuanxin()
+        self.navigationController?.popToRootViewControllerAnimated(true)
+        table.reloadData()
+    }
+
+    deinit{
+    
+       EaseMob.sharedInstance().chatManager.removeDelegate(self)
+    }
 }
 
 

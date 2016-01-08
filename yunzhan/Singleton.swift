@@ -20,7 +20,7 @@ class UserData:NSObject {
 //    }
     
     
-    var name:String?
+    var name:String? = ""
     var title:String?
     var deviceToken:String?{
     
@@ -108,7 +108,7 @@ class UserData:NSObject {
        isLogIn = false
        phone  = nil
         title = nil
-       name = nil
+       name = ""
        let userDefault = NSUserDefaults.standardUserDefaults()
         userDefault.removeObjectForKey("token")
         userDefault.removeObjectForKey("phone")

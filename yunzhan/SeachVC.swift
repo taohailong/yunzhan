@@ -209,7 +209,7 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         }
         else
         {
-            head.contentL.text = "日程"
+            head.contentL.text = "活动"
         }
         
         return head
@@ -229,7 +229,7 @@ class GlobalSearchVC: UIViewController,UITableViewDataSource,UITableViewDelegate
             }
             else
             {
-                cell.title.text = "查看更多日程"
+                cell.title.text = "查看更多活动"
             }
             return cell
         }
@@ -627,7 +627,7 @@ class SearchListVC: UIViewController,UISearchBarDelegate,UITableViewDataSource,U
         }
         else
         {
-            head.contentL.text = "日程"
+            head.contentL.text = "活动"
         }
         
         return head

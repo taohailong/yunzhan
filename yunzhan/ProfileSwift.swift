@@ -35,6 +35,8 @@ class Profile
     static let domain = "www.zhangzhantong.com"
     #endif
     
+    static let nickKey = "usernick"
+    static let jobKey = "usertitle"
     static let NavTitleColor = {return UIColor.whiteColor() }
 //    static let 
     class func rgb(let r:CGFloat,let g:CGFloat, let b:CGFloat) ->UIColor{

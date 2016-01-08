@@ -12,6 +12,7 @@ class OrientationTabBar: UITabBarController,IChatManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.changeSettingViewBarImage(false)
         EaseMob.sharedInstance().chatManager.removeDelegate(self)
         EaseMob.sharedInstance().chatManager.addDelegate(self, delegateQueue: nil)
     }
@@ -47,9 +48,23 @@ class OrientationTabBar: UITabBarController,IChatManagerDelegate {
           nu += temp.unreadMessagesCount()
         }
         
-         let f = self.viewControllers![4] as! UINavigationController
-         let rootView = f.viewControllers[0] as! SettingViewController
         if nu > 0
+        {
+            self.changeSettingViewBarImage(true)
+        }
+        else
+        {
+           self.changeSettingViewBarImage(false)
+        }
+    }
+
+    
+    func changeSettingViewBarImage(new:Bool){
+    
+        let f = self.viewControllers![4] as! UINavigationController
+        let rootView = f.viewControllers[0] as! SettingViewController
+
+        if new == true
         {
             f.tabBarItem.image = UIImage(named: "root-5_new")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
             f.tabBarItem.selectedImage = UIImage(named: "root-5_selected_new")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
@@ -57,12 +72,14 @@ class OrientationTabBar: UITabBarController,IChatManagerDelegate {
         }
         else
         {
-             f.tabBarItem.image = UIImage(named: "root-5")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+            f.tabBarItem.image = UIImage(named: "root-5")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
             f.tabBarItem.selectedImage = UIImage(named: "root-5_selected")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
-             rootView.newMessReloadTabel(false)
+            rootView.newMessReloadTabel(false)
         }
+    
     }
-
+    
+    
     
     override func shouldAutorotate() -> Bool {
         return false

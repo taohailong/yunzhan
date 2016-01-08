@@ -17,7 +17,7 @@ class MessageModel: NSObject {
     let originalMessage:EMMessage
     init(mess:EMMessage) {
      
-        self.nickName = mess.from
+//        self.nickName = mess.from
         self.originalMessage = mess
         let body = mess.messageBodies[0] as! EMTextMessageBody
         self.bodyType = body.messageBodyType
@@ -39,6 +39,12 @@ class MessageModel: NSObject {
         {
            self.isSender = true
         }
+        
+        if let dic = mess.ext as? [String:String]
+        {
+            self.nickName = dic[Profile.nickKey]!
+        }
+
     }
 }
 
@@ -46,7 +52,7 @@ class MessageModel: NSObject {
 class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,IChatManagerDelegate,UITextFieldDelegate {
     var messageTimeIntervalTag:Int64 = 0
     var conversationChatter:String!
-    var conversationType:EMConversationType!
+    var conversationType:EMConversationType = .eConversationTypeChat
     var table:UITableView!
     var messsagesSource = [EMMessage]()
     var conversation:EMConversation!
@@ -106,7 +112,19 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
     
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        self.sendTextMess(textField.text!, ext: ["job":"master","nick":"tao"])
+        
+        var job = ""
+        if UserData.shared.title != nil
+        {
+           job = UserData.shared.title!
+        }
+        var name = ""
+        if UserData.shared.name != nil
+        {
+           name = UserData.shared.name!
+        }
+        
+        self.sendTextMess(textField.text!, ext: [Profile.jobKey:job,Profile.nickKey:name])
         textField.text = nil
         return true
     }
@@ -304,9 +322,10 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
         var backArr = [AnyObject]()
         for temp in arr
         {
-          let interval = (messageTimeIntervalTag - temp.timestamp) / 100
+          let interval = (messageTimeIntervalTag - temp.timestamp) / 1000
           if messageTimeIntervalTag < 0 || interval > 60 || interval < -60
           {
+            print("messTinter \(messageTimeIntervalTag) interVal\(interval)")
             let time = Int(temp.timestamp)
             
             backArr.append(time.toTimeString("yy年MM月dd日 HH:mm"))
@@ -323,10 +342,10 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
     
     
     
-    func didLoginFromOtherDevice() {
-        UserData.shared.logOutHuanxin()
-        self.navigationController?.popToRootViewControllerAnimated(true)
-    }
+//    func didLoginFromOtherDevice() {
+//        UserData.shared.logOutHuanxin()
+//        self.navigationController?.popToRootViewControllerAnimated(true)
+//    }
 
     
     
