@@ -20,6 +20,7 @@ class MySchedulerListVC: SchedulerController {
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.tintColor = Profile.rgb(102, g: 102, b: 102)
         self.title = "我的活动"
+        self.navigationItem.rightBarButtonItem = nil
         table.tableHeaderView = nil
         self.fetchData()
     }
@@ -28,7 +29,6 @@ class MySchedulerListVC: SchedulerController {
     
     
     override func creatSchedulerTable(){
-        
         
         table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
         table.delegate = self
@@ -185,6 +185,7 @@ class MyExhibitorList: Exhibitor {
         super.viewDidLoad()
         self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.tintColor = Profile.rgb(102, g: 102, b: 102)
+        self.navigationItem.rightBarButtonItem = nil
         self.title = "我的展商"
     }
 
@@ -198,6 +199,7 @@ class MyExhibitorList: Exhibitor {
         table.separatorColor = Profile.rgb(243, g: 243, b: 243)
         table.sectionIndexBackgroundColor = UIColor.clearColor()
         table.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
+        table.registerClass(TableNoSeparateHeadView.self, forHeaderFooterViewReuseIdentifier: "TableNoSeparateHeadView")
         self.view.addSubview(table)
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.table))
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(self.table))

@@ -28,17 +28,18 @@ class Profile
     
     static let NavBarColor = { return  UIColor(red: 219/255.0, green: 0/255.0, blue: 52/255.0, alpha: 1.0) }
     
-//    #if DEBUG
-    #if true
+    #if EXTERENTERPISE
     static let domain = "123.56.102.224"
+    #elseif INTERENTERPISE
+    static let domain = "123.56.102.224:8099"
     #else
-    static let domain = "www.zhangzhantong.com"
+//    static let domain = "www.zhangzhantong.com"
+    static let domain = "123.56.102.224:8099"
     #endif
     
     static let nickKey = "usernick"
     static let jobKey = "usertitle"
-    static let NavTitleColor = {return UIColor.whiteColor() }
-//    static let 
+    static let NavTitleColor = {return UIColor.whiteColor() } 
     class func rgb(let r:CGFloat,let g:CGFloat, let b:CGFloat) ->UIColor{
        return UIColor(red: r/255.0, green: g/255.0, blue: b/255.0, alpha: 1.0)
     }

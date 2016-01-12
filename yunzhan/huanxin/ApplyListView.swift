@@ -20,23 +20,31 @@ class ConversionData: NSObject {
     init(model:EMMessage) {
     
         self.userID = model.to
-        
         self.new = !model.isRead
         let time = Int(model.timestamp)
         self.time = time.toTimeString("yy-MM-dd HH:mm")
         self.conversionID = model.conversationChatter
         self.conversionType = model.messageType
         
-        if let dic = model.ext as? [String:String]
+//        自己发送
+        if UserData.shared.messID == model.from
         {
-           self.name = dic[Profile.nickKey]!
-           self.workTitle = dic[Profile.jobKey]
+           self.name = MessageUserNameProfile.shareManager.userName(model.to)
         }
         else
         {
-          self.name = ""
-            self.workTitle = ""
+            if let dic = model.ext as? [String:String]
+            {
+                self.name = dic[Profile.nickKey]!
+                MessageUserNameProfile.shareManager.saveName(self.name, key: model.from)
+            }
+            else
+            {
+                self.name = ""
+            }
+
         }
+            
         
         let m = model.messageBodies[model.messageBodies.count - 1] as! EMTextMessageBody
         
@@ -58,9 +66,15 @@ class ConversionData: NSObject {
 
 
 class ApplyListViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,IChatManagerDelegate  {
-//    static let shareApplyView = self
+
     var dataSource:[ConversionData]! = [ConversionData]()
     var table:UITableView!
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.fecthConversationData()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "我的消息"
@@ -74,7 +88,7 @@ class ApplyListViewController: UIViewController,UITableViewDataSource,UITableVie
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
         table.registerClass(ConversationListCell.self, forCellReuseIdentifier: "ConversationListCell")
-        self.fecthConversationData()
+        
         
         EaseMob.sharedInstance().chatManager.addDelegate(self, delegateQueue: nil)
     }
@@ -87,7 +101,6 @@ class ApplyListViewController: UIViewController,UITableViewDataSource,UITableVie
     func didUpdateGroupList(groupList: [AnyObject]!, error: EMError!) {
         self.fecthConversationData()
     }
-    
     
     
     func fecthConversationData(){
@@ -175,7 +188,6 @@ class ApplyListViewController: UIViewController,UITableViewDataSource,UITableVie
         
         let element = dataSource[indexPath.row]
         cell.timeL.text = element.time
-        cell.workL.text = element.workTitle
         cell.nameL.text = element.name
         cell.contentL.text = element.message
         if element.new == true
@@ -207,47 +219,53 @@ class ApplyListViewController: UIViewController,UITableViewDataSource,UITableVie
 
 class ConversationListCell: UITableViewCell {
     let indicateView:UIView
-    let workL:UILabel
+//    let workL:UILabel
     let timeL:UILabel
     let nameL:UILabel
     let contentL:UILabel
+    let userImage:UIImageView
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        
+        userImage = UIImageView()
+        userImage.translatesAutoresizingMaskIntoConstraints = false
+        
         
         indicateView = UIView()
         indicateView.backgroundColor = Profile.rgb(252, g: 58, b: 62)
         indicateView.translatesAutoresizingMaskIntoConstraints = false
         indicateView.layer.masksToBounds = true
-        indicateView.layer.cornerRadius = 2.5
+        indicateView.layer.cornerRadius = 3.5
         
-        workL = UILabel()
-        workL.translatesAutoresizingMaskIntoConstraints = false
+//        workL = UILabel()
+//        workL.translatesAutoresizingMaskIntoConstraints = false
         
         
         timeL = UILabel()
         timeL.translatesAutoresizingMaskIntoConstraints = false
         
         nameL = UILabel()
-        nameL.backgroundColor = UIColor.redColor()
+//        nameL.backgroundColor = UIColor.redColor()
         nameL.translatesAutoresizingMaskIntoConstraints = false
         
         contentL = UILabel()
-        contentL.backgroundColor = UIColor.redColor()
+//        contentL.backgroundColor = UIColor.redColor()
         contentL.numberOfLines = 0
         contentL.translatesAutoresizingMaskIntoConstraints = false
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
 
+        userImage.image = UIImage(named: "messCellUserImage")
+        self.contentView.addSubview(userImage)
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[userImage]", options: [], metrics: nil, views: ["userImage":userImage]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[userImage]", options: [], metrics: nil, views: ["userImage":userImage]))
+        
+        
        
+        self.contentView.addSubview(indicateView)
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[userImage]-0-[indicateView(7)]", options: [], metrics: nil, views: ["indicateView":indicateView,"userImage":userImage]))
         
-        
-        self.contentView.addSubview(workL)
-        workL.textColor = Profile.rgb(153, g: 153, b: 153)
-        workL.font = Profile.font(11)
-        
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[workL]", aView: workL, bView: nil))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-10-[workL]", aView: workL, bView: nil))
-        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[indicateView(7)]", options: [], metrics: nil, views: ["indicateView":indicateView]))
         
         
         self.contentView.addSubview(timeL)
@@ -258,41 +276,35 @@ class ConversationListCell: UITableViewCell {
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-10-[timeL]", aView: timeL, bView: nil))
 
         
+        
         self.contentView.addSubview(nameL)
         nameL.textColor = Profile.rgb(51, g: 51, b: 51)
         nameL.font = Profile.font(14)
-       self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[nameL(40)]", options: [], metrics: nil, views: ["nameL":nameL]))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[timeL]-5-[nameL]", aView: timeL, bView: nameL))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[userImage]-15-[nameL]", options: [], metrics: nil, views: ["userImage":userImage,"nameL":nameL]))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutTopEqual(nameL, toItem: timeL))
+
 
         
         
-        self.contentView.addSubview(indicateView)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-5-[indicateView(5)]", options: [], metrics: nil, views: ["indicateView":indicateView]))
-        
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[indicateView(5)]", options: [], metrics: nil, views: ["indicateView":indicateView]))
-        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(indicateView, toItem: nameL))
+        self.contentView.addSubview(contentL)
+        contentL.textColor = Profile.rgb(153, g: 153, b: 153)
+        contentL.font = Profile.font(12)
+//        contentL.backgroundColor = UIColor.blackColor()
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[userImage]-15-[contentL]-(>=30)-|", options: [], metrics: nil, views: ["userImage":userImage,"contentL":contentL]))
 
+         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[contentL(<=30)]-8-|", options: [], metrics: nil, views: ["contentL":contentL]))
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[nameL]-7-[contentL(<=30)]", options: [], metrics: nil, views: ["contentL":contentL,"nameL":nameL]))
+        
         
         
         let accessView = UIImageView()
         accessView.image = UIImage(named: "cell_narrow")
         accessView.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(accessView)
-        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(accessView, toItem: nameL))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(accessView, toItem: contentL))
+//        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[timeL]-10-[accessView]-15-|", aView:timeL , bView: accessView))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[accessView]-15-|", aView: accessView, bView: nil))
-        
-        
-        
-        
-        self.contentView.addSubview(contentL)
-        contentL.textColor = Profile.rgb(153, g: 153, b: 153)
-        contentL.font = Profile.font(12)
-      self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[nameL]-20-[contentL]-(>=25)-|", options: [], metrics: nil, views: ["nameL":nameL,"contentL":contentL]))
-      self.contentView.addConstraint(NSLayoutConstraint.layoutTopEqual(contentL, toItem: nameL))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[contentL(<=30)]", options: [], metrics: nil, views: ["contentL":contentL]))
-//      self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[contentL]-10-|", aView: contentL, bView: nil))
-        
-//        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[timeL]-10-[contentL]", aView: timeL, bView: contentL))
+
         
     }
 

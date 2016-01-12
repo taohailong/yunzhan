@@ -388,6 +388,7 @@ class SearchListVC: UIViewController,UISearchBarDelegate,UITableViewDataSource,U
     var emptyView:THActivityView?
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.creatSearchView()
         
         table = UITableView(frame: CGRectZero, style: .Plain)

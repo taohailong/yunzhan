@@ -59,10 +59,16 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
     var dataSource:[AnyObject] = [AnyObject]()
     var textView:UITextField!
     var toolBar:UIView!
+    var refreshEnable:Bool = false
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.whiteColor()
+        
+//        保存名称
+        MessageUserNameProfile.shareManager.saveName(self.title!, key: conversationChatter)
+        
         table = UITableView(frame: CGRectZero, style: .Plain)
         table.dataSource = self
         table.backgroundColor = Profile.rgb(243, g: 243, b: 243)
@@ -84,6 +90,7 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
     }
     
     
+//MARK:TextView,Keyboard
     func creatTextView(){
     
         toolBar = UIView()
@@ -96,7 +103,18 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(toolBar))
         
         
+        let separateV = UIView()
+        separateV.backgroundColor = Profile.rgb(210, g: 210, b: 210)
+        separateV.translatesAutoresizingMaskIntoConstraints = false
+        toolBar.addSubview(separateV)
+        toolBar.addConstraints(NSLayoutConstraint.layoutHorizontalFull(separateV))
+        toolBar.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[separateV(0.5)]", options: [], metrics: nil, views: ["separateV":separateV]))
+        
+        
         textView = UITextField()
+        textView.placeholder = "回复:"
+        textView.font = Profile.font(13)
+        textView.layer.borderColor = UIColor.clearColor().CGColor
         textView.borderStyle = .RoundedRect
         textView.delegate = self
         textView.returnKeyType = .Send
@@ -107,7 +125,6 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
         toolBar.addConstraint(NSLayoutConstraint.layoutVerticalCenter(textView, toItem: toolBar))
         
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[textView(30)]", options: [], metrics: nil, views: ["textView":textView]))
-       
     }
     
     
@@ -130,10 +147,60 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
     }
     
     
+    func keyboardWillShow(notic:NSNotification){
+        
+        let value = notic.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
+        let size = value.CGRectValue().size
+        self.toolBarFrameChange(-size.height)
+    }
+    
+    func keyboardWillHide(notic:NSNotification)
+    {
+        self.toolBarFrameChange(0)
+    }
+    
+    func toolBarFrameChange(height:CGFloat){
+        
+        for constraint in self.view.constraints
+        {
+            if constraint.firstItem as! NSObject == self.toolBar && constraint.firstAttribute == .Bottom
+            {
+                constraint.constant = height
+            }
+        }
+        
+        self.view.setNeedsUpdateConstraints()
+        UIView.animateWithDuration(0.2, animations: { () -> Void in
+            self.view.layoutIfNeeded()
+        })
+        
+        if self.dataSource.count == 0
+        {
+            return
+        }
+        self.table.scrollToRowAtIndexPath(NSIndexPath(forRow: self.dataSource.count -  1, inSection: 0), atScrollPosition: .Top, animated: true)
+    }
+    
+    
+    func scrollViewWillBeginDecelerating(scrollView: UIScrollView) {
+        
+        textView.resignFirstResponder()
+    }
+
+    
+    
+    
+    
+    
     
     func registChatManager(){
     
        conversation = EaseMob.sharedInstance().chatManager.conversationForChatter!(conversationChatter, conversationType: conversationType)
+        
+        if conversation == nil
+        {
+           return
+        }
         conversation.markAllMessagesAsRead(true)
         EaseMob.sharedInstance().chatManager.removeDelegate(self)
         EaseMob.sharedInstance().chatManager.addDelegate(self, delegateQueue: nil)
@@ -144,45 +211,8 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
     }
     
     
-    func keyboardWillShow(notic:NSNotification){
-      
-        let value = notic.userInfo![UIKeyboardFrameEndUserInfoKey] as! NSValue
-        let size = value.CGRectValue().size
-       
-        self.toolBarFrameChange(-size.height)
-     }
-    func keyboardWillHide(notic:NSNotification)
-    {
-        self.toolBarFrameChange(0)
-    }
+//    MARK:UITable
     
-    func toolBarFrameChange(height:CGFloat){
-       
-        for constraint in self.view.constraints
-        {
-            if constraint.firstItem as! NSObject == self.toolBar && constraint.firstAttribute == .Bottom
-            {
-                constraint.constant = height
-            }
-        }
-        
-      self.view.setNeedsUpdateConstraints()
-      UIView.animateWithDuration(0.2, animations: { () -> Void in
-         self.view.layoutIfNeeded()
-       })
-        
-        if self.dataSource.count == 0
-        {
-          return
-        }
-        self.table.scrollToRowAtIndexPath(NSIndexPath(forRow: self.dataSource.count -  1, inSection: 0), atScrollPosition: .Top, animated: true)
-    }
-    
-    
-    func scrollViewWillBeginDecelerating(scrollView: UIScrollView) {
-        
-        textView.resignFirstResponder()
-    }
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
@@ -207,7 +237,6 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
             
             let indentifier = cellData.isSender == true ? "MessCellRight":"MessCellLeft"
             let cell = tableView.dequeueReusableCellWithIdentifier(indentifier) as! MessCellRight
-            cell.nameL.text = cellData.nickName
             cell.messL.text = cellData.text
             return cell
         }
@@ -215,8 +244,52 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
     }
     
     
+    func refreshHeadView(isAdd:Bool){
+    
+        if isAdd == true
+        {
+          table.tableHeaderView = MoreTableFootView(frame: CGRectMake(0, 0, Profile.width(), 40))
+        }
+        else
+        {
+          table.tableHeaderView = nil
+        }
+    
+    }
+    
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        
+        guard let view = self.table.tableHeaderView
+            else{
+                return
+        }
+//        if refreshEnable == false
+//        {
+//           return
+//        }
+        
+        let offset = scrollView.contentOffset
+//        let size = scrollView.contentSize
+//        let inset = scrollView.contentInset
+//        let y = scrollView.bounds.size.height - inset.bottom
+//        let h = size.height
+        
+        if (offset.y < 40 && view.bounds.size.height>10)
+        {
+            self.loadMessageDataFromBD()
+        }
+
+    }
+    
+    
+//MARK:dataFormate
+    
     func loadMessageDataFromBD(){
     
+        if conversation == nil
+        {
+           return
+        }
         self.messageTimeIntervalTag = -1;
         var timestamp:Int64 = 0;
         
@@ -230,30 +303,32 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
             timestamp = Int64(NSDate().timeIntervalSince1970) * 100 + 1
         }
         
-        self.loadMessage(timestamp, count:10, append: true)
+        self.loadMessage(timestamp, count:10, append: true,animation: false)
     }
     
     
     
-    func loadMessage(before:Int64,count:NSInteger,append:Bool)
+    func loadMessage(before:Int64,count:NSInteger,append:Bool,animation:Bool)
     {
         weak var wself = self
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
             
-           let messArr = wself?.conversation.loadNumbersOfMessages(UInt(count), before: before) as! [EMMessage]
-            
-           if  messArr.count == 0
+           let temp = wself?.conversation.loadNumbersOfMessages(UInt(count), before: before)
+           if temp == nil
            {
-             return
+              return
+           }
+           let messArr = temp as! [EMMessage]
+          
+            if  messArr.count == 0
+            {
+                return
             }
-            
-            let formatte = wself?.formatMessage(messArr)
-            
+ 
+           let formatte = wself?.formatMessage(messArr)
             var scrollIndex = 0
-            
             if append == true
             {
-                
                 for (index,value) in messArr.enumerate()
                 {
                    self.messsagesSource.insert(value, atIndex: index)
@@ -278,8 +353,6 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
                 {
                     self.dataSource.insert(obj, atIndex: index)
                 }
-
-                
             }
             else
             {
@@ -292,8 +365,18 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
             
             
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                
+                if messArr.count < 10
+                {
+                    self.refreshHeadView(false)
+                }
+                else
+                {
+                    self.refreshHeadView(true)
+                }
+                
                 self.table.reloadData()
-                self.table.scrollToRowAtIndexPath(NSIndexPath(forRow: self.dataSource.count - scrollIndex - 1, inSection: 0), atScrollPosition: .Top, animated: true)
+                self.table.scrollToRowAtIndexPath(NSIndexPath(forRow: self.dataSource.count - scrollIndex - 1, inSection: 0), atScrollPosition: .Top, animated: animation)
             })
         }
     }
@@ -325,9 +408,7 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
           let interval = (messageTimeIntervalTag - temp.timestamp) / 1000
           if messageTimeIntervalTag < 0 || interval > 60 || interval < -60
           {
-            print("messTinter \(messageTimeIntervalTag) interVal\(interval)")
             let time = Int(temp.timestamp)
-            
             backArr.append(time.toTimeString("yy年MM月dd日 HH:mm"))
             messageTimeIntervalTag = temp.timestamp
             
@@ -341,14 +422,8 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
     }
     
     
-    
-//    func didLoginFromOtherDevice() {
-//        UserData.shared.logOutHuanxin()
-//        self.navigationController?.popToRootViewControllerAnimated(true)
-//    }
 
-    
-    
+// MARK:环信代理、发送方法
     func didReceiveOfflineMessages(offlineMessages: [AnyObject]!) {
         
         if offlineMessages.count == 0
@@ -366,7 +441,7 @@ class MessageVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ICha
         {
            timestamp = Int64(NSDate().timeIntervalSince1970) * 100 + 1
          }
-        self.loadMessage(timestamp, count: self.dataSource.count + offlineMessages.count, append: false)
+        self.loadMessage(timestamp, count: self.dataSource.count + offlineMessages.count, append: false,animation: true)
     }
     
     
@@ -398,16 +473,35 @@ class MessTimeCell: UITableViewCell {
     
     let timeL:UILabel
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
+        
+        
         timeL = UILabel()
         timeL.font = Profile.font(11)
         timeL.textColor = UIColor.whiteColor()
         timeL.backgroundColor = Profile.rgb(221, g: 221, b: 221)
         timeL.translatesAutoresizingMaskIntoConstraints = false
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        self.selectionStyle = .None
+        
+        let titleBack = UIView()
+        titleBack.backgroundColor = timeL.backgroundColor
+        titleBack.translatesAutoresizingMaskIntoConstraints = false
+        self.contentView.addSubview(titleBack)
+        
+        
         self.contentView.addSubview(timeL)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-10-[timeL]-5-|", aView: timeL, bView: nil))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-10-[timeL]-8-|", aView: timeL, bView: nil))
         self.contentView.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(timeL, toItem: self.contentView))
         self.contentView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
+        
+        
+        self.contentView.addConstraint(NSLayoutConstraint(item: titleBack, attribute: .Width, relatedBy: .Equal, toItem: timeL, attribute: .Width, multiplier: 1.0, constant: 10))
+        self.contentView.addConstraint(NSLayoutConstraint(item: titleBack, attribute: .Height, relatedBy: .Equal, toItem: timeL, attribute: .Height, multiplier: 1.0, constant: 6))
+        
+        self.contentView.addConstraint(NSLayoutConstraint(item: titleBack, attribute: .CenterY, relatedBy: .Equal, toItem: timeL, attribute: .CenterY, multiplier: 1.0, constant: 0))
+        self.contentView.addConstraint(NSLayoutConstraint(item: titleBack, attribute: .CenterX, relatedBy: .Equal, toItem: timeL, attribute: .CenterX, multiplier: 1.0, constant: 0))
+
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -418,29 +512,33 @@ class MessTimeCell: UITableViewCell {
 class MessCellRight:UITableViewCell {
     
     let messL:UILabel
-    let nameL:UILabel
+//    let nameL:UILabel
+    let userImage:UIImageView
     let backImage:UIImageView
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         messL = UILabel()
         messL.font = Profile.font(14)
         messL.numberOfLines = 0
+//        messL.backgroundColor = UIColor.redColor()
         messL.translatesAutoresizingMaskIntoConstraints = false
         
-        nameL = UILabel()
-        nameL.textColor = Profile.rgb(51, g: 51, b: 51)
-        nameL.font = Profile.font(16)
-        nameL.translatesAutoresizingMaskIntoConstraints = false
+        
+        userImage = UIImageView()
+        userImage.translatesAutoresizingMaskIntoConstraints = false
+        userImage.image = UIImage(named: "messCellUserImage")
+        
         
         backImage = UIImageView()
-        
+//        backImage.backgroundColor = UIColor.greenColor()
         backImage.translatesAutoresizingMaskIntoConstraints = false
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.selectionStyle = .None
         self.contentView.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         self.contentView.addSubview(backImage)
-        self.contentView.addSubview(nameL)
-        
+//        self.contentView.addSubview(nameL)
+        self.contentView.addSubview(userImage)
         self.contentView.addSubview(messL)
         
         self.setSubViewLayout()
@@ -448,16 +546,17 @@ class MessCellRight:UITableViewCell {
 
     
     func setSubViewLayout(){
+        
         backImage.image = UIImage(named: "MessRight")
         messL.textColor = UIColor.whiteColor()
-        nameL.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Horizontal)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[nameL]-12-|", aView: nameL, bView: nil))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-10-[nameL]", aView: nameL, bView: nil))
-
-    
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-(>=80)-[messL]-15-[nameL]", options: [], metrics: nil, views: ["messL":messL,"nameL":nameL]))
         
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[messL]-5-|", options: [], metrics: nil, views: ["messL":messL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-8-[userImage(35)]", options: [], metrics: nil, views: ["userImage":userImage]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[userImage(35)]-12-|", options: [], metrics: nil, views: ["userImage":userImage]))
+        
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-(>=80)-[messL]-20-[userImage]", options: [], metrics: nil, views: ["messL":messL,"userImage":userImage]))
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-17-[messL]-14-|", options: [], metrics: nil, views: ["messL":messL]))
         
         
         
@@ -465,8 +564,8 @@ class MessCellRight:UITableViewCell {
         self.contentView.addConstraint(NSLayoutConstraint(item: backImage, attribute: .CenterX, relatedBy: .Equal, toItem: messL, attribute: .CenterX, multiplier: 1.0, constant: 3))
         
         
-        self.contentView.addConstraint(NSLayoutConstraint(item: backImage, attribute: .Width, relatedBy: .Equal, toItem: messL, attribute: .Width, multiplier: 1.0, constant: 15))
-        self.contentView.addConstraint(NSLayoutConstraint(item: backImage, attribute: .Height, relatedBy: .Equal, toItem: messL, attribute: .Height, multiplier: 1.0, constant: 6))
+        self.contentView.addConstraint(NSLayoutConstraint(item: backImage, attribute: .Width, relatedBy: .Equal, toItem: messL, attribute: .Width, multiplier: 1.0, constant: 24))
+        self.contentView.addConstraint(NSLayoutConstraint(item: backImage, attribute: .Height, relatedBy: .Equal, toItem: messL, attribute: .Height, multiplier: 1.0, constant: 14))
 
     }
     
@@ -478,16 +577,18 @@ class MessCellRight:UITableViewCell {
 class MessCellLeft: MessCellRight {
     
     override func setSubViewLayout() {
+        
         backImage.image = UIImage(named: "MessLeft")
         messL.textColor = Profile.rgb(51, g: 51, b: 51)
-        nameL.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Horizontal)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[nameL]", aView: nameL, bView: nil))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-10-[nameL]", aView: nameL, bView: nil))
+        
+
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-8-[userImage(35)]", options: [], metrics: nil, views: ["userImage":userImage]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[userImage(35)]", options: [], metrics: nil, views: ["userImage":userImage]))
         
         
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[nameL]-15-[messL]-(>=80)-|", options: [], metrics: nil, views: ["messL":messL,"nameL":nameL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[userImage]-20-[messL]-(>=80)-|", options: [], metrics: nil, views: ["messL":messL,"userImage":userImage]))
         
-      self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[messL]-5-|", options: [], metrics: nil, views: ["messL":messL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-17-[messL]-14-|", options: [], metrics: nil, views: ["messL":messL]))
         
         
         
@@ -495,8 +596,8 @@ class MessCellLeft: MessCellRight {
         self.contentView.addConstraint(NSLayoutConstraint(item: backImage, attribute: .CenterX, relatedBy: .Equal, toItem: messL, attribute: .CenterX, multiplier: 1.0, constant: -3))
         
         
-        self.contentView.addConstraint(NSLayoutConstraint(item: backImage, attribute: .Width, relatedBy: .Equal, toItem: messL, attribute: .Width, multiplier: 1.0, constant: 15))
-        self.contentView.addConstraint(NSLayoutConstraint(item: backImage, attribute: .Height, relatedBy: .Equal, toItem: messL, attribute: .Height, multiplier: 1.0, constant: 6))
+        self.contentView.addConstraint(NSLayoutConstraint(item: backImage, attribute: .Width, relatedBy: .Equal, toItem: messL, attribute: .Width, multiplier: 1.0, constant: 24))
+        self.contentView.addConstraint(NSLayoutConstraint(item: backImage, attribute: .Height, relatedBy: .Equal, toItem: messL, attribute: .Height, multiplier: 1.0, constant: 14))
 
     }
 }

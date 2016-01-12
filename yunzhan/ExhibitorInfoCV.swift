@@ -532,8 +532,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             {
                 let person = personArr[indexPath.row-1]
                 let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorPerson") as! ExhibitorPerson
-                cell.fillData(person.title  , name:person.name, phone: person.phone)
-                cell.addBt.selected = person.favorite
+                cell.fillData(person.title , name:person.name, phone: person.phone,personAdd: person.favorite)
                 weak var wself = self
                 weak var wperson = person
                 cell.tapBlock = { wself?.addMyContact(wperson!) }
@@ -669,6 +668,11 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         {
             return
         }
+        if person.chatID == nil || person.chatID?.isEmpty == true
+        {
+            return
+        }
+        
         let chatView = MessageVC()
         chatView.title = person.name
         chatView.conversationChatter = person.chatID
@@ -1126,33 +1130,34 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
 
 //        addBt.backgroundColor = UIColor.greenColor()
         addBt.setTitle("收藏", forState: .Normal)
-        addBt.titleLabel?.font = Profile.font(10)
+        addBt.titleLabel?.font = Profile.font(11)
         addBt.setTitleColor(Profile.rgb(102, g: 102, b: 102), forState: .Normal)
-        addBt.imageEdgeInsets = UIEdgeInsetsMake(0, 8, 9, 0)
-        addBt.titleEdgeInsets = UIEdgeInsetsMake(15, -15, 0, 0)
+        addBt.imageEdgeInsets = UIEdgeInsetsMake(-7, 8, 10, 0)
+        addBt.titleEdgeInsets = UIEdgeInsetsMake(20, -15, 0, 0)
         addBt.setImage(UIImage(named: "addPhoneBt"), forState: .Normal)
         addBt.setImage(UIImage(named: "addPhoneBt_select"), forState: .Selected)
         addBt.translatesAutoresizingMaskIntoConstraints = false
         addBt.addTarget(self, action: "addContact", forControlEvents: .TouchUpInside)
         self.contentView.addSubview(addBt)
-        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(addBt , toItem: self.contentView))
+//        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(addBt , toItem: self.contentView))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutBottomEqual(addBt, toItem: nameL))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[addBt(30)]-15-|", options: [], metrics: nil, views: ["addBt":addBt]))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[addBt(25)]", options: [], metrics: nil, views: ["addBt":addBt]))
         
 //        phoneBt.backgroundColor = UIColor.greenColor()
         phoneBt.setTitleColor(Profile.rgb(102, g: 102, b: 102), forState: .Normal)
-        phoneBt.titleLabel?.font = Profile.font(10)
+        phoneBt.titleLabel?.font = Profile.font(11)
         phoneBt.translatesAutoresizingMaskIntoConstraints = false
         phoneBt.setTitle("发送消息", forState: .Normal)
         phoneBt.setImage(UIImage(named: "exhibitorChat"), forState: .Normal)
-        phoneBt.imageEdgeInsets = UIEdgeInsetsMake(0, 8, 11, 0)
-        phoneBt.titleEdgeInsets = UIEdgeInsetsMake(15, -17, 0, 0)
+        phoneBt.imageEdgeInsets = UIEdgeInsetsMake(-7, 8, 11, 0)
+        phoneBt.titleEdgeInsets = UIEdgeInsetsMake(20, -17, 0, 0)
         phoneBt.addTarget(self, action: "makeChat", forControlEvents: .TouchUpInside)
         self.contentView.addSubview(phoneBt)
 
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[phoneBt(40)]-30-[addBt]", options: [], metrics: nil, views: ["phoneBt":phoneBt,"addBt":addBt]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[phoneBt(43)]-30-[addBt]", options: [], metrics: nil, views: ["phoneBt":phoneBt,"addBt":addBt]))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[phoneBt(25)]", options: [], metrics: nil, views: ["phoneBt":phoneBt]))
-        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(phoneBt, toItem: self.contentView))
+        self.contentView.addConstraint(NSLayoutConstraint.layoutBottomEqual(phoneBt, toItem: nameL))
         self.bottomSeparateView()
     }
 
@@ -1183,10 +1188,11 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
          tapBlock!()
        }
     }
-    func fillData(title:String? ,name:String?,phone:String?)
+    func fillData(title:String? ,name:String?,phone:String?,personAdd:Bool)
     {
         titleL.text = title
         nameL.text =  name
+        addBt.selected = personAdd
 //       phoneBt.setTitle(phone, forState: UIControlState.Normal)
     }
     

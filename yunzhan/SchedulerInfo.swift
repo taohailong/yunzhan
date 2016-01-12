@@ -447,7 +447,7 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
             let cell = tableView.dequeueReusableCellWithIdentifier("SchedulerInfoContactCell") as! SchedulerInfoContactCell
             
             let person = contacts[indexPath.row]
-            cell.fillData(person.title, name: person.name, phone: person.phone)
+            cell.fillData(person.title, name: person.name, phone: person.phone,personAdd: person.favorite)
             weak var wself = self
             weak var wperson = person
             cell.chatBlock = {wself?.showChatView(wperson!)}
@@ -513,6 +513,10 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
     func showChatView(person:PersonData){
     
         if self.checkLogStatus() == false
+        {
+            return
+        }
+        if person.chatID == nil || person.chatID?.isEmpty == true
         {
             return
         }

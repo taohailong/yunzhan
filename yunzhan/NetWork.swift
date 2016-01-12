@@ -458,8 +458,18 @@ class NetWorkData {
 
     func getSchedulerInfo(schedulerID:String,block:NetBlock) {
         
-        let url = "http://\(Profile.domain)/api/app/schedule/detail?eid=1&sid=\(schedulerID)"
-        
+         weak var user = UserData.shared
+        var url = ""
+        if user?.token != nil
+        {
+            url = "http://\(Profile.domain)/api/app/schedule/detail?eid=1&sid=\(schedulerID)&token=\(user!.token!)"
+        }
+        else
+        {
+            url = "http://\(Profile.domain)/api/app/schedule/detail?eid=1&sid=\(schedulerID)"
+        }
+
+
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -806,8 +816,17 @@ class NetWorkData {
     
     func getExhibitorInfo(id:String,block:NetBlock){
         
-        let url = "http://\(Profile.domain)/api/app/buz/detail?eid=1&bid=\(id)"
-        //         let url = "http://\(Profile.domain)/api/app/buz/detail?eid=1&bid=2"
+        weak var user = UserData.shared
+        var url = ""
+        if user?.token != nil
+        {
+           url = "http://\(Profile.domain)/api/app/buz/detail?eid=1&bid=\(id)&token=\(user!.token!)"
+        }
+        else
+        {
+          url = "http://\(Profile.domain)/api/app/buz/detail?eid=1&bid=2"
+        }
+        
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             //            print(result)
@@ -816,7 +835,6 @@ class NetWorkData {
                 block(result: result, status: status)
                 return
             }
-            
             
             guard let data = result as? [String:AnyObject],let list = data["data"] as? [String:AnyObject],let id = list["id"] as? Int   else {
                 

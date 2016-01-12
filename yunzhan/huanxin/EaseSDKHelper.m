@@ -198,7 +198,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
     [self _setupAppDelegateNotifications];
     
     //注册apns
-    [self _registerRemoteNotification];
+//    [self _registerRemoteNotification];
     
     //注册easemob sdk
     [[EaseMob sharedInstance] registerSDKWithAppKey:appkey

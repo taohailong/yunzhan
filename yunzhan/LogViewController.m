@@ -11,19 +11,23 @@
 #import <AFNetworking.h>
 #import "LogInCell.h"
 
-#if ENTERPISE
-#import "yunzhan_copy-Swift.h"
-
+#if EXTERENTERPISE
+#import "yunzhan_external-Swift.h"
+#define PORT "123.56.102.224"
+#elif INTERENTERPISE
+#import "yunzhan_internal-Swift.h"
+#define PORT "123.56.102.224:8099"
 #else
-
 #import "yunzhan-Swift.h"
+//#define PORT "www.zhangzhantong.com"
+#define PORT "123.56.102.224:8099"
 #endif
 
 //#if DEBUG
 #if 1
-#define PORT "123.56.102.224"
+
 #else
-#define PORT "www.zhangzhantong.com"
+
 #endif
 
 
@@ -331,6 +335,8 @@
              user.token = dataDic[@"user_token"];
              user.messID = dataDic[@"hxin_id"];
 //             user.messID = @"thl";
+//             value	__NSCFString *	@"7355af64e85ed4962894562c238d3e83"	0x00007fb47bc0a3d0
+//             [8]	(null)	@"hxin_id" : @"26379769f4ef4d9ed8d02872a90ce41a"	
              user.password_huanxin = @"123456";
              [user sendDeviceToken];
              [user logInHuanxin];

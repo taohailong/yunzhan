@@ -54,6 +54,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         
         let rightBar = UIBarButtonItem(image: UIImage(named: "global_search"), style: .Plain, target: self, action: "showGlobalSearchVC")
         self.navigationItem.rightBarButtonItem = rightBar
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Done, target: nil, action: "")
     }
     
     func showGlobalSearchVC(){

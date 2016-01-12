@@ -8,11 +8,14 @@
 
 #import "ShareCoverageView.h"
 #import "WXApi.h"
-#if ENTERPISE
-#import "yunzhan_copy-Swift.h"
-#define PORT "www.zhangzhantong.com"
+
+#if EXTERENTERPISE
+#import "yunzhan_external-Swift.h"
+
+#elif INTERENTERPISE
+#include "yunzhan_internal-Swift.h"
 #else
-#define PORT "www.zhangzhantong.com"
+
 #import "yunzhan-Swift.h"
 #endif
 

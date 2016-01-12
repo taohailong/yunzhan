@@ -59,6 +59,8 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//       返回按钮去掉文字
+        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Done, target: nil, action: "")
         self.title = "展商"
         
         self.navigationController?.tabBarItem.selectedImage = UIImage(named: "root-2_selected")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
@@ -223,6 +225,7 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
     }
     
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
         if tableView != table
         {
             return nil

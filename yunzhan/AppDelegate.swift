@@ -20,8 +20,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate,IChatManager
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0
         
+        var cerName = ""
+        #if EXTERENTERPISE
+            cerName = "external_product"
+        #elseif INTERENTERPISE
+             cerName = "external_product"
+        #else
+            cerName = "normal_develop"
+        #endif
+
         
-        self.easemob(application, didFinishLaunchingWithOptions: launchOptions, appKey: "zhangzhantong#zhangzhantong", certName: "null")
+        
+        self.easemob(application, didFinishLaunchingWithOptions: launchOptions, appKey: "zhangzhantong#zhangzhantong", certName: cerName)
         let u = UserData.shared
 //        u.messID = "tfy"
 //        u.password_huanxin = "123456"
@@ -46,6 +56,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate,IChatManager
 
     
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        
+        EaseMob.sharedInstance().application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
         
         var deviceToken = NSString(format: "%@", deviceToken)
         deviceToken = deviceToken.substringWithRange(NSMakeRange(1, deviceToken.length-2))

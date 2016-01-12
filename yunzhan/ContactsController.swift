@@ -113,8 +113,9 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         let p = arr[indexPath.row]
         cell.fillData(p.title, name: p.name, phone: p.phone)
         cell.separatorInset = UIEdgeInsetsZero
-        weak var wself = self
-        cell.chatBlock = { wself?.showChatView(p) }
+//        weak var wself = self
+//        cell.chatBlock = { wself?.showChatView(p) }
+        
         if #available(iOS 8.0, *) {
             cell.layoutMargins = UIEdgeInsetsZero
         } else {
@@ -152,6 +153,14 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return true
     }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        var subArr = dataArr[indexPath.section]
+        let p = subArr[indexPath.row]
+         self.showChatView(p)
+    }
+    
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         
@@ -208,7 +217,7 @@ class ContactsPersonCell: UITableViewCell,UIAlertViewDelegate {
         phoneBt = UIButton(type: .Custom)
 
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.selectionStyle = .None
+    
         titleL.textColor = Profile.rgb(153, g: 153, b: 153)
         titleL.font = Profile.font(13)
         self.contentView.addSubview(titleL)
@@ -226,36 +235,36 @@ class ContactsPersonCell: UITableViewCell,UIAlertViewDelegate {
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-10-[nameL]", options: [], metrics: nil, views: ["nameL":nameL,"titleL":titleL]))
         
         
-        let chatBt = UIButton(type: .Custom)
-//        chatBt.backgroundColor = UIColor.redColor()
-        chatBt.translatesAutoresizingMaskIntoConstraints = false
-        self.contentView.addSubview(chatBt)
-        chatBt.addTarget(self, action: "chatBlockAction", forControlEvents: .TouchUpInside)
-        chatBt.setImage(UIImage(named: "exhibitorChat"), forState: .Normal)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[nameL]-30-[chatBt(25)]", options: [], metrics: nil , views: ["nameL":nameL,"chatBt":chatBt]))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[chatBt(20)]", options: [], metrics: nil, views: ["chatBt":chatBt]))
-        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(chatBt, toItem: nameL))
-        
-        
-        phoneBt.setTitleColor(Profile.rgb(51, g: 51, b: 51), forState: .Normal)
-        phoneBt.titleLabel?.font = Profile.font(13)
-        phoneBt.translatesAutoresizingMaskIntoConstraints = false
-        phoneBt.addTarget(self, action: "makeCall", forControlEvents: .TouchUpInside)
-        phoneBt.setImage(UIImage(named: "contactsPhone"), forState: .Normal)
-        phoneBt.imageEdgeInsets = UIEdgeInsetsMake(0, -6, 0, 0)
-        self.contentView.addSubview(phoneBt)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[chatBt]-25-[phoneBt]", options: [], metrics: nil, views: ["phoneBt":phoneBt,"chatBt":chatBt]))
-        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(phoneBt, toItem: nameL))
+//        let chatBt = UIButton(type: .Custom)
+////        chatBt.backgroundColor = UIColor.redColor()
+//        chatBt.translatesAutoresizingMaskIntoConstraints = false
+//        self.contentView.addSubview(chatBt)
+//        chatBt.addTarget(self, action: "chatBlockAction", forControlEvents: .TouchUpInside)
+//        chatBt.setImage(UIImage(named: "exhibitorChat"), forState: .Normal)
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[nameL]-30-[chatBt(25)]", options: [], metrics: nil , views: ["nameL":nameL,"chatBt":chatBt]))
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[chatBt(20)]", options: [], metrics: nil, views: ["chatBt":chatBt]))
+//        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(chatBt, toItem: nameL))
+//        
+//        
+//        phoneBt.setTitleColor(Profile.rgb(51, g: 51, b: 51), forState: .Normal)
+//        phoneBt.titleLabel?.font = Profile.font(13)
+//        phoneBt.translatesAutoresizingMaskIntoConstraints = false
+//        phoneBt.addTarget(self, action: "makeCall", forControlEvents: .TouchUpInside)
+//        phoneBt.setImage(UIImage(named: "contactsPhone"), forState: .Normal)
+//        phoneBt.imageEdgeInsets = UIEdgeInsetsMake(0, -6, 0, 0)
+//        self.contentView.addSubview(phoneBt)
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[chatBt]-25-[phoneBt]", options: [], metrics: nil, views: ["phoneBt":phoneBt,"chatBt":chatBt]))
+//        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(phoneBt, toItem: nameL))
     }
 
     func fillData(title: String?,name: String? ,phone: String?)
     {
         titleL.text = title
         nameL.text =  name
-        if phone != nil
-        {
-            phoneBt.setTitle(phone, forState: UIControlState.Normal)
-        }
+//        if phone != nil
+//        {
+//            phoneBt.setTitle(phone, forState: UIControlState.Normal)
+//        }
     }
 
     
