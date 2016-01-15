@@ -22,7 +22,7 @@ class ConversionData: NSObject {
         self.userID = model.to
         self.new = !model.isRead
         let time = Int(model.timestamp)
-        self.time = time.toTimeString("yy-MM-dd HH:mm")
+        self.time = time.toTimeString("yyyy-MM-dd HH:mm")
         self.conversionID = model.conversationChatter
         self.conversionType = model.messageType
         
@@ -204,11 +204,20 @@ class ApplyListViewController: UIViewController,UITableViewDataSource,UITableVie
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         let element = dataSource[indexPath.row]
-        let chatView = MessageVC()
-        chatView.title = element.name
-        chatView.conversationChatter = element.conversionID
-        chatView.conversationType = .eConversationTypeChat
-        self.navigationController?.pushViewController(chatView, animated: true)
+        
+        let chatView = MessageVC(conversationChatter: element.conversionID)
+        if chatView == nil
+        {
+            return
+        }
+        chatView?.title = element.name
+        self.navigationController?.pushViewController(chatView!, animated: true)
+
+//        let chatView = MessageVC()
+//        chatView.title = element.name
+//        chatView.conversationChatter = element.conversionID
+//        chatView.conversationType = .eConversationTypeChat
+//        self.navigationController?.pushViewController(chatView, animated: true)
     }
     deinit
     {

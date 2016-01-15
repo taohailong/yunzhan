@@ -160,14 +160,19 @@ class UserData:NSObject {
         
         EaseMob.sharedInstance().chatManager.asyncLoginWithUsername(self.messID, password: self.password_huanxin, completion: { (loginInfo:[NSObject : AnyObject]!, err:EMError!) -> Void in
         
-            if err == nil
+            
+            if err == nil && loginInfo != nil
             {
-//               EaseMob.sharedInstance().chatManager.isAutoLoginEnabled = true
+//               EaseMob.sharedInstance().chatManager.setIsAutoLoginEnable = true
                EaseMob.sharedInstance().chatManager.loadDataFromDatabase()
                 NSNotificationCenter.defaultCenter().postNotificationName("loginStateChange", object: true)
 //                EaseMob.sharedInstance().chatManager.asyncFetch
             }
-            
+            else
+            {
+                THActivityView(string: "消息中心登陆失败")
+                print("huanxin err \(err) loginInfo \(loginInfo)")
+            }
             
         }, onQueue: nil)
     

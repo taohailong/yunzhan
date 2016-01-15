@@ -26,30 +26,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         self.setNavgationBarAttribute(false)
     }
     
-    func setNavgationBarAttribute(change:Bool)
-    {
-        if change == true
-        {
-            self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor(),NSFontAttributeName:Profile.font(18)]
-            self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
-            let application = UIApplication.sharedApplication()
-            application.setStatusBarStyle(.LightContent, animated: true)
-        }
-        else
-        {
-            if self.navigationController?.viewControllers.count == 1
-            {
-                return
-            }
-            self.navigationController?.navigationBar.tintColor = Profile.rgb(102, g: 102, b: 102)
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor(),NSFontAttributeName:Profile.font(18)]
-            self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
-            let application = UIApplication.sharedApplication()
-            application.setStatusBarStyle(.Default, animated: true)
-        }
-    }
-    
+        
     func creatRightBar(){
         
         let rightBar = UIBarButtonItem(image: UIImage(named: "global_search"), style: .Plain, target: self, action: "showGlobalSearchVC")
@@ -72,23 +49,14 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "首页"
-
-        self.navigationController?.tabBarItem.selectedImage = UIImage(named: "root-1")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
-        self.navigationController?.tabBarItem.image = UIImage(named: "root-1_selected")
-        self.navigationController?.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
-            
         
-
-//        self.view.backgroundColor = Profile.rgb(240, g: 0, b: 0)
         
         let flowLayout = UICollectionViewFlowLayout()
-            
         collection = UICollectionView(frame: CGRectMake(0, 0, Profile.width(), Profile.height()),
         collectionViewLayout: flowLayout)
         collection.alwaysBounceVertical = true
         collection.registerClass(CommonHeadView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "CommonHeadView")
         collection.registerClass(UICollectionReusableView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "UICollectionReusableView")
-    
         collection.registerClass(AdRootCollectionView.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "AdRootCollectionView")
         
         
@@ -151,12 +119,6 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
                  {
                     let warnV = THActivityView(string: "网络错误")
                     warnV.show()
-//                    let errView = THActivityView(netErrorWithSuperView: wself!.view)
-//                    weak var werr = errView
-//                    errView.setErrorBk({ () -> Void in
-//                        wself?.fetchData()
-//                        werr?.removeFromSuperview()
-//                    })
                 }
                 else
                 {
@@ -277,6 +239,8 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
              return CGSizeMake(Profile.width(), 75)
         }
     }
+    
+
 //    垂直间距
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
         if section == 1 || section == 3
@@ -299,7 +263,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         }
         return 0.5
     }
-    
+ //    内部间距
 //    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAtIndex section: Int) -> UIEdgeInsets {
 //     
 //        if section == 1
@@ -490,13 +454,19 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
                 mapVC.hidesBottomBarWhenPushed = true
                self.navigationController?.pushViewController(mapVC, animated: true)
             }
-            else if act.name == "精彩瞬间"
+            else if act.name == "精彩瞬间a"
             {
                 self.tabBarController?.selectedIndex = 3
             }
-            else if act.name == "我的关注"
+            else if act.name == "我的关注a"
             {
                 self.tabBarController?.selectedIndex = 4
+            }
+            else
+            {
+               let category = ExhibitorCategoryVC()
+                category.hidesBottomBarWhenPushed = true
+                self.navigationController?.pushViewController(category, animated: true)
             }
         }
         
@@ -548,54 +518,9 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             wself?.fetchData()
         }
         
-//        collection.addHeaderWithCallback { () -> Void in
-//            wself?.fetchData()
-//        }
-//        collection.headerBeginRefreshing()
-    
     }
     
-    
-    
-//    func addRefreshTableHead()
-//    {
-//    // 加入refreshView;
-//      let refreshRect = CGRectMake(0,
-//       0 - collection.bounds.size.height,
-//       collection.bounds.size.width,
-//       collection.bounds.size.height);
-//    
-//       refreshView = EGORefreshTableHeaderView(frame: refreshRect)
-//       refreshView.delegate = self;
-//        refreshView.scrollEdge = collection.contentInset
-//       collection.addSubview(refreshView)
-//    /* 刷新一次数据 */
-////       refreshView.refreshLastUpdatedDate()
-//    
-//    }
-//    
-//    func egoRefreshTableHeaderDidTriggerRefresh(view: EGORefreshTableHeaderView!) {
-//        
-//    //    if (isLoading) {
-//    //        return;
-//    //    }
-//    /* 开始更新代码放在这里 */
-//      self.fetchData()
-//    
-//    /* 实现更新代码 */
-//    
-//    }
-    
-//    func scrollViewDidEndDragging(scrollView: UIScrollView, willDecelerate decelerate: Bool) {
-//        
-//       refreshView.egoRefreshScrollViewDidEndDragging(scrollView)
-//    }
-//    
-//    func scrollViewDidScroll(scrollView: UIScrollView) {
-//        
-//       refreshView.egoRefreshScrollViewDidScroll(scrollView)
-//    }
-    
+
     deinit{
       net = nil
     }
@@ -611,7 +536,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
 
 
 class CommonWebController:UIViewController,UIWebViewDelegate {
-    
+    var readLocal:Bool = false
     var loadV:THActivityView!
     var webHtml:String?
     var webLink:String?
@@ -620,6 +545,12 @@ class CommonWebController:UIViewController,UIWebViewDelegate {
        super.init(nibName: nil, bundle: nil)
     }
     
+    
+    init(bodyHtml:String){
+      webHtml = bodyHtml
+      super.init(nibName: nil, bundle: nil)
+        
+    }
     init(html:String?)
     {
         webHtml = html

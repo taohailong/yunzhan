@@ -15,14 +15,7 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
     var net:NetWorkData!
     var shareElement:TimeMessage!
     var loading:Bool = false
-//    override func viewWillAppear(animated: Bool) {
-//        super.viewWillAppear(animated)
-//        if dataArr == nil
-//        {
-//            self.refreshControl?.beginRefreshing()
-//        }
-//    }
-    
+    var empyView:THActivityView!
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -68,19 +61,18 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
         
     }
     
-
-    
     func fetchTimeLineList(){
-    
-        
+
         weak var wself = self
         let index = 0
-//        let loadView = THActivityView(activityViewWithSuperView: self.view)
-//        self.refreshControl?.beginRefreshing()
         net = NetWorkData()
         net.getTimeLineList(index) { (result, status) -> (Void) in
             wself?.refreshV.endRefreshing()
- 
+            if wself?.empyView != nil
+            {
+               wself?.empyView.removeFromSuperview()
+            }
+            
             if status == .NetWorkStatusError
             {
                 if result == nil
@@ -101,10 +93,9 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
          
             if let list = result as? [TimeMessage]{
             
-                
                 if list.count == 0{
                 
-                   _ = THActivityView(emptyDataWarnViewWithString: "快来互动，上传图片吧", withImage: "noPicData", withSuperView: wself?.view)
+                   wself!.empyView = THActivityView(emptyDataWarnViewWithString: "快来互动，上传图片吧", withImage: "noPicData", withSuperView: wself?.view)
                     wself?.dataArr = [TimeMessage]()
                     wself?.table.reloadData()
                     return
@@ -720,9 +711,6 @@ class TimeLinePersonCell: UITableViewCell {
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(userPicV, toItem: self.contentView))
         
         self.contentView.addSubview(nameL)
-       
-        
-        
         self.contentView.addSubview(timeL)
        
         
@@ -774,7 +762,7 @@ class TimeLinePersonCell: UITableViewCell {
             
             if title != nil
             {
-              attribute.appendAttributedString(NSAttributedString(string:" -\(title!)" , attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(250, g: 250, b: 250)]))
+              attribute.appendAttributedString(NSAttributedString(string:" -\(title!)" , attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(210, g: 210, b: 210)]))
             }
             
             nameL.attributedText = attribute

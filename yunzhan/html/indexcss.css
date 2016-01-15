@@ -1,0 +1,17 @@
+.spot i {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 3px;
+        background: #ff9b3a;
+        margin-right: 10px;
+        vertical-align: middle;
+    }
+.fullImage {
+   width:100%;
+   margin-bottom:8px;
+}
+.fullImage img{
+   width:100%
+}
+

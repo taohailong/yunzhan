@@ -34,44 +34,12 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         self.setNavgationBarAttribute(false)
     }
     
-    func setNavgationBarAttribute(change:Bool)
-    {
-        if change == true
-        {
-            self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor(),NSFontAttributeName:Profile.font(18)]
-            self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
-            let application = UIApplication.sharedApplication()
-            application.setStatusBarStyle(.LightContent, animated: true)
-        }
-        else
-        {
-            if self.navigationController?.viewControllers.count == 1
-            {
-                return
-            }
-            self.navigationController?.navigationBar.tintColor = Profile.rgb(102, g: 102, b: 102)
-            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor()]
-            self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
-            let application = UIApplication.sharedApplication()
-            application.setStatusBarStyle(.Default, animated: true)
-        }
-    }
-    
     override func viewDidLoad() {
         
         super.viewDidLoad()
        
         //       返回按钮去掉文字
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Done, target: nil, action: "")
-//        self.navigationController?.tabBarItem.selectedImage = UIImage(named: "root-5_selected")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
-        self.navigationController?.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
-        self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor()]
-        self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
-        
-        let dict = [NSFontAttributeName: Profile.font(18)]
-        self.navigationController!.navigationBar.titleTextAttributes = dict
         
         self.title = "我的"
         table.registerClass(SettingHeadCell.self , forCellReuseIdentifier: "SettingHeadCell")

@@ -532,7 +532,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             {
                 let person = personArr[indexPath.row-1]
                 let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorPerson") as! ExhibitorPerson
-                cell.fillData(person.title , name:person.name, phone: person.phone,personAdd: person.favorite)
+                cell.fillData(person.title , name:person.name, chatID: person.chatID,personAdd: person.favorite)
                 weak var wself = self
                 weak var wperson = person
                 cell.tapBlock = { wself?.addMyContact(wperson!) }
@@ -668,15 +668,14 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         {
             return
         }
-        if person.chatID == nil || person.chatID?.isEmpty == true
+        
+        let chatView = MessageVC(conversationChatter: person.chatID)
+        if chatView == nil
         {
             return
         }
-        
-        let chatView = MessageVC()
-        chatView.title = person.name
-        chatView.conversationChatter = person.chatID
-        self.navigationController?.pushViewController(chatView, animated: true)
+        chatView?.title = person.name
+        self.navigationController?.pushViewController(chatView!, animated: true)
     }
     
     
@@ -1188,8 +1187,18 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
          tapBlock!()
        }
     }
-    func fillData(title:String? ,name:String?,phone:String?,personAdd:Bool)
+    func fillData(title:String? ,name:String?,chatID:String?,personAdd:Bool)
     {
+        if UserData.shared.messID == chatID
+        {
+           addBt.hidden = true
+           phoneBt.hidden = true
+        }
+        else
+        {
+           addBt.hidden = false
+           phoneBt.hidden = false
+        }
         titleL.text = title
         nameL.text =  name
         addBt.selected = personAdd

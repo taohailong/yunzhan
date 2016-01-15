@@ -12,10 +12,47 @@ class OrientationTabBar: UITabBarController,IChatManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.changeSettingViewBarImage(false)
+//        self.changeSettingViewBarImage(false)
+        self.setTabBarSelectIcon()
         EaseMob.sharedInstance().chatManager.removeDelegate(self)
         EaseMob.sharedInstance().chatManager.addDelegate(self, delegateQueue: nil)
     }
+    
+    func setTabBarSelectIcon(){
+      
+         let f = self.viewControllers as! [UINavigationController]
+        
+        for (index,value) in f.enumerate()
+        {
+            var normal = ""
+            var select = ""
+            switch index
+            {
+               case 0:
+                 normal = "root-1"
+                 select = "root-1_selected"
+            case 1:
+                normal = "root-2"
+                select = "root-2_selected"
+            case 2:
+                normal = "root-3"
+                select = "root-3_selected"
+            case 3:
+                normal = "root-4"
+                select = "root-4_selected"
+            default:
+                normal = "root-5"
+                select = "root-5_selected"
+            }
+            
+            value.tabBarItem.image = UIImage(named: normal)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+            value.tabBarItem.selectedImage = UIImage(named: select)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+            value.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
+        }
+    
+    
+    }
+    
     
     func didLoginFromOtherDevice() {
         UserData.shared.logOutHuanxin()

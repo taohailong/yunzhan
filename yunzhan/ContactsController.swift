@@ -174,6 +174,7 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
             {
                return
             }
+            
             let subA = wself?.dataArr[indexPath.section]
             subArr.removeAtIndex(indexPath.row)
             wself?.prefixArr.removeAtIndex(indexPath.section)
@@ -192,10 +193,14 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     
     func showChatView(person :PersonData){
         
-        let chatView = MessageVC()
-        chatView.title = person.name
-        chatView.conversationChatter = person.chatID
-        self.navigationController?.pushViewController(chatView, animated: true)
+        let chatView = MessageVC(conversationChatter: person.chatID)
+        if chatView == nil
+        {
+            return
+        }
+        chatView?.title = person.name
+        self.navigationController?.pushViewController(chatView!, animated: true)
+
     }
     
     

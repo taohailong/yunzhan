@@ -317,21 +317,32 @@ extension UISearchBar {
 
 }
 
-extension UINavigationBar{
+extension UIViewController{
 
-    func navBarWhiteBackGround(){
-    
-        self.tintColor = Profile.rgb(102, g: 102, b: 102)
-        self.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor(),NSFontAttributeName:Profile.font(18)]
-        self.barTintColor = UIColor.whiteColor()
+    func setNavgationBarAttribute(change:Bool)
+    {
+        if change == true
+        {
+            self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor(),NSFontAttributeName:Profile.font(18)]
+            self.navigationController?.navigationBar.barTintColor = Profile.NavBarColor()
+            let application = UIApplication.sharedApplication()
+            application.setStatusBarStyle(.LightContent, animated: true)
+        }
+        else
+        {
+            if self.navigationController?.viewControllers.count == 1
+            {
+                return
+            }
+            self.navigationController?.navigationBar.tintColor = Profile.rgb(102, g: 102, b: 102)
+            self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName:UIColor.blackColor(),NSFontAttributeName:Profile.font(18)]
+            self.navigationController?.navigationBar.barTintColor = UIColor.whiteColor()
+            let application = UIApplication.sharedApplication()
+            application.setStatusBarStyle(.Default, animated: true)
+        }
     }
 
-    func navBarGenuineBackGround(){
-      
-        self.tintColor = UIColor.whiteColor()
-        self.titleTextAttributes = [NSForegroundColorAttributeName:Profile.NavTitleColor(),NSFontAttributeName:Profile.font(18)]
-        self.barTintColor = Profile.NavBarColor()
-    }
 }
 
 

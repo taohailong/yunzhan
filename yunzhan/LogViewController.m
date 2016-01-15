@@ -23,12 +23,6 @@
 #define PORT "123.56.102.224:8099"
 #endif
 
-//#if DEBUG
-#if 1
-
-#else
-
-#endif
 
 
 @interface LogViewController ()<UITableViewDataSource,UITableViewDelegate,UINavigationControllerDelegate>
@@ -335,8 +329,8 @@
              user.token = dataDic[@"user_token"];
              user.messID = dataDic[@"hxin_id"];
 //             user.messID = @"thl";
-//             value	__NSCFString *	@"7355af64e85ed4962894562c238d3e83"	0x00007fb47bc0a3d0
-//             [8]	(null)	@"hxin_id" : @"26379769f4ef4d9ed8d02872a90ce41a"	
+//             [7]	(null)	@"hxin_id" : @"e7d56f95cf1aec3e0c59efcdb3d7af31" ziyu
+//
              user.password_huanxin = @"123456";
              [user sendDeviceToken];
              [user logInHuanxin];

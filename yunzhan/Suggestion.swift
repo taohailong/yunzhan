@@ -13,6 +13,12 @@ class SuggestionVC: UIViewController,UITextViewDelegate {
     var lenth:Int!
     var indicateL:UILabel!
     var net:NetWorkData!
+    
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        textView.becomeFirstResponder()
+    }
     override func viewDidLoad() {
         self.title = "建议意见"
         self.automaticallyAdjustsScrollViewInsets = false
@@ -24,7 +30,7 @@ class SuggestionVC: UIViewController,UITextViewDelegate {
         
         textView = UITextView(frame: CGRectZero)
         textView.layer.masksToBounds = true;
-        textView.becomeFirstResponder()
+        
         textView.layer.cornerRadius = 4;
         textView.textColor = Profile.rgb(102, g: 102, b: 102)
         textView.font = Profile.font(14)

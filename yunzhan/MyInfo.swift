@@ -48,12 +48,23 @@ class MyInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate {
             return
         }
         
-//        if title?.isEmpty == true
-//        {
-//            let load = THActivityView(string: "请输入您的职称")
-//            load.show()
-//            return
-//        }
+        var warnStr = ""
+        if title?.characters.count > 10
+        {
+           warnStr = "职称超过10个字符"
+        }
+        
+        if name?.characters.count > 5
+        {
+           warnStr = "姓名超过5个字符"
+        }
+        if warnStr.isEmpty != true
+        {
+            let load = THActivityView(string: warnStr)
+            load.show()
+            return
+        }
+        
         weak var wself = self
         let load = THActivityView(activityViewWithSuperView: self.view)
        let net = NetWorkData()

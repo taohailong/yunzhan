@@ -11,7 +11,7 @@ import Foundation
 //typealias NetTestBlock = (s:String) ->Void
 
 typealias NetBlock = (result: Any?,  status: NetStatus) ->(Void)
-
+typealias NetDicBlock = (result:[String:AnyObject],status: NetStatus) ->(Void)
 
 enum NetStatus:Int{
   case NetWorkStatusSucess = 0
@@ -19,16 +19,12 @@ enum NetStatus:Int{
 }
 
 
-class NetWorkData {
+class NetWorkData:NSObject {
     
     var net : AFHTTPRequestOperation!
-    
-    
-    //    typealias AsyRequestSuccessBlock = (data:NSData, response:NSURLResponse)->Void
-    //    typealias Block = ( s: String)->Void
-    init(){
-        //      net = AFHTTPRequestOperation()
-    }
+    //    init(){
+//        //      net = AFHTTPRequestOperation()
+//    }
     
     
 //   MARK: 全局配置API
@@ -210,7 +206,7 @@ class NetWorkData {
     
     func getRootData(block: NetBlock){
     
-        let url = "http://\(Profile.domain)/api/app/exhibition/index?id=1"
+        let url = "http://\(Profile.domain)/api/app/exhibition/index?chn=ios&id=1"
         
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
@@ -348,10 +344,19 @@ class NetWorkData {
                 
                 let p = PersonData(name: temp["name"] as? String, title: temp["title"] as? String, phone: temp["phone"] as? String)
                 
+                
                 p.chatID = temp["hxin_id"] as? String
                 if let exhibitorID = temp["exhibition_id"] as? Int
                 {
                     p.exhibitorID = String(exhibitorID)
+                }
+                
+                if let exhibitorName = temp["buz_name"] as? String
+                {
+                    if p.title != nil
+                    {
+                       p.title = exhibitorName + p.title!
+                    }
                 }
                 
                 if let id = temp["id"] as? Int
@@ -415,7 +420,7 @@ class NetWorkData {
     
     func getSchedulList(block:NetBlock){
         
-        let url = "http://\(Profile.domain)/api/app/schedule/list?eid=1"
+        let url = "http://\(Profile.domain)/api/app/schedule/list?eid=1&chn=ios"
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -436,7 +441,7 @@ class NetWorkData {
                 guard let date = dic["date"] as? Int, let arr = dic["schedules"] as? [[String:AnyObject]]
                     else { return}
                 
-                let dateStr = date.toTimeString("yy-MM-dd")
+                let dateStr = date.toTimeString("yyyy-MM-dd")
                 let week = date.toWeekData()
                 schedulerDateArr.append("\(dateStr)  \(week)")
                 
@@ -462,11 +467,11 @@ class NetWorkData {
         var url = ""
         if user?.token != nil
         {
-            url = "http://\(Profile.domain)/api/app/schedule/detail?eid=1&sid=\(schedulerID)&token=\(user!.token!)"
+            url = "http://\(Profile.domain)/api/app/schedule/detail?chn=ios&eid=1&sid=\(schedulerID)&token=\(user!.token!)"
         }
         else
         {
-            url = "http://\(Profile.domain)/api/app/schedule/detail?eid=1&sid=\(schedulerID)"
+            url = "http://\(Profile.domain)/api/app/schedule/detail?chn=ios&eid=1&sid=\(schedulerID)"
         }
 
 
@@ -485,7 +490,7 @@ class NetWorkData {
             //            print(list)
             let startT = list["start_time"] as! Int
             let endT = list["end_time"] as! Int
-            let scheduleData = SchedulerData(time: "\(startT.toTimeString("HH:mm"))-\(endT.toTimeString("HH:mm"))" , date: startT.toTimeString("yy-MM-dd"), title: (list["name"] as? String)!, introduce: nil, address: (list["addr"] as? String)!, id: String(list["id"]))
+            let scheduleData = SchedulerData(time: "\(startT.toTimeString("HH:mm"))-\(endT.toTimeString("HH:mm"))" , date: startT.toTimeString("yyyy-MM-dd"), title: (list["name"] as? String)!, introduce: nil, address: (list["addr"] as? String)!, id: String(list["id"]))
             
             scheduleData.company = list["sponsor"] as? String
             scheduleData.type = SchedulerType.init(status: list["status"] as? Int, type: list["stype"] as? Int)
@@ -557,7 +562,7 @@ class NetWorkData {
     
     func searchScheduler(searchStr:String,block:NetBlock)
     {
-        var url = "http://\(Profile.domain)/api/app/schedule/search?eid=1&name=\(searchStr)"
+        var url = "http://\(Profile.domain)/api/app/schedule/search?chn=ios&eid=1&name=\(searchStr)"
         
         url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
         self.getMethodRequest(url) { (result, status) -> (Void) in
@@ -680,7 +685,7 @@ class NetWorkData {
     func checkSchedulerStatus(schedulerID:String,block:(status:Bool)->Void)
     {
         let user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/personal/checkschedule?eid=1&sid=\(schedulerID)&chn=ios&token=\(user.token!)"
+        let url = "http://\(Profile.domain)/api/app/personal/checkschedule?chn=ios&eid=1&sid=\(schedulerID)&chn=ios&token=\(user.token!)"
         
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
@@ -730,7 +735,7 @@ class NetWorkData {
                 guard let date = dic["date"] as? Int, let arr = dic["schedules"] as? [[String:AnyObject]]
                     else { return}
                 
-                schedulerDateArr.append(date.toTimeString("yy-MM-dd"))
+                schedulerDateArr.append(date.toTimeString("yyyy-MM-dd"))
                 
                 var subArr = [SchedulerData]()
                 for s in arr
@@ -754,7 +759,7 @@ class NetWorkData {
     
     func getExhibitorList(block:NetBlock){
         
-        let url = "http://\(Profile.domain)/api/app/buz/list?eid=1"
+        let url = "http://\(Profile.domain)/api/app/buz/list?chn=ios&eid=1"
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -820,11 +825,11 @@ class NetWorkData {
         var url = ""
         if user?.token != nil
         {
-           url = "http://\(Profile.domain)/api/app/buz/detail?eid=1&bid=\(id)&token=\(user!.token!)"
+           url = "http://\(Profile.domain)/api/app/buz/detail?chn=ios&eid=1&bid=\(id)&token=\(user!.token!)"
         }
         else
         {
-          url = "http://\(Profile.domain)/api/app/buz/detail?eid=1&bid=2"
+          url = "http://\(Profile.domain)/api/app/buz/detail?chn=ios&eid=1&bid=\(id)"
         }
         
         self.getMethodRequest(url) { (result, status) -> (Void) in
@@ -1082,7 +1087,7 @@ class NetWorkData {
     
     func searchExhibitor(searchStr:String,block:NetBlock){
         
-        var url = "http://\(Profile.domain)/api/app/buz/search?eid=1&name=\(searchStr)"
+        var url = "http://\(Profile.domain)/api/app/buz/search?chn=ios&eid=1&name=\(searchStr)"
         
         url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
         self.getMethodRequest(url) { (result, status) -> (Void) in
@@ -1160,7 +1165,7 @@ class NetWorkData {
                 let ids = dic["product_id"] as? Int
                 let p = ProductData(imageUrl: dic["product_pic_url"] as? String, id:String(ids) , name: dic["product_name_zh"] as? String)
                 let time = dic["create_time"] as? Int
-                p.time = time?.toTimeString("yy-MM-dd HH:mm")
+                p.time = time?.toTimeString("yyyy-MM-dd HH:mm")
                 p.remark = dic["remark"] as? String
                 p.introduce = dic["product_intro"] as? String
                 p.createrName = dic["buz_name_zh"] as? String
@@ -1208,7 +1213,7 @@ class NetWorkData {
     
     func getNewsList(block:NetBlock) {
         
-        let url = "http://\(Profile.domain)/api/app/news/list?eid=1"
+        let url = "http://\(Profile.domain)/api/app/news/list?chn=ios&eid=1"
         
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
@@ -1268,8 +1273,6 @@ class NetWorkData {
             var listArr = [TimeMessage]()
             for temp  in list{
                 
-                
-//               print(temp)
                 let m = TimeMessage()
                 
                 var scale = 0.0
@@ -1463,7 +1466,7 @@ class NetWorkData {
               element.figureOutContentHeight(CGSizeMake(Profile.width()-73, 1000), font: Profile.font(12))
               if let time = temp["create_time"] as? Int
               {
-                element.time = time.toTimeString("yy-MM-dd HH:mm")
+                element.time = time.toTimeString("yyyy-MM-dd HH:mm")
               }
               element.personName = temp["name"] as? String
               element.personTitle = temp["title"] as? String
@@ -1569,7 +1572,7 @@ class NetWorkData {
                 c.contact = temp["contacts"] as? String
                 if let time = temp["create_time"] as? Int
                 {
-                  c.time = time.toTimeString("yy-MM-dd HH:mm")
+                  c.time = time.toTimeString("yyyy-MM-dd HH:mm")
                 }
                 c.name = temp["name"] as? String
                 c.mobile = temp["mobile"] as? String
@@ -1614,6 +1617,274 @@ class NetWorkData {
     
     }
     
+   
+    
+//    MARK: 展会须知
+    
+   internal func exhibitor1(block:NetBlock){
+    
+        let url = "http://\(Profile.domain)/api/app/exhibition/notes?eid=1&chn=ios"
+        self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
+
+            var html = ""
+            if let arr = result["data"] as? [[String:AnyObject]]
+            {
+               for temp in arr
+               {
+                  if let title = temp["title"] as?String
+                  {
+                     html = html + "<div class=\"spot\"><i></i><span>\(title) </span></div>"
+                  }
+                
+                  if let contentDic = temp["value"] as? [String:AnyObject]
+                  {
+                    
+                    if let content = contentDic["content"]
+                    {
+                      html = html + "<p><font size=\"3px\" color=\"black\">\(content)</font></p>"
+                    }
+                    
+                    if let picTitle = contentDic["pic_title"]
+                    {
+                        html = html + "<p><font size=\"3px\" color=\"black\">\(picTitle)</font></p>"
+                    }
+
+                    if let picUrl = contentDic["pic_url"]
+                    {
+                        html = html + "<div class=\"fullImage\"> <img src=\"\(picUrl)\"/></div>"
+                    }
+
+                  }
+                }
+            }
+            block(result: html, status: .NetWorkStatusSucess)
+        })
+    }
+    
+    
+    func exhibitor7(block:NetBlock){
+    
+        let url = "http://\(Profile.domain)/api/app/exhibition/distribution?eid=1&chn=ios"
+        self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
+            
+            var html = ""
+            if let dic  = result["data"] as? [String:AnyObject]
+            {
+                if let title = dic["title"] as?String
+                {
+                    html = html + "<div class=\"spot\"><i></i><span>\(title) </span></div>"
+                }
+                if let content = dic["content"]
+                {
+                    html = html + "<p><font size=\"2px\" color=\"black\">\(content)</font></p>"
+                }
+
+                if let picTitle = dic["pic_title"]
+                {
+                    html = html + "<p><font size=\"3px\" color=\"black\">\(picTitle)</font></p>"
+                }
+                        
+                if let picUrl = dic["pic_url"]
+                {
+                    html = html + "<div class=\"fullImage\"> <img src=\"\(picUrl)\"/></div>"
+                }
+                        
+            }
+            
+            block(result: html, status: .NetWorkStatusSucess)
+        })
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    func exhibitorAdvertiseCategory(block:NetBlock){
+        
+        let url = "http://\(Profile.domain)/api/app/exhibition/guidelist?eid=1&chn=ios"
+        self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
+            
+            block(result: result["data"] as? [[String:AnyObject]], status: .NetWorkStatusSucess)
+        })
+    }
+    
+    
+    
+    func exhibitorAdvertiseContact(block:NetBlock){
+    
+        let url = "http://\(Profile.domain)/api/app/exhibition/contact?eid=1&chn=ios"
+        self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
+            
+            var titleArr = [String]()
+            var contentArr = [[NSAttributedString]]()
+            
+            if let arr = result["data"] as? [[String:AnyObject]]
+            {
+                for temp in arr
+                {
+                  if let t = temp["title"] as? String
+                  {
+                     titleArr.append(t)//yi ji
+                  }
+                    
+                  var subCArr = [NSAttributedString]()
+//                    print(temp)
+                  if let subDicArr = temp["value"] as? [[String:AnyObject]]
+                  {
+
+                    for erji in subDicArr
+                    {
+                        var contentStr = ""
+                        self.appFormateAdString(&contentStr, appendString:erji["title"])
+                        
+                        
+                        
+                        if let remarkArr = erji["remark"] as? [[String:AnyObject]]
+                        {
+                            
+                            for remarkDic in remarkArr
+                            {
+                                self.appFormateAdString(&contentStr, appendString:remarkDic["value"])//备注
+                                
+                                if let personArr = remarkDic["list"] as? [[String:AnyObject]]
+                                {
+                                    for (index,personDic) in personArr.enumerate()
+                                    {
+                                        if let name = personDic["name"] as? String
+                                        {
+                                            if name.isEmpty != true
+                                            {
+                                               contentStr = contentStr + name + "  "
+                                            }
+                                            
+                                            contentStr = contentStr + (personDic["content"] as! String)
+                                        }
+                                        
+                                        if  index/2 != 0 && index != personArr.count
+                                        {
+                                            //双数
+                                            contentStr = contentStr +  "\n"
+                                        }
+                                        else
+                                        {
+                                            //单数
+                                            contentStr = contentStr + "     "
+                                        }
+                                        
+                                    }
+                                    
+                                }
+                            }
+                            
+                        }
+                        let attribute = NSMutableAttributedString(string: contentStr, attributes: [NSFontAttributeName : Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(51, g: 51, b: 51)])
+                        
+                        let paragraph = NSMutableParagraphStyle()
+                        paragraph.lineSpacing = 3
+                        attribute.addAttributes([NSParagraphStyleAttributeName : paragraph], range: NSMakeRange(0, attribute.length))
+                        
+                        subCArr.append(attribute)
+                        
+                        
+                        
+                    
+                    }
+               
+                  }
+                    
+                    
+                  contentArr.append(subCArr)
+                }
+            }
+            
+            let compose:(title:[String],content:[[NSAttributedString]]) = (titleArr,contentArr)
+            block(result:compose , status: .NetWorkStatusSucess)
+        })
+    }
+    
+    
+    func appFormateAdString(inout original:String,appendString:AnyObject?)
+    {
+        if let temp  = appendString as? String
+        {
+            if temp.isEmpty != true
+            {
+                original = original + temp + "\n"
+            }
+        }
+    }
+    
+    func newMethodRequest(url:String,taskBlock:NetBlock,warnShow:Bool,completeBlock:NetDicBlock){
+    
+        if url.isEmpty
+        {
+            return
+        }
+        
+        net = AFHTTPRequestOperation(request: NSURLRequest(URL: NSURL(string: url)!))
+            net.setCompletionBlockWithSuccess({ (operation:AFHTTPRequestOperation!, result:AnyObject!) -> Void in
+            
+            if let jsonData = result as? NSData
+            {
+                
+                if let json = try?  NSJSONSerialization.JSONObjectWithData(jsonData, options: [])
+                {
+                    
+                    if let code = json["code"] as? Int
+                    {
+                        if code != 0 ,let msg = json["msg"] as? String
+                        {
+                            if warnShow == true
+                            {
+                               let warnString = THActivityView(string: msg)
+                               warnString.show()
+                            }
+                            taskBlock(result: msg, status: .NetWorkStatusError)
+                        }
+                        else
+                        {
+                            completeBlock(result: json as! [String : AnyObject], status: .NetWorkStatusSucess)
+                        }
+                    }
+                    else
+                    {
+                        
+                        if warnShow == true
+                        {
+                            let warnString = THActivityView(string: "参数错误")
+                            warnString.show()
+                        }
+                        taskBlock(result: "参数错误", status: .NetWorkStatusError)
+                    }
+                }
+                else
+                {
+                    if warnShow == true
+                    {
+                        let warnString = THActivityView(string: "参数错误")
+                        warnString.show()
+                    }
+                    taskBlock(result: "参数错误", status: .NetWorkStatusError)
+                }
+            }
+            
+            }) { ( operating:AFHTTPRequestOperation!, err:NSError!) -> Void in
+                
+                if warnShow == true
+                {
+                    let warnString = THActivityView(string: "网络异常")
+                    warnString.show()
+                }
+
+                taskBlock(result: "网络异常", status: .NetWorkStatusError)
+        }
+    }
+    
+    
+    
     
     func getMethodRequest(url:String,completeBlock:NetBlock){
         
@@ -1623,6 +1894,8 @@ class NetWorkData {
         }
 
         net = AFHTTPRequestOperation(request: NSURLRequest(URL: NSURL(string: url)!))
+//        net.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+        
         net.setCompletionBlockWithSuccess({ (operation:AFHTTPRequestOperation!, result:AnyObject!) -> Void in
             
             if let jsonData = result as? NSData
@@ -1631,7 +1904,7 @@ class NetWorkData {
                 {
                     if let code = json["code"] as? Int,let msg = json["msg"]
                     {
-                        if code == 1
+                        if code != 0
                         {
                             completeBlock(result: msg, status: .NetWorkStatusError)
                         }

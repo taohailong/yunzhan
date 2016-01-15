@@ -34,6 +34,12 @@
 		C76A3AD61C43958A00D70A6A /* MessUserName.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76A3AD41C43958A00D70A6A /* MessUserName.swift */; };
 		C76E08EF1C09E17200AAFF7B /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76E08EE1C09E17200AAFF7B /* About.swift */; };
 		C76E08F01C09E17200AAFF7B /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = C76E08EE1C09E17200AAFF7B /* About.swift */; };
+		C773A8971C48D6B50000054D /* ExhibitorWeb.swift in Sources */ = {isa = PBXBuildFile; fileRef = C773A8961C48D6B50000054D /* ExhibitorWeb.swift */; };
+		C773A8981C48D6B50000054D /* ExhibitorWeb.swift in Sources */ = {isa = PBXBuildFile; fileRef = C773A8961C48D6B50000054D /* ExhibitorWeb.swift */; };
+		C773A8991C48D6B50000054D /* ExhibitorWeb.swift in Sources */ = {isa = PBXBuildFile; fileRef = C773A8961C48D6B50000054D /* ExhibitorWeb.swift */; };
+		C773A89C1C48EA5D0000054D /* ExhibitorAdController.m in Sources */ = {isa = PBXBuildFile; fileRef = C773A89B1C48EA5D0000054D /* ExhibitorAdController.m */; };
+		C773A89D1C48EA5D0000054D /* ExhibitorAdController.m in Sources */ = {isa = PBXBuildFile; fileRef = C773A89B1C48EA5D0000054D /* ExhibitorAdController.m */; };
+		C773A89E1C48EA5D0000054D /* ExhibitorAdController.m in Sources */ = {isa = PBXBuildFile; fileRef = C773A89B1C48EA5D0000054D /* ExhibitorAdController.m */; };
 		C77481091C34C33400144427 /* MyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77481081C34C33400144427 /* MyInfo.swift */; };
 		C774810A1C34C33400144427 /* MyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77481081C34C33400144427 /* MyInfo.swift */; };
 		C779C0FB1BF42D35008D625F /* LogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C779C0F81BF42D35008D625F /* LogViewController.m */; };
@@ -78,6 +84,12 @@
 		C7848F541BFDDA4500339623 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F511BFDDA2300339623 /* libz.tbd */; };
 		C7848F551BFDDEC400339623 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F4F1BFDDA0800339623 /* SystemConfiguration.framework */; };
 		C7848F571BFDDEDC00339623 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = C7848F561BFDDEDC00339623 /* libc++.tbd */; };
+		C784B34C1C4778790043D968 /* ExhibitorAdvertisement.swift in Sources */ = {isa = PBXBuildFile; fileRef = C784B34B1C4778790043D968 /* ExhibitorAdvertisement.swift */; };
+		C784B34D1C4778790043D968 /* ExhibitorAdvertisement.swift in Sources */ = {isa = PBXBuildFile; fileRef = C784B34B1C4778790043D968 /* ExhibitorAdvertisement.swift */; };
+		C784B34E1C4778790043D968 /* ExhibitorAdvertisement.swift in Sources */ = {isa = PBXBuildFile; fileRef = C784B34B1C4778790043D968 /* ExhibitorAdvertisement.swift */; };
+		C784B3511C47A4BB0043D968 /* ExhibitorContactVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C784B3501C47A4BB0043D968 /* ExhibitorContactVC.swift */; };
+		C784B3521C47A4BB0043D968 /* ExhibitorContactVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C784B3501C47A4BB0043D968 /* ExhibitorContactVC.swift */; };
+		C784B3531C47A4BB0043D968 /* ExhibitorContactVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C784B3501C47A4BB0043D968 /* ExhibitorContactVC.swift */; };
 		C78509961C1FBF2600D3C7D1 /* OrientationTabBarControll.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78509951C1FBF2600D3C7D1 /* OrientationTabBarControll.swift */; };
 		C78509971C1FBF2600D3C7D1 /* OrientationTabBarControll.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78509951C1FBF2600D3C7D1 /* OrientationTabBarControll.swift */; };
 		C78EA5521C1189A2007798E2 /* THLRefeshView_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C78EA54D1C1189A2007798E2 /* THLRefeshView_arrow@2x.png */; };
@@ -187,6 +199,12 @@
 		C7AEDEE41C05C341009C196C /* MyCompany.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7AEDEE21C05C341009C196C /* MyCompany.swift */; };
 		C7C0EABC1BF09CA2004711BF /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C0EABB1BF09CA2004711BF /* ContactsController.swift */; };
 		C7C0EABD1BF09CA2004711BF /* ContactsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C0EABB1BF09CA2004711BF /* ContactsController.swift */; };
+		C7C32E7A1C4904CE007A57F9 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = C7C32E781C4904CE007A57F9 /* index.html */; };
+		C7C32E7B1C4904CE007A57F9 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = C7C32E781C4904CE007A57F9 /* index.html */; };
+		C7C32E7C1C4904CE007A57F9 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = C7C32E781C4904CE007A57F9 /* index.html */; };
+		C7C32E7D1C4904CE007A57F9 /* indexcss.css in Resources */ = {isa = PBXBuildFile; fileRef = C7C32E791C4904CE007A57F9 /* indexcss.css */; };
+		C7C32E7E1C4904CE007A57F9 /* indexcss.css in Resources */ = {isa = PBXBuildFile; fileRef = C7C32E791C4904CE007A57F9 /* indexcss.css */; };
+		C7C32E7F1C4904CE007A57F9 /* indexcss.css in Resources */ = {isa = PBXBuildFile; fileRef = C7C32E791C4904CE007A57F9 /* indexcss.css */; };
 		C7C3C35C1C195A1E0083F3A1 /* RepeatScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C3C35B1C195A1E0083F3A1 /* RepeatScrollView.m */; };
 		C7C3C35D1C195A1E0083F3A1 /* RepeatScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = C7C3C35B1C195A1E0083F3A1 /* RepeatScrollView.m */; };
 		C7DC59911C33CD4800EFED5A /* OrderFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7DC59901C33CD4800EFED5A /* OrderFile.swift */; };
@@ -223,6 +241,9 @@
 		C76429B31C2B93FF00F34888 /* SeachVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SeachVC.swift; sourceTree = "<group>"; };
 		C76A3AD41C43958A00D70A6A /* MessUserName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessUserName.swift; sourceTree = "<group>"; };
 		C76E08EE1C09E17200AAFF7B /* About.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
+		C773A8961C48D6B50000054D /* ExhibitorWeb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitorWeb.swift; sourceTree = "<group>"; };
+		C773A89A1C48EA5D0000054D /* ExhibitorAdController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExhibitorAdController.h; sourceTree = "<group>"; };
+		C773A89B1C48EA5D0000054D /* ExhibitorAdController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExhibitorAdController.m; sourceTree = "<group>"; };
 		C77481081C34C33400144427 /* MyInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyInfo.swift; sourceTree = "<group>"; };
 		C779C0F71BF42D35008D625F /* LogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogViewController.h; sourceTree = "<group>"; };
 		C779C0F81BF42D35008D625F /* LogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogViewController.m; sourceTree = "<group>"; };
@@ -261,6 +282,8 @@
 		C7848F4F1BFDDA0800339623 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		C7848F511BFDDA2300339623 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		C7848F561BFDDEDC00339623 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		C784B34B1C4778790043D968 /* ExhibitorAdvertisement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitorAdvertisement.swift; sourceTree = "<group>"; };
+		C784B3501C47A4BB0043D968 /* ExhibitorContactVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitorContactVC.swift; sourceTree = "<group>"; };
 		C78509951C1FBF2600D3C7D1 /* OrientationTabBarControll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrientationTabBarControll.swift; sourceTree = "<group>"; };
 		C78EA54D1C1189A2007798E2 /* THLRefeshView_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "THLRefeshView_arrow@2x.png"; sourceTree = "<group>"; };
 		C78EA54E1C1189A2007798E2 /* THLRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THLRefreshView.h; sourceTree = "<group>"; };
@@ -290,6 +313,8 @@
 		C7AEDEDC1C05A938009C196C /* MyRegist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyRegist.swift; sourceTree = "<group>"; };
 		C7AEDEE21C05C341009C196C /* MyCompany.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyCompany.swift; sourceTree = "<group>"; };
 		C7C0EABB1BF09CA2004711BF /* ContactsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsController.swift; sourceTree = "<group>"; };
+		C7C32E781C4904CE007A57F9 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		C7C32E791C4904CE007A57F9 /* indexcss.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = indexcss.css; sourceTree = "<group>"; };
 		C7C3C35A1C195A1E0083F3A1 /* RepeatScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepeatScrollView.h; sourceTree = "<group>"; };
 		C7C3C35B1C195A1E0083F3A1 /* RepeatScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepeatScrollView.m; sourceTree = "<group>"; };
 		C7DC59901C33CD4800EFED5A /* OrderFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderFile.swift; sourceTree = "<group>"; };
@@ -407,31 +432,17 @@
 		C77E1D9B1BE09EDA00B8F444 /* yunzhan */ = {
 			isa = PBXGroup;
 			children = (
-				C79531B21C44F50800270DD8 /* swizze */,
+				C7B0390D1C4650A600F5FBD5 /* firstTabBar */,
 				C77E1D9C1BE09EDA00B8F444 /* AppDelegate.swift */,
 				C78509951C1FBF2600D3C7D1 /* OrientationTabBarControll.swift */,
-				C77E1D9E1BE09EDA00B8F444 /* ViewController.swift */,
-				C79E545E1BE9DCB800E4A514 /* RootCollectionCells.swift */,
-				C77C14721BE8B02B00DCC670 /* ExhibitorController.swift */,
-				C78200201BEC800F002BBDB7 /* ExhibitorInfoCV.swift */,
 				C7811B951C0C905A00E5A637 /* ZoomView.swift */,
-				C71A3A821BF1954B0081F7E6 /* SchedulerInfo.swift */,
-				C79285701BEAF65B00287A24 /* NewsView.swift */,
-				C79546DD1BFEBC8F0080CD46 /* NewListCV.swift */,
-				C79546E01BFEBCE30080CD46 /* TimeLineVC.swift */,
-				C77C402D1C040284005596E0 /* TimeLineInfo.swift */,
-				C763D3E71C045FE2005E3921 /* TimeLineCommit.swift */,
-				C79285771BEB322700287A24 /* SettingController.swift */,
 				C77481081C34C33400144427 /* MyInfo.swift */,
 				C76429B31C2B93FF00F34888 /* SeachVC.swift */,
-				C76E08EE1C09E17200AAFF7B /* About.swift */,
-				C79E545B1BE9B79100E4A514 /* Scheduler.swift */,
 				C7AEDEDC1C05A938009C196C /* MyRegist.swift */,
 				C7AEDEE21C05C341009C196C /* MyCompany.swift */,
 				C779C1021BF48A92008D625F /* MyFavorite.swift */,
 				C7A962981BF32354003B883A /* ProductList.swift */,
 				C7A9629B1BF32F01003B883A /* WebHtml.swift */,
-				C77E1DB21BE0AEE600B8F444 /* ProfileSwift.swift */,
 				C79E54641BE9FED500E4A514 /* NetWork.swift */,
 				C7DC59901C33CD4800EFED5A /* OrderFile.swift */,
 				C79880501C3221D700557880 /* ExhibitorMap.swift */,
@@ -442,24 +453,13 @@
 				C779C1081BF4A72D008D625F /* ViewModel.swift */,
 				C77E1DAF1BE0ADD400B8F444 /* test.h */,
 				C77E1DB01BE0ADD400B8F444 /* test.m */,
-				C763D3EA1C0468FC005E3921 /* UIImage+ZoomImage.h */,
-				C763D3EB1C0468FC005E3921 /* UIImage+ZoomImage.m */,
-				C7C3C35A1C195A1E0083F3A1 /* RepeatScrollView.h */,
-				C7C3C35B1C195A1E0083F3A1 /* RepeatScrollView.m */,
-				C79285731BEB06A400287A24 /* THActivityView.h */,
-				C79285741BEB06A400287A24 /* THActivityView.m */,
 				C779C0F71BF42D35008D625F /* LogViewController.h */,
 				C779C0F81BF42D35008D625F /* LogViewController.m */,
-				C78001C21C0EEFEA0097FD8E /* NSString+ZhengZe.h */,
-				C78001C31C0EEFEA0097FD8E /* NSString+ZhengZe.m */,
 				C779C0F91BF42D35008D625F /* LogInCell.h */,
 				C779C0FA1BF42D35008D625F /* LogInCell.m */,
-				C79546E31BFEC3D80080CD46 /* TSegmentedControl.h */,
-				C79546E41BFEC3D80080CD46 /* TSegmentedControl.m */,
-				C763D3EE1C049945005E3921 /* ShareCoverageView.h */,
-				C763D3EF1C049945005E3921 /* ShareCoverageView.m */,
-				C77E8FA31C06DB48003832BA /* CommentScoreView.h */,
-				C77E8FA41C06DB48003832BA /* CommentScoreView.m */,
+				C784B34F1C47788A0043D968 /* ExhibitorAdvertisement */,
+				C7B0390F1C4651D700F5FBD5 /* configure */,
+				C79531B21C44F50800270DD8 /* swizze */,
 				C70505081C3CB50A007F8C72 /* huanxin */,
 				C78EA54C1C1189A2007798E2 /* THLScrollRefreshLoad */,
 				C7848F411BFDD8F400339623 /* weixin */,
@@ -484,6 +484,19 @@
 			path = weixin;
 			sourceTree = SOURCE_ROOT;
 		};
+		C784B34F1C47788A0043D968 /* ExhibitorAdvertisement */ = {
+			isa = PBXGroup;
+			children = (
+				C7C32E771C4904CE007A57F9 /* html */,
+				C784B34B1C4778790043D968 /* ExhibitorAdvertisement.swift */,
+				C784B3501C47A4BB0043D968 /* ExhibitorContactVC.swift */,
+				C773A8961C48D6B50000054D /* ExhibitorWeb.swift */,
+				C773A89A1C48EA5D0000054D /* ExhibitorAdController.h */,
+				C773A89B1C48EA5D0000054D /* ExhibitorAdController.m */,
+			);
+			name = ExhibitorAdvertisement;
+			sourceTree = "<group>";
+		};
 		C78EA54C1C1189A2007798E2 /* THLScrollRefreshLoad */ = {
 			isa = PBXGroup;
 			children = (
@@ -502,6 +515,57 @@
 				C79531B31C44F83D00270DD8 /* NavgationBar.swift */,
 			);
 			name = swizze;
+			sourceTree = "<group>";
+		};
+		C7B0390D1C4650A600F5FBD5 /* firstTabBar */ = {
+			isa = PBXGroup;
+			children = (
+				C77E1D9E1BE09EDA00B8F444 /* ViewController.swift */,
+				C79E545E1BE9DCB800E4A514 /* RootCollectionCells.swift */,
+				C77C14721BE8B02B00DCC670 /* ExhibitorController.swift */,
+				C78200201BEC800F002BBDB7 /* ExhibitorInfoCV.swift */,
+				C79285701BEAF65B00287A24 /* NewsView.swift */,
+				C79546DD1BFEBC8F0080CD46 /* NewListCV.swift */,
+				C79546E01BFEBCE30080CD46 /* TimeLineVC.swift */,
+				C77C402D1C040284005596E0 /* TimeLineInfo.swift */,
+				C763D3E71C045FE2005E3921 /* TimeLineCommit.swift */,
+				C79E545B1BE9B79100E4A514 /* Scheduler.swift */,
+				C71A3A821BF1954B0081F7E6 /* SchedulerInfo.swift */,
+				C79285771BEB322700287A24 /* SettingController.swift */,
+				C76E08EE1C09E17200AAFF7B /* About.swift */,
+			);
+			name = firstTabBar;
+			sourceTree = "<group>";
+		};
+		C7B0390F1C4651D700F5FBD5 /* configure */ = {
+			isa = PBXGroup;
+			children = (
+				C763D3EA1C0468FC005E3921 /* UIImage+ZoomImage.h */,
+				C763D3EB1C0468FC005E3921 /* UIImage+ZoomImage.m */,
+				C7C3C35A1C195A1E0083F3A1 /* RepeatScrollView.h */,
+				C7C3C35B1C195A1E0083F3A1 /* RepeatScrollView.m */,
+				C79285731BEB06A400287A24 /* THActivityView.h */,
+				C79285741BEB06A400287A24 /* THActivityView.m */,
+				C78001C21C0EEFEA0097FD8E /* NSString+ZhengZe.h */,
+				C78001C31C0EEFEA0097FD8E /* NSString+ZhengZe.m */,
+				C79546E31BFEC3D80080CD46 /* TSegmentedControl.h */,
+				C79546E41BFEC3D80080CD46 /* TSegmentedControl.m */,
+				C763D3EE1C049945005E3921 /* ShareCoverageView.h */,
+				C763D3EF1C049945005E3921 /* ShareCoverageView.m */,
+				C77E8FA31C06DB48003832BA /* CommentScoreView.h */,
+				C77E8FA41C06DB48003832BA /* CommentScoreView.m */,
+				C77E1DB21BE0AEE600B8F444 /* ProfileSwift.swift */,
+			);
+			name = configure;
+			sourceTree = "<group>";
+		};
+		C7C32E771C4904CE007A57F9 /* html */ = {
+			isa = PBXGroup;
+			children = (
+				C7C32E781C4904CE007A57F9 /* index.html */,
+				C7C32E791C4904CE007A57F9 /* indexcss.css */,
+			);
+			path = html;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -612,8 +676,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				C77E1DA71BE09EDA00B8F444 /* LaunchScreen.storyboard in Resources */,
+				C7C32E7D1C4904CE007A57F9 /* indexcss.css in Resources */,
 				C77E1DA41BE09EDA00B8F444 /* Assets.xcassets in Resources */,
 				C78EA5521C1189A2007798E2 /* THLRefeshView_arrow@2x.png in Resources */,
+				C7C32E7A1C4904CE007A57F9 /* index.html in Resources */,
 				C7848F491BFDD8F400339623 /* read_me.txt in Resources */,
 				C77E1DA21BE09EDA00B8F444 /* Main.storyboard in Resources */,
 			);
@@ -624,8 +690,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				C7A383F21C449B50008DF57F /* LaunchScreen.storyboard in Resources */,
+				C7C32E7F1C4904CE007A57F9 /* indexcss.css in Resources */,
 				C7A383F31C449B50008DF57F /* Assets.xcassets in Resources */,
 				C7A383F41C449B50008DF57F /* THLRefeshView_arrow@2x.png in Resources */,
+				C7C32E7C1C4904CE007A57F9 /* index.html in Resources */,
 				C7A383F51C449B50008DF57F /* read_me.txt in Resources */,
 				C7A383F61C449B50008DF57F /* Main.storyboard in Resources */,
 			);
@@ -636,8 +704,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				C7F0AE431BE210C70056C06B /* LaunchScreen.storyboard in Resources */,
+				C7C32E7E1C4904CE007A57F9 /* indexcss.css in Resources */,
 				C7F0AE441BE210C70056C06B /* Assets.xcassets in Resources */,
 				C78EA5531C1189A2007798E2 /* THLRefeshView_arrow@2x.png in Resources */,
+				C7C32E7B1C4904CE007A57F9 /* index.html in Resources */,
 				C7848F4A1BFDD8F400339623 /* read_me.txt in Resources */,
 				C7F0AE451BE210C70056C06B /* Main.storyboard in Resources */,
 			);
@@ -751,6 +821,7 @@
 				C7811B961C0C905A00E5A637 /* ZoomView.swift in Sources */,
 				C7A9629C1BF32F01003B883A /* WebHtml.swift in Sources */,
 				C70505191C3CE03C007F8C72 /* EaseConvertToCommonEmoticonsHelper.m in Sources */,
+				C773A8971C48D6B50000054D /* ExhibitorWeb.swift in Sources */,
 				C77481091C34C33400144427 /* MyInfo.swift in Sources */,
 				C78EA5541C1189A2007798E2 /* THLRefreshView.m in Sources */,
 				C7C0EABC1BF09CA2004711BF /* ContactsController.swift in Sources */,
@@ -766,6 +837,7 @@
 				C79285751BEB06A400287A24 /* THActivityView.m in Sources */,
 				C7C3C35C1C195A1E0083F3A1 /* RepeatScrollView.m in Sources */,
 				C779C0FD1BF42D35008D625F /* LogInCell.m in Sources */,
+				C784B34C1C4778790043D968 /* ExhibitorAdvertisement.swift in Sources */,
 				C705050E1C3CB9F3007F8C72 /* ApplyListView.swift in Sources */,
 				C79285781BEB322700287A24 /* SettingController.swift in Sources */,
 				C77E1D9D1BE09EDA00B8F444 /* AppDelegate.swift in Sources */,
@@ -788,7 +860,9 @@
 				C7DC59911C33CD4800EFED5A /* OrderFile.swift in Sources */,
 				C763D3EC1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */,
 				C79285711BEAF65B00287A24 /* NewsView.swift in Sources */,
+				C784B3511C47A4BB0043D968 /* ExhibitorContactVC.swift in Sources */,
 				C78EA5561C1189A2007798E2 /* THLScrollLoadView.m in Sources */,
+				C773A89C1C48EA5D0000054D /* ExhibitorAdController.m in Sources */,
 				C70505151C3CDF3D007F8C72 /* EaseSDKHelper.m in Sources */,
 				C78001C41C0EEFEA0097FD8E /* NSString+ZhengZe.m in Sources */,
 				C76E08EF1C09E17200AAFF7B /* About.swift in Sources */,
@@ -810,6 +884,7 @@
 				C7A383BA1C449B50008DF57F /* ZoomView.swift in Sources */,
 				C7A383BB1C449B50008DF57F /* SettingController.swift in Sources */,
 				C7A383BC1C449B50008DF57F /* EaseConvertToCommonEmoticonsHelper.m in Sources */,
+				C773A8991C48D6B50000054D /* ExhibitorWeb.swift in Sources */,
 				C7A383BD1C449B50008DF57F /* MyInfo.swift in Sources */,
 				C7A383BE1C449B50008DF57F /* THLRefreshView.m in Sources */,
 				C7A383BF1C449B50008DF57F /* ViewController.swift in Sources */,
@@ -825,6 +900,7 @@
 				C7A383C91C449B50008DF57F /* ExhibitorController.swift in Sources */,
 				C7A383CA1C449B50008DF57F /* RepeatScrollView.m in Sources */,
 				C7A383CB1C449B50008DF57F /* Scheduler.swift in Sources */,
+				C784B34E1C4778790043D968 /* ExhibitorAdvertisement.swift in Sources */,
 				C7A383CC1C449B50008DF57F /* ApplyListView.swift in Sources */,
 				C7A383CD1C449B50008DF57F /* ProductList.swift in Sources */,
 				C7A383CE1C449B50008DF57F /* ExhibitorInfoCV.swift in Sources */,
@@ -847,7 +923,9 @@
 				C7A383DF1C449B50008DF57F /* OrderFile.swift in Sources */,
 				C7A383E01C449B50008DF57F /* UIImage+ZoomImage.m in Sources */,
 				C7A383E11C449B50008DF57F /* WebHtml.swift in Sources */,
+				C784B3531C47A4BB0043D968 /* ExhibitorContactVC.swift in Sources */,
 				C7A383E21C449B50008DF57F /* THLScrollLoadView.m in Sources */,
+				C773A89E1C48EA5D0000054D /* ExhibitorAdController.m in Sources */,
 				C7A383E31C449B50008DF57F /* EaseSDKHelper.m in Sources */,
 				C7A383E41C449B50008DF57F /* NSString+ZhengZe.m in Sources */,
 				C7A383E51C449B50008DF57F /* About.swift in Sources */,
@@ -869,6 +947,7 @@
 				C7811B971C0C905A00E5A637 /* ZoomView.swift in Sources */,
 				C79285791BEB322700287A24 /* SettingController.swift in Sources */,
 				C705051A1C3CE03C007F8C72 /* EaseConvertToCommonEmoticonsHelper.m in Sources */,
+				C773A8981C48D6B50000054D /* ExhibitorWeb.swift in Sources */,
 				C774810A1C34C33400144427 /* MyInfo.swift in Sources */,
 				C78EA5551C1189A2007798E2 /* THLRefreshView.m in Sources */,
 				C7F0AE3C1BE210C70056C06B /* ViewController.swift in Sources */,
@@ -884,6 +963,7 @@
 				C77C14741BE8B02B00DCC670 /* ExhibitorController.swift in Sources */,
 				C7C3C35D1C195A1E0083F3A1 /* RepeatScrollView.m in Sources */,
 				C79E545D1BE9B79100E4A514 /* Scheduler.swift in Sources */,
+				C784B34D1C4778790043D968 /* ExhibitorAdvertisement.swift in Sources */,
 				C705050F1C3CB9F3007F8C72 /* ApplyListView.swift in Sources */,
 				C7A9629A1BF32354003B883A /* ProductList.swift in Sources */,
 				C78200221BEC800F002BBDB7 /* ExhibitorInfoCV.swift in Sources */,
@@ -906,7 +986,9 @@
 				C7DC59921C33CD4800EFED5A /* OrderFile.swift in Sources */,
 				C763D3ED1C0468FC005E3921 /* UIImage+ZoomImage.m in Sources */,
 				C7A9629D1BF32F01003B883A /* WebHtml.swift in Sources */,
+				C784B3521C47A4BB0043D968 /* ExhibitorContactVC.swift in Sources */,
 				C78EA5571C1189A2007798E2 /* THLScrollLoadView.m in Sources */,
+				C773A89D1C48EA5D0000054D /* ExhibitorAdController.m in Sources */,
 				C70505161C3CDF3D007F8C72 /* EaseSDKHelper.m in Sources */,
 				C78001C51C0EEFEA0097FD8E /* NSString+ZhengZe.m in Sources */,
 				C76E08F01C09E17200AAFF7B /* About.swift in Sources */,
