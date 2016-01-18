@@ -8,7 +8,7 @@
 
 import Foundation
 class ExhibitorAdWebController:UIViewController,UIWebViewDelegate {
-    var readLocal:Bool = false
+    var webIsLoad:Bool = false
     var loadV:THActivityView!
     var webHtml:String?
     let web :UIWebView
@@ -37,6 +37,7 @@ class ExhibitorAdWebController:UIViewController,UIWebViewDelegate {
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(web))
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(web))
         self.getNetData(webHtml!)
+        webHtml = nil
         
     }
     
@@ -44,17 +45,62 @@ class ExhibitorAdWebController:UIViewController,UIWebViewDelegate {
     func getNetData(code:String){
     
         weak var wself = self
-        net.exhibitor7 { (result, status) -> (Void) in
         
-         if status == .NetWorkStatusError{
-            return
-         }
-         if let html = result as? String
-         {
-            wself?.writeBodyToWeb(html)
-         }
+        if code == "1"
+        {
+          net.exhibitor1({ (result, status) -> (Void) in
+            wself?.parseData(result, status: status)
+          })
         }
+        if code == "2"
+        {
+           net.exhibitor2({ (result, status) -> (Void) in
+            wself?.parseData(result, status: status)
+           })
+        }
+        
+        if code == "3"
+        {
+            net.exhibitor3({ (result, status) -> (Void) in
+                wself?.parseData(result, status: status)
+            })
+        }
+
+        if code == "5"
+        {
+            net.exhibitor5({ (result, status) -> (Void) in
+                wself?.parseData(result, status: status)
+            })
+        }
+
+        if code == "6"
+        {
+            net.exhibitor6({ (result, status) -> (Void) in
+                wself?.parseData(result, status: status)
+            })
+        }
+        
+        if code == "7"
+        {
+            net.exhibitor7 { (result, status) -> (Void) in
+                wself?.parseData(result, status: status)
+            }
+        }
+        
        net.start()
+    }
+    
+    
+    func parseData(data:Any?,status:NetStatus)
+    {
+        if status == .NetWorkStatusError{
+            return
+        }
+        if let html = data as? String
+        {
+            self.writeBodyToWeb(html)
+        }
+        
     }
     
     
@@ -62,13 +108,7 @@ class ExhibitorAdWebController:UIViewController,UIWebViewDelegate {
        
         let path = NSBundle.mainBundle().pathForResource("index", ofType: "html")
         let url = NSURL(fileURLWithPath: path!)
-    
-    
-        let html = try! NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding)
-        //        html = html.stringByReplacingOccurrencesOfString("tao", withString: original as String)
-        //
-        web.loadHTMLString(html as String, baseURL: nil)
-        //web.loadRequest(NSURLRequest(URL: url))
+        web.loadRequest(NSURLRequest(URL: url))
      }
     
     
@@ -76,15 +116,20 @@ class ExhibitorAdWebController:UIViewController,UIWebViewDelegate {
 
         var original = NSString(string: html)
         original = original.stringByReplacingOccurrencesOfString("\r\n", withString: "</br>")
-        let path = NSBundle.mainBundle().pathForResource("index", ofType: "html")
-        let url = NSURL(fileURLWithPath: path!)
-        var body = try! NSString(contentsOfURL: url, encoding: NSUTF8StringEncoding)
-        body = body.stringByReplacingOccurrencesOfString("\" \"", withString: original as String)
-        web.loadHTMLString(body as String, baseURL: nil)
-//        let s = "document.write('\(original)');"
-//
-//       print(html)
-      // web.stringByEvaluatingJavaScriptFromString(s)
+        
+        webHtml = original as String
+        self.loadWebJs()
+    }
+    
+    
+    func loadWebJs(){
+    
+       if webIsLoad == true && webHtml != nil
+       {
+          let s = "addBodyHtml('\(webHtml!)')"
+          web.stringByEvaluatingJavaScriptFromString(s)
+       }
+        
     }
     
     
@@ -94,10 +139,52 @@ class ExhibitorAdWebController:UIViewController,UIWebViewDelegate {
     
     func webViewDidFinishLoad(webView: UIWebView) {
         loadV.removeFromSuperview()
+        webIsLoad = true
+        
+        if webIsLoad == true
+        {
+           self.loadWebJs()
+        }
+
+    }
+    
+    
+    
+    
+    
+    
+    func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+        
+        if let url = request.URL?.absoluteString
+        {
+            if url.verifyIsImageURL()
+            {
+              self.showZoomMap(url)
+              return false
+            }
+            if url.verifyIsMobilePhoneNu()
+            {
+
+               return false
+            }
+            return true
+        }
+        return true
         
     }
     
     
+    
+    
+    func showZoomMap(url:String?){
+        
+        let zoom = ZoomVC()
+        zoom.url = url
+        self.presentViewController(zoom, animated: false) { () -> Void in
+            
+        }
+    }
+
     
     
     

@@ -274,10 +274,20 @@ extension String {
     func verifyIsMobilePhoneNu()->Bool
     {
        let match = "^1[0-9]{10}"
-       let predicate = NSPredicate(format: "SELF MATCHS %@", match)
+        
+       let predicate = NSPredicate(format: "SELF MATCHES %@", match)
         
         return predicate.evaluateWithObject(self)
     }
+
+    func verifyIsImageURL() ->Bool
+    {
+        let match = "(http|https):\\/\\/\\S*.(png|jpg|gif)"
+        let predicate = NSPredicate(format: "SELF MATCHES %@", match)
+        return predicate.evaluateWithObject(self)
+    }
+    
+    
     
     
     subscript(start:Int,lenth:Int)->String?{
@@ -348,6 +358,10 @@ extension UIViewController{
 
 extension UIColor {
    
+    class func rgb(let r:CGFloat,let g:CGFloat, let b:CGFloat) ->UIColor{
+        return UIColor(red: r/255.0, green: g/255.0, blue: b/255.0, alpha: 1.0)
+    }
+    
    func convertToImage()->UIImage
    {
         let size = CGRectMake(0, 0, 1, 1)

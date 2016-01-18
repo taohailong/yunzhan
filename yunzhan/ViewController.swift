@@ -454,11 +454,11 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
                 mapVC.hidesBottomBarWhenPushed = true
                self.navigationController?.pushViewController(mapVC, animated: true)
             }
-            else if act.name == "精彩瞬间a"
+            else if act.name == "精彩瞬间"
             {
                 self.tabBarController?.selectedIndex = 3
             }
-            else if act.name == "我的关注a"
+            else if act.name == "我的关注"
             {
                 self.tabBarController?.selectedIndex = 4
             }

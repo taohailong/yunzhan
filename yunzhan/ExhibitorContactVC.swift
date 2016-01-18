@@ -23,6 +23,7 @@ class ExhibitorContactVC: UIViewController,UITableViewDataSource,UITableViewDele
         table.tableFooterView = UIView()
         table.tableHeaderView = UIView(frame: CGRectMake(0,0,Profile.width(),5))
         table.rowHeight = UITableViewAutomaticDimension
+        table.estimatedRowHeight = 45
         table.registerClass(SchedulerInfoTitleHeadView.self , forHeaderFooterViewReuseIdentifier: "SchedulerInfoTitleHeadView")
         table.registerClass(ExhibitorAdCommonCell.self, forCellReuseIdentifier: "ExhibitorAdCommonCell")
         self.view.addSubview(table)
@@ -72,6 +73,7 @@ class ExhibitorContactVC: UIViewController,UITableViewDataSource,UITableViewDele
     func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         let head = tableView.dequeueReusableHeaderFooterViewWithIdentifier("SchedulerInfoTitleHeadView") as! SchedulerInfoTitleHeadView
+        head.titleL.textColor = UIColor.rgb(51, g: 51, b: 51)
         head.titleL.text = tableHeadArr[section]
         return head
     }
@@ -85,12 +87,13 @@ class ExhibitorContactVC: UIViewController,UITableViewDataSource,UITableViewDele
 
 class ExhibitorAdCommonCell: UITableViewCell {
     let title:UILabel
+//    let title:UITextView
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         title = UILabel()
         title.numberOfLines = 0
         title.translatesAutoresizingMaskIntoConstraints = false
-        
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.contentView.addSubview(title)
         
@@ -98,7 +101,7 @@ class ExhibitorAdCommonCell: UITableViewCell {
         self.contentView.addConstraint(left)
         
         self.contentView.addConstraint(NSLayoutConstraint(item: title, attribute: .Right, relatedBy: .Equal, toItem: self.contentView, attribute: .Right, multiplier: 1.0, constant: 15))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-5-[title]-5-|", aView: title, bView: nil))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-7-[title]-7-|", aView: title, bView: nil))
     }
     
 

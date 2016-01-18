@@ -200,9 +200,7 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         }
         chatView?.title = person.name
         self.navigationController?.pushViewController(chatView!, animated: true)
-
     }
-    
     
 }
 

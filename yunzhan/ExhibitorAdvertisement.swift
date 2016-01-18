@@ -14,7 +14,7 @@ class ExhibitorCategoryVC: UIViewController,UICollectionViewDataSource,UICollect
     var dataArr = [[String:AnyObject]]()
     override func viewDidLoad() {
       super.viewDidLoad()
-        self.title = "参展须知"
+        self.title = "展商须知"
         self.view.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         self.automaticallyAdjustsScrollViewInsets = false
         let flowLayout = UICollectionViewFlowLayout()
@@ -51,7 +51,7 @@ class ExhibitorCategoryVC: UIViewController,UICollectionViewDataSource,UICollect
         
         if let data = result as? [[String:AnyObject]]
         {
-           wself?.dataArr = data
+            wself?.dataArr = data
             wself?.collection.reloadData()
         }
         
@@ -123,44 +123,28 @@ class ExhibitorCategoryVC: UIViewController,UICollectionViewDataSource,UICollect
         
         return cell
     }
+    
+    
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
 //        // 项目编号, 1: 组委会和重要联系人, 2: 报到安排, 3: 布展须知, 5: 展馆交通线路, 6: 展品运输线路, 7: 展览馆、停车位分布图
         let dic = dataArr[indexPath.row]
+        let title = dic["title"] as? String
+        
+        var controller:UIViewController? = nil
         if let code = dic["code"] as? String
         {
-            var imageN = ""
-            switch code
-            {
-            case "1":
-                
-                let contact = ExhibitorContactVC()
-                self.navigationController?.pushViewController(contact, animated: true)
-                
-            case "2":
-//                imageN = "exhibitor_ad_2"
-                let web = ExhibitorAdWebController(bodyHtml: "2")
-                self.navigationController?.pushViewController(web, animated: true)
-                
-            case "3":
-                imageN = "exhibitor_ad_3"
-                
-            case "4":
-                imageN = "exhibitor_ad_4"
-                
-            case "5":
-                imageN = "exhibitor_ad_5"
-                
-            case "6":
-                imageN = "exhibitor_ad_6"
-                
-            case "7":
-                imageN = "exhibitor_ad_7"
-            default:
-                imageN = ""
-            }
+//            if code == "1"
+//            {
+//                controller = ExhibitorContactVC()
+//            }
+//            else
+//            {
+                controller = ExhibitorAdWebController(bodyHtml: code)
+//            }
         }
-
-    }
+        controller?.title = title
+         self.navigationController?.pushViewController(controller!, animated: true)
+     }
     
 }
 

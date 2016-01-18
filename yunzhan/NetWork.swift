@@ -1621,7 +1621,7 @@ class NetWorkData:NSObject {
     
 //    MARK: 展会须知
     
-   internal func exhibitor1(block:NetBlock){
+   internal func exhibitor3(block:NetBlock){
     
         let url = "http://\(Profile.domain)/api/app/exhibition/notes?eid=1&chn=ios"
         self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
@@ -1638,20 +1638,32 @@ class NetWorkData:NSObject {
                 
                   if let contentDic = temp["value"] as? [String:AnyObject]
                   {
-                    
-                    if let content = contentDic["content"]
+                    //  有标题无标题格式不同
+                    if let _ = temp["title"] as?String
                     {
-                      html = html + "<p><font size=\"3px\" color=\"black\">\(content)</font></p>"
+                        if let content = contentDic["content"] as?String
+                        {
+                            html = html + "<p class=\"contents\">\(content)</p>"
+                        }
                     }
+                    else
+                    {
+                        if let content = contentDic["content"] as?String
+                        {
+                            html = html + "<p class=\"contentnoleft\">\(content)</p>"
+                        }
+                    }
+
+                    
                     
                     if let picTitle = contentDic["pic_title"]
                     {
-                        html = html + "<p><font size=\"3px\" color=\"black\">\(picTitle)</font></p>"
+                        html = html + "<p class=\"picTitle\">\(picTitle)</p>"
                     }
 
                     if let picUrl = contentDic["pic_url"]
                     {
-                        html = html + "<div class=\"fullImage\"> <img src=\"\(picUrl)\"/></div>"
+                        html = html + "<div class=\"fullImage\"> <a href=\"\(picUrl)\"><img src=\"\(picUrl)\" /></a></div>"
                     }
 
                   }
@@ -1662,6 +1674,7 @@ class NetWorkData:NSObject {
     }
     
     
+//   展馆和停车场分布图
     func exhibitor7(block:NetBlock){
     
         let url = "http://\(Profile.domain)/api/app/exhibition/distribution?eid=1&chn=ios"
@@ -1670,18 +1683,29 @@ class NetWorkData:NSObject {
             var html = ""
             if let dic  = result["data"] as? [String:AnyObject]
             {
+          //  有标题无标题格式不同
                 if let title = dic["title"] as?String
                 {
                     html = html + "<div class=\"spot\"><i></i><span>\(title) </span></div>"
+                    
+                    if let content = dic["content"] as?String
+                    {
+                        html = html + "<p class=\"contents\">\(content)</p>"
+                    }
                 }
-                if let content = dic["content"]
+                else
                 {
-                    html = html + "<p><font size=\"2px\" color=\"black\">\(content)</font></p>"
+                    if let content = dic["content"] as?String
+                    {
+                        html = html + "<p class=\"contentnoleft\">\(content)</p>"
+                    }
                 }
 
+                
+                
                 if let picTitle = dic["pic_title"]
                 {
-                    html = html + "<p><font size=\"3px\" color=\"black\">\(picTitle)</font></p>"
+                    html = html + "<p class=\"picTitle\">\(picTitle)</p>"
                 }
                         
                 if let picUrl = dic["pic_url"]
@@ -1697,6 +1721,211 @@ class NetWorkData:NSObject {
     
     
     
+    //展品运输路线
+    func exhibitor6(block:NetBlock){
+        
+        let url = "http://\(Profile.domain)/api/app/exhibition/transport?eid=1&chn=ios"
+        self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
+            
+            var html = ""
+            if let dic  = result["data"] as? [String:AnyObject]
+            {
+                //  有标题无标题格式不同
+                if let title = dic["title"] as?String
+                {
+                    html = html + "<div class=\"spot\"><i></i><span>\(title) </span></div>"
+                    
+                    if let content = dic["content"] as?String
+                    {
+                        html = html + "<p class=\"contents\">\(content)</p>"
+                    }
+                }
+                else
+                {
+                    if let content = dic["content"] as?String
+                    {
+                        html = html + "<p class=\"contentnoleft\">\(content)</p>"
+                    }
+                }
+
+                
+                
+                if let picTitle = dic["pic_title"]
+                {
+                    html = html + "<p class=\"picTitle\">\(picTitle)</p>"
+                }
+                
+                if let picUrl = dic["pic_url"]
+                {
+                    html = html + "<div class=\"fullImage\"> <img src=\"\(picUrl)\"/></div>"
+                }
+                
+            }
+            
+            block(result: html, status: .NetWorkStatusSucess)
+        })
+    }
+
+    
+    
+    
+    //展馆交通路线
+    func exhibitor5(block:NetBlock){
+        
+        let url = "http://\(Profile.domain)/api/app/exhibition/traffic?eid=1&chn=ios"
+        self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
+            
+            var html = ""
+            if let dic  = result["data"] as? [String:AnyObject]
+            {
+                //   有标题无标题格式不同
+                if let title = dic["title"] as?String
+                {
+                    html = html + "<div class=\"spot\"><i></i><span>\(title) </span></div>"
+                    
+                    if let content = dic["content"] as?String
+                    {
+                        html = html + "<p class=\"contents\">\(content)</p>"
+                    }
+                }
+                else
+                {
+                    if let content = dic["content"] as?String
+                    {
+                        html = html + "<p class=\"contentnoleft\">\(content)</p>"
+                    }
+                }
+
+                
+                
+                
+                if let picTitle = dic["pic_title"]
+                {
+                    html = html + "<p class=\"picTitle\">\(picTitle)</p>"
+                }
+                
+                if let picUrl = dic["pic_url"]
+                {
+                    html = html + "<div class=\"fullImage\"> <img src=\"\(picUrl)\"/></div>"
+                }
+                
+            }
+            
+            block(result: html, status: .NetWorkStatusSucess)
+        })
+    }
+  
+    
+    
+    //报到安排
+    func exhibitor2(block:NetBlock){
+        
+        let url = "http://\(Profile.domain)/api/app/exhibition/arrange?eid=1&chn=ios"
+        self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
+            
+            var html = ""
+            if let arrDic  = result["data"] as? [[String:AnyObject]]
+            {
+                for dic in arrDic
+                {
+//                    有标题无标题格式不同
+                    
+                    if let title = dic["title"] as?String
+                    {
+                        html = html + "<div class=\"spot\"><i></i><span>\(title) </span></div>"
+                        
+                        if let content = dic["value"] as?String
+                        {
+                            html = html + "<p class=\"contents\">\(content)</p>"
+                        }
+                    }
+                    else
+                    {
+                        if let content = dic["value"] as?String
+                        {
+                            html = html + "<p class=\"contentnoleft\">\(content)</p>"
+                        }
+                    }
+                }
+                
+            }
+            
+            block(result: html, status: .NetWorkStatusSucess)
+        })
+    }
+
+    
+    
+    func addSeparate(inout html:String)
+    {
+        html = html + "<hr class=\"separates\"></hr>"
+    }
+    
+    
+    func addHtmlTitle(inout html:String,element:AnyObject?)
+    {
+       if let title = element as? String
+       {
+          if !title.isEmpty
+          {
+              html = html + "<div class=\"spot\"><i></i><span>\(title) </span></div>"
+          }
+       }
+
+    }
+    
+    
+    func addHtmlSubTitle(inout html:String,element:AnyObject?){
+    
+        if let title = element as? String
+        {
+            if !title.isEmpty
+            {
+                html = html + "<p class=\"subTitle\">\(title)</div>"
+            }
+        }
+    }
+    
+    func addHtmlContent(inout html:String,element:AnyObject?,leftSpace:Bool)
+    {
+        if let content  = element as? String
+        {
+            if !content.isEmpty
+            {
+                if leftSpace == true
+                {
+                   html = html + "<p class=\"contents\">\(content)</p>"
+                }
+                else
+                {
+                    html = html + "<p class=\"contentnoleft\">\(content)</p>"
+                   
+                }
+            }
+        }
+    }
+    
+    
+    func addHtmlPicTitle(inout html:String,element:AnyObject?){
+        
+        if let picTitle = element as? String
+        {
+            if !picTitle.isEmpty
+            {
+                html = html + "<p class=\"picTitle\">\(picTitle)</p>"
+            }
+        }
+    }
+
+    
+    func addHtmlPicUrl(inout html:String,element:AnyObject?){
+        
+        if let picurl = element as? String
+        {
+            html = html + "<div class=\"fullImage\"> <img src=\"\(picurl)\"/></div>"
+        }
+    }
+
     
     
     
@@ -1710,6 +1939,99 @@ class NetWorkData:NSObject {
             block(result: result["data"] as? [[String:AnyObject]], status: .NetWorkStatusSucess)
         })
     }
+    
+    
+    
+    func exhibitor1(block:NetBlock){
+        
+        let url = "http://\(Profile.domain)/api/app/exhibition/contact?eid=1&chn=ios"
+        self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
+            
+            var html = ""
+            if let arr = result["data"] as? [[String:AnyObject]]
+            {
+                for temp in arr
+                {
+                    self.addHtmlTitle(&html, element: temp["title"])
+                    if let subDicArr = temp["value"] as? [[String:AnyObject]]
+                    {
+                        
+                        for erji in subDicArr
+                        {
+                            self.addHtmlSubTitle(&html, element: erji["title"])
+                            
+                            
+                            if let remarkArr = erji["remark"] as? [[String:AnyObject]]
+                            {
+                                
+                                for remarkDic in remarkArr
+                                {
+                                    self.addHtmlSubTitle(&html, element: remarkDic["value"])//备注
+                                    
+                                    
+                                    if let personArr = remarkDic["list"] as? [[String:AnyObject]]
+                                    {
+                                        var personStr = ""
+                                        for (index,personDic) in personArr.enumerate()
+                                        {
+                                            
+                                            if let name = personDic["name"] as? String
+                                            {
+                                                if name.isEmpty != true//防止没有名字时 增加了几个空格
+                                                {
+                                                   personStr = personStr + name + "&nbsp&nbsp&nbsp&nbsp&nbsp"
+                                                }
+                                               
+                                                personStr = personStr + (personDic["content"] as! String)
+                                            }
+    
+                                    
+                                            if  index%2 != 0 && index != personArr.count - 1
+                                            {
+                                                //双数
+                                                personStr = personStr +  "</br>"
+                                            }
+                                            else
+                                            {
+                                                //单数
+                                                personStr = personStr + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"
+                                            }
+                                        
+                                        }
+                                        
+                                        self.addHtmlContent(&html, element: personStr, leftSpace: true)
+                                        // 只有一个消息时不要横线
+                                        if subDicArr.count != 1
+                                        {
+                                            self.addSeparate(&html)
+                                        }
+            
+                                    }
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
+            }
+            block(result:html , status: .NetWorkStatusSucess)
+        })
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -1731,7 +2053,6 @@ class NetWorkData:NSObject {
                   }
                     
                   var subCArr = [NSAttributedString]()
-//                    print(temp)
                   if let subDicArr = temp["value"] as? [[String:AnyObject]]
                   {
 
@@ -1745,8 +2066,12 @@ class NetWorkData:NSObject {
                         if let remarkArr = erji["remark"] as? [[String:AnyObject]]
                         {
                             
-                            for remarkDic in remarkArr
+                            for (remarkDicIndex,remarkDic) in remarkArr.enumerate()
                             {
+                                if remarkDicIndex != 0
+                                {
+                                   contentStr = contentStr +  "\n"
+                                }
                                 self.appFormateAdString(&contentStr, appendString:remarkDic["value"])//备注
                                 
                                 if let personArr = remarkDic["list"] as? [[String:AnyObject]]
@@ -1763,7 +2088,8 @@ class NetWorkData:NSObject {
                                             contentStr = contentStr + (personDic["content"] as! String)
                                         }
                                         
-                                        if  index/2 != 0 && index != personArr.count
+                                        
+                                        if  index%2 != 0 && index != personArr.count - 1
                                         {
                                             //双数
                                             contentStr = contentStr +  "\n"
@@ -1773,7 +2099,7 @@ class NetWorkData:NSObject {
                                             //单数
                                             contentStr = contentStr + "     "
                                         }
-                                        
+                                    
                                     }
                                     
                                 }
@@ -1789,8 +2115,7 @@ class NetWorkData:NSObject {
                         subCArr.append(attribute)
                         
                         
-                        
-                    
+                
                     }
                
                   }
