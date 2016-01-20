@@ -13,14 +13,14 @@
 
 #if EXTERENTERPISE
 #import "yunzhan_external-Swift.h"
-#define PORT "123.56.102.224"
+//#define PORT "123.56.102.224"
 #elif INTERENTERPISE
 #import "yunzhan_internal-Swift.h"
-#define PORT "123.56.102.224:8099"
+//#define PORT "123.56.102.224:8099"
 #else
 #import "yunzhan-Swift.h"
 //#define PORT "www.zhangzhantong.com"
-#define PORT "123.56.102.224:8099"
+//#define PORT "123.56.102.224:8099"
 #endif
 
 
@@ -221,7 +221,11 @@
     
     __weak LogViewController* wself = self;
     
-    NSString* str = [NSString stringWithFormat:@"http://%s/api/app/user/verifysms?eid=1&phone=%@",PORT,_phoneField.text];
+    
+    
+//    NSString* str = [NSString stringWithFormat:@"http://%s/api/app/user/verifysms?eid=1&phone=%@",PORT,_phoneField.text];
+    
+    NSString* str = [Profile globalHttpHead:@"api/app/user/verifysms" parameter:[NSString stringWithFormat:@"phone=%@",_phoneField.text]];
     NSURLRequest* url = [NSURLRequest requestWithURL:[NSURL URLWithString:str]];
     AFHTTPRequestOperation * req = [[AFHTTPRequestOperation alloc]initWithRequest:url];
     [req setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -310,7 +314,9 @@
     
     __weak LogViewController* wSelf = self;
     
-    NSString* str = [NSString stringWithFormat:@"http://%s/api/app/user/login?chn=ios&eid=1&phone=%@&code=%@",PORT,_phoneField.text,_pwField.text];
+//    NSString* str = [NSString stringWithFormat:@"http://%s/api/app/user/login?chn=ios&eid=1&phone=%@&code=%@",PORT,_phoneField.text,_pwField.text];
+    
+    NSString* str = [Profile globalHttpHead:@"api/app/user/login" parameter:[NSString stringWithFormat:@"phone=%@&code=%@",_phoneField.text,_pwField.text]];
     NSURLRequest* url = [NSURLRequest requestWithURL:[NSURL URLWithString:str]];
     AFHTTPRequestOperation * req = [[AFHTTPRequestOperation alloc]initWithRequest:url];
     [req setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -385,7 +391,8 @@
     
     __weak LogViewController* wself = self;
     
-     NSString* str = [NSString stringWithFormat:@"http://%s/api/app/user/verifyvoice?eid=1&phone=%@",PORT,_phoneField.text];
+//    NSString* str = [NSString stringWithFormat:@"http://%s/api/app/user/verifyvoice?eid=1&phone=%@",PORT,_phoneField.text];
+    NSString* str = [Profile globalHttpHead:@"api/app/user/verifyvoice" parameter:[NSString stringWithFormat:@"phone=%@",_phoneField.text]];
     NSURLRequest* url = [NSURLRequest requestWithURL:[NSURL URLWithString:str]];
     AFHTTPRequestOperation * req = [[AFHTTPRequestOperation alloc]initWithRequest:url];
     [req setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {

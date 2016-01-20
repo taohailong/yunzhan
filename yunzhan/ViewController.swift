@@ -197,36 +197,28 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         
         if indexPath.section == 1
         {
+            let widthSpace:CGFloat = activityArr.count == 4 ? 0.0:0.5
+            let size = self.figureOutCollectionSize(activityArr.count, indexPath: indexPath,space:widthSpace)
             switch  activityArr.count
             {
                 case 1:
-                return  CGSizeMake(Profile.width(), 60)
+                return  CGSizeMake(size.width, 60)
                 
                case 2:
-                return  CGSizeMake(Profile.width()/2-0.25, 60)
+                return  CGSizeMake(size.width, 60)
                 
                case 3:
-                return  CGSizeMake(Profile.width()/3 - 0.34, 100)
+                return  CGSizeMake(size.width, 83)
               default:
                 
-                
-                let width = Profile.width()/4
-                let f = width - floor(width)
-                if indexPath.row/2 == 0
-                {
-                  return CGSizeMake(width - f , 83)
-                }
-                else
-                {
-                  return CGSizeMake(width + f , 83)
-                }
+                return  CGSizeMake(size.width, 83)
             }
         }
         else if indexPath.section == 2
         {
 //            展商
-            let lenth = (Profile.width()-2)/5
-           return CGSizeMake(lenth, lenth)
+              let size = self.figureOutCollectionSize(5, indexPath: indexPath,space: 0.5)
+              return size
         }
         else if indexPath.section == 3
         {
@@ -243,11 +235,12 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
 
 //    垂直间距
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAtIndex section: Int) -> CGFloat {
-        if section == 1 || section == 3
+        
+        if section == 2 || section == 4
         {
           return 0.5
         }
-        return 0
+        return 0.0
     }
     
 //    水平间距
@@ -361,7 +354,6 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             {
                 return CGSizeZero
             }
-//            return exhibitor.count
         }
         else if section == 3
         {
@@ -369,7 +361,6 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             {
                 return CGSizeZero
             }
-//            return scheduler.count
         }
         else
         {
@@ -377,7 +368,6 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
                 
                 return CGSizeZero
             }
-//            return news.count
         }
 
         
@@ -519,6 +509,32 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         }
         
     }
+    
+    func figureOutCollectionSize(total:Int,indexPath:NSIndexPath,space:CGFloat)->CGSize
+    {
+        let index = indexPath.row % total
+        let totalLenth = Profile.width() - CGFloat(total)*space + space
+        
+        let lenth = totalLenth*2 / CGFloat(total)
+        let absoluteWidth = ceil(lenth)
+        
+        if total == index + 1
+        {
+            var totalWidth:CGFloat = 0.0
+            if index%2 == 0
+            {
+                totalWidth = absoluteWidth * CGFloat(index)
+            }
+            else
+            {
+                totalWidth = absoluteWidth * CGFloat(index)+1
+            }
+            return CGSizeMake(totalLenth - totalWidth/2 , absoluteWidth/2)
+        }
+        let genuineWidth = index%2 == 0 ? absoluteWidth - 1: absoluteWidth + 1
+        return CGSizeMake(genuineWidth/2, absoluteWidth/2)
+    }
+    
     
 
     deinit{

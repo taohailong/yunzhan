@@ -24,9 +24,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate,IChatManager
         #if EXTERENTERPISE
             cerName = "external_product"
         #elseif INTERENTERPISE
-             cerName = "external_product"
+             cerName = "internal_product"
         #else
-            cerName = "normal_develop"
+            cerName = "normal_product"
         #endif
 
         
@@ -63,8 +63,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate,IChatManager
         deviceToken = deviceToken.substringWithRange(NSMakeRange(1, deviceToken.length-2))
     
         deviceToken = deviceToken.stringByReplacingOccurrencesOfString(" ", withString: "")
-//        print(deviceToken)
-        
+//        print("deviceToken------------------- \(deviceToken)" )
+//        develop   97ba19cba5b30bf2c0a715b2d6a0fa41126d5c791d6da9ef701363bf4f35ac4c
         net = NetWorkData()
         net.sendDeviceToken(deviceToken as String)
         net.start()

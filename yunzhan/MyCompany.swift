@@ -437,7 +437,7 @@ class HotelCell: UITableViewCell,UIAlertViewDelegate {
         {
             phoneStr = phoneNu!
             let att = NSMutableAttributedString(string: "电话：", attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(102, g: 102, b: 102)])
-            att.appendAttributedString(NSAttributedString(string: phoneNu!, attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(255, g: 199, b: 92)]))
+            att.appendAttributedString(NSAttributedString(string: phoneNu!, attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(0, g: 78, b: 208)]))
             phoneBt.setAttributedTitle(att, forState: .Normal)
 //           phoneBt.setTitle("电话：\(phoneNu!)", forState: .Normal)
         }
@@ -518,7 +518,7 @@ class CompanyCell: UITableViewCell,UIAlertViewDelegate {
         {
             phoneNu = phone!
             let att = NSMutableAttributedString(string: "电话：", attributes: [NSFontAttributeName:Profile.font(13),NSForegroundColorAttributeName:Profile.rgb(102, g: 102, b: 102)])
-            att.appendAttributedString(NSAttributedString(string: phoneNu!, attributes: [NSFontAttributeName:Profile.font(13),NSForegroundColorAttributeName:Profile.rgb(255, g: 199, b: 92)]))
+            att.appendAttributedString(NSAttributedString(string: phoneNu!, attributes: [NSFontAttributeName:Profile.font(13),NSForegroundColorAttributeName:Profile.rgb(0, g: 78, b: 208)]))
             phoneBt.setAttributedTitle(att, forState: .Normal)
 
 //           phoneBt.setTitle("电话：\(phone!)", forState: .Normal)
@@ -537,7 +537,7 @@ class CompanyCell: UITableViewCell,UIAlertViewDelegate {
                 att.appendAttributedString(NSAttributedString(string: personName!, attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(102, g: 102, b: 102)]))
 //               mobileBt.setTitle("联系人：\(personName!)  \(mobile!)", forState: .Normal)
             }
-            att.appendAttributedString(NSAttributedString(string: "  \(mobile!)", attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(255, g: 199, b: 92)]))
+            att.appendAttributedString(NSAttributedString(string: "  \(mobile!)", attributes: [NSFontAttributeName:Profile.font(12),NSForegroundColorAttributeName:Profile.rgb(0, g: 78, b: 208)]))
             mobileBt.setAttributedTitle(att, forState: .Normal)
         }
     

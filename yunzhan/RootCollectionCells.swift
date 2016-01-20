@@ -498,21 +498,34 @@ class ActiCollectionCell_Three: ActiCollectionCell_One
     override func setSubViewLayout(){
         
         titleL.font = Profile.font(12)
+        titleL.textColor = Profile.rgb(51, g: 51, b: 51)
         
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-9-[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
         self.contentView.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(iconView, toItem: self.contentView))
-
-        
-        
         
         self.contentView.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(titleL, toItem: self.contentView))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[iconView]-8-[titleL]", aView: iconView, bView: titleL))
         
-        
-        self.contentView.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(detailL, toItem: self.contentView))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-1-[detailL]", aView: titleL, bView: detailL))
+        detailL.removeFromSuperview()
 
+        
+        
+//        titleL.font = Profile.font(12)
+//        
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
+//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[iconView(44)]", options: [], metrics: nil, views: ["iconView":iconView]))
+//        self.contentView.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(iconView, toItem: self.contentView))
+//
+//        
+//        
+//        
+//        self.contentView.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(titleL, toItem: self.contentView))
+//        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[iconView]-8-[titleL]", aView: iconView, bView: titleL))
+//        
+//        
+//        self.contentView.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(detailL, toItem: self.contentView))
+//        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-1-[detailL]", aView: titleL, bView: detailL))
         
     }
 }

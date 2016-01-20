@@ -98,7 +98,14 @@ class ExhibitorAdWebController:UIViewController,UIWebViewDelegate {
         }
         if let html = data as? String
         {
-            self.writeBodyToWeb(html)
+            if html.isEmpty
+            {
+               let _ = THActivityView(emptyDataWarnViewWithString: "没有相关信息", withImage: "empty_exhibitorwebVc", withSuperView: self.view)
+            }
+            else
+            {
+               self.writeBodyToWeb(html)
+            }
         }
         
     }
@@ -127,6 +134,7 @@ class ExhibitorAdWebController:UIViewController,UIWebViewDelegate {
        if webIsLoad == true && webHtml != nil
        {
           let s = "addBodyHtml('\(webHtml!)')"
+//         print(s)
           web.stringByEvaluatingJavaScriptFromString(s)
        }
         
@@ -151,8 +159,6 @@ class ExhibitorAdWebController:UIViewController,UIWebViewDelegate {
     
     
     
-    
-    
     func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
         
         if let url = request.URL?.absoluteString
@@ -162,11 +168,10 @@ class ExhibitorAdWebController:UIViewController,UIWebViewDelegate {
               self.showZoomMap(url)
               return false
             }
-            if url.verifyIsMobilePhoneNu()
-            {
-
-               return false
-            }
+//            if url.hasPrefix("tel:")
+//            {
+//               return false
+//            }
             return true
         }
         return true

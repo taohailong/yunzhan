@@ -39,11 +39,8 @@
 }
 
 -(void)getNetData{
-   
-    NetWorkData* net = [[NetWorkData alloc]init];
+//    NetWorkData* net = [[NetWorkData alloc]init];
 //    [net ex]
-  
-  
 }
 
 

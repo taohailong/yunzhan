@@ -20,7 +20,7 @@ class NSLog {
        print(s)
     }
 }
-class Profile
+class Profile:NSObject
 {
     static let width = { return UIScreen.mainScreen().bounds.size.width }
     static let height = { return UIScreen.mainScreen().bounds.size.height}
@@ -30,16 +30,31 @@ class Profile
     
     #if EXTERENTERPISE
     static let domain = "123.56.102.224"
+    static let exhibitor = "1"
     #elseif INTERENTERPISE
     static let domain = "123.56.102.224:8099"
+     static let exhibitor = "1"
     #else
 //    static let domain = "www.zhangzhantong.com"
     static let domain = "123.56.102.224:8099"
+     static let exhibitor = "1"
     #endif
     
     static let nickKey = "usernick"
     static let jobKey = "usertitle"
-    static let NavTitleColor = {return UIColor.whiteColor() } 
+    static let NavTitleColor = {return UIColor.whiteColor() }
+    
+    class func globalHttpHead(path:String,parameter:String?)->String {
+        
+        if parameter == nil
+        {
+          return "http://\(self.domain)/\(path)?eid=\(self.exhibitor)&chn=ios"
+        }
+        
+        let url = "http://\(self.domain)/\(path)?eid=\(self.exhibitor)&chn=ios&\(parameter!)"
+        return url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
+    }
+    
     class func rgb(let r:CGFloat,let g:CGFloat, let b:CGFloat) ->UIColor{
        return UIColor(red: r/255.0, green: g/255.0, blue: b/255.0, alpha: 1.0)
     }

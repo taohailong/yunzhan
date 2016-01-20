@@ -175,14 +175,18 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
                return
             }
             
-            let subA = wself?.dataArr[indexPath.section]
-            subArr.removeAtIndex(indexPath.row)
-            wself?.prefixArr.removeAtIndex(indexPath.section)
+            var tempArr = wself!.dataArr[indexPath.section]
+            tempArr.removeAtIndex(indexPath.row)
             
-            wself?.dataArr.removeAtIndex(indexPath.section)
-            if subArr.count != 0
+            if tempArr.count == 0
             {
-                wself?.dataArr.insert(subA!, atIndex: indexPath.section)
+                wself?.prefixArr.removeAtIndex(indexPath.section)
+                wself?.dataArr.removeAtIndex(indexPath.section)
+            }
+            else
+            {
+                wself?.dataArr.removeAtIndex(indexPath.section)
+                wself?.dataArr.insert(tempArr, atIndex: indexPath.section)
             }
 
             wself?.table.reloadData()

@@ -31,8 +31,7 @@ class NetWorkData:NSObject {
     
     func getUserInfo(token:String,block:NetBlock)
     {
-        let url = "http://\(Profile.domain)/api/app/user/relogin?chn=ios&token=\(token)&eid=1"
-        
+        let url = Profile.globalHttpHead("api/app/user/relogin", parameter: "token=\(token)")
         weak var user = UserData.shared
         
         self.getMethodRequest(url) { (result, status) -> (Void) in
@@ -74,8 +73,8 @@ class NetWorkData:NSObject {
         
         let genuineTitle:String! = job
         
-        var url = "http://\(Profile.domain)/api/app/personal/setting?chn=ios&token=\(user!.token!)&eid=1&name=\(genuineName)&title=\(genuineTitle)"
-        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
+        let url = Profile.globalHttpHead("api/app/personal/setting", parameter: "name=\(genuineName)&title=\(genuineTitle)&token=\(user!.token!)")
+        
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -99,12 +98,21 @@ class NetWorkData:NSObject {
     func sendDeviceToken(deviceToken:String){
         
         let user = UserData.shared
-        var url = "http://\(Profile.domain)/api/app/user/setToken?eid=1&device_token=\(deviceToken)&chn=ios"
-        
+        var url = ""
         if let token = user.token
         {
-            url = "\(url)&user_token=\(token)"
+           url = Profile.globalHttpHead("api/app/user/setToken", parameter: "device_token=\(deviceToken)&user_token=\(token)")
         }
+        else
+        {
+           url = Profile.globalHttpHead("api/app/user/setToken", parameter: "device_token=\(deviceToken)")
+        }
+//         var url = "http://\(Profile.domain)/api/app/user/setToken?eid=1&device_token=\(deviceToken)&chn=ios"
+//        
+//        if let token = user.token
+//        {
+//            url = "\(url)&user_token=\(token)"
+//        }
         
         
         self.getMethodRequest(url) { (result, status) -> (Void) in
@@ -120,9 +128,8 @@ class NetWorkData:NSObject {
     
     func getGlobalSearchResult(let search:String,block:NetBlock){
         
-        var url = "http://\(Profile.domain)/api/app/exhibition/search?eid=1&name=\(search)&chn=ios"
         
-        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
+        let url = Profile.globalHttpHead("api/app/exhibition/search", parameter: "name=\(search)")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -206,8 +213,7 @@ class NetWorkData:NSObject {
     
     func getRootData(block: NetBlock){
     
-        let url = "http://\(Profile.domain)/api/app/exhibition/index?chn=ios&id=1"
-        
+        let url = Profile.globalHttpHead("api/app/exhibition/index", parameter: "id=1")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -275,7 +281,11 @@ class NetWorkData:NSObject {
                 {
                    let a = ActivityData(dataDic: temp)
                     moduleArr.append(a)
-                  }
+//                    if moduleArr.count == 3
+//                    {
+//                      break
+//                    }
+                }
                     
             }
                     
@@ -288,7 +298,8 @@ class NetWorkData:NSObject {
     
     func getExhibitorMap(block:NetBlock){
         
-        let url = "http://\(Profile.domain)/api/app/exhibition/boothpics?eid=1&chn=ios"
+        let url = Profile.globalHttpHead("api/app/exhibition/boothpics", parameter: nil)
+
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -320,9 +331,8 @@ class NetWorkData:NSObject {
 //   MARK: 我的联系人收藏API
     func myContactsList(block:NetBlock){
         
-        weak var user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/personal/listcontact?chn=ios&token=\(user!.token!)&eid=1"
-        
+        let user = UserData.shared
+        let url = Profile.globalHttpHead("api/app/personal/listcontact", parameter: "token=\(user.token!)")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -388,9 +398,8 @@ class NetWorkData:NSObject {
     
     func delectContact(exhibitorID:String,personID:String,block:NetBlock)
     {
-        weak var user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/personal/delcontact?chn=ios&token=\(user!.token!)&eid=1&id=\(personID)"
-        
+        let user = UserData.shared
+        let url = Profile.globalHttpHead("api/app/personal/delcontact", parameter: "token=\(user.token!)&id=\(personID)")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -420,7 +429,7 @@ class NetWorkData:NSObject {
     
     func getSchedulList(block:NetBlock){
         
-        let url = "http://\(Profile.domain)/api/app/schedule/list?eid=1&chn=ios"
+        let url = Profile.globalHttpHead("api/app/schedule/list", parameter: nil)
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -463,15 +472,15 @@ class NetWorkData:NSObject {
 
     func getSchedulerInfo(schedulerID:String,block:NetBlock) {
         
-         weak var user = UserData.shared
+         let user = UserData.shared
         var url = ""
-        if user?.token != nil
+        if user.token != nil
         {
-            url = "http://\(Profile.domain)/api/app/schedule/detail?chn=ios&eid=1&sid=\(schedulerID)&token=\(user!.token!)"
+            url = Profile.globalHttpHead("api/app/schedule/detail", parameter: "sid=\(schedulerID)&token=\(user.token!)")
         }
         else
         {
-            url = "http://\(Profile.domain)/api/app/schedule/detail?chn=ios&eid=1&sid=\(schedulerID)"
+            url = Profile.globalHttpHead("api/app/schedule/detail", parameter: "sid=\(schedulerID)")
         }
 
 
@@ -562,9 +571,8 @@ class NetWorkData:NSObject {
     
     func searchScheduler(searchStr:String,block:NetBlock)
     {
-        var url = "http://\(Profile.domain)/api/app/schedule/search?chn=ios&eid=1&name=\(searchStr)"
+        let url = Profile.globalHttpHead("api/app/schedule/search", parameter: "name=\(searchStr)")
         
-        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -601,15 +609,15 @@ class NetWorkData:NSObject {
     
     func modifySchedulerContact(schedulerID:String,personID:String,isAdd:Bool,block:NetBlock)
     {
-        weak var user = UserData.shared
+        let user = UserData.shared
         var url = ""
         if isAdd == true
         {
-           url = "http://\(Profile.domain)/api/app/personal/addscontact?chn=ios&token=\(user!.token!)&eid=1&sid=\(schedulerID)&cid=\(personID)"
+           url = Profile.globalHttpHead("api/app/personal/addscontact", parameter: "token=\(user.token!)&sid=\(schedulerID)&cid=\(personID)")
         }
         else
         {
-           url = "http://\(Profile.domain)/api/app/schedule/delcontact?chn=ios&token=\(user!.token!)&eid=1&sid=\(schedulerID)&cid=\(personID)"
+           url = Profile.globalHttpHead("api/app/schedule/delcontact", parameter: "token=\(user.token!)&sid=\(schedulerID)&cid=\(personID)")
         }
         
         
@@ -639,9 +647,9 @@ class NetWorkData:NSObject {
     
     func addMyScheduler(schedulerID:String,block:NetBlock)
     {
-        weak var user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/personal/addshedule?chn=ios&token=\(user!.token!)&eid=1&sid=\(schedulerID)"
-        
+        let user = UserData.shared
+
+        let url = Profile.globalHttpHead("api/app/personal/addshedule", parameter: "token=\(user.token!)&sid=\(schedulerID)")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -661,8 +669,8 @@ class NetWorkData:NSObject {
     
     func delectMyScheduler(schedulerID:String,block:NetBlock)
     {
-        weak var user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/personal/delshedule?chn=ios&token=\(user!.token!)&eid=1&sid=\(schedulerID)"
+        let user = UserData.shared
+        let url = Profile.globalHttpHead("api/app/personal/delshedule", parameter: "token=\(user.token!)&sid=\(schedulerID)")
         
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
@@ -685,8 +693,8 @@ class NetWorkData:NSObject {
     func checkSchedulerStatus(schedulerID:String,block:(status:Bool)->Void)
     {
         let user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/personal/checkschedule?chn=ios&eid=1&sid=\(schedulerID)&chn=ios&token=\(user.token!)"
-        
+
+        let url = Profile.globalHttpHead("api/app/personal/checkschedule", parameter: "token=\(user.token!)&sid=\(schedulerID)")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -713,8 +721,8 @@ class NetWorkData:NSObject {
     
     func myFavoriteScheduler(block:NetBlock){
         
-        weak var user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/personal/listshedule?chn=ios&token=\(user!.token!)&eid=1"
+        let user = UserData.shared
+        let url = Profile.globalHttpHead("api/app/personal/listshedule", parameter: "token=\(user.token!)")
         
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
@@ -759,7 +767,7 @@ class NetWorkData:NSObject {
     
     func getExhibitorList(block:NetBlock){
         
-        let url = "http://\(Profile.domain)/api/app/buz/list?chn=ios&eid=1"
+        let url = Profile.globalHttpHead("api/app/buz/list", parameter: nil)
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -821,15 +829,15 @@ class NetWorkData:NSObject {
     
     func getExhibitorInfo(id:String,block:NetBlock){
         
-        weak var user = UserData.shared
+        let user = UserData.shared
         var url = ""
-        if user?.token != nil
+        if user.token != nil
         {
-           url = "http://\(Profile.domain)/api/app/buz/detail?chn=ios&eid=1&bid=\(id)&token=\(user!.token!)"
+           url = Profile.globalHttpHead("api/app/buz/detail", parameter: "token=\(user.token!)&bid=\(id)")
         }
         else
         {
-          url = "http://\(Profile.domain)/api/app/buz/detail?chn=ios&eid=1&bid=\(id)"
+            url = Profile.globalHttpHead("api/app/buz/detail", parameter: "bid=\(id)")
         }
         
         self.getMethodRequest(url) { (result, status) -> (Void) in
@@ -923,15 +931,15 @@ class NetWorkData:NSObject {
     
     func modifyExhibitorContact(exhibitorID:String,personID:String,isAdd:Bool,block:NetBlock)
     {
-        weak var user = UserData.shared
+        let user = UserData.shared
         var url = ""
         if isAdd == true
         {
-           url = "http://\(Profile.domain)/api/app/personal/addcontact?chn=ios&token=\(user!.token!)&eid=1&bid=\(exhibitorID)&cid=\(personID)"
+           url = Profile.globalHttpHead("api/app/personal/addcontact", parameter: "token=\(user.token!)&bid=\(exhibitorID)&cid=\(personID)")
         }
         else
         {
-           url = "http://\(Profile.domain)/api/app/buz/delcontact?chn=ios&token=\(user!.token!)&eid=1&bid=\(exhibitorID)&cid=\(personID)"
+            url = Profile.globalHttpHead("api/app/buz/delcontact", parameter: "token=\(user.token!)&bid=\(exhibitorID)&cid=\(personID)")
         }
         
         self.getMethodRequest(url) { (result, status) -> (Void) in
@@ -959,9 +967,9 @@ class NetWorkData:NSObject {
     
     func delectMyExhibitor(exhibitorID:String,block:NetBlock)
     {
-        weak var user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/personal/delbuz?chn=ios&token=\(user!.token!)&eid=1&bid=\(exhibitorID)"
-        
+        let user = UserData.shared
+
+        let url = Profile.globalHttpHead("api/app/personal/delbuz", parameter: "token=\(user.token!)&bid=\(exhibitorID)")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -982,9 +990,9 @@ class NetWorkData:NSObject {
     
     func addMyExhibitor(exhibitorID:String,block:NetBlock)
     {
-        weak var user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/personal/addbuz?chn=ios&token=\(user!.token!)&eid=1&bid=\(exhibitorID)"
-        
+        let user = UserData.shared
+
+        let url = Profile.globalHttpHead("api/app/personal/addbuz", parameter: "token=\(user.token!)&bid=\(exhibitorID)")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -1005,8 +1013,9 @@ class NetWorkData:NSObject {
     func checkExhibitorStatus(exhibitorID:String,block:(status:Bool)->Void)
     {
         let user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/personal/checkbuz?eid=1&bid=\(exhibitorID)&chn=ios&token=\(user.token!)"
+
         
+        let url = Profile.globalHttpHead("api/app/personal/checkbuz", parameter: "token=\(user.token!)&bid=\(exhibitorID)")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -1036,9 +1045,9 @@ class NetWorkData:NSObject {
     
     func myFavoriteExhibitor(block:NetBlock){
     
-        weak var user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/personal/listbuz?chn=ios&token=\(user!.token!)&eid=1"
-        
+        let user = UserData.shared
+
+        let url = Profile.globalHttpHead("api/app/personal/listbuz", parameter: "token=\(user.token!)")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -1087,9 +1096,8 @@ class NetWorkData:NSObject {
     
     func searchExhibitor(searchStr:String,block:NetBlock){
         
-        var url = "http://\(Profile.domain)/api/app/buz/search?chn=ios&eid=1&name=\(searchStr)"
-        
-        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
+        let url = Profile.globalHttpHead("api/app/buz/search", parameter: "name=\(searchStr)")
+
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -1123,9 +1131,8 @@ class NetWorkData:NSObject {
 
     func orderProduct(let exhibitorID:String,let productID:String, let remark:String,block:NetBlock){
         
-        weak var user = UserData.shared
-        var url = "http://\(Profile.domain)/api/app/product/order?chn=ios&token=\(user!.token!)&eid=1&bid=\(exhibitorID)&pid=\(productID)&remark=\(remark)"
-        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
+        let user = UserData.shared
+        let url = Profile.globalHttpHead("api/app/product/order", parameter: "token=\(user.token!)&bid=\(exhibitorID)&pid=\(productID)&remark=\(remark)")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -1142,10 +1149,9 @@ class NetWorkData:NSObject {
     
     func getMyOrderList(block:NetBlock)
     {
-        
-        weak var user = UserData.shared
-        let url = "http://\(Profile.domain)/api/app/personal/orders?chn=ios&token=\(user!.token!)&eid=1"
-        
+        let user = UserData.shared
+
+        let url = Profile.globalHttpHead("api/app/personal/orders", parameter: "token=\(user.token!)")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -1179,16 +1185,10 @@ class NetWorkData:NSObject {
 
     
     
-    
-    
-    
     func sendSuggestion(suggestion:String,block:NetBlock)
     {
         let user = UserData.shared
-        
-        var url = "http://\(Profile.domain)/api/app/feedback/add?eid=1&mobile=\(user.phone!)&content=\(suggestion)&chn=ios&token=\(user.token!)"
-//        url = url.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
-        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
+        let url = Profile.globalHttpHead("api/app/feedback/add", parameter: "mobile=\(user.phone!)&content=\(suggestion)&token=\(user.token!)")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -1213,8 +1213,7 @@ class NetWorkData:NSObject {
     
     func getNewsList(block:NetBlock) {
         
-        let url = "http://\(Profile.domain)/api/app/news/list?chn=ios&eid=1"
-        
+        let url = Profile.globalHttpHead("api/app/news/list", parameter:nil)
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -1251,11 +1250,12 @@ class NetWorkData:NSObject {
         var url :String?
         if user.token != nil
         {
-           url = "http://\(Profile.domain)/api/app/infoWall/infoWallList?eid=1&start=\(start)&offset=20&chn=ios&token=\(user.token!)"
+            url = Profile.globalHttpHead("api/app/infoWall/infoWallList", parameter:"start=\(start)&offset=20&token=\(user.token!)")
+
         }
         else
         {
-           url = "http://\(Profile.domain)/api/app/infoWall/infoWallList?eid=1&start=\(start)&offset=20&chn=ios&token="
+            url = Profile.globalHttpHead("api/app/infoWall/infoWallList", parameter:"start=\(start)&offset=20&token=")
         }
         
         self.getMethodRequest(url!) { (result, status) -> (Void) in
@@ -1328,11 +1328,13 @@ class NetWorkData:NSObject {
         var url :String?
         if user.token != nil
         {
-            url = "http://\(Profile.domain)/api/app/infoWall/praise?eid=1&info_wall_id=\(id)&chn=ios&token=\(user.token!)"
+            url = Profile.globalHttpHead("api/app/infoWall/praise", parameter:"info_wall_id=\(id)&token=\(user.token!)")
+
         }
         else
         {
-            url = "http://\(Profile.domain)/api/app/infoWall/praise?eid=1&info_wall_id=\(id)&chn=ios&token="
+            url = Profile.globalHttpHead("api/app/infoWall/praise", parameter:"info_wall_id=\(id)&token=")
+
         }
         
         self.getMethodRequest(url!) { (result, status) -> (Void) in
@@ -1371,11 +1373,12 @@ class NetWorkData:NSObject {
         var url :String?
         if user.token != nil
         {
-            url = "http://\(Profile.domain)/api/app/infoWall/share?eid=1&info_wall_id=\(id)&chn=ios&token=\(user.token!)"
+            url = Profile.globalHttpHead("api/app/infoWall/share", parameter:"info_wall_id=\(id)&token=\(user.token!)")
+
         }
         else
         {
-            url = "http://\(Profile.domain)/api/app/infoWall/share?eid=1&info_wall_id=\(id)&chn=ios&token="
+            url = Profile.globalHttpHead("api/app/infoWall/share", parameter:"info_wall_id=\(id)&token=")
         }
         
         self.getMethodRequest(url!) { (result, status) -> (Void) in
@@ -1403,10 +1406,7 @@ class NetWorkData:NSObject {
     func sendCommentToMessage(id:String,comment:String,block:NetBlock){
     
         let user = UserData.shared
-        var url = "http://\(Profile.domain)/api/app/infoWall/comment?eid=1&info_wall_id=\(id)&content=\(comment)&chn=ios&token=\(user.token!)"
-//        var str = url as NSString
-//        str = str.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!
-        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
+        let url = Profile.globalHttpHead("api/app/infoWall/comment", parameter: "token=\(user.token!)&info_wall_id=\(id)&content=\(comment)")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -1438,11 +1438,11 @@ class NetWorkData:NSObject {
         var url :String?
         if user.token != nil
         {
-            url = "http://\(Profile.domain)/api/app/infoWall/getContents?eid=1&info_wall_id=\(id)&chn=ios&token=\(user.token!)"
+             url = Profile.globalHttpHead("api/app/infoWall/getContents", parameter: "token=\(user.token!)&info_wall_id=\(id)")
         }
         else
         {
-            url = "http://\(Profile.domain)/api/app/infoWall/getContents?eid=1&info_wall_id=\(id)&chn=ios&token="
+            url = Profile.globalHttpHead("api/app/infoWall/getContents", parameter: "info_wall_id=\(id)")
         }
         
         self.getMethodRequest(url!) { (result, status) -> (Void) in
@@ -1487,7 +1487,7 @@ class NetWorkData:NSObject {
         let url = "http://\(Profile.domain)/api/app/infoWall/publish"
         
         let manager = AFHTTPRequestOperationManager()
-        let parameter:NSDictionary = ["chn":"ios","token":user.token!,"eid":"1","content":comment]
+        let parameter:NSDictionary = ["chn":"ios","token":user.token!,"eid":Profile.exhibitor,"content":comment]
         
         manager.POST(url, parameters: parameter, constructingBodyWithBlock: { (let formData:AFMultipartFormData!) -> Void in
             
@@ -1523,9 +1523,8 @@ class NetWorkData:NSObject {
     func getRegistUrl(block:NetBlock){
     
         let user = UserData.shared
-        var url = "http://\(Profile.domain)/api/app/personal/applyurl?eid=1&chn=ios&token=\(user.token!)"
-        
-        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
+
+        let url = Profile.globalHttpHead("api/app/personal/applyurl", parameter: "token=\(user.token!)")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -1546,9 +1545,9 @@ class NetWorkData:NSObject {
     func getCompanyOfExhibitor(block:NetBlock){
     
         let user = UserData.shared
-        var url = "http://\(Profile.domain)/api/app/personal/recommend?eid=1&chn=ios&token=\(user.token!)"
-        
-        url = url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
+
+        let url = Profile.globalHttpHead("api/app/personal/recommend", parameter: "token=\(user.token!)")
+
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -1598,8 +1597,7 @@ class NetWorkData:NSObject {
                         companyArr.append(c)
                     }
                 }
-            
-                
+        
             }
             
             if companyArr.count != 0
@@ -1623,7 +1621,9 @@ class NetWorkData:NSObject {
     
    internal func exhibitor3(block:NetBlock){
     
-        let url = "http://\(Profile.domain)/api/app/exhibition/notes?eid=1&chn=ios"
+
+        let url = Profile.globalHttpHead("api/app/exhibition/notes", parameter: nil)
+
         self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
 
             var html = ""
@@ -1631,40 +1631,21 @@ class NetWorkData:NSObject {
             {
                for temp in arr
                {
-                  if let title = temp["title"] as?String
-                  {
-                     html = html + "<div class=\"spot\"><i></i><span>\(title) </span></div>"
-                  }
-                
+                  self.addHtmlTitle(&html, element: temp["title"])
                   if let contentDic = temp["value"] as? [String:AnyObject]
                   {
                     //  有标题无标题格式不同
                     if let _ = temp["title"] as?String
                     {
-                        if let content = contentDic["content"] as?String
-                        {
-                            html = html + "<p class=\"contents\">\(content)</p>"
-                        }
+                        self.addHtmlContent(&html, element: contentDic["content"], leftSpace: true)
                     }
                     else
                     {
-                        if let content = contentDic["content"] as?String
-                        {
-                            html = html + "<p class=\"contentnoleft\">\(content)</p>"
-                        }
+                        self.addHtmlContent(&html, element: contentDic["content"], leftSpace: false)
                     }
 
-                    
-                    
-                    if let picTitle = contentDic["pic_title"]
-                    {
-                        html = html + "<p class=\"picTitle\">\(picTitle)</p>"
-                    }
-
-                    if let picUrl = contentDic["pic_url"]
-                    {
-                        html = html + "<div class=\"fullImage\"> <a href=\"\(picUrl)\"><img src=\"\(picUrl)\" /></a></div>"
-                    }
+                    self.addHtmlPicTitle(&html, element: contentDic["pic_title"])
+                    self.addHtmlPicUrl(&html, element: contentDic["pic_url"])
 
                   }
                 }
@@ -1677,7 +1658,8 @@ class NetWorkData:NSObject {
 //   展馆和停车场分布图
     func exhibitor7(block:NetBlock){
     
-        let url = "http://\(Profile.domain)/api/app/exhibition/distribution?eid=1&chn=ios"
+        let url = Profile.globalHttpHead("api/app/exhibition/distribution", parameter: nil)
+
         self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
             
             var html = ""
@@ -1686,33 +1668,16 @@ class NetWorkData:NSObject {
           //  有标题无标题格式不同
                 if let title = dic["title"] as?String
                 {
-                    html = html + "<div class=\"spot\"><i></i><span>\(title) </span></div>"
-                    
-                    if let content = dic["content"] as?String
-                    {
-                        html = html + "<p class=\"contents\">\(content)</p>"
-                    }
+                    self.addHtmlTitle(&html, element: title)
+                    self.addHtmlContent(&html, element: dic["content"], leftSpace: true)
                 }
                 else
                 {
-                    if let content = dic["content"] as?String
-                    {
-                        html = html + "<p class=\"contentnoleft\">\(content)</p>"
-                    }
+                    self.addHtmlContent(&html, element: dic["content"], leftSpace: false)
                 }
 
-                
-                
-                if let picTitle = dic["pic_title"]
-                {
-                    html = html + "<p class=\"picTitle\">\(picTitle)</p>"
-                }
-                        
-                if let picUrl = dic["pic_url"]
-                {
-                    html = html + "<div class=\"fullImage\"> <img src=\"\(picUrl)\"/></div>"
-                }
-                        
+                self.addHtmlPicTitle(&html, element: dic["pic_title"])
+                self.addHtmlPicUrl(&html, element: dic["pic_url"])
             }
             
             block(result: html, status: .NetWorkStatusSucess)
@@ -1724,7 +1689,7 @@ class NetWorkData:NSObject {
     //展品运输路线
     func exhibitor6(block:NetBlock){
         
-        let url = "http://\(Profile.domain)/api/app/exhibition/transport?eid=1&chn=ios"
+        let url = Profile.globalHttpHead("api/app/exhibition/transport", parameter: nil)
         self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
             
             var html = ""
@@ -1733,33 +1698,17 @@ class NetWorkData:NSObject {
                 //  有标题无标题格式不同
                 if let title = dic["title"] as?String
                 {
-                    html = html + "<div class=\"spot\"><i></i><span>\(title) </span></div>"
-                    
-                    if let content = dic["content"] as?String
-                    {
-                        html = html + "<p class=\"contents\">\(content)</p>"
-                    }
+                    self.addHtmlTitle(&html, element: title)
+                    self.addHtmlContent(&html, element: dic["content"], leftSpace: true)
                 }
                 else
                 {
-                    if let content = dic["content"] as?String
-                    {
-                        html = html + "<p class=\"contentnoleft\">\(content)</p>"
-                    }
+                    self.addHtmlContent(&html, element: dic["content"], leftSpace: false)
                 }
 
                 
-                
-                if let picTitle = dic["pic_title"]
-                {
-                    html = html + "<p class=\"picTitle\">\(picTitle)</p>"
-                }
-                
-                if let picUrl = dic["pic_url"]
-                {
-                    html = html + "<div class=\"fullImage\"> <img src=\"\(picUrl)\"/></div>"
-                }
-                
+                self.addHtmlPicTitle(&html, element: dic["pic_title"])
+                self.addHtmlPicUrl(&html, element: dic["pic_url"])
             }
             
             block(result: html, status: .NetWorkStatusSucess)
@@ -1772,7 +1721,8 @@ class NetWorkData:NSObject {
     //展馆交通路线
     func exhibitor5(block:NetBlock){
         
-        let url = "http://\(Profile.domain)/api/app/exhibition/traffic?eid=1&chn=ios"
+        let url = Profile.globalHttpHead("api/app/exhibition/traffic", parameter: nil)
+
         self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
             
             var html = ""
@@ -1781,34 +1731,16 @@ class NetWorkData:NSObject {
                 //   有标题无标题格式不同
                 if let title = dic["title"] as?String
                 {
-                    html = html + "<div class=\"spot\"><i></i><span>\(title) </span></div>"
-                    
-                    if let content = dic["content"] as?String
-                    {
-                        html = html + "<p class=\"contents\">\(content)</p>"
-                    }
+                    self.addHtmlTitle(&html, element: title)
+                    self.addHtmlContent(&html, element: dic["content"], leftSpace: true)
                 }
                 else
                 {
-                    if let content = dic["content"] as?String
-                    {
-                        html = html + "<p class=\"contentnoleft\">\(content)</p>"
-                    }
+                    self.addHtmlContent(&html, element: dic["content"], leftSpace: false)
                 }
 
-                
-                
-                
-                if let picTitle = dic["pic_title"]
-                {
-                    html = html + "<p class=\"picTitle\">\(picTitle)</p>"
-                }
-                
-                if let picUrl = dic["pic_url"]
-                {
-                    html = html + "<div class=\"fullImage\"> <img src=\"\(picUrl)\"/></div>"
-                }
-                
+                self.addHtmlPicTitle(&html, element: dic["pic_title"])
+                self.addHtmlPicUrl(&html, element: dic["pic_url"])
             }
             
             block(result: html, status: .NetWorkStatusSucess)
@@ -1820,7 +1752,8 @@ class NetWorkData:NSObject {
     //报到安排
     func exhibitor2(block:NetBlock){
         
-        let url = "http://\(Profile.domain)/api/app/exhibition/arrange?eid=1&chn=ios"
+
+        let url = Profile.globalHttpHead("api/app/exhibition/arrange", parameter: nil)
         self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
             
             var html = ""
@@ -1829,22 +1762,14 @@ class NetWorkData:NSObject {
                 for dic in arrDic
                 {
 //                    有标题无标题格式不同
-                    
                     if let title = dic["title"] as?String
                     {
-                        html = html + "<div class=\"spot\"><i></i><span>\(title) </span></div>"
-                        
-                        if let content = dic["value"] as?String
-                        {
-                            html = html + "<p class=\"contents\">\(content)</p>"
-                        }
+                        self.addHtmlTitle(&html, element: title)
+                        self.addHtmlContent(&html, element: dic["value"], leftSpace: true)
                     }
                     else
                     {
-                        if let content = dic["value"] as?String
-                        {
-                            html = html + "<p class=\"contentnoleft\">\(content)</p>"
-                        }
+                        self.addHtmlContent(&html, element: dic["value"], leftSpace: false)
                     }
                 }
                 
@@ -1875,13 +1800,25 @@ class NetWorkData:NSObject {
     }
     
     
+    func addHtmlRemarkTitle(inout html:String,element:AnyObject?){
+        
+        if let title = element as? String
+        {
+            if !title.isEmpty
+            {
+                html = html + "<p class=\"remarkTitle\">\(title)</p>"
+            }
+        }
+    
+    }
+    
     func addHtmlSubTitle(inout html:String,element:AnyObject?){
     
         if let title = element as? String
         {
             if !title.isEmpty
             {
-                html = html + "<p class=\"subTitle\">\(title)</div>"
+                html = html + "<p class=\"subTitle\">\(title)</p>"
             }
         }
     }
@@ -1899,7 +1836,6 @@ class NetWorkData:NSObject {
                 else
                 {
                     html = html + "<p class=\"contentnoleft\">\(content)</p>"
-                   
                 }
             }
         }
@@ -1922,18 +1858,15 @@ class NetWorkData:NSObject {
         
         if let picurl = element as? String
         {
-            html = html + "<div class=\"fullImage\"> <img src=\"\(picurl)\"/></div>"
+            html = html + "<div class=\"fullImage\"> <a href=\"\(picurl)\"> <img src=\"\(picurl)\"/></a></div>"
         }
     }
 
     
     
-    
-    
-    
     func exhibitorAdvertiseCategory(block:NetBlock){
         
-        let url = "http://\(Profile.domain)/api/app/exhibition/guidelist?eid=1&chn=ios"
+        let url = Profile.globalHttpHead("api/app/exhibition/guidelist", parameter: nil)
         self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
             
             block(result: result["data"] as? [[String:AnyObject]], status: .NetWorkStatusSucess)
@@ -1966,8 +1899,7 @@ class NetWorkData:NSObject {
                                 
                                 for remarkDic in remarkArr
                                 {
-                                    self.addHtmlSubTitle(&html, element: remarkDic["value"])//备注
-                                    
+                                    self.addHtmlRemarkTitle(&html, element: remarkDic["value"])//备注
                                     
                                     if let personArr = remarkDic["list"] as? [[String:AnyObject]]
                                     {
@@ -1989,6 +1921,7 @@ class NetWorkData:NSObject {
                                             if  index%2 != 0 && index != personArr.count - 1
                                             {
                                                 //双数
+//                                                print(personStr)
                                                 personStr = personStr +  "</br>"
                                             }
                                             else
@@ -1998,15 +1931,16 @@ class NetWorkData:NSObject {
                                             }
                                         
                                         }
-                                        
-                                        self.addHtmlContent(&html, element: personStr, leftSpace: true)
-                                        // 只有一个消息时不要横线
-                                        if subDicArr.count != 1
-                                        {
-                                            self.addSeparate(&html)
-                                        }
-            
+                                         self.addHtmlContent(&html, element: personStr, leftSpace: true)
                                     }
+                                    
+                                }
+                                
+                               
+                                // 只有一个消息时不要横线
+                                if subDicArr.count != 1
+                                {
+                                    self.addSeparate(&html)
                                 }
                                 
                             }
@@ -2017,6 +1951,7 @@ class NetWorkData:NSObject {
                     
                 }
             }
+            
             block(result:html , status: .NetWorkStatusSucess)
         })
     }
@@ -2024,17 +1959,7 @@ class NetWorkData:NSObject {
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+//    native view data parse （）
     func exhibitorAdvertiseContact(block:NetBlock){
     
         let url = "http://\(Profile.domain)/api/app/exhibition/contact?eid=1&chn=ios"
@@ -2142,7 +2067,15 @@ class NetWorkData:NSObject {
         }
     }
     
-    func newMethodRequest(url:String,taskBlock:NetBlock,warnShow:Bool,completeBlock:NetDicBlock){
+    
+    
+    
+    
+//MARK: ---global configure------------    
+    
+
+    
+    func newMethodRequest(url:String,taskBlock:NetBlock,warnShow:Bool = true,completeBlock:NetDicBlock){
     
         if url.isEmpty
         {
