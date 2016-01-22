@@ -49,14 +49,14 @@ class MyInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate {
         }
         
         var warnStr = ""
-        if title?.characters.count > 10
+        if title?.characters.count > 6
         {
-           warnStr = "职称超过10个字符"
+           warnStr = "职称超过6个字符"
         }
         
-        if name?.characters.count > 5
+        if name?.characters.count > 4
         {
-           warnStr = "姓名超过5个字符"
+           warnStr = "姓名超过4个字符"
         }
         if warnStr.isEmpty != true
         {

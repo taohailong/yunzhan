@@ -35,8 +35,8 @@ class Profile:NSObject
     static let domain = "123.56.102.224:8099"
      static let exhibitor = "1"
     #else
-//    static let domain = "www.zhangzhantong.com"
-    static let domain = "123.56.102.224:8099"
+    static let domain = "www.zhangzhantong.com"
+//    static let domain = "123.56.102.224:8099"
      static let exhibitor = "1"
     #endif
     
