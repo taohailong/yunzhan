@@ -73,9 +73,9 @@ class ExhibitorAdWebController:UIViewController,UIWebViewDelegate {
             })
         }
 
-        if code == "6"
+        if code == "4"
         {
-            net.exhibitor6({ (result, status) -> (Void) in
+            net.exhibitor4({ (result, status) -> (Void) in
                 wself?.parseData(result, status: status)
             })
         }

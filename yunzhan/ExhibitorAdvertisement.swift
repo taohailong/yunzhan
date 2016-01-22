@@ -109,8 +109,7 @@ class ExhibitorCategoryVC: UIViewController,UICollectionViewDataSource,UICollect
            case "5":
             imageN = "exhibitor_ad_5"
 
-           case "6":
-            imageN = "exhibitor_ad_6"
+           
 
            case "7":
             imageN = "exhibitor_ad_7"

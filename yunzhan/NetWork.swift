@@ -1619,7 +1619,7 @@ class NetWorkData:NSObject {
     
 //    MARK: 展会须知
     
-   internal func exhibitor3(block:NetBlock){
+   internal func exhibitor5(block:NetBlock){
     
 
         let url = Profile.globalHttpHead("api/app/exhibition/notes", parameter: nil)
@@ -1687,7 +1687,7 @@ class NetWorkData:NSObject {
     
     
     //展品运输路线
-    func exhibitor6(block:NetBlock){
+    func exhibitor4(block:NetBlock){
         
         let url = Profile.globalHttpHead("api/app/exhibition/transport", parameter: nil)
         self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
@@ -1719,7 +1719,7 @@ class NetWorkData:NSObject {
     
     
     //展馆交通路线
-    func exhibitor5(block:NetBlock){
+    func exhibitor3(block:NetBlock){
         
         let url = Profile.globalHttpHead("api/app/exhibition/traffic", parameter: nil)
 
@@ -1854,6 +1854,26 @@ class NetWorkData:NSObject {
     }
 
     
+    func addHtmltelphone(inout html:String,element:AnyObject?,isTitle:Bool){
+        
+        if let tel  = element as? String
+        {
+            if !tel.isEmpty
+            {
+                if isTitle == true
+                {
+                  html = html + "<p class=\"telTitleText\">\(tel)</p>"
+                }
+                else
+                {
+                  html = html + "<p class=\"telPhoneText\">\(tel)</p>"
+                }
+            }
+        }
+    }
+
+    
+    
     func addHtmlPicUrl(inout html:String,element:AnyObject?){
         
         if let picurl = element as? String
@@ -1906,15 +1926,25 @@ class NetWorkData:NSObject {
                                         var personStr = ""
                                         for (index,personDic) in personArr.enumerate()
                                         {
-                                            
+//                                            var personStr = ""
                                             if let name = personDic["name"] as? String
                                             {
                                                 if name.isEmpty != true//防止没有名字时 增加了几个空格
                                                 {
-                                                   personStr = personStr + name + "&nbsp&nbsp&nbsp&nbsp&nbsp"
+                                                    let n = 4 - name.characters.count
+                                                    var space = ""
+                                                    if n > 0
+                                                    {
+                                                     for _ in 1...n
+                                                     {
+                                                        space = space + "&nbsp&nbsp&nbsp&nbsp"
+                                                      }
+                                                    }
+                                                   personStr = personStr +  name + space +  "&nbsp&nbsp"
                                                 }
-                                               
+                                                
                                                 personStr = personStr + (personDic["content"] as! String)
+                                                
                                             }
     
                                     
@@ -1922,14 +1952,15 @@ class NetWorkData:NSObject {
                                             {
                                                 //双数
 //                                                print(personStr)
+//                                                html = html + "</br>"
                                                 personStr = personStr +  "</br>"
                                             }
                                             else
                                             {
                                                 //单数
-                                                personStr = personStr + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"
+                                                personStr = personStr + "&nbsp&nbsp&nbsp&nbsp"
                                             }
-                                        
+
                                         }
                                          self.addHtmlContent(&html, element: personStr, leftSpace: true)
                                     }
