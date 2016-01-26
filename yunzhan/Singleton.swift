@@ -9,17 +9,8 @@
 import Foundation
 class UserData:NSObject {
 //    static let shared:UserData = UserData()
-    
-    
-    
-//    private let sharedKraken = TheOneAndOnlyKraken()
-//    class TheOneAndOnlyKraken {
-//        class var sharedInstance: TheOneAndOnlyKraken {
-//            return sharedKraken
-//        }
-//    }
-    
-    
+    var qq:String?
+    var company:String?
     var name:String? = ""
     var title:String?
     var deviceToken:String?{

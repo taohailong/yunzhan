@@ -48,32 +48,17 @@ class NetWorkData:NSObject {
             user!.title = list["title"] as? String
             user!.name = list["name"] as? String
             user!.phone = list["mobile"] as? String
-            
+            user!.qq = list["qq"] as? String
+            user!.company = list["company"] as? String
             block(result: nil, status: status)
         }
     }
     
-    func updateUserInfo(let name:String?,let job:String?,block:NetBlock){
+    func updateUserInfo(let key:String,let parameter:String,block:NetBlock){
         
         weak var user = UserData.shared
-        var genuineName:String! = ""
-        
-        if name == nil
-        {
-            if user?.name != nil
-            {
-                genuineName = user?.name
-            }
-            
-        }
-        else
-        {
-            genuineName = name!
-        }
-        
-        let genuineTitle:String! = job
-        
-        let url = Profile.globalHttpHead("api/app/personal/setting", parameter: "name=\(genuineName)&title=\(genuineTitle)&token=\(user!.token!)")
+
+        let url = Profile.globalHttpHead("api/app/personal/setting", parameter: "\(key)=\(parameter)&token=\(user!.token!)")
         
         self.getMethodRequest(url) { (result, status) -> (Void) in
             

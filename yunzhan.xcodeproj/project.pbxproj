@@ -97,6 +97,9 @@
 		C78EA5551C1189A2007798E2 /* THLRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78EA54F1C1189A2007798E2 /* THLRefreshView.m */; };
 		C78EA5561C1189A2007798E2 /* THLScrollLoadView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78EA5511C1189A2007798E2 /* THLScrollLoadView.m */; };
 		C78EA5571C1189A2007798E2 /* THLScrollLoadView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78EA5511C1189A2007798E2 /* THLScrollLoadView.m */; };
+		C791E8511C5712D400500898 /* QRScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C791E8501C5712D400500898 /* QRScanViewController.m */; };
+		C791E8521C5712D400500898 /* QRScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C791E8501C5712D400500898 /* QRScanViewController.m */; };
+		C791E8531C5712D400500898 /* QRScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C791E8501C5712D400500898 /* QRScanViewController.m */; };
 		C79285711BEAF65B00287A24 /* NewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79285701BEAF65B00287A24 /* NewsView.swift */; };
 		C79285721BEAF65B00287A24 /* NewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79285701BEAF65B00287A24 /* NewsView.swift */; };
 		C79285751BEB06A400287A24 /* THActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = C79285741BEB06A400287A24 /* THActivityView.m */; };
@@ -290,6 +293,8 @@
 		C78EA54F1C1189A2007798E2 /* THLRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THLRefreshView.m; sourceTree = "<group>"; };
 		C78EA5501C1189A2007798E2 /* THLScrollLoadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THLScrollLoadView.h; sourceTree = "<group>"; };
 		C78EA5511C1189A2007798E2 /* THLScrollLoadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THLScrollLoadView.m; sourceTree = "<group>"; };
+		C791E84F1C5712D400500898 /* QRScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRScanViewController.h; sourceTree = "<group>"; };
+		C791E8501C5712D400500898 /* QRScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRScanViewController.m; sourceTree = "<group>"; };
 		C79285701BEAF65B00287A24 /* NewsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsView.swift; sourceTree = "<group>"; };
 		C79285731BEB06A400287A24 /* THActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THActivityView.h; sourceTree = "<group>"; };
 		C79285741BEB06A400287A24 /* THActivityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THActivityView.m; sourceTree = "<group>"; };
@@ -457,6 +462,8 @@
 				C779C0F81BF42D35008D625F /* LogViewController.m */,
 				C779C0F91BF42D35008D625F /* LogInCell.h */,
 				C779C0FA1BF42D35008D625F /* LogInCell.m */,
+				C791E84F1C5712D400500898 /* QRScanViewController.h */,
+				C791E8501C5712D400500898 /* QRScanViewController.m */,
 				C784B34F1C47788A0043D968 /* ExhibitorAdvertisement */,
 				C7B0390F1C4651D700F5FBD5 /* configure */,
 				C79531B21C44F50800270DD8 /* swizze */,
@@ -862,6 +869,7 @@
 				C79285711BEAF65B00287A24 /* NewsView.swift in Sources */,
 				C784B3511C47A4BB0043D968 /* ExhibitorContactVC.swift in Sources */,
 				C78EA5561C1189A2007798E2 /* THLScrollLoadView.m in Sources */,
+				C791E8511C5712D400500898 /* QRScanViewController.m in Sources */,
 				C773A89C1C48EA5D0000054D /* ExhibitorAdController.m in Sources */,
 				C70505151C3CDF3D007F8C72 /* EaseSDKHelper.m in Sources */,
 				C78001C41C0EEFEA0097FD8E /* NSString+ZhengZe.m in Sources */,
@@ -925,6 +933,7 @@
 				C7A383E11C449B50008DF57F /* WebHtml.swift in Sources */,
 				C784B3531C47A4BB0043D968 /* ExhibitorContactVC.swift in Sources */,
 				C7A383E21C449B50008DF57F /* THLScrollLoadView.m in Sources */,
+				C791E8531C5712D400500898 /* QRScanViewController.m in Sources */,
 				C773A89E1C48EA5D0000054D /* ExhibitorAdController.m in Sources */,
 				C7A383E31C449B50008DF57F /* EaseSDKHelper.m in Sources */,
 				C7A383E41C449B50008DF57F /* NSString+ZhengZe.m in Sources */,
@@ -988,6 +997,7 @@
 				C7A9629D1BF32F01003B883A /* WebHtml.swift in Sources */,
 				C784B3521C47A4BB0043D968 /* ExhibitorContactVC.swift in Sources */,
 				C78EA5571C1189A2007798E2 /* THLScrollLoadView.m in Sources */,
+				C791E8521C5712D400500898 /* QRScanViewController.m in Sources */,
 				C773A89D1C48EA5D0000054D /* ExhibitorAdController.m in Sources */,
 				C70505161C3CDF3D007F8C72 /* EaseSDKHelper.m in Sources */,
 				C78001C51C0EEFEA0097FD8E /* NSString+ZhengZe.m in Sources */,

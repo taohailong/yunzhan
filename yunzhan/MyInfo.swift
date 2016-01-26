@@ -7,11 +7,98 @@
 //
 
 import Foundation
+
+enum ModifyUserInfonType:String{
+    case qq = "qq"
+    case company = "company"
+    case name = "name"
+    case job = "title"
+}
+class ModifyMyInfoVC:UIViewController {
+    var InfoType:ModifyUserInfonType = .name
+    var textField:UITextField!
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.generateRightBarItem()
+        
+        textField = UITextField()
+        textField.backgroundColor = UIColor.whiteColor()
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(textField)
+        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(textField))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[textField(45)]", options: [], metrics: nil, views: ["textField":textField]))
+    }
+    
+    func generateRightBarItem(){
+    
+        let rightBt = UIButton(type: .Custom)
+        rightBt.titleLabel?.font = Profile.font(17)
+        rightBt.frame = CGRectMake(0, 0, 40, 30)
+        rightBt.setTitleColor(Profile.NavBarColor(), forState: .Normal)
+        rightBt.setTitle("提交", forState: .Normal)
+        rightBt.addTarget(self, action: "commitAction", forControlEvents: .TouchUpInside)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBt)
+    }
+    
+    
+    
+    func commitAction(){
+       
+        let content = textField.text!
+        
+        if content.isEmpty == true
+        {
+            let load = THActivityView(string: "请输入")
+            load.show()
+            return
+        }
+        
+        var warnStr = ""
+        if content.characters.count > 6 && InfoType == .job
+        {
+            warnStr = "职称超过6个字符"
+        }
+        
+        if content.characters.count > 4 && InfoType == .name
+        {
+            warnStr = "姓名超过4个字符"
+        }
+        if warnStr.isEmpty != true
+        {
+            let load = THActivityView(string: warnStr)
+            load.show()
+            return
+        }
+        
+        weak var wself = self
+        let load = THActivityView(activityViewWithSuperView: self.view)
+        let net = NetWorkData()
+        net.updateUserInfo(InfoType.rawValue, parameter: content) { (result, status) -> (Void) in
+            
+            load.removeFromSuperview()
+            if status == .NetWorkStatusError
+            {
+                if let string = result as? String
+                {
+                    let warnV = THActivityView(string: string)
+                    warnV.show()
+                }
+            }
+            wself?.navigationController?.popViewControllerAnimated(true)
+
+        }
+        net.start()
+    }
+
+}
+
+
+
+
+
 class MyInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate {
     var table:UITableView!
-//    var 
-    weak var nameField:UITextField!
-    weak var jobField:UITextField!
+    var dataArr:[ModifyUserInfonType] = [ModifyUserInfonType]()
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "我的信息"
@@ -26,69 +113,25 @@ class MyInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate {
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
         self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
         
-        let rightBt = UIButton(type: .Custom)
-        rightBt.titleLabel?.font = Profile.font(17)
-        rightBt.frame = CGRectMake(0, 0, 40, 30)
-        rightBt.setTitleColor(Profile.NavBarColor(), forState: .Normal)
-        rightBt.setTitle("提交", forState: .Normal)
-        rightBt.addTarget(self, action: "commitAction", forControlEvents: .TouchUpInside)
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: rightBt)
     }
     
-    func commitAction(){
-       
-        let name = nameField.text
-        let title = jobField.text
-        
-        if name?.isEmpty == true
-        {
-            let load = THActivityView(string: "请输入您的姓名")
-            load.show()
-            return
-        }
-        
-        var warnStr = ""
-        if title?.characters.count > 6
-        {
-           warnStr = "职称超过6个字符"
-        }
-        
-        if name?.characters.count > 4
-        {
-           warnStr = "姓名超过4个字符"
-        }
-        if warnStr.isEmpty != true
-        {
-            let load = THActivityView(string: warnStr)
-            load.show()
-            return
-        }
-        
-        weak var wself = self
-        let load = THActivityView(activityViewWithSuperView: self.view)
-       let net = NetWorkData()
-        net.updateUserInfo(name, job: title) { (result, status) -> (Void) in
-            load.removeFromSuperview()
-            if status == .NetWorkStatusError
-            {
-                if let string = result as? String
-                {
-                    let warnV = THActivityView(string: string)
-                    warnV.show()
-                }
-            }
-            wself?.navigationController?.popViewControllerAnimated(true)
-        }
-        net.start()
-    }
+//    func parseDataArr(){
+//        
+//        let userData = UserData.shared
+//        if let title = userData.title
+//        
+//    }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 1
+        return 2
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        if section == 1
+        {
+          return 5
+        }
+        return 1
     }
     
     func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -99,39 +142,56 @@ class MyInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCellWithIdentifier("UserInfoCell") as! UserInfoCell
         
-        
         let userData = UserData.shared
+        var cellText = ""
+        var cellAccessText:String? = ""
         if indexPath.row == 0
         {
-            cell.imageView?.image = UIImage(named: "userinfo_name")
-            nameField =  cell.textField
-            nameField.text = userData.name
-            nameField.placeholder = "请输入您的姓名"
+            cellText = "名称"
+            cellAccessText = userData.name!
         }
+        else if indexPath.row == 1
+        {
+            cellText = "职位"
+            cellAccessText = userData.title
+        }
+        else if indexPath.row == 2
+        {
+            cellText = "公司"
+            cellAccessText = userData.company
+        }
+        else if indexPath.row == 3
+        {
+            cellText = "手机号"
+            cellAccessText = userData.phone
+        }
+
         else
         {
-            cell.imageView?.image = UIImage(named: "userinfo_job")
-            jobField =  cell.textField
-            jobField.text = userData.title
-            jobField.placeholder = "请输入您的职称"
+            cellText = "QQ"
+            cellAccessText = userData.qq
         }
+        cell.textLabel?.text = cellText
+        cell.accessL.text = cellAccessText
         return cell
     }
 }
 
 class UserInfoCell: UITableViewCell {
-    let textField : UITextField
+    let accessL : UILabel
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        textField = UITextField()
-        textField.font = Profile.font(13)
-        textField.translatesAutoresizingMaskIntoConstraints = false
+        accessL = UILabel()
+        accessL.textColor = UIColor.rgb(153, g: 153, b: 153)
+        accessL.font = Profile.font(12)
+        accessL.translatesAutoresizingMaskIntoConstraints = false
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.contentView.addSubview(textField)
-        self.selectionStyle = .None
-        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(textField, toItem: self.contentView))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-50-[textField]-5-|", aView: textField, bView: nil))
+        self.contentView.addSubview(accessL)
+        
+        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(accessL, toItem: self.contentView))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[accessL]-10-|", aView: accessL, bView: nil))
     }
 
     required init?(coder aDecoder: NSCoder) {

@@ -316,8 +316,65 @@ extension String {
         let subString = self.substringWithRange(Range.init(start: self.startIndex.advancedBy(start), end: self.startIndex.advancedBy(start+lenth)))
         return subString
        }
-    
     }
+    
+    
+    func characterDetectChinese(char:String)->Bool
+    {
+        let chinese = 0x4E00 ... 0x9FFF
+        for chr in char.unicodeScalars
+        {
+            if  Int(chr.value) >= chinese.startIndex &&  Int(chr.value) <= chinese.endIndex
+            {
+                return true
+            }
+        }
+        return false
+    }
+
+
+//MARK:生产二维码
+    func toQRImage(width:CGFloat)->UIImage?{
+    
+        if self.isEmpty
+        {
+          return nil
+        }
+        let filter = CIFilter(name: "CIQRCodeGenerator")
+        filter?.setDefaults()
+        let dataStr = self.dataUsingEncoding(NSUTF8StringEncoding)
+        filter?.setValue(dataStr, forKey: "inputMessage")
+        filter?.setValue("M", forKey: "inputCorrectionLevel")
+        let outImage = filter?.outputImage
+
+        
+        
+        
+        let extent = CGRectIntegral(outImage!.extent)
+        
+        let widthScale = width/CGRectGetWidth(extent)
+        let heithScale = width/CGRectGetHeight(extent)
+        let scale = widthScale > heithScale ? heithScale:widthScale
+        // 创建bitmap;
+        let width = CGRectGetWidth(extent) * scale;
+        let height = CGRectGetHeight(extent) * scale;
+        let cs = CGColorSpaceCreateDeviceGray();
+        
+        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.None.rawValue)
+        let bitmapRef = CGBitmapContextCreate(nil, Int(width), Int(height), 8, 0, cs, bitmapInfo.rawValue);
+        
+        let context = CIContext()
+        let bitmapImage = context.createCGImage(outImage!, fromRect: extent)
+        CGContextSetInterpolationQuality(bitmapRef, .None);
+        CGContextScaleCTM(bitmapRef, scale, scale);
+        CGContextDrawImage(bitmapRef, extent, bitmapImage);
+        // 保存bitmap到图片
+        let scaledImage = CGBitmapContextCreateImage(bitmapRef);
+        
+        return UIImage(CGImage: scaledImage!)
+
+    }
+    
 }
 
 

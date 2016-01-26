@@ -7,7 +7,7 @@
 //ok
 
 import UIKit
-class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UICollectionViewDataSource {
+class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UICollectionViewDataSource,ScanProtocol {
     
     var userNet:NetWorkData!
     var net:NetWorkData!
@@ -26,25 +26,40 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         self.setNavgationBarAttribute(false)
     }
     
+   
+//MARK: navBar Item Action
+    
+    func creatNavBar(){
         
-    func creatRightBar(){
+        let rightBar1 = UIBarButtonItem(image: UIImage(named: "global_search"), style: .Plain, target: self, action: "showGlobalSearchVC")
+        let rightBar2 = UIBarButtonItem(image: UIImage(named: "qrscanIcon"), style: .Plain, target: self, action: "showQRscanVC")
+        self.navigationItem.rightBarButtonItems = [rightBar1,rightBar2]
         
-        let rightBar = UIBarButtonItem(image: UIImage(named: "global_search"), style: .Plain, target: self, action: "showGlobalSearchVC")
-        self.navigationItem.rightBarButtonItem = rightBar
+        
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Done, target: nil, action: "")
     }
     
+    
     func showGlobalSearchVC(){
-        
         let search = GlobalSearchVC()
-        
         let nav = UINavigationController(rootViewController: search)
-        
-        self.presentViewController(nav, animated: true) { () -> Void in
-            
-        }
+        self.presentViewController(nav, animated: true) { () -> Void in}
     }
 
+    func showQRscanVC(){
+    
+      let scanVC = QRScanViewController()
+      scanVC.delegate = self
+      scanVC.hidesBottomBarWhenPushed = true
+      self.navigationController?.pushViewController(scanVC, animated: true)
+
+//      self.presentViewController(scanVC, animated: true) { () -> Void in}
+    }
+    
+    func scanActionCompleteWithResult(string: String!) {
+        print("url \(string)")
+    }
+    
     
         override func viewDidLoad() {
         super.viewDidLoad()
@@ -81,7 +96,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
 //        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-0-[collection]-0-|", options: [], metrics: nil, views: ["collection" : collection]))
             
             
-         self.creatRightBar()
+         self.creatNavBar()
          self.addHead()
             
          self.fetchUserData()
@@ -197,7 +212,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         
         if indexPath.section == 1
         {
-            let widthSpace:CGFloat = activityArr.count == 4 ? 0.0:0.5
+            let widthSpace:CGFloat = activityArr.count == 2 ? 0.5:0.0
             let size = self.figureOutCollectionSize(activityArr.count, indexPath: indexPath,space:widthSpace)
             switch  activityArr.count
             {
@@ -248,7 +263,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         
         if section == 1 && activityArr != nil
         {
-         if activityArr.count == 4
+         if activityArr.count == 4 || activityArr.count == 3
          {
              return 0.0
          }

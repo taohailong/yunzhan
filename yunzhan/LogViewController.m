@@ -267,7 +267,7 @@
 {
     _countDown--;
     [_verifyBt setTitle:[NSString stringWithFormat:@"%ds后(重发)",_countDown] forState:UIControlStateDisabled];
-//    _verifyBt.layer.borderColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0 ].CGColor;
+
     
     if (_countDown==0) {
          _verifyBt.layer.borderColor = [UIColor colorWithRed:250/255.0 green:60/255.0 blue:96/255.0 alpha:1.0 ].CGColor;
@@ -334,10 +334,9 @@
              user.phone = dataDic[@"mobile"];
              user.token = dataDic[@"user_token"];
              user.messID = dataDic[@"hxin_id"];
-//             user.messID = @"thl";
-//             [7]	(null)	@"hxin_id" : @"e7d56f95cf1aec3e0c59efcdb3d7af31" ziyu
-//
              user.password_huanxin = @"123456";
+             user.qq = dataDic[@"qq"];
+             user.company = dataDic[@"company"];
              [user sendDeviceToken];
              [user logInHuanxin];
             [wSelf logViewDismiss];
@@ -391,7 +390,7 @@
     
     __weak LogViewController* wself = self;
     
-//    NSString* str = [NSString stringWithFormat:@"http://%s/api/app/user/verifyvoice?eid=1&phone=%@",PORT,_phoneField.text];
+
     NSString* str = [Profile globalHttpHead:@"api/app/user/verifyvoice" parameter:[NSString stringWithFormat:@"phone=%@",_phoneField.text]];
     NSURLRequest* url = [NSURLRequest requestWithURL:[NSURL URLWithString:str]];
     AFHTTPRequestOperation * req = [[AFHTTPRequestOperation alloc]initWithRequest:url];

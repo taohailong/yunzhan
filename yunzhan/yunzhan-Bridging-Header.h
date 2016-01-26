@@ -20,3 +20,4 @@
 //#import "EMSDKFull.h"
 #import "EaseMob.h"
 #import "EaseSDKHelper.h"
+#import "QRScanViewController.h"
