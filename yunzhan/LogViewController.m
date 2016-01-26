@@ -335,6 +335,8 @@
              user.token = dataDic[@"user_token"];
              user.messID = dataDic[@"hxin_id"];
              user.password_huanxin = @"123456";
+             NSNumber* userID = dataDic[@"id"];
+             user.userID = [userID stringValue];
              user.qq = dataDic[@"qq"];
              user.company = dataDic[@"company"];
              [user sendDeviceToken];

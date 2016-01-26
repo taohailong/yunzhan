@@ -385,12 +385,31 @@ extension ActivityData{
 }
 
 
-//class ProductData {
-//    var exhibitorName:String?
-//    var productName:String?
-//    var remark:String?
-//    var picUrl:String?
-//    var productIntroduct:String?
-////    override init()
-//}
+class UserDataModel {
+    var qq:String?
+    var company:String?
+    var name:String?
+    var title:String?
+    var job:String?
+    let phone:String
+    let exhibitor:String
+    let huanxinID:String
+    
+    init(phone:String,exhibitorID:String,huanxinID:String){
+       
+        self.huanxinID = huanxinID
+        self.exhibitor = exhibitorID
+        self.phone = phone
+    }
+    
+    convenience init(dataDic:[String:AnyObject]){
+      
+        self.init(phone: dataDic["mobile"] as! String, exhibitorID: dataDic["exhibition_id"] as! String, huanxinID:dataDic["hxin_id"] as! String)
+        
+        self.qq = dataDic["qq"] as? String
+        self.company = dataDic["company"] as? String
+        self.name = dataDic["name"] as? String
+        self.job = dataDic["title"] as? String
+    }
+}
 

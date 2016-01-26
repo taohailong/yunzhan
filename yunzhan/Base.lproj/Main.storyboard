@@ -413,6 +413,83 @@
             </objects>
             <point key="canvasLocation" x="291" y="1299"/>
         </scene>
+        <!--MyQRVC-->
+        <scene sceneID="CKB-IE-JvY">
+            <objects>
+                <viewController storyboardIdentifier="MyQRVC" useStoryboardIdentifierAsRestorationIdentifier="YES" id="r5U-eg-ps2" customClass="MyQRVC" customModule="yunzhan" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="0Ft-km-PRb"/>
+                        <viewControllerLayoutGuide type="bottom" id="DUX-dy-gsB"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="lHQ-gV-dBd">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VFi-mu-Atw">
+                                <rect key="frame" x="15" y="35" width="570" height="315"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="settingUser" translatesAutoresizingMaskIntoConstraints="NO" id="dsp-X9-oBn">
+                                        <rect key="frame" x="15" y="15" width="50" height="50"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pkg-4g-5OC" userLabel="TitleLabel">
+                                        <rect key="frame" x="91" y="15" width="42" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hwS-wc-dcE" userLabel="phoneLabel">
+                                        <rect key="frame" x="91" y="44" width="42" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="扫一扫上面的二维码，添加好友" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wyz-xF-enO" userLabel="bottomLabel">
+                                        <rect key="frame" x="201" y="285" width="168" height="15"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7ZM-TQ-FXt">
+                                        <rect key="frame" x="195" y="85" width="180" height="180"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="180" id="9i2-cl-ELC"/>
+                                            <constraint firstAttribute="width" constant="180" id="Cin-f5-pG5"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="315" id="2dh-Uj-ljE"/>
+                                    <constraint firstItem="Wyz-xF-enO" firstAttribute="top" secondItem="7ZM-TQ-FXt" secondAttribute="bottom" constant="20" id="3WU-Os-DxN"/>
+                                    <constraint firstItem="7ZM-TQ-FXt" firstAttribute="centerX" secondItem="VFi-mu-Atw" secondAttribute="centerX" id="5Ui-zk-vvf"/>
+                                    <constraint firstItem="7ZM-TQ-FXt" firstAttribute="top" secondItem="hwS-wc-dcE" secondAttribute="bottom" constant="20" id="8l0-NI-R4Z"/>
+                                    <constraint firstItem="pkg-4g-5OC" firstAttribute="top" secondItem="VFi-mu-Atw" secondAttribute="top" constant="15" id="Gdq-Sj-vyc"/>
+                                    <constraint firstItem="Wyz-xF-enO" firstAttribute="centerX" secondItem="VFi-mu-Atw" secondAttribute="centerX" id="NfS-wJ-KrL"/>
+                                    <constraint firstItem="hwS-wc-dcE" firstAttribute="leading" secondItem="pkg-4g-5OC" secondAttribute="leading" id="TX6-5W-vDm"/>
+                                    <constraint firstItem="hwS-wc-dcE" firstAttribute="bottom" secondItem="dsp-X9-oBn" secondAttribute="bottom" id="UH4-ei-5Zw"/>
+                                    <constraint firstItem="pkg-4g-5OC" firstAttribute="leading" secondItem="dsp-X9-oBn" secondAttribute="trailing" constant="26" id="gV6-tQ-Rbh"/>
+                                    <constraint firstItem="dsp-X9-oBn" firstAttribute="top" secondItem="VFi-mu-Atw" secondAttribute="top" constant="15" id="jdl-KH-sDg"/>
+                                    <constraint firstItem="dsp-X9-oBn" firstAttribute="leading" secondItem="VFi-mu-Atw" secondAttribute="leading" constant="15" id="nAN-Sx-sz5"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="0.95294117647058818" green="0.95294117647058818" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="VFi-mu-Atw" firstAttribute="leading" secondItem="lHQ-gV-dBd" secondAttribute="leading" constant="15" id="Lm1-jg-40z"/>
+                            <constraint firstItem="VFi-mu-Atw" firstAttribute="top" secondItem="0Ft-km-PRb" secondAttribute="bottom" constant="15" id="ZkW-ce-YgT"/>
+                            <constraint firstAttribute="trailing" secondItem="VFi-mu-Atw" secondAttribute="trailing" constant="15" id="d16-pd-Sdf"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="phoneL" destination="hwS-wc-dcE" id="vWF-Wd-bgQ"/>
+                        <outlet property="qrImageView" destination="7ZM-TQ-FXt" id="KQN-Ew-aOT"/>
+                        <outlet property="titleL" destination="pkg-4g-5OC" id="6gX-YP-gpg"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LgB-Fl-qIt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="58" y="2085"/>
+        </scene>
         <!--Exhibitor CategoryVC-->
         <scene sceneID="Pp7-jp-Gm8">
             <objects>
@@ -429,7 +506,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Dqb-36-N6r" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="260" y="2034"/>
+            <point key="canvasLocation" x="723" y="2070"/>
         </scene>
     </scenes>
     <resources>
@@ -438,5 +515,6 @@
         <image name="root-3" width="30" height="30"/>
         <image name="root-4" width="30" height="30"/>
         <image name="root-5" width="30" height="30"/>
+        <image name="settingUser" width="50" height="50"/>
     </resources>
 </document>

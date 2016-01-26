@@ -526,7 +526,6 @@ class SettingHeadCell: UITableViewCell {
             }
             titleL.attributedText = att
         }
-//        titleL.text = name
         phoneL.text = phone
         loginBt?.hidden = true
     }

@@ -29,6 +29,29 @@ class NetWorkData:NSObject {
     
 //   MARK: 全局配置API
     
+    func getUserInfo(eid:String,token:String,block:NetBlock)
+    {
+        let url = Profile.globalHttpHead("api/app/personal/scanuser", parameter: "token=\(token)&eid=\(eid)")
+        
+        self.getMethodRequest(url) { (result, status) -> (Void) in
+            
+            if status == NetStatus.NetWorkStatusError
+            {
+                block(result: result, status: status)
+                return
+            }
+            
+            guard let data = result as? [String:AnyObject],let list = data["data"] as? [String:AnyObject] else {
+                return
+            }
+            let user = UserDataModel(dataDic: list)
+            block(result: user, status: status)
+        }
+
+    }
+    
+    
+    
     func getUserInfo(token:String,block:NetBlock)
     {
         let url = Profile.globalHttpHead("api/app/user/relogin", parameter: "token=\(token)")
@@ -74,6 +97,9 @@ class NetWorkData:NSObject {
             }
             user?.name = data["name"] as? String
             user?.title = data["title"] as? String
+            user?.phone = data["mobile"] as? String
+            user?.qq = data["qq"] as? String
+            user?.company = data["company"] as? String
             block(result:0 , status: status)
         }
         
@@ -92,12 +118,6 @@ class NetWorkData:NSObject {
         {
            url = Profile.globalHttpHead("api/app/user/setToken", parameter: "device_token=\(deviceToken)")
         }
-//         var url = "http://\(Profile.domain)/api/app/user/setToken?eid=1&device_token=\(deviceToken)&chn=ios"
-//        
-//        if let token = user.token
-//        {
-//            url = "\(url)&user_token=\(token)"
-//        }
         
         
         self.getMethodRequest(url) { (result, status) -> (Void) in

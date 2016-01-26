@@ -348,8 +348,7 @@ extension String {
         let outImage = filter?.outputImage
 
         
-        
-        
+
         let extent = CGRectIntegral(outImage!.extent)
         
         let widthScale = width/CGRectGetWidth(extent)
@@ -363,7 +362,7 @@ extension String {
         let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.None.rawValue)
         let bitmapRef = CGBitmapContextCreate(nil, Int(width), Int(height), 8, 0, cs, bitmapInfo.rawValue);
         
-        let context = CIContext()
+        let context = CIContext(options: nil)
         let bitmapImage = context.createCGImage(outImage!, fromRect: extent)
         CGContextSetInterpolationQuality(bitmapRef, .None);
         CGContextScaleCTM(bitmapRef, scale, scale);

@@ -13,6 +13,22 @@ class UserData:NSObject {
     var company:String?
     var name:String? = ""
     var title:String?
+    
+    var userID:String?{
+        
+        get {
+            let userDefault = NSUserDefaults.standardUserDefaults()
+            let tokenT = userDefault.objectForKey("userID") as? String
+            return tokenT
+        }
+        set
+        {
+            let userDefault = NSUserDefaults.standardUserDefaults()
+            userDefault.setObject(newValue, forKey: "userID")
+            userDefault.synchronize()
+        }
+    }
+    
     var deviceToken:String?{
     
         get{
@@ -74,6 +90,10 @@ class UserData:NSObject {
         }
     }
     
+    
+    
+    
+    
     var password_huanxin:String?{
     
         get{
@@ -106,6 +126,7 @@ class UserData:NSObject {
         userDefault.removeObjectForKey("deviceToken")
         userDefault.removeObjectForKey("messID")
         userDefault.removeObjectForKey("huanxin_ps")
+        userDefault.removeObjectForKey("userID")
         self.logOutHuanxin()
     }
     
