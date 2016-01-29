@@ -451,7 +451,8 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
             weak var wself = self
             weak var wperson = person
             cell.chatBlock = {wself?.showChatView(wperson!)}
-            cell.tapBlock = { wself?.addMyContact(wperson!) }
+            cell.favouriteBlock = { wself?.addMyContact(wperson!) }
+            cell.tapBlock = { wself?.showUserInfoVC((wperson?.id)!) }
 
             return cell
         }
@@ -486,12 +487,13 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
         {
             return
         }
+        
         let isFavorite = person.favorite
         weak var wself = self
         let loadV = THActivityView(activityViewWithSuperView: self.view)
         let tempNet = NetWorkData()
         
-        tempNet.modifySchedulerContact(schedulerID, personID: person.id!, isAdd: !isFavorite) { (result, status) -> (Void) in
+        tempNet.modifyFavouritePersonStatus(person.id!, isAdd: !isFavorite) { (result, status) -> (Void) in
             
             loadV.removeFromSuperview()
             if let warnStr = result as? String
@@ -510,6 +512,18 @@ class SchedulerInfoVC: UIViewController,UITableViewDelegate,UITableViewDataSourc
         tempNet.start()
     }
 
+
+    
+    func showUserInfoVC(userID:String){
+        
+        weak var wself = self
+        let userInfo = UserInfoVC(userID: userID)
+        userInfo.favouriteActionBlock = { wself?.fetchNetData() }
+        self.navigationController?.pushViewController(userInfo, animated: true)
+    }
+
+    
+    
     func showChatView(person:PersonData){
     
         if self.checkLogStatus() == false

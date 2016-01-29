@@ -426,7 +426,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="VFi-mu-Atw">
-                                <rect key="frame" x="15" y="35" width="570" height="315"/>
+                                <rect key="frame" x="15" y="35" width="570" height="310"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="settingUser" translatesAutoresizingMaskIntoConstraints="NO" id="dsp-X9-oBn">
                                         <rect key="frame" x="15" y="15" width="50" height="50"/>
@@ -444,7 +444,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="扫一扫上面的二维码，添加好友" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wyz-xF-enO" userLabel="bottomLabel">
-                                        <rect key="frame" x="201" y="285" width="168" height="15"/>
+                                        <rect key="frame" x="201" y="280" width="168" height="14.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                         <color key="textColor" red="0.59999999999999998" green="0.59999999999999998" blue="0.59999999999999998" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -459,8 +459,8 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="315" id="2dh-Uj-ljE"/>
-                                    <constraint firstItem="Wyz-xF-enO" firstAttribute="top" secondItem="7ZM-TQ-FXt" secondAttribute="bottom" constant="20" id="3WU-Os-DxN"/>
+                                    <constraint firstAttribute="height" constant="310" id="2dh-Uj-ljE"/>
+                                    <constraint firstItem="Wyz-xF-enO" firstAttribute="top" secondItem="7ZM-TQ-FXt" secondAttribute="bottom" constant="15" id="3WU-Os-DxN"/>
                                     <constraint firstItem="7ZM-TQ-FXt" firstAttribute="centerX" secondItem="VFi-mu-Atw" secondAttribute="centerX" id="5Ui-zk-vvf"/>
                                     <constraint firstItem="7ZM-TQ-FXt" firstAttribute="top" secondItem="hwS-wc-dcE" secondAttribute="bottom" constant="20" id="8l0-NI-R4Z"/>
                                     <constraint firstItem="pkg-4g-5OC" firstAttribute="top" secondItem="VFi-mu-Atw" secondAttribute="top" constant="15" id="Gdq-Sj-vyc"/>

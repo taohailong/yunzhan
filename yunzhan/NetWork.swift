@@ -29,30 +29,33 @@ class NetWorkData:NSObject {
     
 //   MARK: 全局配置API
     
-    func getUserInfo(eid:String,token:String,block:NetBlock)
+    func getUserInfo(userID:String,block:NetBlock)
     {
-        let url = Profile.globalHttpHead("api/app/personal/scanuser", parameter: "token=\(token)&eid=\(eid)")
-        
-        self.getMethodRequest(url) { (result, status) -> (Void) in
-            
-            if status == NetStatus.NetWorkStatusError
-            {
-                block(result: result, status: status)
-                return
-            }
-            
-            guard let data = result as? [String:AnyObject],let list = data["data"] as? [String:AnyObject] else {
-                return
-            }
-            let user = UserDataModel(dataDic: list)
-            block(result: user, status: status)
+        let user = UserData.shared
+        var url = ""
+        if user.token == nil
+        {
+          url = Profile.globalHttpHead("api/app/personal/scanuser", parameter: "uid=\(userID)")
         }
+        else
+        {
+          url = Profile.globalHttpHead("api/app/personal/scanuser", parameter: "token=\(user.token!)&uid=\(userID)")
+        }
+        self.newMethodRequest(url, taskBlock: block, completeBlock: { (result, status) -> (Void) in
+            
+            guard let list = result["data"] as? [String:AnyObject] else {
+                return
+            }
+            let user = PersonData(netData: list)
+            user.phone =  list["mobile"] as? String
+            block(result: user, status: status)
+        })
 
     }
     
     
     
-    func getUserInfo(token:String,block:NetBlock)
+    func getMyselfInfo(token:String,block:NetBlock)
     {
         let url = Profile.globalHttpHead("api/app/user/relogin", parameter: "token=\(token)")
         weak var user = UserData.shared
@@ -76,6 +79,7 @@ class NetWorkData:NSObject {
             block(result: nil, status: status)
         }
     }
+    
     
     func updateUserInfo(let key:String,let parameter:String,block:NetBlock){
         
@@ -124,7 +128,6 @@ class NetWorkData:NSObject {
             
             if status == NetStatus.NetWorkStatusError
             {
-                //                block(status: false)
                 return
             }
         }
@@ -213,6 +216,7 @@ class NetWorkData:NSObject {
     }
     
     
+    
 //    MARK: 首页API
     
     
@@ -286,10 +290,6 @@ class NetWorkData:NSObject {
                 {
                    let a = ActivityData(dataDic: temp)
                     moduleArr.append(a)
-//                    if moduleArr.count == 3
-//                    {
-//                      break
-//                    }
                 }
                     
             }
@@ -334,6 +334,7 @@ class NetWorkData:NSObject {
 
 
 //   MARK: 我的联系人收藏API
+    
     func myContactsList(block:NetBlock){
         
         let user = UserData.shared
@@ -401,6 +402,8 @@ class NetWorkData:NSObject {
         }
     }
     
+    
+    
     func delectContact(exhibitorID:String,personID:String,block:NetBlock)
     {
         let user = UserData.shared
@@ -424,10 +427,42 @@ class NetWorkData:NSObject {
             {
                 block(result: msg, status: .NetWorkStatusError)
             }
-            
+        }
+    }
+    
+    
+    func modifyFavouritePersonStatus(personID:String,isAdd:Bool,block:NetBlock)
+    {
+        let user = UserData.shared
+        var url = ""
+        if isAdd == true
+        {
+            url = Profile.globalHttpHead("api/app/personal/addcontact2", parameter: "token=\(user.token!)&cid=\(personID)")
+        }
+        else
+        {
+            url = Profile.globalHttpHead("api/app/personal/delcontact2", parameter: "token=\(user.token!)&cid=\(personID)")
         }
         
+        self.newMethodRequest(url, taskBlock: block,warnShow: false, completeBlock: { (result, status) -> (Void) in
+            
+            guard let code = result["code"] as? Int,let msg = result["msg"] else {
+                return
+            }
+            if code == 0
+            {
+                block(result: msg, status: status)
+            }
+            else
+            {
+                block(result: msg, status: .NetWorkStatusError)
+            }
+        })
+        
     }
+
+    
+    
 
 //    MARK:我的 活动API
     
@@ -477,7 +512,7 @@ class NetWorkData:NSObject {
 
     func getSchedulerInfo(schedulerID:String,block:NetBlock) {
         
-         let user = UserData.shared
+        let user = UserData.shared
         var url = ""
         if user.token != nil
         {
@@ -501,7 +536,7 @@ class NetWorkData:NSObject {
             guard let data = result as? [String:AnyObject],let list = data["data"] as? [String:AnyObject] else {
                 return
             }
-            //            print(list)
+        
             let startT = list["start_time"] as! Int
             let endT = list["end_time"] as! Int
             let scheduleData = SchedulerData(time: "\(startT.toTimeString("HH:mm"))-\(endT.toTimeString("HH:mm"))" , date: startT.toTimeString("yyyy-MM-dd"), title: (list["name"] as? String)!, introduce: nil, address: (list["addr"] as? String)!, id: String(list["id"]))
@@ -612,41 +647,41 @@ class NetWorkData:NSObject {
     }
     
     
-    func modifySchedulerContact(schedulerID:String,personID:String,isAdd:Bool,block:NetBlock)
-    {
-        let user = UserData.shared
-        var url = ""
-        if isAdd == true
-        {
-           url = Profile.globalHttpHead("api/app/personal/addscontact", parameter: "token=\(user.token!)&sid=\(schedulerID)&cid=\(personID)")
-        }
-        else
-        {
-           url = Profile.globalHttpHead("api/app/schedule/delcontact", parameter: "token=\(user.token!)&sid=\(schedulerID)&cid=\(personID)")
-        }
-        
-        
-        self.getMethodRequest(url) { (result, status) -> (Void) in
-            
-            if status == NetStatus.NetWorkStatusError
-            {
-                block(result: result, status: status)
-                return
-            }
-            
-            guard let data = result as? [String:AnyObject],let code = data["code"] as? Int,let msg = data["msg"] else {
-                return
-            }
-            if code == 0
-            {
-                block(result: msg, status: status)
-            }
-            else
-            {
-                block(result: msg, status: .NetWorkStatusError)
-            }
-        }
-    }
+//    func modifySchedulerContact(schedulerID:String,personID:String,isAdd:Bool,block:NetBlock)
+//    {
+//        let user = UserData.shared
+//        var url = ""
+//        if isAdd == true
+//        {
+//           url = Profile.globalHttpHead("api/app/personal/addscontact", parameter: "token=\(user.token!)&sid=\(schedulerID)&cid=\(personID)")
+//        }
+//        else
+//        {
+//           url = Profile.globalHttpHead("api/app/schedule/delcontact", parameter: "token=\(user.token!)&sid=\(schedulerID)&cid=\(personID)")
+//        }
+//        
+//        
+//        self.getMethodRequest(url) { (result, status) -> (Void) in
+//            
+//            if status == NetStatus.NetWorkStatusError
+//            {
+//                block(result: result, status: status)
+//                return
+//            }
+//            
+//            guard let data = result as? [String:AnyObject],let code = data["code"] as? Int,let msg = data["msg"] else {
+//                return
+//            }
+//            if code == 0
+//            {
+//                block(result: msg, status: status)
+//            }
+//            else
+//            {
+//                block(result: msg, status: .NetWorkStatusError)
+//            }
+//        }
+//    }
     
     
     
@@ -847,7 +882,7 @@ class NetWorkData:NSObject {
         
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
-            //            print(result)
+//                        print(result)
             if status == NetStatus.NetWorkStatusError
             {
                 block(result: result, status: status)
@@ -934,40 +969,40 @@ class NetWorkData:NSObject {
 
     
     
-    func modifyExhibitorContact(exhibitorID:String,personID:String,isAdd:Bool,block:NetBlock)
-    {
-        let user = UserData.shared
-        var url = ""
-        if isAdd == true
-        {
-           url = Profile.globalHttpHead("api/app/personal/addcontact", parameter: "token=\(user.token!)&bid=\(exhibitorID)&cid=\(personID)")
-        }
-        else
-        {
-            url = Profile.globalHttpHead("api/app/buz/delcontact", parameter: "token=\(user.token!)&bid=\(exhibitorID)&cid=\(personID)")
-        }
-        
-        self.getMethodRequest(url) { (result, status) -> (Void) in
-            
-            if status == NetStatus.NetWorkStatusError
-            {
-                block(result: result, status: status)
-                return
-            }
-            
-            guard let data = result as? [String:AnyObject],let code = data["code"] as? Int,let msg = data["msg"] else {
-                return
-            }
-            if code == 0
-            {
-               block(result: msg, status: status)
-            }
-            else
-            {
-                block(result: msg, status: .NetWorkStatusError)
-            }
-        }
-    }
+//    func modifyExhibitorContact(exhibitorID:String,personID:String,isAdd:Bool,block:NetBlock)
+//    {
+//        let user = UserData.shared
+//        var url = ""
+//        if isAdd == true
+//        {
+//           url = Profile.globalHttpHead("api/app/personal/addcontact", parameter: "token=\(user.token!)&bid=\(exhibitorID)&cid=\(personID)")
+//        }
+//        else
+//        {
+//            url = Profile.globalHttpHead("api/app/buz/delcontact", parameter: "token=\(user.token!)&bid=\(exhibitorID)&cid=\(personID)")
+//        }
+//        
+//        self.getMethodRequest(url) { (result, status) -> (Void) in
+//            
+//            if status == NetStatus.NetWorkStatusError
+//            {
+//                block(result: result, status: status)
+//                return
+//            }
+//            
+//            guard let data = result as? [String:AnyObject],let code = data["code"] as? Int,let msg = data["msg"] else {
+//                return
+//            }
+//            if code == 0
+//            {
+//               block(result: msg, status: status)
+//            }
+//            else
+//            {
+//                block(result: msg, status: .NetWorkStatusError)
+//            }
+//        }
+//    }
     
     
     func delectMyExhibitor(exhibitorID:String,block:NetBlock)
@@ -2145,7 +2180,6 @@ class NetWorkData:NSObject {
                     }
                     else
                     {
-                        
                         if warnShow == true
                         {
                             let warnString = THActivityView(string: "参数错误")

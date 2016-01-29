@@ -7,7 +7,7 @@
 //
 
 import Foundation
-class SettingViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,IChatManagerDelegate {
+class SettingViewController: UIViewController,UITableViewDataSource,UITableViewDelegate,IChatManagerDelegate,ScanProtocol {
     
     @IBOutlet weak var table: UITableView!
     private var isNewMess = false
@@ -45,12 +45,12 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         table.registerClass(SettingHeadCell.self , forCellReuseIdentifier: "SettingHeadCell")
         table.registerClass(SettingCommonCell.self , forCellReuseIdentifier: "SettingCommonCell")
         table.separatorColor = Profile.rgb(243, g: 243, b: 243)
-        
+        table.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         self.registerHunxinNotic()
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 6
+        return 7
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -67,6 +67,11 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
           return 2
         }
         else if section == 3
+        {
+            return 1
+        }
+
+        else if section == 4
         {
           return 2
         }
@@ -92,8 +97,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
             }
             else
             {
-            
-              cell.fillData(nil, name: user.name, phone: user.phone ,title:user.title )
+              cell.fillData(nil, name: user.name, phone: user.phone ,title:user.title ,company: user.company)
             }
             
            return cell
@@ -104,7 +108,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
             cell.textLabel?.font = Profile.font(15)
             cell.messageSpot.hidden = true
             cell.textLabel?.textColor = Profile.rgb(102, g: 102, b: 102)
-            
+            cell.accessoryType = .DisclosureIndicator
             var imageName:String?, title:String
             switch indexPath {
              
@@ -134,14 +138,19 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
                 
             case let s where s.section == 3 && s.row == 0:
                 
+                imageName = "settingRQ"
+                title = "扫一扫"
+                
+            case let s where s.section == 4 && s.row == 0:
+                
                 imageName = "settingMyRegist"
                 title = "预约报名"
     
-            case let s where s.section == 3 && s.row == 1:
+            case let s where s.section == 4 && s.row == 1:
                 imageName = "settingMyHotel"
                 title = "相关推荐"
                 
-             case let s where s.section == 4:
+             case let s where s.section == 5:
                 
                 imageName = "settingSuggestion"
                 title = "反馈"
@@ -249,8 +258,15 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
                 self.navigationController?.pushViewController(messList, animated: true)
             }
         }
-            
-        else if indexPath.section == 3
+       else if indexPath.section == 3
+        {
+            let scanVC = QRScanViewController()
+            scanVC.delegate = self
+            scanVC.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(scanVC, animated: true)
+
+        }
+        else if indexPath.section == 4
         {
             if user.token == nil
             {
@@ -273,7 +289,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
             }
         }
             
-        else if indexPath.section == 4
+        else if indexPath.section == 5
         {
             if user.token == nil
             {
@@ -298,6 +314,31 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
             self.navigationController?.pushViewController(aboutVC, animated: true)
         }
     }
+    
+    
+    
+//    MARK: ScanDelegate
+    func scanActionCompleteWithResult(string: String!) {
+        
+        let separateArr = string.componentsSeparatedByString(",")
+        if separateArr.count == 0 || separateArr[0] != Profile.qrKey
+        {
+            return
+        }
+        
+        let exhibitor = separateArr[1]
+        
+        if exhibitor != Profile.exhibitor
+        {
+            return
+        }
+        let userID = separateArr[2]
+        let userVC = UserInfoVC(userID: userID,needSendMessage: true)
+        userVC.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(userVC, animated: true)
+    }
+    
+    
     
     func showLoginVC(){
     
@@ -485,7 +526,7 @@ class SettingHeadCell: UITableViewCell {
     {
        tapBlock!()
     }
-    func fillData(userUrl:String? ,name:String? ,phone:String?,title:String?)
+    func fillData(userUrl:String? ,name:String? ,phone:String?,title:String?,company:String?)
     {
         if userUrl != nil
         {
@@ -524,6 +565,12 @@ class SettingHeadCell: UITableViewCell {
             {
               att.appendAttributedString(NSAttributedString(string: "  \(title!)", attributes: [NSFontAttributeName:Profile.font(11),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)]))
             }
+            
+            if company != nil && company?.isEmpty != true
+            {
+               att.appendAttributedString(NSAttributedString(string: "-\(company!)", attributes: [NSFontAttributeName:Profile.font(11),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)]))
+            }
+            
             titleL.attributedText = att
         }
         phoneL.text = phone

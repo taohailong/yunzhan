@@ -46,23 +46,40 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         self.presentViewController(nav, animated: true) { () -> Void in}
     }
 
+//    MARK: QR Scan
+    
     func showQRscanVC(){
     
       let scanVC = QRScanViewController()
       scanVC.delegate = self
       scanVC.hidesBottomBarWhenPushed = true
       self.navigationController?.pushViewController(scanVC, animated: true)
-
-//      self.presentViewController(scanVC, animated: true) { () -> Void in}
     }
     
     func scanActionCompleteWithResult(string: String!) {
-        print("url \(string)")
+        
+        let separateArr = string.componentsSeparatedByString(",")
+        if separateArr.count == 0 || separateArr[0] != Profile.qrKey
+        {
+           return
+        }
+    
+        let exhibitor = separateArr[1]
+        
+        if exhibitor != Profile.exhibitor
+        {
+           return
+        }
+        let userID = separateArr[2]
+        let userVC = UserInfoVC(userID: userID,needSendMessage: true)
+        userVC.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(userVC, animated: true)
     }
     
     
         override func viewDidLoad() {
         super.viewDidLoad()
+            
         self.title = "首页"
         
         
@@ -111,7 +128,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         if user.token != nil
         {
             userNet = NetWorkData()
-            userNet.getUserInfo(user.token!) { (result, status) -> (Void) in
+            userNet.getMyselfInfo(user.token!) { (result, status) -> (Void) in
                 
             }
             userNet.start()
@@ -120,14 +137,11 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
     
     func fetchData(){
     
-//        let loadView = THActivityView(activityViewWithSuperView: self.view)
-        
         weak var wself = self
         net = NetWorkData()
         net.getRootData { (result, status) -> (Void) in
-//            wself?.collection.headerEndRefreshing()
             wself?.refreshHeadView.endRefreshing()
-//            loadView.removeFromSuperview()
+
             if status == .NetWorkStatusError
             {
                  if result == nil

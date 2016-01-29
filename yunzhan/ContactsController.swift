@@ -19,8 +19,8 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         self.title = "我的联系人"
         table = UITableView(frame: CGRectZero, style: .Plain)
         table.delegate = self
-//        table.separatorColor = Profile.rgb(210, g: 210, b: 210)
-        table.separatorStyle = .None
+        table.separatorColor = Profile.rgb(243, g: 243, b: 243)
+//        table.separatorStyle = .None
         table.dataSource = self
         table.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(table)
@@ -43,6 +43,11 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         net.myContactsList { (result, status) -> (Void) in
         
         loadView.removeFromSuperview()
+        if let emptyView = wself?.view.viewWithTag(10)
+        {
+            emptyView.removeFromSuperview()
+        }
+            
         if status == .NetWorkStatusError
         {
             if result == nil
@@ -113,14 +118,11 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         let p = arr[indexPath.row]
         cell.fillData(p.title, name: p.name, phone: p.phone)
         cell.separatorInset = UIEdgeInsetsZero
-//        weak var wself = self
+        weak var wself = self
+        cell.userInfoBlock = { wself?.showUserInfoVC(p.id!)}
 //        cell.chatBlock = { wself?.showChatView(p) }
         
-        if #available(iOS 8.0, *) {
-            cell.layoutMargins = UIEdgeInsetsZero
-        } else {
-            // Fallback on earlier versions
-        }
+        cell.layoutMargins = UIEdgeInsetsZero
         return cell
     }
     
@@ -166,13 +168,20 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         
         var subArr = dataArr[indexPath.section]
         let p = subArr[indexPath.row]
+        self.deleteFavouritePerson(p.id!,indexPath: indexPath)
+    }
+    
+    
+
+    func deleteFavouritePerson(personID:String,indexPath:NSIndexPath){
+    
         weak var wself = self
         let delectNet = NetWorkData()
-        delectNet.delectContact(p.exhibitorID!, personID: p.id!) { (result, status) -> (Void) in
-          
+        delectNet.modifyFavouritePersonStatus(personID, isAdd: false) { (result, status) -> (Void) in
+            
             if status == .NetWorkStatusError
             {
-               return
+                return
             }
             
             var tempArr = wself!.dataArr[indexPath.section]
@@ -188,10 +197,11 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
                 wself?.dataArr.removeAtIndex(indexPath.section)
                 wself?.dataArr.insert(tempArr, atIndex: indexPath.section)
             }
-
+            
             wself?.table.reloadData()
         }
         delectNet.start()
+    
     }
     
     
@@ -206,6 +216,20 @@ class ContactsListVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         self.navigationController?.pushViewController(chatView!, animated: true)
     }
     
+    
+    func showUserInfoVC(userID:String){
+        
+        weak var wself = self
+        let userInfo = UserInfoVC(userID: userID)
+        userInfo.favouriteActionBlock = { wself?.fetchContactList() }
+        self.navigationController?.pushViewController(userInfo, animated: true)
+    }
+    
+
+    deinit
+    {
+//      print("deinit")
+    }
 }
 
 
@@ -216,7 +240,7 @@ class ContactsPersonCell: UITableViewCell,UIAlertViewDelegate {
     let titleL:UILabel
     var phoneBt:UIButton
     var chatBlock:(Void->Void)?
-    
+    var userInfoBlock:((Void)->Void)?
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         
         nameL = UILabel()
@@ -233,7 +257,9 @@ class ContactsPersonCell: UITableViewCell,UIAlertViewDelegate {
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
         
         
-        
+        nameL.userInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: "showUserInfoAction")
+        nameL.addGestureRecognizer(tap)
         nameL.textColor = Profile.rgb(51, g: 51, b: 51)
         nameL.font = Profile.font(15)
         self.contentView.addSubview(nameL)
@@ -241,37 +267,13 @@ class ContactsPersonCell: UITableViewCell,UIAlertViewDelegate {
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[nameL]", options: [], metrics: nil, views: ["nameL":nameL]))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-10-[nameL]", options: [], metrics: nil, views: ["nameL":nameL,"titleL":titleL]))
         
-        
-//        let chatBt = UIButton(type: .Custom)
-////        chatBt.backgroundColor = UIColor.redColor()
-//        chatBt.translatesAutoresizingMaskIntoConstraints = false
-//        self.contentView.addSubview(chatBt)
-//        chatBt.addTarget(self, action: "chatBlockAction", forControlEvents: .TouchUpInside)
-//        chatBt.setImage(UIImage(named: "exhibitorChat"), forState: .Normal)
-//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[nameL]-30-[chatBt(25)]", options: [], metrics: nil , views: ["nameL":nameL,"chatBt":chatBt]))
-//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[chatBt(20)]", options: [], metrics: nil, views: ["chatBt":chatBt]))
-//        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(chatBt, toItem: nameL))
-//        
-//        
-//        phoneBt.setTitleColor(Profile.rgb(51, g: 51, b: 51), forState: .Normal)
-//        phoneBt.titleLabel?.font = Profile.font(13)
-//        phoneBt.translatesAutoresizingMaskIntoConstraints = false
-//        phoneBt.addTarget(self, action: "makeCall", forControlEvents: .TouchUpInside)
-//        phoneBt.setImage(UIImage(named: "contactsPhone"), forState: .Normal)
-//        phoneBt.imageEdgeInsets = UIEdgeInsetsMake(0, -6, 0, 0)
-//        self.contentView.addSubview(phoneBt)
-//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[chatBt]-25-[phoneBt]", options: [], metrics: nil, views: ["phoneBt":phoneBt,"chatBt":chatBt]))
-//        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(phoneBt, toItem: nameL))
+    
     }
 
     func fillData(title: String?,name: String? ,phone: String?)
     {
         titleL.text = title
         nameL.text =  name
-//        if phone != nil
-//        {
-//            phoneBt.setTitle(phone, forState: UIControlState.Normal)
-//        }
     }
 
     
@@ -283,6 +285,17 @@ class ContactsPersonCell: UITableViewCell,UIAlertViewDelegate {
         }
     
     }
+    
+    
+    func showUserInfoAction(){
+        
+        if userInfoBlock != nil
+        {
+            userInfoBlock!()
+        }
+    }
+
+    
     
     func makeCall(){
     

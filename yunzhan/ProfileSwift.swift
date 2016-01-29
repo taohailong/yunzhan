@@ -42,6 +42,7 @@ class Profile:NSObject
     
     static let nickKey = "usernick"
     static let jobKey = "usertitle"
+    static let qrKey = "zzt"
     static let NavTitleColor = {return UIColor.whiteColor() }
     
     class func globalHttpHead(path:String,parameter:String?)->String {

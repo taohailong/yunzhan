@@ -457,7 +457,6 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
             else
             {
                 let cell = tableView.dequeueReusableCellWithIdentifier("ExhibitorMoreIndicateCell") as! ExhibitorMoreIndicateCell
-//                cell.titleL.text = elementData.introduct
                 return cell
             }
             
@@ -535,7 +534,8 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
                 cell.fillData(person.title , name:person.name, chatID: person.chatID,personAdd: person.favorite)
                 weak var wself = self
                 weak var wperson = person
-                cell.tapBlock = { wself?.addMyContact(wperson!) }
+                cell.favouriteBlock = { wself?.addMyContact(wperson!) }
+                cell.tapBlock = { wself?.showUserInfoVC((wperson?.id)!) }
                 cell.chatBlock = { wself?.showChatView(wperson!)}
                 return cell
 
@@ -632,10 +632,9 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
         weak var wself = self
         let loadV = THActivityView(activityViewWithSuperView: self.view)
         
-        
         let tempNet = NetWorkData()
         
-        tempNet.modifyExhibitorContact(id!, personID: person.id!, isAdd: !isFavorite, block: { (result, status) -> (Void) in
+        tempNet.modifyFavouritePersonStatus(person.id!, isAdd: !isFavorite) { (result, status) -> (Void) in
             
             loadV.removeFromSuperview()
             if let warnStr = result as? String
@@ -648,7 +647,7 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
                 person.favorite = !isFavorite
                 wself?.table.reloadData()
             }
-        })
+        }
         
         tempNet.start()
     }
@@ -659,6 +658,16 @@ class ExhibitorController: UIViewController,UITableViewDataSource,UITableViewDel
        let productVC = ProductListVC()
         productVC.products = productArr
         self.navigationController?.pushViewController(productVC, animated: true)
+    }
+    
+    
+    
+    func showUserInfoVC(userID:String){
+    
+        weak var wself = self
+        let userInfo = UserInfoVC(userID: userID)
+        userInfo.favouriteActionBlock = { wself?.fetchData() }
+        self.navigationController?.pushViewController(userInfo, animated: true)
     }
     
     
@@ -772,11 +781,6 @@ class ExhibitorInfoHeadCell: UITableViewCell {
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[iconImage]-15-[titleL]-15-|", options: [], metrics: nil, views: ["iconImage":iconImage,"titleL":titleL]))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
         
-        
-//        self.contentView.addSubview(companyNameL)
-//        companyNameL.translatesAutoresizingMaskIntoConstraints = false
-//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[titleL]-15-[companyNameL]", options: [], metrics: nil, views: ["companyNameL":companyNameL,"titleL":titleL]))
-//        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(companyNameL, toItem: titleL))
         
     
         self.contentView.addSubview(addressL)
@@ -1098,6 +1102,7 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
     let addBt:UIButton
 //    let phoneL:UILabel
     let phoneBt:UIButton
+    var favouriteBlock:(Void ->Void)?
     var tapBlock:((Void)->Void)?
     var chatBlock:(Void ->Void)?
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
@@ -1113,7 +1118,7 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
         titleL.font = Profile.font(13)
         self.contentView.addSubview(titleL)
         titleL.translatesAutoresizingMaskIntoConstraints = false
-//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
+
         self.contentView.addConstraint(NSLayoutConstraint(item: titleL, attribute: .Left, relatedBy: .Equal, toItem: self.contentView, attribute: .Left, multiplier: 1.0, constant: 15))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-5-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
         
@@ -1122,8 +1127,12 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
         nameL.textColor = Profile.rgb(102, g: 102, b: 102)
         nameL.font = Profile.font(14)
         self.contentView.addSubview(nameL)
+        
+        nameL.userInteractionEnabled = true
+        let tap = UITapGestureRecognizer(target: self, action: "showUserInfoAction")
+        nameL.addGestureRecognizer(tap)
+        
         nameL.translatesAutoresizingMaskIntoConstraints = false
-//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[nameL]", options: [], metrics: nil, views: ["nameL":nameL]))
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(nameL, toItem: titleL))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-10-[nameL]", options: [], metrics: nil, views: ["nameL":nameL,"titleL":titleL]))
 
@@ -1138,7 +1147,7 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
         addBt.translatesAutoresizingMaskIntoConstraints = false
         addBt.addTarget(self, action: "addContact", forControlEvents: .TouchUpInside)
         self.contentView.addSubview(addBt)
-//        self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(addBt , toItem: self.contentView))
+
         self.contentView.addConstraint(NSLayoutConstraint.layoutBottomEqual(addBt, toItem: nameL))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[addBt(30)]-15-|", options: [], metrics: nil, views: ["addBt":addBt]))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[addBt(25)]", options: [], metrics: nil, views: ["addBt":addBt]))
@@ -1171,6 +1180,16 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[separateV]-0-|", aView: separateV, bView: nil))
     }
     
+    
+    func showUserInfoAction(){
+    
+        if tapBlock != nil
+        {
+            tapBlock!()
+        }
+    }
+    
+    
     func makeChat()
     {
         if chatBlock != nil
@@ -1182,9 +1201,9 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
     
     func addContact()
     {
-       if tapBlock != nil
+       if favouriteBlock != nil
        {
-         tapBlock!()
+         favouriteBlock!()
        }
     }
     func fillData(title:String? ,name:String?,chatID:String?,personAdd:Bool)

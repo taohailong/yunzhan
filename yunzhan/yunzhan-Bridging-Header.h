@@ -21,3 +21,4 @@
 #import "EaseMob.h"
 #import "EaseSDKHelper.h"
 #import "QRScanViewController.h"
+//#import "QRView.h"

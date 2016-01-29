@@ -8,7 +8,7 @@
 //
 
 #import "QRScanViewController.h"
-
+#import "QRView.h"
 @interface QRScanViewController ()<UIAlertViewDelegate>
 
 @end
@@ -28,6 +28,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.title = @"扫一扫";
     self.view.backgroundColor = [UIColor blackColor];
 //    [self creatSubView];
 }
@@ -136,7 +137,7 @@
     // Output
     _output = [[AVCaptureMetadataOutput alloc]init];
     [_output setMetadataObjectsDelegate:self queue:dispatch_get_main_queue()];
-//     _output.rectOfInterest=CGRectMake(0.5,0,0.5, 1);
+
     
     // Session
     _session = [[AVCaptureSession alloc]init];
@@ -183,9 +184,23 @@
     
     CGFloat devWidth = [UIScreen mainScreen].bounds.size.width;
     CGFloat devHeight = [UIScreen mainScreen].bounds.size.height;
-//    _preview.frame =CGRectMake(0,64,devWidth,devHeight-64);
-    _preview.frame =CGRectMake((devWidth-280)/2,(devHeight-280)/2,280,280);
+    _preview.frame =CGRectMake(0,64,devWidth,devHeight-64);
+    
+//    _preview.frame =CGRectMake((devWidth-280)/2,(devHeight-280)/2,280,280);
     [self.view.layer insertSublayer:self.preview atIndex:0];
+    
+    
+    
+    CGFloat screenX = (devWidth - 280) / 2;//透明区域的x
+    CGFloat screenY = (devHeight - 280) / 2;
+    _output.rectOfInterest=CGRectMake(screenY/CGRectGetHeight(_preview.frame),screenX/CGRectGetWidth(_preview.frame),280/CGRectGetHeight(_preview.frame), 280/CGRectGetWidth(_preview.frame));
+    
+    
+    QRView* qrView = [[QRView alloc] initWithFrame:CGRectMake(0, 64, devWidth, devHeight - 64)];
+    qrView.transparentArea = CGSizeMake(280, 280);
+    qrView.backgroundColor = [UIColor clearColor];
+    [self.view addSubview:qrView];
+    
     
     UILabel * labIntroudction= [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 0, 0)];
     labIntroudction.backgroundColor = [UIColor clearColor];
@@ -219,14 +234,12 @@
         
     }
     
+    [_session stopRunning];
+    [self.navigationController popViewControllerAnimated:NO];
     if ([self.delegate respondsToSelector:@selector(scanActionCompleteWithResult:)]) {
         [self.delegate scanActionCompleteWithResult:stringValue];
     }
-    
-   [_session stopRunning];
-    
-    [self.navigationController popViewControllerAnimated:YES];
-    
+
 }
 
 

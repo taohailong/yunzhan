@@ -234,6 +234,8 @@ class ProductData {
 
 
 class PersonData {
+    var qq:String?
+    var company:String?
     var name:String?
     var title:String?
     var phone:String?
@@ -254,7 +256,9 @@ extension PersonData{
 
     convenience init(let netData:[String:AnyObject])
     {
-        self.init(name: netData["name"] as?String, title: netData["title"] as? String, phone: netData["phone"] as? String)
+        self.init(name: netData["name"] as?String, title: netData["title"] as? String, phone: netData["mobile"] as? String)
+        self.qq = netData["qq"] as? String
+        self.company = netData["company"] as? String
         if let id = netData["id"] as? Int
         {
             self.id = String(id)
@@ -385,31 +389,31 @@ extension ActivityData{
 }
 
 
-class UserDataModel {
-    var qq:String?
-    var company:String?
-    var name:String?
-    var title:String?
-    var job:String?
-    let phone:String
-    let exhibitor:String
-    let huanxinID:String
-    
-    init(phone:String,exhibitorID:String,huanxinID:String){
-       
-        self.huanxinID = huanxinID
-        self.exhibitor = exhibitorID
-        self.phone = phone
-    }
-    
-    convenience init(dataDic:[String:AnyObject]){
-      
-        self.init(phone: dataDic["mobile"] as! String, exhibitorID: dataDic["exhibition_id"] as! String, huanxinID:dataDic["hxin_id"] as! String)
-        
-        self.qq = dataDic["qq"] as? String
-        self.company = dataDic["company"] as? String
-        self.name = dataDic["name"] as? String
-        self.job = dataDic["title"] as? String
-    }
-}
+//class UserDataModel {
+//    var qq:String?
+//    var company:String?
+//    var name:String?
+//    var title:String?
+//    var job:String?
+//    let phone:String
+//    let exhibitor:String
+//    let huanxinID:String
+//    
+//    init(phone:String,exhibitorID:String,huanxinID:String){
+//       
+//        self.huanxinID = huanxinID
+//        self.exhibitor = exhibitorID
+//        self.phone = phone
+//    }
+//    
+//    convenience init(dataDic:[String:AnyObject]){
+//      
+//        self.init(phone: dataDic["mobile"] as! String, exhibitorID: String(dataDic["exhibition_id"]), huanxinID:dataDic["hxin_id"] as! String)
+//        
+//        self.qq = dataDic["qq"] as? String
+//        self.company = dataDic["company"] as? String
+//        self.name = dataDic["name"] as? String
+//        self.job = dataDic["title"] as? String
+//    }
+//}
 
