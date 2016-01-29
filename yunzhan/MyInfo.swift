@@ -429,8 +429,8 @@ class UserInfoVC:UIViewController,UITableViewDataSource,UITableViewDelegate {
     
     func sendFavouriteMessage(){
     
-      let title = user.title == nil ? "" : user.title!
-       _ = EaseSDKHelper.sendTextMessage("收藏您的名片", to: user.chatID, messageType: .eMessageTypeChat, requireEncryption: false, messageExt: [Profile.jobKey:title,Profile.nickKey:user.name!])
+      let title = UserData.shared.title == nil ? "" : UserData.shared.title!
+       _ = EaseSDKHelper.sendTextMessage("我刚通过扫一扫收藏了你的名片", to: user.chatID, messageType: .eMessageTypeChat, requireEncryption: false, messageExt: [Profile.jobKey:title,Profile.nickKey:UserData.shared.name!])
     }
     
     func getUserInfo(){
@@ -601,9 +601,13 @@ class MyQRVC: UIViewController {
         
         let att = NSMutableAttributedString(string: user.name!, attributes: [NSFontAttributeName:Profile.font(17),NSForegroundColorAttributeName:Profile.rgb(51, g: 51, b: 51)])
         
-        if let job = user.title,let company = user.company
+        if let job = user.title
         {
-            att.appendAttributedString(NSAttributedString(string: "  \(job)-\(company)", attributes: [NSFontAttributeName:Profile.font(11),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)]))
+            att.appendAttributedString(NSAttributedString(string: "  \(job)", attributes: [NSFontAttributeName:Profile.font(11),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)]))
+        }
+        if user.company != nil && user.company?.isEmpty != true
+        {
+            att.appendAttributedString(NSAttributedString(string: "-\(user.company!)", attributes: [NSFontAttributeName:Profile.font(11),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)]))
         }
         titleL.attributedText = att
        
