@@ -218,7 +218,7 @@ class NetWorkData:NSObject {
     
     func getRootData(block: NetBlock){
     
-        let url = Profile.globalHttpHead("api/app/exhibition/index", parameter: "id=1")
+        let url = Profile.globalHttpHead("api/app/exhibition/index", parameter: "id=\(Profile.exhibitor)")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
