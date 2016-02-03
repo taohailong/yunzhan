@@ -9,36 +9,48 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>3</integer>
+			<integer>7</integer>
+		</dict>
+		<key>Pods-JSPatch.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>8</integer>
 		</dict>
 		<key>Pods-SDWebImage.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>4</integer>
+			<integer>9</integer>
 		</dict>
 		<key>Pods.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>2</integer>
+			<integer>6</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>0F9964AA8D2A85330C8D06CA</key>
+		<key>03E89056DCBCEC7CBDEB23A6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>809CB529EA0E316D2323DCB7</key>
+		<key>07DE1226B636D324588D69D1</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>E3D1B510B878CEDB72EF8DC7</key>
+		<key>C9111440B266CFA60AB1FCCB</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E818825AFEBEC46804C5C098</key>
 		<dict>
 			<key>primary</key>
 			<true/>

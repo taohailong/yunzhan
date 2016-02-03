@@ -12,7 +12,7 @@ import Foundation
 
 typealias NetBlock = (result: Any?,  status: NetStatus) ->(Void)
 typealias NetDicBlock = (result:[String:AnyObject],status: NetStatus) ->(Void)
-
+typealias NetNoParse = (data:NSData?) -> (Void)
 enum NetStatus:Int{
   case NetWorkStatusSucess = 0
     case NetWorkStatusError = 1
@@ -22,10 +22,6 @@ enum NetStatus:Int{
 class NetWorkData:NSObject {
     
     var net : AFHTTPRequestOperation!
-    //    init(){
-//        //      net = AFHTTPRequestOperation()
-//    }
-    
     
 //   MARK: 全局配置API
     
@@ -2110,8 +2106,6 @@ class NetWorkData:NSObject {
                         
                         subCArr.append(attribute)
                         
-                        
-                
                     }
                
                   }
@@ -2137,6 +2131,22 @@ class NetWorkData:NSObject {
             }
         }
     }
+    
+    
+//    MARK: ----------JSPatch---------
+    
+    func commitJSToServer(fileName:String,text:String){
+     
+        let url = Profile.globalHttpHead("api/app/tool/savedebug", parameter: "name=\(fileName)&content=\(text)")
+        self.commonRequestWithoutParse(url) { (data) -> (Void) in
+       
+            let str = NSString(data: data!, encoding: NSUTF8StringEncoding)
+            print(str);
+        }
+
+    }
+    
+    
     
     
     
@@ -2222,8 +2232,6 @@ class NetWorkData:NSObject {
         }
 
         net = AFHTTPRequestOperation(request: NSURLRequest(URL: NSURL(string: url)!))
-//        net.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-        
         net.setCompletionBlockWithSuccess({ (operation:AFHTTPRequestOperation!, result:AnyObject!) -> Void in
             
             if let jsonData = result as? NSData
@@ -2253,6 +2261,27 @@ class NetWorkData:NSObject {
         }
         
     }
+    
+    
+    
+    
+    
+    func commonRequestWithoutParse(url:String,block: NetNoParse){
+    
+        net = AFHTTPRequestOperation(request: NSURLRequest(URL: NSURL(string: url)!))
+        net.setCompletionBlockWithSuccess({ (operation:AFHTTPRequestOperation!, result:AnyObject!) -> Void in
+            
+            if let jsonData = result as? NSData
+            {
+                block(data: jsonData)
+            }
+            
+            }) { ( operating:AFHTTPRequestOperation!, err:NSError!) -> Void in
+                block(data: nil)
+        }
+    }
+    
+    
     
     func start(){
         

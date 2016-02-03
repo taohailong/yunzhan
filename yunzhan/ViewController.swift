@@ -32,10 +32,8 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
     func creatNavBar(){
         
         let rightBar1 = UIBarButtonItem(image: UIImage(named: "global_search"), style: .Plain, target: self, action: "showGlobalSearchVC")
-        let rightBar2 = UIBarButtonItem(image: UIImage(named: "qrscanIcon"), style: .Plain, target: self, action: "showQRscanVC")
-        self.navigationItem.rightBarButtonItems = [rightBar1,rightBar2]
-        
-        
+
+        self.navigationItem.rightBarButtonItems = [rightBar1]
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Done, target: nil, action: "")
     }
     
@@ -46,32 +44,26 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         self.presentViewController(nav, animated: true) { () -> Void in}
     }
 
-//    MARK: QR Scan
+
     
-    func showQRscanVC(){
-    
-      let scanVC = QRScanViewController()
-      scanVC.delegate = self
-      scanVC.hidesBottomBarWhenPushed = true
-      self.navigationController?.pushViewController(scanVC, animated: true)
-    }
     
     func scanActionCompleteWithResult(string: String!) {
         
-        let separateArr = string.componentsSeparatedByString(",")
-        if separateArr.count == 0 || separateArr[0] != Profile.qrKey
-        {
-           return
-        }
-    
-        let exhibitor = separateArr[1]
+        let elementDic = string.figureUrlElement()
         
+        let exhibitor = elementDic["eid"]
         if exhibitor != Profile.exhibitor
         {
            return
         }
-        let userID = separateArr[2]
-        let userVC = UserInfoVC(userID: userID,needSendMessage: true)
+        let userID = elementDic["uid"]
+        
+        if userID == nil
+        {
+           return
+        }
+        
+        let userVC = UserInfoVC(userID: userID!,needSendMessage: true)
         userVC.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(userVC, animated: true)
     }

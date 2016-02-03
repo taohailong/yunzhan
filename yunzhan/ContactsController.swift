@@ -261,7 +261,7 @@ class ContactsPersonCell: UITableViewCell,UIAlertViewDelegate {
         let tap = UITapGestureRecognizer(target: self, action: "showUserInfoAction")
         nameL.addGestureRecognizer(tap)
         nameL.textColor = Profile.rgb(51, g: 51, b: 51)
-        nameL.font = Profile.font(15)
+        nameL.font = Profile.font(15.5)
         self.contentView.addSubview(nameL)
         nameL.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-15-[nameL]", options: [], metrics: nil, views: ["nameL":nameL]))
@@ -273,7 +273,11 @@ class ContactsPersonCell: UITableViewCell,UIAlertViewDelegate {
     func fillData(title: String?,name: String? ,phone: String?)
     {
         titleL.text = title
-        nameL.text =  name
+        if name != nil
+        {
+          nameL.text =  "\(name!)  "
+        }
+        
     }
 
     

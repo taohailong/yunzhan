@@ -42,6 +42,9 @@
 		C773A89E1C48EA5D0000054D /* ExhibitorAdController.m in Sources */ = {isa = PBXBuildFile; fileRef = C773A89B1C48EA5D0000054D /* ExhibitorAdController.m */; };
 		C77481091C34C33400144427 /* MyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77481081C34C33400144427 /* MyInfo.swift */; };
 		C774810A1C34C33400144427 /* MyInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C77481081C34C33400144427 /* MyInfo.swift */; };
+		C7776B421C61C410002C03B7 /* demo.js in Resources */ = {isa = PBXBuildFile; fileRef = C7776B411C61C410002C03B7 /* demo.js */; };
+		C7776B431C61C410002C03B7 /* demo.js in Resources */ = {isa = PBXBuildFile; fileRef = C7776B411C61C410002C03B7 /* demo.js */; };
+		C7776B441C61C410002C03B7 /* demo.js in Resources */ = {isa = PBXBuildFile; fileRef = C7776B411C61C410002C03B7 /* demo.js */; };
 		C779C0FB1BF42D35008D625F /* LogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C779C0F81BF42D35008D625F /* LogViewController.m */; };
 		C779C0FC1BF42D35008D625F /* LogViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C779C0F81BF42D35008D625F /* LogViewController.m */; };
 		C779C0FD1BF42D35008D625F /* LogInCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C779C0FA1BF42D35008D625F /* LogInCell.m */; };
@@ -74,6 +77,9 @@
 		C77E8FA61C06DB48003832BA /* CommentScoreView.m in Sources */ = {isa = PBXBuildFile; fileRef = C77E8FA41C06DB48003832BA /* CommentScoreView.m */; };
 		C78001C41C0EEFEA0097FD8E /* NSString+ZhengZe.m in Sources */ = {isa = PBXBuildFile; fileRef = C78001C31C0EEFEA0097FD8E /* NSString+ZhengZe.m */; };
 		C78001C51C0EEFEA0097FD8E /* NSString+ZhengZe.m in Sources */ = {isa = PBXBuildFile; fileRef = C78001C31C0EEFEA0097FD8E /* NSString+ZhengZe.m */; };
+		C78039861C5F44EF000AD0F9 /* JSPatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78039851C5F44EF000AD0F9 /* JSPatchManager.swift */; };
+		C78039871C5F44EF000AD0F9 /* JSPatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78039851C5F44EF000AD0F9 /* JSPatchManager.swift */; };
+		C78039881C5F44EF000AD0F9 /* JSPatchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78039851C5F44EF000AD0F9 /* JSPatchManager.swift */; };
 		C7811B961C0C905A00E5A637 /* ZoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7811B951C0C905A00E5A637 /* ZoomView.swift */; };
 		C7811B971C0C905A00E5A637 /* ZoomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7811B951C0C905A00E5A637 /* ZoomView.swift */; };
 		C78200211BEC800F002BBDB7 /* ExhibitorInfoCV.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78200201BEC800F002BBDB7 /* ExhibitorInfoCV.swift */; };
@@ -251,6 +257,7 @@
 		C773A89A1C48EA5D0000054D /* ExhibitorAdController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExhibitorAdController.h; sourceTree = "<group>"; };
 		C773A89B1C48EA5D0000054D /* ExhibitorAdController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExhibitorAdController.m; sourceTree = "<group>"; };
 		C77481081C34C33400144427 /* MyInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyInfo.swift; sourceTree = "<group>"; };
+		C7776B411C61C410002C03B7 /* demo.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = demo.js; sourceTree = "<group>"; };
 		C779C0F71BF42D35008D625F /* LogViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogViewController.h; sourceTree = "<group>"; };
 		C779C0F81BF42D35008D625F /* LogViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogViewController.m; sourceTree = "<group>"; };
 		C779C0F91BF42D35008D625F /* LogInCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogInCell.h; sourceTree = "<group>"; };
@@ -280,6 +287,7 @@
 		C77E8FA41C06DB48003832BA /* CommentScoreView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommentScoreView.m; sourceTree = "<group>"; };
 		C78001C21C0EEFEA0097FD8E /* NSString+ZhengZe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+ZhengZe.h"; sourceTree = "<group>"; };
 		C78001C31C0EEFEA0097FD8E /* NSString+ZhengZe.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+ZhengZe.m"; sourceTree = "<group>"; };
+		C78039851C5F44EF000AD0F9 /* JSPatchManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSPatchManager.swift; sourceTree = "<group>"; };
 		C7811B951C0C905A00E5A637 /* ZoomView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ZoomView.swift; sourceTree = "<group>"; };
 		C78200201BEC800F002BBDB7 /* ExhibitorInfoCV.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitorInfoCV.swift; sourceTree = "<group>"; };
 		C7848F421BFDD8F400339623 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
@@ -453,6 +461,7 @@
 		C77E1D9B1BE09EDA00B8F444 /* yunzhan */ = {
 			isa = PBXGroup;
 			children = (
+				C78039841C5F44BB000AD0F9 /* JSPatch */,
 				C7B0390D1C4650A600F5FBD5 /* firstTabBar */,
 				C77E1D9C1BE09EDA00B8F444 /* AppDelegate.swift */,
 				C78509951C1FBF2600D3C7D1 /* OrientationTabBarControll.swift */,
@@ -493,6 +502,15 @@
 			);
 			path = yunzhan;
 			sourceTree = "<group>";
+		};
+		C78039841C5F44BB000AD0F9 /* JSPatch */ = {
+			isa = PBXGroup;
+			children = (
+				C78039851C5F44EF000AD0F9 /* JSPatchManager.swift */,
+				C7776B411C61C410002C03B7 /* demo.js */,
+			);
+			path = JSPatch;
+			sourceTree = SOURCE_ROOT;
 		};
 		C7848F411BFDD8F400339623 /* weixin */ = {
 			isa = PBXGroup;
@@ -704,6 +722,7 @@
 				C79E40371C4CABD400CF21E1 /* Assets.xcassets in Resources */,
 				C7848F491BFDD8F400339623 /* read_me.txt in Resources */,
 				C77E1DA21BE09EDA00B8F444 /* Main.storyboard in Resources */,
+				C7776B421C61C410002C03B7 /* demo.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -718,6 +737,7 @@
 				C79E40381C4CABD500CF21E1 /* Assets.xcassets in Resources */,
 				C7A383F51C449B50008DF57F /* read_me.txt in Resources */,
 				C7A383F61C449B50008DF57F /* Main.storyboard in Resources */,
+				C7776B441C61C410002C03B7 /* demo.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -732,6 +752,7 @@
 				C79E40391C4CABE700CF21E1 /* Assets.xcassets in Resources */,
 				C7848F4A1BFDD8F400339623 /* read_me.txt in Resources */,
 				C7F0AE451BE210C70056C06B /* Main.storyboard in Resources */,
+				C7776B431C61C410002C03B7 /* demo.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -887,6 +908,7 @@
 				C78EA5561C1189A2007798E2 /* THLScrollLoadView.m in Sources */,
 				C773A89C1C48EA5D0000054D /* ExhibitorAdController.m in Sources */,
 				C70505151C3CDF3D007F8C72 /* EaseSDKHelper.m in Sources */,
+				C78039861C5F44EF000AD0F9 /* JSPatchManager.swift in Sources */,
 				C78001C41C0EEFEA0097FD8E /* NSString+ZhengZe.m in Sources */,
 				C77DE13E1C5B4BB500B21FE5 /* QRView.m in Sources */,
 				C76E08EF1C09E17200AAFF7B /* About.swift in Sources */,
@@ -952,6 +974,7 @@
 				C7A383E21C449B50008DF57F /* THLScrollLoadView.m in Sources */,
 				C773A89E1C48EA5D0000054D /* ExhibitorAdController.m in Sources */,
 				C7A383E31C449B50008DF57F /* EaseSDKHelper.m in Sources */,
+				C78039881C5F44EF000AD0F9 /* JSPatchManager.swift in Sources */,
 				C7A383E41C449B50008DF57F /* NSString+ZhengZe.m in Sources */,
 				C77DE1401C5B4BB500B21FE5 /* QRView.m in Sources */,
 				C7A383E51C449B50008DF57F /* About.swift in Sources */,
@@ -1017,6 +1040,7 @@
 				C78EA5571C1189A2007798E2 /* THLScrollLoadView.m in Sources */,
 				C773A89D1C48EA5D0000054D /* ExhibitorAdController.m in Sources */,
 				C70505161C3CDF3D007F8C72 /* EaseSDKHelper.m in Sources */,
+				C78039871C5F44EF000AD0F9 /* JSPatchManager.swift in Sources */,
 				C78001C51C0EEFEA0097FD8E /* NSString+ZhengZe.m in Sources */,
 				C77DE13F1C5B4BB500B21FE5 /* QRView.m in Sources */,
 				C76E08F01C09E17200AAFF7B /* About.swift in Sources */,

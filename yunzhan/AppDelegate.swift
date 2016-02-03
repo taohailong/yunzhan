@@ -30,6 +30,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate,IChatManager
         #endif
 
         
+        let js = JSPatchManager.share
+        js.setJSpatch()
+//        js.commitJsToServer()
+        
         
         self.easemob(application, didFinishLaunchingWithOptions: launchOptions, appKey: "zhangzhantong#zhangzhantong", certName: cerName)
         let u = UserData.shared
@@ -40,7 +44,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate,IChatManager
         {
 //           let action1 = UIMutableUserNotificationAction()
 //            action1.identifier = ""
-            
             let userSet = UIUserNotificationSettings(forTypes: [.Badge,.Alert,.Sound], categories: nil)
             application.registerUserNotificationSettings(userSet)
             application.registerForRemoteNotifications()

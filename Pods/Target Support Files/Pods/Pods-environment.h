@@ -55,6 +55,18 @@
 // Please contact the author.
 // Version: 2.2.1.2.
 
+// JSPatch
+#define COCOAPODS_POD_AVAILABLE_JSPatch
+#define COCOAPODS_VERSION_MAJOR_JSPatch 0
+#define COCOAPODS_VERSION_MINOR_JSPatch 1
+#define COCOAPODS_VERSION_PATCH_JSPatch 3
+
+// JSPatch/Core
+#define COCOAPODS_POD_AVAILABLE_JSPatch_Core
+#define COCOAPODS_VERSION_MAJOR_JSPatch_Core 0
+#define COCOAPODS_VERSION_MINOR_JSPatch_Core 1
+#define COCOAPODS_VERSION_PATCH_JSPatch_Core 3
+
 // SDWebImage
 #define COCOAPODS_POD_AVAILABLE_SDWebImage
 #define COCOAPODS_VERSION_MAJOR_SDWebImage 3

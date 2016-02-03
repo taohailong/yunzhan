@@ -25,6 +25,10 @@ class ModifyMyInfoVC:UIViewController {
         
         textField = UITextField()
         textField.text = originalStr
+        if InfoType == .qq
+        {
+          textField.keyboardType = .NumberPad
+        }
         textField.leftViewMode = .Always
         textField.leftView = UIView(frame: CGRectMake(0,0,20,10))
         textField.backgroundColor = UIColor.whiteColor()
@@ -51,23 +55,23 @@ class ModifyMyInfoVC:UIViewController {
        
         let content = textField.text!
         
-        if content.isEmpty == true
-        {
-            let load = THActivityView(string: "请输入")
-            load.show()
-            return
-        }
-        
         var warnStr = ""
         if content.characters.count > 6 && InfoType == .job
         {
             warnStr = "职称超过6个字符"
         }
         
+        if content.isEmpty && InfoType == .name
+        {
+            warnStr = "姓名不能为空"
+        }
+
+        
         if content.characters.count > 4 && InfoType == .name
         {
             warnStr = "姓名超过4个字符"
         }
+        
         if warnStr.isEmpty != true
         {
             let load = THActivityView(string: warnStr)
@@ -466,7 +470,7 @@ class UserInfoVC:UIViewController,UITableViewDataSource,UITableViewDelegate {
         self.checkObjectIsNil("名称", ob: user.name)
         self.checkObjectIsNil("职位", ob: user.title)
         self.checkObjectIsNil("公司", ob: user.company)
-        self.checkObjectIsNil("手机号", ob: user.phone)
+//        self.checkObjectIsNil("手机号", ob: user.phone)
         self.checkObjectIsNil("QQ", ob: user.qq)
     }
     
@@ -613,7 +617,7 @@ class MyQRVC: UIViewController {
        
         phoneL.text = user.phone
         
-        let qrStr = "\(Profile.qrKey),\(Profile.exhibitor),\(user.userID!)"
+        let qrStr = Profile.globalHttpHead("downapp", parameter: "eid=\(Profile.exhibitor)&uid=\(user.userID!)")
         let qrImage = qrStr.toQRImage(300)
         
         qrImageView.image = qrImage

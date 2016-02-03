@@ -303,7 +303,35 @@ extension String {
         return predicate.evaluateWithObject(self)
     }
     
-    
+    func figureUrlElement()-> [String:String]
+    {
+        var dic: [String:String] = [String:String]()
+        let separateArr = self.componentsSeparatedByString("?")
+        if separateArr.count != 2
+        {
+            return dic
+        }
+        
+        let elementArr = separateArr[1].componentsSeparatedByString("&")
+        if elementArr.count == 0
+        {
+            return dic
+        }
+        
+        for temp in elementArr
+        {
+           let keyValueArr = temp.componentsSeparatedByString("=")
+           if keyValueArr.count != 2
+           {
+              continue
+           }
+           let key = keyValueArr[0]
+           let value = keyValueArr[1]
+           dic[key] = value
+        }
+        
+        return dic
+    }
     
     
     subscript(start:Int,lenth:Int)->String?{

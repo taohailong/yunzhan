@@ -320,20 +320,21 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
 //    MARK: ScanDelegate
     func scanActionCompleteWithResult(string: String!) {
         
-        let separateArr = string.componentsSeparatedByString(",")
-        if separateArr.count == 0 || separateArr[0] != Profile.qrKey
-        {
-            return
-        }
+        let elementDic = string.figureUrlElement()
         
-        let exhibitor = separateArr[1]
-        
+        let exhibitor = elementDic["eid"]
         if exhibitor != Profile.exhibitor
         {
             return
         }
-        let userID = separateArr[2]
-        let userVC = UserInfoVC(userID: userID,needSendMessage: true)
+        let userID = elementDic["uid"]
+        
+        if userID == nil
+        {
+            return
+        }
+        
+        let userVC = UserInfoVC(userID: userID!,needSendMessage: true)
         userVC.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(userVC, animated: true)
     }

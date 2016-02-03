@@ -1125,7 +1125,7 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
 
         
         nameL.textColor = Profile.rgb(102, g: 102, b: 102)
-        nameL.font = Profile.font(14)
+        nameL.font = Profile.font(15)
         self.contentView.addSubview(nameL)
         
         nameL.userInteractionEnabled = true
@@ -1219,7 +1219,11 @@ class ExhibitorPerson: UITableViewCell,UIAlertViewDelegate {
            phoneBt.hidden = false
         }
         titleL.text = title
-        nameL.text =  name
+        if name != nil
+        {
+           nameL.text =  "\(name!)  "
+        }
+        
         addBt.selected = personAdd
 //       phoneBt.setTitle(phone, forState: UIControlState.Normal)
     }

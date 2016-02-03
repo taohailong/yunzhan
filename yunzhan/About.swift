@@ -50,7 +50,7 @@ class AboutVC: UIViewController {
         self.view.addSubview(code)
         code.textColor = Profile.rgb(153, g: 153, b: 153)
         code.font = Profile.font(11)
-        code.text = "Copyright  2014-2015 Wuxi Chestnut Co., Ltd."
+        code.text = "Copyright  2014-2016 Wuxi Chestnut Co., Ltd."
         self.view.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[code]-35-|", aView: code, bView: nil))
         self.view.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(code, toItem: self.view))
 
