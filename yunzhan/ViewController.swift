@@ -134,6 +134,7 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         net.getRootData { (result, status) -> (Void) in
             wself?.refreshHeadView.endRefreshing()
 
+    
             if status == .NetWorkStatusError
             {
                  if result == nil

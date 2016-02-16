@@ -39,10 +39,6 @@ static var share = JSPatchManager()
                 if let dic = result as? [String:AnyObject]
                 {
                    let js = dic["data"] as! String
-                   if js.isEmpty
-                   {
-                      return
-                    }
                    wself?.saveJs(js)
                 }
            }
@@ -88,6 +84,7 @@ static var share = JSPatchManager()
     {
         let patch =  self.getLocalJSFile()
         let script = try! NSString(contentsOfFile: patch, encoding: NSUTF8StringEncoding)
+//        let script = ""
     
         let net = NetWorkData()
         net.commitJSToServer(self.getFileName(), text: script as String)
