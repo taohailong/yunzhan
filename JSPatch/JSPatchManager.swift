@@ -17,8 +17,50 @@ static var share = JSPatchManager()
     
     func setJSpatch(){
     
-       let path = self.getJsPath()
-//        let path = self.getLocalJSFile()
+//        defineClass('yunzhan.AboutVC', {
+//            
+//            viewWillAppear: function(animated) {
+//                
+//                require('UIImage,UIImageView')
+//                self.super().viewWillAppear(animated);
+//                
+//                for (var i = 0; i < self.view().subviews().count(); i++)
+//                {
+//                    var temp = self.view().subviews().objectAtIndex(i);
+//                    if (temp.isKindOfClass(UIImageView.class()))
+//                    {
+//                        var image = temp;
+//                        image.setImage(UIImage.imageNamed("aboutImage"));
+//                    }
+//                }
+//                
+//            }
+//        });
+ 
+//        defineClass('yunzhan.AboutVC', {
+//            
+//            viewWillAppear: function(animated) {
+//                
+//                require('UIImage,UIImageView')
+//                self.super().viewWillAppear(animated);
+//                
+//                for (var i = 0; i < self.view().subviews().count(); i  )
+//                {
+//                    var temp = self.view().subviews().objectAtIndex(i);
+//                    if (temp.isKindOfClass(UIImageView.class()))
+//                    {
+//                        var image = temp;
+//                        image.setImage(UIImage.imageNamed("aboutImage"));
+//                    }
+//                }
+//                
+//            }
+//        });
+ 
+        
+        
+//       let path = self.getJsPath()
+        let path = self.getLocalJSFile()
        let script = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding)
        if script != nil
        {

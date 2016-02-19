@@ -8,6 +8,7 @@
 
 import Foundation
 class AboutVC: UIViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -16,8 +17,8 @@ class AboutVC: UIViewController {
         let aboutImage = UIImageView()
         aboutImage.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(aboutImage)
-//        aboutImage.image = UIImage(named: "aboutImage")
-        aboutImage.image = "123456".toQRImage(200)
+        aboutImage.image = UIImage(named: "aboutImage")
+//        aboutImage.image = "123456".toQRImage(200)
         self.view.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-180-[aboutImage]", aView: aboutImage, bView: nil))
         self.view.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(aboutImage, toItem: self.view))
         
