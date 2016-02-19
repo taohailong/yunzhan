@@ -54,6 +54,9 @@ class UserData:NSObject {
         
         set {
             
+            #if EXTERENTERPISE
+                self.parseExhibitorID(self.phone)
+            #endif
             let userDefault = NSUserDefaults.standardUserDefaults()
             userDefault.setObject(newValue, forKey: "phone")
             userDefault.synchronize()
@@ -160,6 +163,12 @@ class UserData:NSObject {
     
     func logInHuanxin()
     {
+        
+    #if EXTERENTERPISE
+//    self.parseExhibitorID(self.phone)
+        self.getExhibitorID()
+    #endif
+
         if self.messID == nil
         {
           return
@@ -176,14 +185,14 @@ class UserData:NSObject {
             if err == nil && loginInfo != nil
             {
 //               EaseMob.sharedInstance().chatManager.setIsAutoLoginEnable = true
-               EaseMob.sharedInstance().chatManager.loadDataFromDatabase()
-                NSNotificationCenter.defaultCenter().postNotificationName("loginStateChange", object: true)
+                EaseMob.sharedInstance().chatManager.loadDataFromDatabase()
+            NSNotificationCenter.defaultCenter().postNotificationName("loginStateChange", object: true)
 //                EaseMob.sharedInstance().chatManager.asyncFetch
             }
             else
             {
                 THActivityView(string: "消息中心登陆失败")
-                print("huanxin err \(err) loginInfo \(loginInfo)")
+//                print("huanxin err \(err) loginInfo \(loginInfo)")
             }
             
         }, onQueue: nil)
@@ -209,4 +218,66 @@ class UserData:NSObject {
         }, onQueue: nil)
     }
     
-   }
+    
+    
+    
+    
+    
+    
+    
+//  MARK: 分类
+    
+    func getExhibitorID()
+    {
+        let userDefault = NSUserDefaults.standardUserDefaults()
+        let exhibitorID = userDefault.objectForKey("exhibitorID") as? String
+        if exhibitorID != nil
+        {
+            Profile.exhibitor = exhibitorID!
+        }
+    }
+    
+    func parseExhibitorID(phone:String?){
+    
+        if phone == nil
+        {
+            return
+        }
+        
+        switch phone!
+        {
+           case "15810002520":
+        
+            Profile.exhibitor = "3"
+        
+           case "13718170818":
+            
+            Profile.exhibitor = "4"
+
+           case "xiaowei":
+            
+            Profile.exhibitor = "5"
+            
+           case "xiaoming":
+            
+            Profile.exhibitor = "6"
+
+            case "xiongfei":
+            
+            Profile.exhibitor = "7"
+
+            case "13439145981":
+            
+            Profile.exhibitor = "8"
+
+
+           default: break
+            
+        }
+    
+            let userDefault = NSUserDefaults.standardUserDefaults()
+            userDefault.setObject(Profile.exhibitor, forKey: "exhibitorID")
+    }
+    
+    
+}

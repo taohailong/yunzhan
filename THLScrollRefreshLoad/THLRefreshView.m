@@ -243,6 +243,7 @@
 
         [self setRefreshStatus:TRefreshViewStatusNormal];
         if (self.isManuallyRefreshing) {
+//            _scrollView.contentOffset = CGPointMake(0, 0);
             self.isManuallyRefreshing = NO;
         }
     }];

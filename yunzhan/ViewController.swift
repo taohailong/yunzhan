@@ -131,9 +131,8 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
     
         weak var wself = self
         net = NetWorkData()
-        net.getRootData { (result, status) -> (Void) in
+        net.getRootData { (result, status:NetStatus) -> (Void) in
             wself?.refreshHeadView.endRefreshing()
-
     
             if status == .NetWorkStatusError
             {

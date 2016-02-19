@@ -9,14 +9,14 @@
 import Foundation
 
 //typealias NetTestBlock = (s:String) ->Void
+enum NetStatus:Int{
+    case NetWorkStatusSucess = 0
+    case NetWorkStatusError = 1
+}
 
 typealias NetBlock = (result: Any?,  status: NetStatus) ->(Void)
 typealias NetDicBlock = (result:[String:AnyObject],status: NetStatus) ->(Void)
 typealias NetNoParse = (data:NSData?) -> (Void)
-enum NetStatus:Int{
-  case NetWorkStatusSucess = 0
-    case NetWorkStatusError = 1
-}
 
 
 class NetWorkData:NSObject {
@@ -1652,6 +1652,103 @@ class NetWorkData:NSObject {
     }
     
    
+ //    MARK: 展会联系人
+    
+    func exhibitor1(block:NetBlock){
+        
+        let url = Profile.globalHttpHead("api/app/exhibition/contact", parameter: nil)
+        
+        self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
+            
+            var html = ""
+            if let arr = result["data"] as? [[String:AnyObject]]
+            {
+                for temp in arr
+                {
+                    self.addHtmlTitle(&html, element: temp["title"])
+                    if let subDicArr = temp["value"] as? [[String:AnyObject]]
+                    {
+                        
+                        for erji in subDicArr
+                        {
+                            self.addHtmlSubTitle(&html, element: erji["title"])
+                            
+                            
+                            if let remarkArr = erji["remark"] as? [[String:AnyObject]]
+                            {
+                                
+                                for remarkDic in remarkArr
+                                {
+                                    self.addHtmlRemarkTitle(&html, element: remarkDic["value"])//备注
+                                    
+                                    if let personArr = remarkDic["list"] as? [[String:AnyObject]]
+                                    {
+                                        var personStr = ""
+                                        for (index,personDic) in personArr.enumerate()
+                                        {
+                                            //                                            var personStr = ""
+                                            if let name = personDic["name"] as? String
+                                            {
+                                                if name.isEmpty != true//防止没有名字时 增加了几个空格
+                                                {
+                                                    let n = 4 - name.characters.count
+                                                    var space = ""
+                                                    if n > 0
+                                                    {
+                                                        for _ in 1...n
+                                                        {
+                                                            space = space + "&nbsp&nbsp&nbsp&nbsp"
+                                                        }
+                                                    }
+                                                    personStr = personStr +  name + space +  "&nbsp&nbsp"
+                                                }
+                                                
+                                                personStr = personStr + (personDic["content"] as! String)
+                                                
+                                            }
+                                            
+                                            
+                                            if  index%2 != 0 && index != personArr.count - 1
+                                            {
+                                                //双数
+                                                //                                                print(personStr)
+                                                //                                                html = html + "</br>"
+                                                personStr = personStr +  "</br>"
+                                            }
+                                            else
+                                            {
+                                                //单数
+                                                personStr = personStr + "&nbsp&nbsp&nbsp&nbsp"
+                                            }
+                                            
+                                        }
+                                        self.addHtmlContent(&html, element: personStr, leftSpace: true)
+                                    }
+                                    
+                                }
+                                
+                                
+                                // 只有一个消息时不要横线
+                                if subDicArr.count != 1
+                                {
+                                    self.addSeparate(&html)
+                                }
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                }
+            }
+            
+            block(result:html , status: .NetWorkStatusSucess)
+        })
+    }
+    
+
+    
     
 //    MARK: 展会须知
     
@@ -1931,105 +2028,11 @@ class NetWorkData:NSObject {
     
     
     
-    func exhibitor1(block:NetBlock){
-        
-        let url = "http://\(Profile.domain)/api/app/exhibition/contact?eid=1&chn=ios"
-        self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
-            
-            var html = ""
-            if let arr = result["data"] as? [[String:AnyObject]]
-            {
-                for temp in arr
-                {
-                    self.addHtmlTitle(&html, element: temp["title"])
-                    if let subDicArr = temp["value"] as? [[String:AnyObject]]
-                    {
-                        
-                        for erji in subDicArr
-                        {
-                            self.addHtmlSubTitle(&html, element: erji["title"])
-                            
-                            
-                            if let remarkArr = erji["remark"] as? [[String:AnyObject]]
-                            {
-                                
-                                for remarkDic in remarkArr
-                                {
-                                    self.addHtmlRemarkTitle(&html, element: remarkDic["value"])//备注
-                                    
-                                    if let personArr = remarkDic["list"] as? [[String:AnyObject]]
-                                    {
-                                        var personStr = ""
-                                        for (index,personDic) in personArr.enumerate()
-                                        {
-//                                            var personStr = ""
-                                            if let name = personDic["name"] as? String
-                                            {
-                                                if name.isEmpty != true//防止没有名字时 增加了几个空格
-                                                {
-                                                    let n = 4 - name.characters.count
-                                                    var space = ""
-                                                    if n > 0
-                                                    {
-                                                     for _ in 1...n
-                                                     {
-                                                        space = space + "&nbsp&nbsp&nbsp&nbsp"
-                                                      }
-                                                    }
-                                                   personStr = personStr +  name + space +  "&nbsp&nbsp"
-                                                }
-                                                
-                                                personStr = personStr + (personDic["content"] as! String)
-                                                
-                                            }
-    
-                                    
-                                            if  index%2 != 0 && index != personArr.count - 1
-                                            {
-                                                //双数
-//                                                print(personStr)
-//                                                html = html + "</br>"
-                                                personStr = personStr +  "</br>"
-                                            }
-                                            else
-                                            {
-                                                //单数
-                                                personStr = personStr + "&nbsp&nbsp&nbsp&nbsp"
-                                            }
-
-                                        }
-                                         self.addHtmlContent(&html, element: personStr, leftSpace: true)
-                                    }
-                                    
-                                }
-                                
-                               
-                                // 只有一个消息时不要横线
-                                if subDicArr.count != 1
-                                {
-                                    self.addSeparate(&html)
-                                }
-                                
-                            }
-                            
-                        }
-                        
-                    }
-                    
-                }
-            }
-            
-            block(result:html , status: .NetWorkStatusSucess)
-        })
-    }
-
-    
-    
     
 //    native view data parse （）
     func exhibitorAdvertiseContact(block:NetBlock){
     
-        let url = "http://\(Profile.domain)/api/app/exhibition/contact?eid=1&chn=ios"
+         let url = Profile.globalHttpHead("api/app/exhibition/contact", parameter: nil)
         self.newMethodRequest(url,taskBlock: block, warnShow: true,completeBlock: { (result, status) -> (Void) in
             
             var titleArr = [String]()
@@ -2053,8 +2056,7 @@ class NetWorkData:NSObject {
                         var contentStr = ""
                         self.appFormateAdString(&contentStr, appendString:erji["title"])
                         
-                        
-                        
+                    
                         if let remarkArr = erji["remark"] as? [[String:AnyObject]]
                         {
                             
