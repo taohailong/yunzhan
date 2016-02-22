@@ -213,14 +213,19 @@
     WXWebpageObject *ext = [WXWebpageObject object];
     
     NSString* url = [NSString stringWithFormat:@"http://www.zhangzhantong.com/share?name=jsbicycle&token=%@&eid=1&info_wall_id=%@",self.token,self.wallID];
-    NSLog(url);
+
     ext.webpageUrl = url;
     
+    
+    NSDictionary *infoPlist = [[NSBundle mainBundle] infoDictionary];
     WXMediaMessage *message = [WXMediaMessage message];
-//    message.message = "message"
-    message.title = @"中国电动车展";
+
+    message.title = infoPlist[@"CFBundleName"];
     message.description = @"《第34界中国江苏国际自行车新能源电动车及零部件交易会》火热报名中~";
-    [message setThumbImage:[UIImage imageNamed:@"aboutImage"]];
+    
+    
+    NSString *icon = [[infoPlist valueForKeyPath:@"CFBundleIcons.CFBundlePrimaryIcon.CFBundleIconFiles"] lastObject];
+    [message setThumbImage:[UIImage imageNamed:icon]];
     message.mediaObject = ext;
     
     SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];

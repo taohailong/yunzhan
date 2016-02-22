@@ -14,21 +14,30 @@ class AboutVC: UIViewController {
         
         self.view.backgroundColor = UIColor.whiteColor()
         self.title = "关于"
+        
         let aboutImage = UIImageView()
+        aboutImage.layer.cornerRadius = 8
+        aboutImage.layer.masksToBounds = true
         aboutImage.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(aboutImage)
-        aboutImage.image = UIImage(named: "aboutImage")
+        
+        
+        let appImageDic = NSBundle.mainBundle().infoDictionary!["CFBundleIcons"] as! NSDictionary
+        let appImageArr = appImageDic["CFBundlePrimaryIcon"]!["CFBundleIconFiles"] as! [String]
+        let appImageName = appImageArr[0]
+        aboutImage.image = UIImage(named: appImageName)
         self.view.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-180-[aboutImage]", aView: aboutImage, bView: nil))
         self.view.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(aboutImage, toItem: self.view))
         
         
         
+        let appName = NSBundle.mainBundle().infoDictionary!["CFBundleName"] as! String
         let name = UILabel()
         name.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(name)
         name.textColor = Profile.rgb(223, g: 32, b: 82)
         name.font = Profile.font(15)
-        name.text = "中国电动车展"
+        name.text = appName
         self.view.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[aboutImage]-10-[name]", aView: aboutImage, bView: name))
         self.view.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(name, toItem: self.view))
         
