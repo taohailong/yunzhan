@@ -212,7 +212,7 @@
 {
     WXWebpageObject *ext = [WXWebpageObject object];
     
-    NSString* url = [NSString stringWithFormat:@"http://www.zhangzhantong.com/share?name=jsbicycle&token=%@&eid=1&info_wall_id=%@",self.token,self.wallID];
+    NSString* url = [NSString stringWithFormat:@"http://www.zhangzhantong.com/share?name=jsbicycle&token=%@&eid=%@&info_wall_id=%@",self.token,[Profile exhibitor],self.wallID];
 
     ext.webpageUrl = url;
     
@@ -229,7 +229,6 @@
     message.mediaObject = ext;
     
     SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
-//    req.text = @"http://www.zhangzhantong.com/jsbicycle";
     req.message = message;
     req.bText = NO;
     if (flag) {
