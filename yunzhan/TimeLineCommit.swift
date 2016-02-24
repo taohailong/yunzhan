@@ -70,7 +70,7 @@ class TimeLineCommitVC: UIViewController,UIActionSheetDelegate,UIImagePickerCont
         rightBt.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         rightBt.setTitle("发送", forState: .Normal)
         rightBt.titleLabel?.font = Profile.font(16)
-        rightBt.setTitleColor(Profile.rgb(223, g: 32, b: 82), forState: .Normal)
+        rightBt.setTitleColor(Profile.NavBarColorGenuine, forState: .Normal)
         rightBt.addTarget(self, action: "sendMessage", forControlEvents: .TouchUpInside)
         let rightBar = UIBarButtonItem(customView: rightBt)
         self.navigationItem.rightBarButtonItem = rightBar

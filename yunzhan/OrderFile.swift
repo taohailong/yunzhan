@@ -51,7 +51,7 @@ class BookVC: UIViewController,UITableViewDelegate,UITableViewDataSource ,UIText
         bookBt.layer.masksToBounds = true
         bookBt.titleLabel?.font = Profile.font(16)
         bookBt.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        bookBt.setBackgroundImage(Profile.rgb(223, g: 32, b: 82).convertToImage(), forState: .Normal)
+        bookBt.setBackgroundImage(Profile.NavBarColorGenuine.convertToImage(), forState: .Normal)
         bookBt.setBackgroundImage(Profile.rgb(219, g: 21, b: 58).convertToImage(), forState: .Highlighted)
         bookBt.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(bookBt)

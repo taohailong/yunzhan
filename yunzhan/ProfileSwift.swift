@@ -22,29 +22,47 @@ class NSLog {
 }
 class Profile:NSObject
 {
-    static let width = { return UIScreen.mainScreen().bounds.size.width }
-    static let height = { return UIScreen.mainScreen().bounds.size.height}
-//    static let NavBarColor = { return  UIColor(red: 223/255.0, green: 32/255.0, blue: 82/255.0, alpha: 1.0) }
     
-    static let NavBarColor = { return  UIColor(red: 219/255.0, green: 0/255.0, blue: 52/255.0, alpha: 1.0) }
-    
+//MARK:不同展会app配置参数
     #if EXTERENTERPISE
     static let domain = "123.56.102.224"
     static var exhibitor = "1"
     
     #elseif INTERENTERPISE
     static let domain = "123.56.102.224:8099"
-     static var exhibitor = "1"
+    static var exhibitor = "1"
     #else
     static let domain = "www.zhangzhantong.com"
-//    static let domain = "123.56.102.224:8099"
-     static var exhibitor = "1"
+    //    static let domain = "123.56.102.224:8099"
+    static var exhibitor = "1"
     #endif
+    static let huanxinKey = "zhangzhantong#zhangzhantong"
+    static let huanxinAPN = "normal_product"
+    static let wxKey = "wx9f2610aedf4da519"
+    static let wxDescribe = "《第34界中国江苏国际自行车新能源电动车及零部件交易会》火热报名中~"
+    
+    static let NavBarColor = { return  UIColor(red: 219/255.0, green: 0/255.0, blue: 52/255.0, alpha: 1.0) }
+
+    static let NavBarColorGenuine =  UIColor(red: 223/255.0, green: 32/255.0, blue: 82/255.0, alpha: 1.0)
+    static let GlobalButtonDisableColor = UIColor(red: 245/255.0, green: 92/255.0, blue: 125/255.0, alpha: 1.0)
+    static let GlobalButtonHightColor = UIColor(red: 207/255.0, green: 0/255.0, blue: 44/255.0, alpha: 1.0)
+    
+    
+//    static let NavBarColor = { return  UIColor(red: 1/255.0, green: 144/255.0, blue: 61/255.0, alpha: 1.0) }
+//    static let NavBarColorGenuine =  UIColor(red: 57/255.0, green: 172/255.0, blue: 107/255.0, alpha: 1.0)
+//    static let GlobalButtonHightColor = UIColor(red: 23/255.0, green: 137/255.0, blue: 72/255.0, alpha: 1.0)
+//    static let GlobalButtonDisableColor = UIColor(red: 161/255.0, green: 221/255.0, blue: 183/255.0, alpha: 1.0)
+    
+    static let NavTitleColor = {return UIColor.whiteColor() }
+    
+
+    static let width = { return UIScreen.mainScreen().bounds.size.width }
+    static let height = { return UIScreen.mainScreen().bounds.size.height}
     
     static let nickKey = "usernick"
     static let jobKey = "usertitle"
     static let qrKey = "zzt"
-    static let NavTitleColor = {return UIColor.whiteColor() }
+    
     
     class func globalHttpHead(path:String,parameter:String?)->String {
         
@@ -61,7 +79,6 @@ class Profile:NSObject
        return UIColor(red: r/255.0, green: g/255.0, blue: b/255.0, alpha: 1.0)
     }
     class func font(let l: CGFloat)->UIFont {
-    
          return UIFont.systemFontOfSize(l)
     }
 }

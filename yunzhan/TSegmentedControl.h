@@ -23,6 +23,7 @@ enum HMSelectionIndicatorMode {
 @property (nonatomic, strong) UIColor *textColor; // default is [UIColor blackColor]
 @property (nonatomic, strong) UIColor *backgroundColor; // default is [UIColor whiteColor]
 @property (nonatomic, strong) UIColor *selectionIndicatorColor; // default is 52, 181, 229
+@property (nonatomic, strong) UIColor *selectTitleColor;
 @property (nonatomic, assign) enum HMSelectionIndicatorMode selectionIndicatorMode; // Default is HMSelectionIndicatorResizesToStringWidth
 
 @property (nonatomic, assign) NSInteger selectedIndex;

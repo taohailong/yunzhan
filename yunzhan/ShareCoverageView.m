@@ -221,7 +221,7 @@
     WXMediaMessage *message = [WXMediaMessage message];
 
     message.title = infoPlist[@"CFBundleName"];
-    message.description = @"《第34界中国江苏国际自行车新能源电动车及零部件交易会》火热报名中~";
+    message.description = [Profile wxDescribe];
     
     
     NSString *icon = [[infoPlist valueForKeyPath:@"CFBundleIcons.CFBundlePrimaryIcon.CFBundleIconFiles"] lastObject];

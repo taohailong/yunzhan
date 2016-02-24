@@ -234,6 +234,7 @@ class ProductData {
 
 
 class PersonData {
+    var score:String?
     var qq:String?
     var company:String?
     var name:String?
@@ -243,6 +244,7 @@ class PersonData {
     var exhibitorID:String?
     var favorite:Bool = false
     var chatID:String?
+    var picUrl:String?
     init(name:String?,title:String?,phone:String?)
     {
         self.name = name
@@ -273,6 +275,13 @@ extension PersonData{
             self.chatID = chat
         }
  
+        self.picUrl = netData["pic_url"] as?String
+        
+        if let score  = netData["score"] as? Int
+        {
+           self.score = String(score)
+        }
+        
     }
 }
 

@@ -161,7 +161,7 @@ class NetWorkData:NSObject {
                     let rang = name.rangeOfString(search)
                     let att = NSMutableAttributedString(string: exhibitorData.name!, attributes: [NSForegroundColorAttributeName:UIColor.blackColor(),NSFontAttributeName: Profile.font(16)])
                     
-                    att.addAttributes([NSForegroundColorAttributeName:UIColor.redColor()], range: rang)
+                    att.addAttributes([NSForegroundColorAttributeName:Profile.NavBarColorGenuine], range: rang)
                     exhibitorData.searchAttribute = att
                     exhibitorArr?.append(exhibitorData)
                 }
@@ -1650,7 +1650,39 @@ class NetWorkData:NSObject {
         }
     
     }
+//    MARK: 积分
     
+    func scoreList(block:NetBlock)
+    {
+        let user = UserData.shared
+        
+        let url = Profile.globalHttpHead("api/app/personal/score", parameter: "token=\(user.token!)")
+        
+        self.newMethodRequest(url, taskBlock: block) { (result, status) -> (Void) in
+            
+            var backArr = [PersonData]()
+            
+            if let dataDic = result["data"] as? [String:AnyObject]
+            {
+                if let myDic = dataDic["myself"] as? [String:AnyObject]
+                {
+                    user.score = String(myDic["score"])
+                }
+                
+                if let listArr = dataDic["toplist"] as? [[String:AnyObject]]
+                {
+                    for dic in listArr
+                    {
+                        let tempUser = PersonData(netData: dic)
+                       backArr.append(tempUser)
+                    }
+                }
+            }
+            
+             block(result: backArr, status: .NetWorkStatusSucess)
+        }
+    
+    }
    
  //    MARK: 展会联系人
     

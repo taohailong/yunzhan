@@ -35,7 +35,7 @@ class AboutVC: UIViewController {
         let name = UILabel()
         name.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(name)
-        name.textColor = Profile.rgb(223, g: 32, b: 82)
+        name.textColor = Profile.NavBarColorGenuine
         name.font = Profile.font(15)
         name.text = appName
         self.view.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[aboutImage]-10-[name]", aView: aboutImage, bView: name))

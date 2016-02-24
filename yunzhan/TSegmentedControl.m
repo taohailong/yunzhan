@@ -17,7 +17,7 @@
 @end
 
 @implementation TSegmentedControl
-
+@synthesize selectTitleColor;
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
 
@@ -66,7 +66,17 @@
     [self.sectionTitles enumerateObjectsUsingBlock:^(id titleString, NSUInteger idx, BOOL *stop) {
        
         if (_selectedIndex == idx ) {
-            [[UIColor colorWithRed:223/255.0 green:32/255.0 blue:82/255.0 alpha:1.0] set];
+            
+            if (self.selectTitleColor == nil)
+            {
+              [self.selectionIndicatorColor set];
+            }
+            else
+            {
+              [self.selectTitleColor set];
+            }
+//            [[UIColor colorWithRed:223/255.0 green:32/255.0 blue:82/255.0 alpha:1.0] set];
+            
         }
         else
         {

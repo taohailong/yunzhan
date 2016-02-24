@@ -9,6 +9,7 @@
 import Foundation
 class UserData:NSObject {
 //    static let shared:UserData = UserData()
+    var score:String = ""
     var qq:String?
     var company:String?
     var name:String? = ""

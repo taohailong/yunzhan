@@ -337,8 +337,8 @@ class UserInfoVC:UIViewController,UITableViewDataSource,UITableViewDelegate {
        sendMessBt.frame = CGRectMake(15, 20, footView.frame.size.width - 30, 35)
        sendMessBt.layer.masksToBounds = true
        sendMessBt.layer.cornerRadius = 4
-       sendMessBt.setBackgroundImage(UIColor.rgb(223, g: 32, b: 82).convertToImage(), forState: .Normal)
-       sendMessBt.setBackgroundImage(UIColor.rgb(219, g: 21, b: 58).convertToImage(), forState: .Highlighted)
+       sendMessBt.setBackgroundImage(Profile.NavBarColorGenuine.convertToImage(), forState: .Normal)
+       sendMessBt.setBackgroundImage(Profile.NavBarColorGenuine.convertToImage(), forState: .Highlighted)
        sendMessBt.setTitle("发送消息", forState: .Normal)
        sendMessBt.titleLabel?.font = Profile.font(14)
        sendMessBt.addTarget(self, action: "sendMessage", forControlEvents: .TouchUpInside)
@@ -349,14 +349,14 @@ class UserInfoVC:UIViewController,UITableViewDataSource,UITableViewDelegate {
         let favouriteBt = UIButton(type: .Custom)
         favouriteBt.layer.masksToBounds = true
         favouriteBt.layer.cornerRadius = 4
-        favouriteBt.layer.borderColor = UIColor.rgb(223, g: 32, b: 82).CGColor
+        favouriteBt.layer.borderColor = Profile.NavBarColorGenuine.CGColor
         
         favouriteBt.layer.borderWidth = 1
         favouriteBt.frame = CGRectMake(15,CGRectGetMaxY(sendMessBt.frame) + 20, footView.frame.size.width - 30, 35)
         favouriteBt.setTitleColor(UIColor.whiteColor(), forState: .Highlighted)
-        favouriteBt.setTitleColor(UIColor.rgb(223, g: 32, b: 82), forState: .Normal)
+        favouriteBt.setTitleColor(Profile.NavBarColorGenuine, forState: .Normal)
         favouriteBt.setBackgroundImage(UIColor.rgb(243, g: 243, b: 243).convertToImage(), forState: .Normal)
-        favouriteBt.setBackgroundImage(UIColor.rgb(223, g: 32, b: 82).convertToImage(), forState: .Highlighted)
+        favouriteBt.setBackgroundImage(Profile.NavBarColorGenuine.convertToImage(), forState: .Highlighted)
         if self.user.favorite == true
         {
             favouriteBt.setTitle("取消收藏", forState: .Normal)

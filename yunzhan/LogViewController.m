@@ -78,9 +78,12 @@
     _verifyBt.layer.masksToBounds = YES;
     _verifyBt.layer.cornerRadius = 3;
     _verifyBt.layer.borderWidth = 1;
-    _verifyBt.layer.borderColor = [UIColor redColor].CGColor;
-    [_verifyBt setBackgroundImage:[UIImage imageNamed:@"button_back_red"] forState:UIControlStateHighlighted];
-    [_verifyBt setTitleColor:[UIColor colorWithRed:250/255.0 green:60/255.0 blue:96/255.0 alpha:1.0 ] forState:UIControlStateNormal];
+    
+    UIColor* c = [Profile NavBarColorGenuine];
+    _verifyBt.layer.borderColor = c.CGColor;
+    
+    [_verifyBt setBackgroundImage:[c convertToImage] forState:UIControlStateHighlighted];
+    [_verifyBt setTitleColor:c forState:UIControlStateNormal];
     [_verifyBt setTitleColor:[UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0 ] forState:UIControlStateDisabled];
     [_verifyBt setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
     
@@ -96,11 +99,9 @@
     _logBt.titleLabel.font = [UIFont systemFontOfSize:15];
     [_logBt setTitle:@"立即登录" forState:UIControlStateNormal];
     [_logBt setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    [_logBt setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted];
-    
-//    [_logBt setBackgroundImage:[UIImage imageNamed:@"login_hight"] forState:UIControlStateHighlighted];
-     [_logBt setBackgroundImage:[UIImage imageNamed:@"login_tap"] forState:UIControlStateHighlighted];
-    [_logBt setBackgroundImage:[UIImage imageNamed:@"login_default"] forState:UIControlStateNormal];
+
+    [_logBt setBackgroundImage:[[Profile GlobalButtonHightColor] convertToImage] forState:UIControlStateHighlighted];
+    [_logBt setBackgroundImage:[[Profile GlobalButtonDisableColor] convertToImage] forState:UIControlStateNormal];
     _logBt.layer.masksToBounds = YES;
     _logBt.layer.cornerRadius = 3;
     _logBt.layer.borderWidth = 1;
@@ -119,7 +120,7 @@
     
     NSMutableAttributedString* voiceStr = [[NSMutableAttributedString alloc]initWithString:@"收不到短信？使用语音验证码" attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:13]}];
     [voiceStr addAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0]} range:NSMakeRange(0, 8)];
-    [voiceStr addAttributes:@{NSForegroundColorAttributeName:[UIColor colorWithRed:250/255.0 green:60/255.0 blue:96/255.0 alpha:1.0]} range:NSMakeRange(8, 5)];
+    [voiceStr addAttributes:@{NSForegroundColorAttributeName:[Profile NavBarColorGenuine]} range:NSMakeRange(8, 5)];
     
     [_voiceVerifyBt setAttributedTitle:voiceStr forState:UIControlStateNormal];
     _voiceVerifyBt.translatesAutoresizingMaskIntoConstraints = NO;
@@ -478,9 +479,9 @@
 
 - (void)keyboardShown:(NSNotification *)aNotification
 {
-    [_logBt setBackgroundImage:[UIImage imageNamed:@"login_tap"] forState:UIControlStateHighlighted];
-    [_logBt setBackgroundImage:[UIImage imageNamed:@"login_hight"] forState:UIControlStateNormal];
-
+    [_logBt setBackgroundImage:[[Profile GlobalButtonHightColor] convertToImage] forState:UIControlStateHighlighted];
+    [_logBt setBackgroundImage:[[Profile NavBarColorGenuine] convertToImage] forState:UIControlStateNormal];
+    
     NSDictionary *info = [aNotification userInfo];
     NSValue *aValue = [info objectForKey:UIKeyboardFrameEndUserInfoKey];
     
@@ -490,7 +491,7 @@
 
 - (void)keyboardHidden:(NSNotification *)aNotification
 {
-     [_logBt setBackgroundImage:[UIImage imageNamed:@"login_default"] forState:UIControlStateNormal];
+    [_logBt setBackgroundImage:[[Profile GlobalButtonDisableColor] convertToImage] forState:UIControlStateNormal];
     [self accessViewAnimate:0.0];
 }
 

@@ -103,6 +103,9 @@
 		C784B3531C47A4BB0043D968 /* ExhibitorContactVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C784B3501C47A4BB0043D968 /* ExhibitorContactVC.swift */; };
 		C78509961C1FBF2600D3C7D1 /* OrientationTabBarControll.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78509951C1FBF2600D3C7D1 /* OrientationTabBarControll.swift */; };
 		C78509971C1FBF2600D3C7D1 /* OrientationTabBarControll.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78509951C1FBF2600D3C7D1 /* OrientationTabBarControll.swift */; };
+		C78CB3731C7D9CF400EBE76A /* ScoreVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78CB3721C7D9CF400EBE76A /* ScoreVC.swift */; };
+		C78CB3741C7D9CF400EBE76A /* ScoreVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78CB3721C7D9CF400EBE76A /* ScoreVC.swift */; };
+		C78CB3751C7D9CF400EBE76A /* ScoreVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78CB3721C7D9CF400EBE76A /* ScoreVC.swift */; };
 		C78EA5521C1189A2007798E2 /* THLRefeshView_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C78EA54D1C1189A2007798E2 /* THLRefeshView_arrow@2x.png */; };
 		C78EA5531C1189A2007798E2 /* THLRefeshView_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C78EA54D1C1189A2007798E2 /* THLRefeshView_arrow@2x.png */; };
 		C78EA5541C1189A2007798E2 /* THLRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78EA54F1C1189A2007798E2 /* THLRefreshView.m */; };
@@ -303,6 +306,7 @@
 		C784B34B1C4778790043D968 /* ExhibitorAdvertisement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitorAdvertisement.swift; sourceTree = "<group>"; };
 		C784B3501C47A4BB0043D968 /* ExhibitorContactVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitorContactVC.swift; sourceTree = "<group>"; };
 		C78509951C1FBF2600D3C7D1 /* OrientationTabBarControll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrientationTabBarControll.swift; sourceTree = "<group>"; };
+		C78CB3721C7D9CF400EBE76A /* ScoreVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreVC.swift; sourceTree = "<group>"; };
 		C78EA54D1C1189A2007798E2 /* THLRefeshView_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "THLRefeshView_arrow@2x.png"; sourceTree = "<group>"; };
 		C78EA54E1C1189A2007798E2 /* THLRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THLRefreshView.h; sourceTree = "<group>"; };
 		C78EA54F1C1189A2007798E2 /* THLRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THLRefreshView.m; sourceTree = "<group>"; };
@@ -477,6 +481,7 @@
 				C7DC59901C33CD4800EFED5A /* OrderFile.swift */,
 				C79880501C3221D700557880 /* ExhibitorMap.swift */,
 				C79E54611BE9E47400E4A514 /* DataModel.swift */,
+				C78CB3721C7D9CF400EBE76A /* ScoreVC.swift */,
 				C7C0EABB1BF09CA2004711BF /* ContactsController.swift */,
 				C779C0FF1BF43917008D625F /* Singleton.swift */,
 				C779C1051BF48E9C008D625F /* Suggestion.swift */,
@@ -881,6 +886,7 @@
 				C7C3C35C1C195A1E0083F3A1 /* RepeatScrollView.m in Sources */,
 				C77DE1381C5B4BB500B21FE5 /* QRScanViewController.m in Sources */,
 				C779C0FD1BF42D35008D625F /* LogInCell.m in Sources */,
+				C78CB3731C7D9CF400EBE76A /* ScoreVC.swift in Sources */,
 				C784B34C1C4778790043D968 /* ExhibitorAdvertisement.swift in Sources */,
 				C705050E1C3CB9F3007F8C72 /* ApplyListView.swift in Sources */,
 				C79285781BEB322700287A24 /* SettingController.swift in Sources */,
@@ -947,6 +953,7 @@
 				C7A383CA1C449B50008DF57F /* RepeatScrollView.m in Sources */,
 				C77DE13A1C5B4BB500B21FE5 /* QRScanViewController.m in Sources */,
 				C7A383CB1C449B50008DF57F /* Scheduler.swift in Sources */,
+				C78CB3751C7D9CF400EBE76A /* ScoreVC.swift in Sources */,
 				C784B34E1C4778790043D968 /* ExhibitorAdvertisement.swift in Sources */,
 				C7A383CC1C449B50008DF57F /* ApplyListView.swift in Sources */,
 				C7A383CD1C449B50008DF57F /* ProductList.swift in Sources */,
@@ -1013,6 +1020,7 @@
 				C7C3C35D1C195A1E0083F3A1 /* RepeatScrollView.m in Sources */,
 				C77DE1391C5B4BB500B21FE5 /* QRScanViewController.m in Sources */,
 				C79E545D1BE9B79100E4A514 /* Scheduler.swift in Sources */,
+				C78CB3741C7D9CF400EBE76A /* ScoreVC.swift in Sources */,
 				C784B34D1C4778790043D968 /* ExhibitorAdvertisement.swift in Sources */,
 				C705050F1C3CB9F3007F8C72 /* ApplyListView.swift in Sources */,
 				C7A9629A1BF32354003B883A /* ProductList.swift in Sources */,

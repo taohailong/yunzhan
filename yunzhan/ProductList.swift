@@ -147,12 +147,12 @@ class ProductListCell: UITableViewCell {
     {
         let bt = UIButton(type: .Custom)
         bt.translatesAutoresizingMaskIntoConstraints = false
-        bt.setImage(UIImage(named: "bookBt"), forState: .Normal)
-//        bt.titleLabel?.font = Profile.font(12)
-//        bt.setBackgroundImage(Profile.rgb(223, g: 32, b: 82).convertToImage(), forState: .Normal)
-//        bt.setBackgroundImage(Profile.rgb(219, g: 21, b: 58).convertToImage(), forState: .Highlighted)
-//        bt.setTitle("预约购买", forState: .Normal)
-//        bt.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+//        bt.setImage(UIImage(named: "bookBt"), forState: .Normal)
+        bt.titleLabel?.font = Profile.font(12)
+        bt.setBackgroundImage(Profile.NavBarColorGenuine.convertToImage(), forState: .Normal)
+        bt.setBackgroundImage(Profile.rgb(219, g: 21, b: 58).convertToImage(), forState: .Highlighted)
+        bt.setTitle("预约购买", forState: .Normal)
+        bt.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         self.contentView.addSubview(bt)
         bt.addTarget(self, action: "ProductListBookAction", forControlEvents: .TouchUpInside)
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[bt]-15-|", options: [], metrics: nil, views: ["bt":bt]))

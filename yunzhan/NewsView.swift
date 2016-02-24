@@ -38,11 +38,12 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
         segmentV = TSegmentedControl(sectionTitles: ["展圈","资讯"])
         segmentV.addTarget(self, action: "segmentChange", forControlEvents: .ValueChanged)
         segmentV.frame = CGRectMake(0, 64, Profile.width(), 40)
-        segmentV.selectionIndicatorColor = Profile.rgb(223, g: 32, b: 82)
+        segmentV.selectionIndicatorColor = Profile.NavBarColorGenuine
         segmentV.textColor = Profile.rgb(102, g: 102, b: 102)
         segmentV.selectionIndicatorHeight = 1
         segmentV.font = Profile.font(15.0)
-        segmentV.selectionIndicatorColor = Profile.rgb(223, g: 32, b: 82)
+        segmentV.selectionIndicatorColor = Profile.NavBarColorGenuine
+        segmentV.selectTitleColor = Profile.NavBarColorGenuine
         segmentV.selectionIndicatorMode = HMSelectionIndicatorFillsTop
 //        segmentV.backgroundColor = UIColor.blueColor()
         self.view.addSubview(segmentV)

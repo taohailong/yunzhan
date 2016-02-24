@@ -20,22 +20,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate,IChatManager
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0
         
-        var cerName = ""
-        #if EXTERENTERPISE
-            cerName = "external_product"
-        #elseif INTERENTERPISE
-             cerName = "internal_product"
-        #else
-            cerName = "normal_product"
-        #endif
-
-        
         let js = JSPatchManager.share
         js.setJSpatch()
 //        js.commitJsToServer()
         
         
-        self.easemob(application, didFinishLaunchingWithOptions: launchOptions, appKey: "zhangzhantong#zhangzhantong", certName: cerName)
+        self.easemob(application, didFinishLaunchingWithOptions: launchOptions, appKey: Profile.huanxinKey, certName: Profile.huanxinAPN)
         let u = UserData.shared
 //        u.messID = "tfy"
 //        u.password_huanxin = "123456"
@@ -53,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate,IChatManager
           application.registerForRemoteNotificationTypes([.Badge,.Alert,.Sound])
         }
         
-        WXApi.registerApp("wx9f2610aedf4da519")
+        WXApi.registerApp(Profile.wxKey)
         return true
     }
 
