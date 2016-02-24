@@ -147,7 +147,6 @@ class ProductListCell: UITableViewCell {
     {
         let bt = UIButton(type: .Custom)
         bt.translatesAutoresizingMaskIntoConstraints = false
-//        bt.setImage(UIImage(named: "bookBt"), forState: .Normal)
         bt.titleLabel?.font = Profile.font(12)
         bt.setBackgroundImage(Profile.NavBarColorGenuine.convertToImage(), forState: .Normal)
         bt.setBackgroundImage(Profile.rgb(219, g: 21, b: 58).convertToImage(), forState: .Highlighted)
@@ -155,10 +154,9 @@ class ProductListCell: UITableViewCell {
         bt.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         self.contentView.addSubview(bt)
         bt.addTarget(self, action: "ProductListBookAction", forControlEvents: .TouchUpInside)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[bt]-15-|", options: [], metrics: nil, views: ["bt":bt]))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[bt]-10-|", options: [], metrics: nil, views: ["bt":bt]))
-//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[bt(65)]-15-|", options: [], metrics: nil, views: ["bt":bt]))
-//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[bt(20)]-10-|", options: [], metrics: nil, views: ["bt":bt]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[bt(65)]-15-|", options: [], metrics: nil, views: ["bt":bt]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[bt(20)]-10-|", options: [], metrics: nil, views: ["bt":bt]))
+
     }
     
     func ProductListBookAction()
