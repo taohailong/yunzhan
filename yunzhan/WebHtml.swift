@@ -87,7 +87,7 @@ class ProductInfoVC: UIViewController,UIWebViewDelegate {
         bt.translatesAutoresizingMaskIntoConstraints = false
         bt.titleLabel?.font = Profile.font(16)
         bt.setBackgroundImage(Profile.NavBarColorGenuine.convertToImage(), forState: .Normal)
-        bt.setBackgroundImage(Profile.rgb(219, g: 21, b: 58).convertToImage(), forState: .Highlighted)
+        bt.setBackgroundImage(Profile.GlobalButtonHightColor.convertToImage(), forState: .Highlighted)
         bt.setTitle("预约购买", forState: .Normal)
         bt.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         self.view.addSubview(bt)
