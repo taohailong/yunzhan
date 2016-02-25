@@ -48,6 +48,14 @@ class Profile:NSObject
     static let GlobalButtonHightColor = UIColor(red: 207/255.0, green: 0/255.0, blue: 44/255.0, alpha: 1.0)
     
     
+    static let ScoreTitleColor = UIColor(red: 250/255.0, green: 84/255.0, blue: 123/255.0, alpha: 1.0)
+    
+    static let ScoreListOneColor = UIColor(red: 255/255.0, green: 137/255.0, blue: 165/255.0, alpha: 1.0)
+    
+    static let ScoreListTwoColor = UIColor(red: 251/255.0, green: 183/255.0, blue: 199/255.0, alpha: 1.0)
+    
+    static let ScoreListThreeColor = UIColor(red: 253/255.0, green: 220/255.0, blue: 228/255.0, alpha: 1.0)
+    
 //    static let NavBarColor = { return  UIColor(red: 1/255.0, green: 144/255.0, blue: 61/255.0, alpha: 1.0) }
 //    static let NavBarColorGenuine =  UIColor(red: 57/255.0, green: 172/255.0, blue: 107/255.0, alpha: 1.0)
 //    static let GlobalButtonHightColor = UIColor(red: 23/255.0, green: 137/255.0, blue: 72/255.0, alpha: 1.0)

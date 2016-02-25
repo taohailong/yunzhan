@@ -50,7 +50,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 7
+        return 8
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -62,16 +62,21 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         {
           return 3
         }
+            
         else if section == 2
+        {
+          return 1
+        }
+        else if section == 3
         {
           return 2
         }
-        else if section == 3
+        else if section == 4
         {
             return 1
         }
 
-        else if section == 4
+        else if section == 5
         {
           return 2
         }
@@ -128,29 +133,36 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
                 title = "我的订单"
     
             case let s where s.section == 2 && s.row == 0:
+                imageName = "settingScore"
+                title = "我的积分"
+                
+
+            case let s where s.section == 3 && s.row == 0:
                 imageName = "settingMyConnect"
                 title = "我的联系人"
                 
-            case let s where s.section == 2 && s.row == 1:
+            case let s where s.section == 3 && s.row == 1:
                 imageName = "setting_chat"
                 title = "我的消息"
+//                去掉消息红点
                 cell.messageSpot.hidden = !isNewMess
                 
-            case let s where s.section == 3 && s.row == 0:
+                
+            case let s where s.section == 4 && s.row == 0:
                 
                 imageName = "settingRQ"
                 title = "扫一扫"
                 
-            case let s where s.section == 4 && s.row == 0:
+            case let s where s.section == 5 && s.row == 0:
                 
                 imageName = "settingMyRegist"
                 title = "预约报名"
     
-            case let s where s.section == 4 && s.row == 1:
+            case let s where s.section == 5 && s.row == 1:
                 imageName = "settingMyHotel"
                 title = "相关推荐"
                 
-             case let s where s.section == 5:
+             case let s where s.section == 6:
                 
                 imageName = "settingSuggestion"
                 title = "反馈"
@@ -191,6 +203,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
+        var controller:UIViewController!
         
         let user = UserData.shared
         if indexPath.section == 0
@@ -201,10 +214,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
                 return
             }
             
-            let updateInfoVC = MyInfoVC()
-            updateInfoVC.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController(updateInfoVC, animated: true)
-            return
+            controller = MyInfoVC()
         }
         else if indexPath.section == 1
         {
@@ -216,27 +226,29 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
             
             if indexPath.row == 0
             {
-                let exhibitorList = MyExhibitorList()
-                exhibitorList.hidesBottomBarWhenPushed = true
-                self.navigationController?.pushViewController(exhibitorList, animated: true)
-                
+                controller = MyExhibitorList()
             }
             else if indexPath.row == 1
             {
-                let schedulerList = MySchedulerListVC()
-                schedulerList.hidesBottomBarWhenPushed = true
-                self.navigationController?.pushViewController(schedulerList, animated: true)
+                controller = MySchedulerListVC()
             }
             else
             {
-               let orderList = MyOrderListVC()
-                orderList.hidesBottomBarWhenPushed = true
-                self.navigationController?.pushViewController(orderList, animated: true)
-            
+               controller = MyOrderListVC()
             }
             
         }
+            
         else if indexPath.section == 2
+        {
+            if user.token == nil
+            {
+                self.showLoginVC()
+                return
+            }
+            controller = ScoreVC()
+        }
+        else if indexPath.section == 3
         {
             if user.token == nil
             {
@@ -247,26 +259,20 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
             
             if indexPath.row == 0
             {
-                let contactList = ContactsListVC()
-                contactList.hidesBottomBarWhenPushed = true
-                self.navigationController?.pushViewController(contactList, animated: true)
+                controller = ContactsListVC()
             }
             else
             {
-                let messList = ApplyListViewController()
-                messList.hidesBottomBarWhenPushed = true
-                self.navigationController?.pushViewController(messList, animated: true)
+                controller = ApplyListViewController()
             }
-        }
-       else if indexPath.section == 3
+       }
+        else if indexPath.section == 4
         {
             let scanVC = QRScanViewController()
             scanVC.delegate = self
-            scanVC.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController(scanVC, animated: true)
-
+           controller = scanVC
         }
-        else if indexPath.section == 4
+        else if indexPath.section == 5
         {
             if user.token == nil
             {
@@ -277,19 +283,15 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
             
             if indexPath.row == 1
             {
-                let companyVC = MyCompanyVC()
-                companyVC.hidesBottomBarWhenPushed = true
-                self.navigationController?.pushViewController(companyVC, animated: true)
+                controller = MyCompanyVC()
             }
             else
             {
-                let registVC = MyRegistVC()
-                registVC.hidesBottomBarWhenPushed = true
-                self.navigationController?.pushViewController(registVC, animated: true)
+                controller = MyRegistVC()
             }
         }
             
-        else if indexPath.section == 5
+        else if indexPath.section == 6
         {
             if user.token == nil
             {
@@ -297,9 +299,8 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
                 return
             }
 
-            let suggest = SuggestionVC()
-            suggest.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController(suggest, animated: true)
+            controller = SuggestionVC()
+            
         }
         else
         {
@@ -309,9 +310,13 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
                 return
             }
 
-            let aboutVC = LogOutVC()
-            aboutVC.hidesBottomBarWhenPushed = true
-            self.navigationController?.pushViewController(aboutVC, animated: true)
+            controller = LogOutVC()
+        }
+        
+        if controller != nil
+        {
+            controller.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(controller, animated: true)
         }
     }
     

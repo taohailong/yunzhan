@@ -1666,7 +1666,7 @@ class NetWorkData:NSObject {
             {
                 if let myDic = dataDic["myself"] as? [String:AnyObject]
                 {
-                    user.score = String(myDic["score"])
+                    user.score = String(myDic["score"]!)
                 }
                 
                 if let listArr = dataDic["toplist"] as? [[String:AnyObject]]

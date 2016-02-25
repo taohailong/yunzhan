@@ -258,7 +258,7 @@
     _countDown = 60;
     [_verifyBt setTitle:[NSString stringWithFormat:@"%ds后(重发)",_countDown] forState:UIControlStateDisabled];
     _verifyBt.enabled = NO;
-    _verifyBt.layer.borderColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0 ].CGColor;
+    _verifyBt.layer.borderColor = [Profile NavBarColorGenuine].CGColor;
     
     _timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timeRunLoop) userInfo:nil repeats:YES];
 
@@ -271,7 +271,7 @@
 
     
     if (_countDown==0) {
-         _verifyBt.layer.borderColor = [UIColor colorWithRed:250/255.0 green:60/255.0 blue:96/255.0 alpha:1.0 ].CGColor;
+        _verifyBt.layer.borderColor = [UIColor colorWithRed:153/255.0 green:153/255.0 blue:153/255.0 alpha:1.0 ].CGColor;
         _verifyBt.enabled = YES;
         [_timer invalidate];
     }
