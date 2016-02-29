@@ -213,6 +213,38 @@ class NetWorkData:NSObject {
     
     
     
+    
+//    MARK:模块控制
+    
+    func getNetModelProfile(block:NetBlock)
+    {
+    
+        let url = Profile.globalHttpHead("api/app/exhibition/funcs", parameter: nil)
+        
+        self.newMethodRequest(url, taskBlock: block,warnShow: false) { (result, status) -> (Void) in
+            
+            let modelDic = NSMutableDictionary()
+            
+            if let dataArr = result["data"] as? [[String:AnyObject]]
+            {
+                for dic in dataArr
+                {
+                    let key = dic["func_desc"] as! String
+                    
+                    if let value = dic["func_show"] as? Int
+                    {
+                        let flag = value == 1  ? true : false
+                        modelDic.setValue( NSNumber(bool: flag), forKey: key)
+                    }
+                }
+            }
+            
+            block(result: modelDic, status: .NetWorkStatusSucess)
+        }
+    
+    }
+    
+    
 //    MARK: 首页API
     
     

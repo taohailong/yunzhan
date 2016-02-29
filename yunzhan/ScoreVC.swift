@@ -351,15 +351,17 @@ class ScoreVCCell:UITableViewCell {
         hatImageV = UIImageView()
         hatImageV.image = UIImage(named: "scoreHat")
         hatImageV.translatesAutoresizingMaskIntoConstraints = false
+    
         
         
-//        scoreLayer = CAShapeLayer()
         scoreV = UIView()
         scoreV.translatesAutoresizingMaskIntoConstraints = false
         
         
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.selectionStyle = .None
+        
+        
         
         self.contentView.addSubview(numberL)
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[numberL]", aView: numberL, bView: nil))

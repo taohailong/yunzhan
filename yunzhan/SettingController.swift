@@ -11,9 +11,10 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
     
     @IBOutlet weak var table: UITableView!
     private var isNewMess = false
-    
-    func newMessReloadTabel(new:Bool){
-       isNewMess = new
+    var tableArr = [[(name:String,image:String)]]()
+    func newMessReloadTabel(new:Bool)
+    {
+        isNewMess = new
         if table != nil
         {
             table.reloadData()
@@ -40,6 +41,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
        
         //       返回按钮去掉文字
         self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .Done, target: nil, action: "")
+        self.figureTableArr()
         
         self.title = "我的"
         table.registerClass(SettingHeadCell.self , forCellReuseIdentifier: "SettingHeadCell")
@@ -49,45 +51,76 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         self.registerHunxinNotic()
     }
     
+    
+    func figureTableArr(){
+    
+        var firstSection = [(name:String,image:String)]()
+        firstSection.append((name:"我的展商",image:"settingMyExhibitor"))
+        firstSection.append((name:"我的活动",image:"settingActivty"))
+        firstSection.append((name:"我的订单",image:"settingMyOrder"))
+        
+        tableArr.append(firstSection)
+        
+        
+        if ModelProfile.needScroeModel()
+        {
+            var secondSection = [(name:String,image:String)]()
+            secondSection.append(("我的积分","settingScore"))
+            tableArr.append(secondSection)
+        }
+       
+        
+        var thirdSection = [(name:String,image:String)]()
+        thirdSection.append(("我的联系人","settingMyConnect"))
+        thirdSection.append(("我的消息","setting_chat"))
+        tableArr.append(thirdSection)
+        
+        
+        var fourthSection = [(name:String,image:String)]()
+        fourthSection.append(("扫一扫","settingRQ"))
+        tableArr.append(fourthSection)
+        
+
+        var fifthSection = [(name:String,image:String)]()
+        
+        if ModelProfile.needRegistModel()
+        {
+            fifthSection.append(("预约报名","settingMyRegist"))
+        }
+        
+        fifthSection.append(("相关推荐","settingMyHotel"))
+        tableArr.append(fifthSection)
+        
+        
+        var sixthSection = [(name:String,image:String)]()
+        sixthSection.append(("反馈","settingSuggestion"))
+        tableArr.append(sixthSection)
+        
+        
+        var seventhSection = [(name:String,image:String)]()
+        seventhSection.append(("设置","settingUp"))
+        tableArr.append(seventhSection)
+    }
+    
+    
+    
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return 8
+        return 1 + tableArr.count
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         if section == 0
         {
           return 1
         }
-        else if section == 1
-        {
-          return 3
-        }
-            
-        else if section == 2
-        {
-          return 1
-        }
-        else if section == 3
-        {
-          return 2
-        }
-        else if section == 4
-        {
-            return 1
-        }
-
-        else if section == 5
-        {
-          return 2
-        }
-        else
-        {
-            return 1
-        }
+        
+        return tableArr[section - 1].count
     }
     
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
         if indexPath.section == 0
         {
           let cell = tableView.dequeueReusableCellWithIdentifier("SettingHeadCell") as! SettingHeadCell
@@ -109,71 +142,22 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
         }
         else
         {
-           let cell = tableView.dequeueReusableCellWithIdentifier("SettingCommonCell") as! SettingCommonCell
+            let cell = tableView.dequeueReusableCellWithIdentifier("SettingCommonCell") as! SettingCommonCell
             cell.textLabel?.font = Profile.font(15)
             cell.messageSpot.hidden = true
             cell.textLabel?.textColor = Profile.rgb(102, g: 102, b: 102)
             cell.accessoryType = .DisclosureIndicator
-            var imageName:String?, title:String
-            switch indexPath {
-             
-            case let s where s.section == 1 && s.row == 0:
-                imageName = "settingMyExhibitor"
-                title = "我的展商"
-                
-               
-           case let s where s.section == 1 && s.row == 1:
-                
-               imageName = "settingActivty"
-               title = "我的活动"
-                
-            case let s where s.section == 1 && s.row == 2:
-                
-                imageName = "settingMyOrder"
-                title = "我的订单"
-    
-            case let s where s.section == 2 && s.row == 0:
-                imageName = "settingScore"
-                title = "我的积分"
-                
-
-            case let s where s.section == 3 && s.row == 0:
-                imageName = "settingMyConnect"
-                title = "我的联系人"
-                
-            case let s where s.section == 3 && s.row == 1:
-                imageName = "setting_chat"
-                title = "我的消息"
-//                去掉消息红点
+            
+            let composeData:(name:String,image:String) = tableArr[indexPath.section - 1][indexPath.row]
+            
+            if composeData.name == "我的消息"
+            {
+                //                去掉消息红点
                 cell.messageSpot.hidden = !isNewMess
-                
-                
-            case let s where s.section == 4 && s.row == 0:
-                
-                imageName = "settingRQ"
-                title = "扫一扫"
-                
-            case let s where s.section == 5 && s.row == 0:
-                
-                imageName = "settingMyRegist"
-                title = "预约报名"
-    
-            case let s where s.section == 5 && s.row == 1:
-                imageName = "settingMyHotel"
-                title = "相关推荐"
-                
-             case let s where s.section == 6:
-                
-                imageName = "settingSuggestion"
-                title = "反馈"
-    
-            default:
-                
-                imageName = "settingUp"
-                title = "设置"
-             
             }
-            cell.fillData(imageName, title: title)
+            
+             cell.fillData(composeData.image, title: composeData.name)
+            
             return cell
         }
         
@@ -200,117 +184,93 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
     }
     
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        
-        var controller:UIViewController!
+    
+    func checkLoginStatusWithPushLoginVC()->Bool
+    {
         
         let user = UserData.shared
+        if user.token == nil
+        {
+            self.showLoginVC()
+            return false
+        }
+        
+        return true
+    }
+
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        var controller:UIViewController!
+        
         if indexPath.section == 0
         {
-            if user.token == nil
+            if self.checkLoginStatusWithPushLoginVC() == false
             {
-                self.showLoginVC()
                 return
             }
             
             controller = MyInfoVC()
+            controller.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(controller, animated: true)
         }
-        else if indexPath.section == 1
+    
+        
+        let composeData:(name:String,image:String) = tableArr[indexPath.section - 1][indexPath.row]
+        if composeData.name != "扫一扫"
         {
-            if user.token == nil
+            if self.checkLoginStatusWithPushLoginVC() == false
             {
-                self.showLoginVC()
                 return
             }
-            
-            if indexPath.row == 0
-            {
-                controller = MyExhibitorList()
-            }
-            else if indexPath.row == 1
-            {
-                controller = MySchedulerListVC()
-            }
-            else
-            {
-               controller = MyOrderListVC()
-            }
-            
         }
-            
-        else if indexPath.section == 2
+
+        if composeData.name == "我的展商"
         {
-            if user.token == nil
-            {
-                self.showLoginVC()
-                return
-            }
+            controller = MyExhibitorList()
+        }
+        else if composeData.name == "我的活动"
+        {
+            controller = MySchedulerListVC()
+        }
+        else if composeData.name == "我的订单"
+        {
+            controller = MyOrderListVC()
+        }
+        else if composeData.name == "我的积分"
+        {
             controller = ScoreVC()
         }
-        else if indexPath.section == 3
+        else if composeData.name == "我的联系人"
         {
-            if user.token == nil
-            {
-                self.showLoginVC()
-                return
-            }
-
-            
-            if indexPath.row == 0
-            {
-                controller = ContactsListVC()
-            }
-            else
-            {
-                controller = ApplyListViewController()
-            }
-       }
-        else if indexPath.section == 4
+            controller = ContactsListVC()
+        }
+        else if composeData.name == "扫一扫"
         {
             let scanVC = QRScanViewController()
             scanVC.delegate = self
-           controller = scanVC
+            controller = scanVC
         }
-        else if indexPath.section == 5
+        else if composeData.name == "预约报名"
         {
-            if user.token == nil
-            {
-                self.showLoginVC()
-                return
-            }
-
-            
-            if indexPath.row == 1
-            {
-                controller = MyCompanyVC()
-            }
-            else
-            {
-                controller = MyRegistVC()
-            }
+            controller = MyRegistVC()
         }
-            
-        else if indexPath.section == 6
+        else if composeData.name == "相关推荐"
         {
-            if user.token == nil
-            {
-                self.showLoginVC()
-                return
-            }
-
+            controller = MyCompanyVC()
+        }
+        else if composeData.name == "反馈"
+        {
             controller = SuggestionVC()
-            
         }
-        else
+        else if composeData.name == "设置"
         {
-            if user.token == nil
-            {
-                self.showLoginVC()
-                return
-            }
-
             controller = LogOutVC()
+        }
+        else if composeData.name == "我的消息"
+        {
+            controller = ApplyListViewController()
         }
         
         if controller != nil

@@ -25,6 +25,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate,IChatManager
 //        js.commitJsToServer()
         
         
+//        MARK:模块控制
+        ModelProfile.setModelProfile()
+        
+        
+        
         self.easemob(application, didFinishLaunchingWithOptions: launchOptions, appKey: Profile.huanxinKey, certName: Profile.huanxinAPN)
         let u = UserData.shared
 //        u.messID = "tfy"

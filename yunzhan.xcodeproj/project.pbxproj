@@ -103,6 +103,9 @@
 		C784B3531C47A4BB0043D968 /* ExhibitorContactVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C784B3501C47A4BB0043D968 /* ExhibitorContactVC.swift */; };
 		C78509961C1FBF2600D3C7D1 /* OrientationTabBarControll.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78509951C1FBF2600D3C7D1 /* OrientationTabBarControll.swift */; };
 		C78509971C1FBF2600D3C7D1 /* OrientationTabBarControll.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78509951C1FBF2600D3C7D1 /* OrientationTabBarControll.swift */; };
+		C78903851C8424A00068C842 /* ModelProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78903841C8424A00068C842 /* ModelProfile.swift */; };
+		C78903861C8424A00068C842 /* ModelProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78903841C8424A00068C842 /* ModelProfile.swift */; };
+		C78903871C8424A00068C842 /* ModelProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78903841C8424A00068C842 /* ModelProfile.swift */; };
 		C78CB3731C7D9CF400EBE76A /* ScoreVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78CB3721C7D9CF400EBE76A /* ScoreVC.swift */; };
 		C78CB3741C7D9CF400EBE76A /* ScoreVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78CB3721C7D9CF400EBE76A /* ScoreVC.swift */; };
 		C78CB3751C7D9CF400EBE76A /* ScoreVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = C78CB3721C7D9CF400EBE76A /* ScoreVC.swift */; };
@@ -306,6 +309,7 @@
 		C784B34B1C4778790043D968 /* ExhibitorAdvertisement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitorAdvertisement.swift; sourceTree = "<group>"; };
 		C784B3501C47A4BB0043D968 /* ExhibitorContactVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExhibitorContactVC.swift; sourceTree = "<group>"; };
 		C78509951C1FBF2600D3C7D1 /* OrientationTabBarControll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrientationTabBarControll.swift; sourceTree = "<group>"; };
+		C78903841C8424A00068C842 /* ModelProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelProfile.swift; sourceTree = "<group>"; };
 		C78CB3721C7D9CF400EBE76A /* ScoreVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreVC.swift; sourceTree = "<group>"; };
 		C78EA54D1C1189A2007798E2 /* THLRefeshView_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "THLRefeshView_arrow@2x.png"; sourceTree = "<group>"; };
 		C78EA54E1C1189A2007798E2 /* THLRefreshView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THLRefreshView.h; sourceTree = "<group>"; };
@@ -600,6 +604,7 @@
 				C77E8FA31C06DB48003832BA /* CommentScoreView.h */,
 				C77E8FA41C06DB48003832BA /* CommentScoreView.m */,
 				C77E1DB21BE0AEE600B8F444 /* ProfileSwift.swift */,
+				C78903841C8424A00068C842 /* ModelProfile.swift */,
 			);
 			name = configure;
 			sourceTree = "<group>";
@@ -893,6 +898,7 @@
 				C77E1D9D1BE09EDA00B8F444 /* AppDelegate.swift in Sources */,
 				C79E54621BE9E47400E4A514 /* DataModel.swift in Sources */,
 				C76A3AD51C43958A00D70A6A /* MessUserName.swift in Sources */,
+				C78903851C8424A00068C842 /* ModelProfile.swift in Sources */,
 				C79546E11BFEBCE30080CD46 /* TimeLineVC.swift in Sources */,
 				C763D3F01C049945005E3921 /* ShareCoverageView.m in Sources */,
 				C779C0FB1BF42D35008D625F /* LogViewController.m in Sources */,
@@ -960,6 +966,7 @@
 				C7A383CE1C449B50008DF57F /* ExhibitorInfoCV.swift in Sources */,
 				C7A383CF1C449B50008DF57F /* LogInCell.m in Sources */,
 				C7A383D01C449B50008DF57F /* MessUserName.swift in Sources */,
+				C78903871C8424A00068C842 /* ModelProfile.swift in Sources */,
 				C7A383D11C449B50008DF57F /* TimeLineVC.swift in Sources */,
 				C7A383D21C449B50008DF57F /* ShareCoverageView.m in Sources */,
 				C7A383D31C449B50008DF57F /* LogViewController.m in Sources */,
@@ -1027,6 +1034,7 @@
 				C78200221BEC800F002BBDB7 /* ExhibitorInfoCV.swift in Sources */,
 				C779C0FE1BF42D35008D625F /* LogInCell.m in Sources */,
 				C76A3AD61C43958A00D70A6A /* MessUserName.swift in Sources */,
+				C78903861C8424A00068C842 /* ModelProfile.swift in Sources */,
 				C79546E21BFEBCE30080CD46 /* TimeLineVC.swift in Sources */,
 				C763D3F11C049945005E3921 /* ShareCoverageView.m in Sources */,
 				C779C0FC1BF42D35008D625F /* LogViewController.m in Sources */,
