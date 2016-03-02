@@ -104,15 +104,6 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
         refreshHeadV.setBeginRefreshBlock { () -> Void in
            wself?.fetchExhibitorData()
         }
-        
-//      let height = Profile.height() - 158
-//        
-//        self.addHeadViewWithTableEdge(UIEdgeInsetsMake(0, 0, 49, 0), withFrame: CGRectMake(0.0, 0 - height,Profile.width(),height)) { () -> Void in
-//            wself?.fetchExhibitorData()
-//        }
-//        
-//        self.headViewBeginLoading()
-
     }
     
     

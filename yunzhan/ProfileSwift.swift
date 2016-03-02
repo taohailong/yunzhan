@@ -33,7 +33,6 @@ class Profile:NSObject
     static var exhibitor = "1"
     #else
     static let domain = "www.zhangzhantong.com"
-    //    static let domain = "123.56.102.224:8099"
     static var exhibitor = "1"
     #endif
     static let huanxinKey = "zhangzhantong#zhangzhantong"
@@ -500,3 +499,41 @@ extension UIColor {
     }
 
 }
+
+
+extension UIImage{
+    
+    func t_RoundedCorner(radius radius: CGFloat, _ sizetoFit: CGSize,roundCorners:UIRectCorner) -> UIImage {
+        
+        let rect = CGRect(origin: CGPoint(x: 0, y: 0), size: sizetoFit)
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, UIScreen.mainScreen().scale)
+        
+        CGContextAddPath(UIGraphicsGetCurrentContext(),
+            UIBezierPath(roundedRect: rect, byRoundingCorners: roundCorners,
+                cornerRadii: CGSize(width: radius, height: radius)).CGPath)
+        CGContextClip(UIGraphicsGetCurrentContext())
+        
+        self.drawInRect(rect)
+        CGContextDrawPath(UIGraphicsGetCurrentContext(), .FillStroke)
+        let output = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        return output
+    }
+}
+
+
+
+extension UIImageView {
+    func t_addCorner(radius radius: CGFloat) {
+        
+        if self.image == nil
+        {
+            return
+        }
+        self.image = self.image?.t_RoundedCorner(radius: radius, self.bounds.size,roundCorners: UIRectCorner.AllCorners)
+    }
+}
+
+
+
+

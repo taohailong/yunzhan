@@ -214,6 +214,7 @@ class SettingViewController: UIViewController,UITableViewDataSource,UITableViewD
             controller = MyInfoVC()
             controller.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(controller, animated: true)
+            return
         }
     
         

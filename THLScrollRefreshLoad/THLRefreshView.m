@@ -241,9 +241,10 @@
         
     } completion:^(BOOL finished) {
 
+//         NSLog(@"contentOffset %@",NSStringFromCGPoint(_scrollView.contentOffset));
         [self setRefreshStatus:TRefreshViewStatusNormal];
         if (self.isManuallyRefreshing) {
-            
+           
             _scrollView.contentOffset = CGPointMake(0, 0);
             self.isManuallyRefreshing = NO;
         }

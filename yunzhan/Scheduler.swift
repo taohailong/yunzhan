@@ -62,13 +62,6 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
     
     func creatSchedulerTable(){
     
-//        let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
-//        searchBar.translatesAutoresizingMaskIntoConstraints = false
-//        self.view.addSubview(searchBar)
-//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(searchBar))
-//        self.view.addConstraint(NSLayoutConstraint(item: searchBar, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1.0, constant: 0))
-//        
-        
         
         table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
         table.delegate = self
@@ -83,18 +76,12 @@ class SchedulerController: UIViewController,UITableViewDelegate,UITableViewDataS
         self.view.addSubview(table)
         
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
-//        self.view.addConstraint(NSLayoutConstraint(item: table, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1.0, constant: 0))
-//        self.view.addConstraint(NSLayoutConstraint(item: table, attribute: .Bottom, relatedBy: .Equal, toItem: self.bottomLayoutGuide, attribute: .Top, multiplier: 1.0, constant: 0))
+        self.view.addConstraint(NSLayoutConstraint(item: table, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1.0, constant: 0))
+        self.view.addConstraint(NSLayoutConstraint(item: table, attribute: .Bottom, relatedBy: .Equal, toItem: self.bottomLayoutGuide, attribute: .Top, multiplier: 1.0, constant: 0))
 //        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(self.tableView))
-        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
-        
-        
-//        searchCV = UISearchDisplayController(searchBar: searchBar, contentsController: self)
-//        searchCV.searchResultsDelegate = self
-//        searchCV.searchResultsDataSource = self
-//        searchCV.delegate = self
-//        searchCV.searchResultsTableView.registerClass(ExhibitorCell.self, forCellReuseIdentifier: "ExhibitorCell")
-    
+//        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
+//        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[table]-0-|", options: [], metrics: nil, views: ["table":table]))
+//        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-64-[tableView]-49-|", options: [], metrics: nil, views: ["tableView":table]))
     }
     
     

@@ -11,11 +11,18 @@ import UIKit
 class ScoreVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
     var dataSource = [PersonData]()
     var net:NetWorkData!
+    var refreshHeadV:THLRefreshView!
     var table:UITableView = UITableView(frame: CGRectZero, style: .Grouped)
+    
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        self.view.backgroundColor = UIColor.whiteColor()
         self.title = "我的积分"
+        self.automaticallyAdjustsScrollViewInsets = false
+        
         table.translatesAutoresizingMaskIntoConstraints = false
+        table.allowsSelection = false
         table.dataSource = self
         table.delegate = self
         table.registerClass(UITableViewCell.self, forCellReuseIdentifier: "UITableViewCell")
@@ -23,22 +30,39 @@ class ScoreVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
         table.registerClass(ScoreVCCell.self, forCellReuseIdentifier: "ScoreVCCell")
         table.separatorColor = UIColor.rgb(243, g: 243, b: 243)
         self.view.addSubview(table)
+        
         self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
-        self.view.addConstraints(NSLayoutConstraint.layoutVerticalFull(table))
+        self.view.addConstraint(NSLayoutConstraint(item: table, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1.0, constant: 0))
+        self.view.addConstraint(NSLayoutConstraint(item: table, attribute: .Bottom, relatedBy: .Equal, toItem: self.bottomLayoutGuide, attribute: .Top, multiplier: 1.0, constant: 0))
+
         
         self.fetchScoreList()
+        self.setupRefresh()
         // Do any additional setup after loading the view.
     }
 
     
+    func setupRefresh(){
+        
+        weak var wself = self
+        refreshHeadV = THLRefreshView(frame: CGRectMake(0,0,Profile.width(),65))
+        refreshHeadV.isManuallyRefreshing = true
+        refreshHeadV.addToScrollView(table)
+        refreshHeadV.setBeginRefreshBlock { () -> Void in
+            wself?.fetchScoreList()
+        }
+    }
+
+    
+    
     func fetchScoreList(){
     
-      let loadV = THActivityView(activityViewWithSuperView: self.view)
+//      let loadV = THActivityView(activityViewWithSuperView: self.view)
       weak var wself = self
       net = NetWorkData()
       net.scoreList { (result, status) -> (Void) in
-        loadV.removeFromSuperview()
-        
+//        loadV.removeFromSuperview()
+         wself?.refreshHeadV.endRefreshing()
         if let arr = result as? [PersonData]
         {
           wself?.dataSource = arr
@@ -162,14 +186,10 @@ class ScoreVC: UIViewController,UITableViewDelegate,UITableViewDataSource {
         }
         
         let number = "\(String(indexPath.row))"
-        let info = "\(data.name!)  \(data.phone!)"
-       
-        cell.fillScoreInfo(number, url: nil, infoStr: info, score: data.score, scoreScale: scale)
+        cell.fillScoreInfo(number, url: nil, infoStr: data.name, score: data.score,phone:data.phone , scoreScale: scale)
         return cell
         
     }
-    
-    
     
     
     override func didReceiveMemoryWarning() {
@@ -236,9 +256,18 @@ class ScoreHeadCell:UITableViewCell {
         self.contentView.addConstraint(NSLayoutConstraint(item: userImage, attribute: NSLayoutAttribute.Width, relatedBy: NSLayoutRelation.Equal, toItem: self.contentView, attribute: NSLayoutAttribute.Height, multiplier: 1.0, constant: 0))
         
         
+        
+        
+        self.contentView.addSubview(scoreTitleL)
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[scoreTitleL]-15-|", aView: scoreTitleL, bView: nil))
+        self.contentView.addConstraint(NSLayoutConstraint(item: scoreTitleL, attribute: .Top, relatedBy: .Equal, toItem: userImage, attribute: .Top, multiplier: 1.0, constant: 0))
+
+        
+        
         self.contentView.addSubview(titleL)
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[userImage]-15-[titleL]", options: [], metrics: nil, views: ["titleL":titleL,"userImage":userImage]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[userImage]-15-[titleL]-(>=10)-[scoreTitleL]", options: [], metrics: nil, views: ["titleL":titleL,"userImage":userImage,"scoreTitleL":scoreTitleL]))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-15-[titleL]", options: [], metrics: nil, views: ["titleL":titleL]))
+        
         
         
         self.contentView.addSubview(phoneL)
@@ -247,9 +276,6 @@ class ScoreHeadCell:UITableViewCell {
         
         
         
-        self.contentView.addSubview(scoreTitleL)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[scoreTitleL]-15-|", aView: scoreTitleL, bView: nil))
-        self.contentView.addConstraint(NSLayoutConstraint(item: scoreTitleL, attribute: .Top, relatedBy: .Equal, toItem: userImage, attribute: .Top, multiplier: 1.0, constant: 0))
         
         
         
@@ -321,6 +347,7 @@ class ScoreVCCell:UITableViewCell {
     let numberL:UILabel
     let userImageV:UIImageView
     let infoL:UILabel
+    let phoneL:UILabel
     let scoreL:UILabel
     let hatImageV:UIImageView
 //    let scoreLayer:CAShapeLayer
@@ -341,6 +368,12 @@ class ScoreVCCell:UITableViewCell {
         infoL.textColor = Profile.rgb(51, g: 51, b: 51)
         infoL.font = Profile.font(11)
         infoL.translatesAutoresizingMaskIntoConstraints = false
+        
+        phoneL = UILabel()
+        phoneL.textColor = infoL.textColor
+        phoneL.font = infoL.font
+        phoneL.translatesAutoresizingMaskIntoConstraints = false
+        
         
         scoreL = UILabel()
         scoreL.textColor = Profile.rgb(51, g: 51, b: 51)
@@ -370,7 +403,7 @@ class ScoreVCCell:UITableViewCell {
         
         
         let blackView = UIView()
-        blackView.layer.masksToBounds = true
+//        blackView.layer.masksToBounds = true
         blackView.layer.cornerRadius = 10
         blackView.translatesAutoresizingMaskIntoConstraints = false
         blackView.backgroundColor = UIColor.rgb(243, g: 243, b: 243)
@@ -382,7 +415,6 @@ class ScoreVCCell:UITableViewCell {
         
     
         
-        scoreV.layer.masksToBounds = true
         scoreV.layer.cornerRadius = 10
 
         self.contentView.addSubview(scoreV)
@@ -414,13 +446,20 @@ class ScoreVCCell:UITableViewCell {
         
         
         self.contentView.addSubview(infoL)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:[userImageV]-15-[infoL]", aView: userImageV, bView: infoL))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[userImageV]-15-[infoL(80)]", options: [], metrics: nil, views: ["userImageV":userImageV,"infoL":infoL]))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-7-[infoL]", aView: infoL, bView: nil))
+        
+        
+        
+        self.contentView.addSubview(phoneL)
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[infoL]-5-[phoneL]", options: [], metrics: nil, views: ["phoneL":phoneL,"infoL":infoL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-7-[phoneL]", aView: phoneL, bView: nil))
         
     }
 
-    func fillScoreInfo(number:String,url:String?,infoStr:String?,score:String?,scoreScale:CGFloat)
+    func fillScoreInfo(number:String,url:String?,infoStr:String?,score:String?,phone:String?,scoreScale:CGFloat)
     {
+        phoneL.text = phone
         numberL.text = number
         infoL.text = infoStr
         scoreL.text = score
