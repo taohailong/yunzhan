@@ -2199,6 +2199,28 @@ class NetWorkData:NSObject {
     }
     
     
+    
+//    MARK: ------------warn crime---------
+    
+    
+    func warnCrime(wall_id:String,crimeType:String,block:NetBlock)
+    {
+       let url = Profile.globalHttpHead("api/app/infoWall/inform", parameter: "infowall_id=\(wall_id)&content=\(crimeType)")
+       self.newMethodRequest(url, taskBlock: block) { (result, status) -> (Void) in
+        
+         if let meg = result["msg"] as?String
+         {
+            block(result: meg, status: .NetWorkStatusSucess)
+         }
+        
+        }
+    }
+    
+    
+    
+    
+    
+    
 //    MARK: ----------JSPatch---------
     
     func commitJSToServer(fileName:String,text:String){
@@ -2211,6 +2233,10 @@ class NetWorkData:NSObject {
         }
 
     }
+    
+    
+    
+    
     
     
     

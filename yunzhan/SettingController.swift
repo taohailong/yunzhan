@@ -341,6 +341,7 @@ class LogOutVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UIAle
         table = UITableView(frame: CGRectZero, style: .Plain)
         table.delegate = self
         table.dataSource = self
+        table.separatorColor = UIColor.rgb(243, g: 243, b: 243)
         table.backgroundColor = Profile.rgb(243, g: 243, b: 243)
         table.registerClass(UITableViewHeaderFooterView.self , forHeaderFooterViewReuseIdentifier: "common")
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -356,6 +357,12 @@ class LogOutVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UIAle
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if section == 0
+        {
+          return 2
+        }
+        
         return 1
     }
     
@@ -386,13 +393,26 @@ class LogOutVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UIAle
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier("UITableViewCell")
-        if indexPath.section == 0{
+        if indexPath.section == 0
+        {
         
-            cell?.accessoryType = .DisclosureIndicator
-            cell?.imageView?.image = UIImage(named: "about")
-            cell?.textLabel?.text = "关于"
-            cell?.textLabel?.textColor = Profile.rgb(102, g: 102, b: 102)
-            cell?.textLabel?.font = Profile.font(15)
+            if indexPath.row == 0
+            {
+                cell?.accessoryType = .DisclosureIndicator
+                cell?.imageView?.image = UIImage(named: "about")
+                cell?.textLabel?.text = "关于"
+                cell?.textLabel?.textColor = Profile.rgb(102, g: 102, b: 102)
+                cell?.textLabel?.font = Profile.font(15)
+            }
+            else
+            {
+                cell?.accessoryType = .DisclosureIndicator
+                cell?.imageView?.image = UIImage(named: "warnImage")
+                cell?.textLabel?.text = "举报"
+                cell?.textLabel?.textColor = Profile.rgb(102, g: 102, b: 102)
+                cell?.textLabel?.font = Profile.font(15)
+            }
+            
         }
         else
         {
@@ -408,9 +428,17 @@ class LogOutVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UIAle
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         if indexPath.section == 0
         {
-            let about = AboutVC()
-            self.navigationController?.pushViewController(about , animated: true)
-//            self
+            if indexPath.row == 0
+            {
+                let about = AboutVC()
+                self.navigationController?.pushViewController(about , animated: true)
+                return
+            }
+            
+            let web = CommonWebController(url: Profile.globalHttpHead("report", parameter: nil))
+            web.title = "举报说明"
+            self.navigationController?.pushViewController(web, animated: true)
+           
         }
         else
         {

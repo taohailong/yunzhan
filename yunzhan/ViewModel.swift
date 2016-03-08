@@ -80,6 +80,33 @@ class MoreTableFootView: UIView {
 }
 
 
+extension UITableViewCell
+{
+   
+    func specialAccessoryType(type:UITableViewCellAccessoryType){
+       
+        self.accessoryType = type
+        if type == .Checkmark
+        {
+            let imageV = UIImageView(frame: CGRectMake(0, 0, 16, 12))
+            imageV.image = UIImage(named: "table_accessory")
+            self.accessoryView = imageV
+        }
+        else
+        {
+          self.accessoryView = nil
+        }
+    
+    }
+
+}
+
+
+
+
+
+
+
 class THTextView: UITextView {
     private let placeHoderL:UILabel
     var placeHolder:String?

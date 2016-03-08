@@ -74,5 +74,28 @@ class AboutVC: UIViewController {
         self.view.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[company]-5-[code]", aView: company, bView: code))
         self.view.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(company, toItem: self.view))
         
+        
+        
+        let protocolBt = UIButton(type: .Custom)
+        protocolBt.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(protocolBt)
+        protocolBt.titleLabel?.font = Profile.font(11)
+        protocolBt.setTitleColor(UIColor.rgb(79, g: 95, b: 142), forState: .Normal)
+        protocolBt.setTitle("\(appName)最终用户许可协议", forState: .Normal)
+        protocolBt.addTarget(self, action: "protocolAction", forControlEvents: .TouchUpInside)
+        
+        self.view.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[protocolBt]-15-[company]", aView: protocolBt, bView: company))
+        self.view.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(protocolBt, toItem: self.view))
+
     }
+    
+    
+    func protocolAction(){
+       
+         let web = CommonWebController(url: Profile.globalHttpHead("lisence", parameter: nil))
+         web.title = "用户许可协议"
+        self.navigationController?.pushViewController(web, animated: true)
+    
+    }
+    
 }

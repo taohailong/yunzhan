@@ -115,6 +115,12 @@
 		C78EA5551C1189A2007798E2 /* THLRefreshView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78EA54F1C1189A2007798E2 /* THLRefreshView.m */; };
 		C78EA5561C1189A2007798E2 /* THLScrollLoadView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78EA5511C1189A2007798E2 /* THLScrollLoadView.m */; };
 		C78EA5571C1189A2007798E2 /* THLScrollLoadView.m in Sources */ = {isa = PBXBuildFile; fileRef = C78EA5511C1189A2007798E2 /* THLScrollLoadView.m */; };
+		C7907FC81C8EB719002BE103 /* PopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7907FC71C8EB719002BE103 /* PopView.swift */; };
+		C7907FC91C8EB719002BE103 /* PopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7907FC71C8EB719002BE103 /* PopView.swift */; };
+		C7907FCA1C8EB719002BE103 /* PopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7907FC71C8EB719002BE103 /* PopView.swift */; };
+		C7907FCC1C8EC942002BE103 /* Crime.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7907FCB1C8EC942002BE103 /* Crime.swift */; };
+		C7907FCD1C8EC942002BE103 /* Crime.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7907FCB1C8EC942002BE103 /* Crime.swift */; };
+		C7907FCE1C8EC942002BE103 /* Crime.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7907FCB1C8EC942002BE103 /* Crime.swift */; };
 		C79285711BEAF65B00287A24 /* NewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79285701BEAF65B00287A24 /* NewsView.swift */; };
 		C79285721BEAF65B00287A24 /* NewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C79285701BEAF65B00287A24 /* NewsView.swift */; };
 		C79285751BEB06A400287A24 /* THActivityView.m in Sources */ = {isa = PBXBuildFile; fileRef = C79285741BEB06A400287A24 /* THActivityView.m */; };
@@ -316,6 +322,8 @@
 		C78EA54F1C1189A2007798E2 /* THLRefreshView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THLRefreshView.m; sourceTree = "<group>"; };
 		C78EA5501C1189A2007798E2 /* THLScrollLoadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THLScrollLoadView.h; sourceTree = "<group>"; };
 		C78EA5511C1189A2007798E2 /* THLScrollLoadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THLScrollLoadView.m; sourceTree = "<group>"; };
+		C7907FC71C8EB719002BE103 /* PopView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopView.swift; sourceTree = "<group>"; };
+		C7907FCB1C8EC942002BE103 /* Crime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Crime.swift; sourceTree = "<group>"; };
 		C79285701BEAF65B00287A24 /* NewsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewsView.swift; sourceTree = "<group>"; };
 		C79285731BEB06A400287A24 /* THActivityView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = THActivityView.h; sourceTree = "<group>"; };
 		C79285741BEB06A400287A24 /* THActivityView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = THActivityView.m; sourceTree = "<group>"; };
@@ -577,6 +585,7 @@
 				C79546DD1BFEBC8F0080CD46 /* NewListCV.swift */,
 				C79546E01BFEBCE30080CD46 /* TimeLineVC.swift */,
 				C77C402D1C040284005596E0 /* TimeLineInfo.swift */,
+				C7907FCB1C8EC942002BE103 /* Crime.swift */,
 				C763D3E71C045FE2005E3921 /* TimeLineCommit.swift */,
 				C79E545B1BE9B79100E4A514 /* Scheduler.swift */,
 				C71A3A821BF1954B0081F7E6 /* SchedulerInfo.swift */,
@@ -604,6 +613,7 @@
 				C77E8FA31C06DB48003832BA /* CommentScoreView.h */,
 				C77E8FA41C06DB48003832BA /* CommentScoreView.m */,
 				C77E1DB21BE0AEE600B8F444 /* ProfileSwift.swift */,
+				C7907FC71C8EB719002BE103 /* PopView.swift */,
 				C78903841C8424A00068C842 /* ModelProfile.swift */,
 			);
 			name = configure;
@@ -894,6 +904,7 @@
 				C78CB3731C7D9CF400EBE76A /* ScoreVC.swift in Sources */,
 				C784B34C1C4778790043D968 /* ExhibitorAdvertisement.swift in Sources */,
 				C705050E1C3CB9F3007F8C72 /* ApplyListView.swift in Sources */,
+				C7907FC81C8EB719002BE103 /* PopView.swift in Sources */,
 				C79285781BEB322700287A24 /* SettingController.swift in Sources */,
 				C77E1D9D1BE09EDA00B8F444 /* AppDelegate.swift in Sources */,
 				C79E54621BE9E47400E4A514 /* DataModel.swift in Sources */,
@@ -905,6 +916,7 @@
 				C779C1031BF48A92008D625F /* MyFavorite.swift in Sources */,
 				C71A3A831BF1954B0081F7E6 /* SchedulerInfo.swift in Sources */,
 				C76429B41C2B93FF00F34888 /* SeachVC.swift in Sources */,
+				C7907FCC1C8EC942002BE103 /* Crime.swift in Sources */,
 				C79546DE1BFEBC8F0080CD46 /* NewListCV.swift in Sources */,
 				C79E545F1BE9DCB800E4A514 /* RootCollectionCells.swift in Sources */,
 				C70505111C3CC5C5007F8C72 /* MessMaster.swift in Sources */,
@@ -962,6 +974,7 @@
 				C78CB3751C7D9CF400EBE76A /* ScoreVC.swift in Sources */,
 				C784B34E1C4778790043D968 /* ExhibitorAdvertisement.swift in Sources */,
 				C7A383CC1C449B50008DF57F /* ApplyListView.swift in Sources */,
+				C7907FCA1C8EB719002BE103 /* PopView.swift in Sources */,
 				C7A383CD1C449B50008DF57F /* ProductList.swift in Sources */,
 				C7A383CE1C449B50008DF57F /* ExhibitorInfoCV.swift in Sources */,
 				C7A383CF1C449B50008DF57F /* LogInCell.m in Sources */,
@@ -973,6 +986,7 @@
 				C7A383D41C449B50008DF57F /* MyFavorite.swift in Sources */,
 				C7A383D51C449B50008DF57F /* Singleton.swift in Sources */,
 				C7A383D61C449B50008DF57F /* SeachVC.swift in Sources */,
+				C7907FCE1C8EC942002BE103 /* Crime.swift in Sources */,
 				C7A383D71C449B50008DF57F /* NewListCV.swift in Sources */,
 				C7A383D81C449B50008DF57F /* THActivityView.m in Sources */,
 				C7A383D91C449B50008DF57F /* MessMaster.swift in Sources */,
@@ -1030,6 +1044,7 @@
 				C78CB3741C7D9CF400EBE76A /* ScoreVC.swift in Sources */,
 				C784B34D1C4778790043D968 /* ExhibitorAdvertisement.swift in Sources */,
 				C705050F1C3CB9F3007F8C72 /* ApplyListView.swift in Sources */,
+				C7907FC91C8EB719002BE103 /* PopView.swift in Sources */,
 				C7A9629A1BF32354003B883A /* ProductList.swift in Sources */,
 				C78200221BEC800F002BBDB7 /* ExhibitorInfoCV.swift in Sources */,
 				C779C0FE1BF42D35008D625F /* LogInCell.m in Sources */,
@@ -1041,6 +1056,7 @@
 				C779C1041BF48A92008D625F /* MyFavorite.swift in Sources */,
 				C779C1011BF43917008D625F /* Singleton.swift in Sources */,
 				C76429B51C2B93FF00F34888 /* SeachVC.swift in Sources */,
+				C7907FCD1C8EC942002BE103 /* Crime.swift in Sources */,
 				C79546DF1BFEBC8F0080CD46 /* NewListCV.swift in Sources */,
 				C79285761BEB06A400287A24 /* THActivityView.m in Sources */,
 				C70505121C3CC5C5007F8C72 /* MessMaster.swift in Sources */,

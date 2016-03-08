@@ -7,7 +7,7 @@
 //
 
 import Foundation
-class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ShareCoverageProtocol {
+class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate,ShareCoverageProtocol,PopViewProtocol {
     
     var timeData:TimeMessage!
     var commentArr:[TimeMessage]!
@@ -60,7 +60,32 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
         accessView = self.getAccessInputView()
         self.view.addSubview(accessView)
         
+        self.creatNavBarItem()
         self.fetchCommentList()
+    }
+    
+    
+    func creatNavBarItem(){
+
+        let rightBar = UIBarButtonItem(image: UIImage(named: "timeInfo_rightBar"), style: .Plain, target: self, action: "rightNavBarAction")
+         self.navigationItem.rightBarButtonItem = rightBar
+    }
+    
+    
+    func rightNavBarAction(){
+    
+       let popV = PopView(contents: [(image: "warnImage", title: "举报")], showViewFrame: CGRectMake(Profile.width()-115, 70, 100, 35))
+        popV.delegate = self
+       self.navigationController?.view.addSubview(popV)
+    }
+    
+    
+//    MARK:PopViewDelegate
+    func popViewDidSelect(index: Int) {
+        
+        let crimeV = CrimeVC()
+        crimeV.wall_id = timeData.id!
+        self.navigationController?.pushViewController(crimeV, animated: true)
     }
     
     
