@@ -7,8 +7,14 @@
 //
 
 import Foundation
+enum NewsVCSelectType:Int {
+   case News = 1
+   case TimeLine = 0
+}
+
 class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDelegate {
     
+    var selectType = NewsVCSelectType.TimeLine
     var net:NetWorkData!
     var dataArr:[NewsData]!
     var segmentV:TSegmentedControl!
@@ -19,12 +25,20 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.setNavgationBarAttribute(true)
+        
+        
+        if segmentV.selectedIndex != selectType.rawValue
+        {
+            segmentV.selectedIndex = selectType.rawValue
+            self.segmentChange()
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         self.setNavgationBarAttribute(false)
     }
+    
     
 
     override func viewDidLoad() {
@@ -110,13 +124,14 @@ class NewsViewController: UIViewController,UITableViewDataSource,UITableViewDele
             newList.view.hidden = true
             timeLineV.view.hidden = false
             self.creatRightBar()
-
+            selectType = .TimeLine
         }
         else
         {
             newList.view.hidden = false
             timeLineV.view.hidden = true
             self.navigationItem.rightBarButtonItem = nil
+            selectType = .News
         }
     }
     

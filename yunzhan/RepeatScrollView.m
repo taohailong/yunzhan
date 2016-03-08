@@ -50,7 +50,7 @@
 
 -(void)setAutoRepeat
 {
-    _timer = [NSTimer scheduledTimerWithTimeInterval:6 target:self selector:@selector(repeatAction) userInfo:nil repeats:YES];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:8 target:self selector:@selector(repeatAction) userInfo:nil repeats:YES];
 
 }
 
@@ -97,6 +97,17 @@
     if (dataArr.count==0) {
         return;
     }
+    
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    
+     for (id<RepeatScrollProtocol> pic  in dataArr) {
+         
+       [manager downloadImageWithURL:[NSURL URLWithString:[pic getImageUrl]] options:0 progress:nil completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
+           
+       }];
+    }
+    
+    
     _dataSource = dataArr;
     _pageControl.numberOfPages = _dataSource.count;
      _pageControl.currentPage = 0;

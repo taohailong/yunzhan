@@ -444,8 +444,13 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
         {
             weak var wself = self
             let head = collection.dequeueReusableSupplementaryViewOfKind(UICollectionElementKindSectionHeader , withReuseIdentifier: "CommonHeadView", forIndexPath: indexPath) as! CommonHeadView
-            head.tap = {()->Void in
+            head.tap = { ()->Void in
+                
+                let nav = self.tabBarController?.viewControllers![3] as! UINavigationController
+                let newVC = nav.viewControllers[0] as! NewsViewController
+                newVC.selectType = .News
                 wself?.tabBarController?.selectedIndex = 3
+                
             }
             head.iconImage("rootNewsHead")
             return head
@@ -467,6 +472,9 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
             }
             else if act.name == "精彩瞬间"
             {
+                let nav = self.tabBarController?.viewControllers![3] as! UINavigationController
+                let newVC = nav.viewControllers[0] as! NewsViewController
+                newVC.selectType = .TimeLine
                 self.tabBarController?.selectedIndex = 3
             }
             else if act.name == "我的关注"

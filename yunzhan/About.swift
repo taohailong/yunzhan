@@ -59,7 +59,7 @@ class AboutVC: UIViewController {
         self.view.addSubview(code)
         code.textColor = Profile.rgb(153, g: 153, b: 153)
         code.font = Profile.font(11)
-        code.text = "Copyright  2014-2016 Wuxi Chestnut Co., Ltd."
+        code.text = "Copyright  2014-2016 Beijing Zhangzhantong Co., Ltd."
         self.view.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[code]-35-|", aView: code, bView: nil))
         self.view.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(code, toItem: self.view))
 
@@ -70,7 +70,7 @@ class AboutVC: UIViewController {
         self.view.addSubview(company)
         company.textColor = Profile.rgb(153, g: 153, b: 153)
         company.font = Profile.font(11)
-        company.text = "无锡栗子网络科技有限公司"
+        company.text = "北京掌展通网络科技有限公司"
         self.view.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[company]-5-[code]", aView: company, bView: code))
         self.view.addConstraint(NSLayoutConstraint.layoutHorizontalCenter(company, toItem: self.view))
         
