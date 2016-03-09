@@ -296,7 +296,7 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+//        tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
 //        if indexPath.row == 2
 //        {
@@ -708,7 +708,7 @@ class TimeLinePersonCell: UITableViewCell {
         timeL.font = Profile.font(11)
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.contentView.addSubview(userPicV)
-        
+        self.selectionStyle = .None
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(userPicV, toItem: self.contentView))
         
         self.contentView.addSubview(nameL)
@@ -791,7 +791,7 @@ class TimeLineContentCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.contentView.addSubview(contentL)
-        
+        self.selectionStyle = .None
         self.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
         if #available(iOS 8.0, *) {
             self.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0)

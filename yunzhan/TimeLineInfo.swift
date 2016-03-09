@@ -17,7 +17,7 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     var net:NetWorkData!
     var sendNet:NetWorkData!
 //    内部操作回调
-    var block:(Void->Void)!
+    var block:(Void->Void)?
     var becomeFirstRes : Bool = false
     
     override func viewDidAppear(animated: Bool) {
@@ -429,6 +429,7 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
                 wself?.commentField.text = nil
 //                wself?.table.reloadData()
                 wself?.fetchCommentList()
+                wself?.block?()
             }
         }
         sendNet.start()
@@ -469,10 +470,7 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
                         message.favorited = true
                     }
                     wself?.table.reloadData()
-                    if wself?.block != nil
-                    {
-                        wself?.block()
-                    }
+                    wself?.block?()
                 }
 
             }
@@ -516,10 +514,7 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
             {
                 wself?.timeData.forwardNu = nu
                 wself?.table.reloadData()
-                if wself?.block != nil
-                {
-                    wself?.block()
-                }
+                wself?.block?()
             }
         }
         shareNet.start()
