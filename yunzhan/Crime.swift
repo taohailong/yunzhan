@@ -33,6 +33,7 @@ class CrimeVC:UITableViewController {
     func creatNavRightBar(){
     
        let rightBar = UIBarButtonItem(title: "提交", style: .Plain, target: self, action: "rightBarAction")
+        rightBar.tintColor = Profile.NavBarColorGenuine
        self.navigationItem.rightBarButtonItem = rightBar
     }
     
@@ -43,6 +44,11 @@ class CrimeVC:UITableViewController {
             weak var wself = self
            net.warnCrime(wall_id, crimeType:contentArr[selectIndex!] , block: { (result, status) -> (Void) in
             
+              if status == .NetWorkStatusError
+              {
+                 return
+              }
+
                if let mes = result as? String
                {
                   let showV = THActivityView(string: mes)

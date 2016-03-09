@@ -2216,7 +2216,21 @@ class NetWorkData:NSObject {
         }
     }
     
+    func shieldUserApi(wall_id:String,block:NetBlock)
+    {
+       
+        let url = Profile.globalHttpHead("api/app/infoWall/block", parameter: "infowall_id=\(wall_id)&token=\(UserData.shared.token!)")
+        
+        self.newMethodRequest(url, taskBlock: block) { (result, status) -> (Void) in
+            
+            if let meg = result["msg"] as?String
+            {
+                block(result: meg, status: .NetWorkStatusSucess)
+            }
+            
+        }
     
+    }
     
     
     

@@ -120,6 +120,7 @@ class UserData:NSObject {
     
     func clearUserData()
     {
+
        isLogIn = false
        phone  = nil
         title = nil
@@ -132,6 +133,9 @@ class UserData:NSObject {
         userDefault.removeObjectForKey("huanxin_ps")
         userDefault.removeObjectForKey("userID")
         self.logOutHuanxin()
+        
+//        放在数据清理完成后
+        NSNotificationCenter.defaultCenter().postNotificationName(Profile.userStatusChanged, object: nil)
     }
     
     
@@ -226,7 +230,7 @@ class UserData:NSObject {
     
     
     
-//  MARK: 分类
+//  MARK: 给销售分类
     
     func getExhibitorID()
     {

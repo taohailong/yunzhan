@@ -449,9 +449,10 @@ class LogOutVC: UIViewController,UITableViewDelegate,UITableViewDataSource,UIAle
     }
     
     func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int){
+        
        if buttonIndex == alertView.cancelButtonIndex
        {
-         return
+          return
         }
       let user = UserData.shared
         user.clearUserData()

@@ -79,7 +79,7 @@ class AboutVC: UIViewController {
         let protocolBt = UIButton(type: .Custom)
         protocolBt.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(protocolBt)
-        protocolBt.titleLabel?.font = Profile.font(11)
+        protocolBt.titleLabel?.font = Profile.font(12)
         protocolBt.setTitleColor(UIColor.rgb(79, g: 95, b: 142), forState: .Normal)
         protocolBt.setTitle("\(appName)最终用户许可协议", forState: .Normal)
         protocolBt.addTarget(self, action: "protocolAction", forControlEvents: .TouchUpInside)

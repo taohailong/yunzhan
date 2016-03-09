@@ -10,11 +10,12 @@ import Foundation
 protocol PopViewProtocol {
 
     func popViewDidSelect(index:Int)->Void
-
+    func popViewDismissed()
 }
-class PopView:UIView {
-    
+class PopView:UIView,UITableViewDataSource,UITableViewDelegate,UIGestureRecognizerDelegate {
+    var dataArr : [(image:String?,title:String)]!
     var delegate:PopViewProtocol?
+    var table:UITableView!
     init(contents: [(image:String?,title:String)],showViewFrame:CGRect) {
         
         super.init(frame: CGRectMake(0, 0, Profile.width(), Profile.height()))
@@ -22,56 +23,68 @@ class PopView:UIView {
         
         
         let tapGesture = UITapGestureRecognizer(target: self, action: "tapToView")
+        tapGesture.delegate = self
         self.addGestureRecognizer(tapGesture)
+        
+        let swipeGesture = UISwipeGestureRecognizer(target: self, action: "tapToView")
+        swipeGesture.delegate = self
+        self.addGestureRecognizer(swipeGesture)
+        
+        
+        
         
         let contentLayer = self.creatSubLayer(showViewFrame, corner: 3, trangleX: CGRectGetWidth(showViewFrame) - 20 , trangleLength: 5)
 //        contentLayer.backgroundColor = UIColor.rgb(243, g: 243, b: 243).CGColor
         self.layer.addSublayer(contentLayer)
         
-        let button = UIButton(type: .Custom)
-        button.titleLabel?.font = Profile.font(17)
-        button.imageEdgeInsets = UIEdgeInsetsMake(0, -15, 0, 0)
-        button.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -15)
-        button.setTitleColor(UIColor.blackColor(), forState: .Normal)
-        button.tag = 0
-        button.frame = CGRectMake(CGRectGetMinX(showViewFrame) + 5, CGRectGetMinY(showViewFrame), CGRectGetWidth(showViewFrame)-5, CGRectGetHeight(showViewFrame))
-        button.setTitle(contents[0].title, forState: .Normal)
         
-        if let imageName = contents[0].image
-        {
-             button.setImage(UIImage(named:imageName ), forState: .Normal)
-        }
         
-        self.addSubview(button)
-        button.addTarget(self, action: "popSelect:", forControlEvents: .TouchUpInside)
+        dataArr = contents
+        table = UITableView(frame: CGRectMake(CGRectGetMinX(showViewFrame), CGRectGetMinY(showViewFrame), CGRectGetWidth(showViewFrame), CGRectGetHeight(showViewFrame)), style: .Plain)
+        table.delegate = self
+        table.dataSource = self
+        table.layer.cornerRadius = 3
+        table.tableFooterView = UIView(frame: CGRectMake(0,0,1,1))
+        table.showsVerticalScrollIndicator = false
+        table.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        table.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0)
+        table.registerClass(UITableViewCell.self , forCellReuseIdentifier: "UITableViewCell")
+        self.addSubview(table)
+        
+        
     }
 
     
-    func popSelect(sender:UIButton)
+    func popSelect(index:Int)
     {
        if delegate != nil
        {
-          delegate?.popViewDidSelect(sender.tag)
-        }
+          delegate?.popViewDidSelect(index)
+       }
        self.disMissPopView()
     }
     
     
     func tapToView()
     {
-      self.disMissPopView()
+       self.disMissPopView()
     }
     
     
     
     func disMissPopView(){
     
+        if delegate != nil
+        {
+            delegate?.popViewDismissed()
+        }
+
        self.removeFromSuperview()
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    
+    
+    
     
     func creatSubLayer(rect:CGRect,corner:CGFloat,trangleX:CGFloat,trangleLength:CGFloat)->CALayer
     {
@@ -83,10 +96,10 @@ class PopView:UIView {
         path.moveToPoint(CGPointMake(CGRectGetMinX(rect)+corner, CGRectGetMinY(rect)))
         
         
-        //
+        // 2,4 调整三角形状
         path.addLineToPoint(CGPointMake(trangleX + CGRectGetMinX(rect), CGRectGetMinY(rect)))
-        path.addLineToPoint(CGPointMake(trangleX + CGRectGetMinX(rect) + trangleLength/2, CGRectGetMinY(rect)-trangleLength))
-        path.addLineToPoint(CGPointMake(trangleX + CGRectGetMinX(rect) + trangleLength, CGRectGetMinY(rect)))
+        path.addLineToPoint(CGPointMake(trangleX + CGRectGetMinX(rect) + trangleLength/2 + 2 , CGRectGetMinY(rect)-trangleLength))
+        path.addLineToPoint(CGPointMake(trangleX + CGRectGetMinX(rect) + trangleLength + 4, CGRectGetMinY(rect)))
         
         
         
@@ -122,4 +135,58 @@ class PopView:UIView {
     
     }
     
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dataArr.count
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 40
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier("UITableViewCell")
+        
+        let element = dataArr[indexPath.row]
+        if element.image != nil
+        {
+           cell?.imageView?.image = UIImage(named: element.image!)
+        }
+        cell?.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        cell?.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0)
+        cell?.textLabel?.font = Profile.font(13)
+        cell?.textLabel?.textColor = UIColor.rgb(51, g: 51, b: 51)
+        cell?.textLabel?.text = element.title
+        return cell!
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        self.popSelect(indexPath.row)
+    }
+    
+    
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool
+    {
+        let point = touch.locationInView(self)
+        
+        if table.frame.contains(point)
+        {
+          return false
+        }
+
+        return true
+    }
+    
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
 }

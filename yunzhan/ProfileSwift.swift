@@ -64,7 +64,7 @@ class Profile:NSObject
 
     static let width = { return UIScreen.mainScreen().bounds.size.width }
     static let height = { return UIScreen.mainScreen().bounds.size.height}
-    
+    static let userStatusChanged = "userStatusChanged"
     static let nickKey = "usernick"
     static let jobKey = "usertitle"
     static let qrKey = "zzt"

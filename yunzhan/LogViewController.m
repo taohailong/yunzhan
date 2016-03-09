@@ -342,7 +342,8 @@
              user.company = dataDic[@"company"];
              [user sendDeviceToken];
              [user logInHuanxin];
-            [wSelf logViewDismiss];
+             [[NSNotificationCenter defaultCenter] postNotificationName:[Profile userStatusChanged] object:nil];
+             [wSelf logViewDismiss];
          }
          else
          {

@@ -16,6 +16,7 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     var accessView:UIView!
     var net:NetWorkData!
     var sendNet:NetWorkData!
+//    内部操作回调
     var block:(Void->Void)!
     var becomeFirstRes : Bool = false
     
@@ -66,15 +67,17 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     
     
     func creatNavBarItem(){
-
+        
         let rightBar = UIBarButtonItem(image: UIImage(named: "timeInfo_rightBar"), style: .Plain, target: self, action: "rightNavBarAction")
+        rightBar.tintColor = Profile.NavBarColorGenuine
          self.navigationItem.rightBarButtonItem = rightBar
     }
     
     
     func rightNavBarAction(){
     
-       let popV = PopView(contents: [(image: "warnImage", title: "举报")], showViewFrame: CGRectMake(Profile.width()-115, 70, 100, 35))
+        self.navigationController?.interactivePopGestureRecognizer?.enabled = false
+       let popV = PopView(contents: [(image: "warnImage", title: "举报"),(image: "shieldImage", title: "屏蔽用户")], showViewFrame: CGRectMake(Profile.width()-135, 70, 120, 80))
         popV.delegate = self
        self.navigationController?.view.addSubview(popV)
     }
@@ -82,10 +85,60 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     
 //    MARK:PopViewDelegate
     func popViewDidSelect(index: Int) {
+       
+        let user = UserData.shared
+        if user.token == nil
+        {
+            self.timeLineInfoShowLoginVC()
+            return
+        }
+
         
-        let crimeV = CrimeVC()
-        crimeV.wall_id = timeData.id!
-        self.navigationController?.pushViewController(crimeV, animated: true)
+        if index == 0
+        {
+            let crimeV = CrimeVC()
+            crimeV.wall_id = timeData.id!
+            self.navigationController?.pushViewController(crimeV, animated: true)
+        }
+        else
+        {
+           self.shieldUser()
+        }
+    }
+    
+    func popViewDismissed() {
+        self.navigationController?.interactivePopGestureRecognizer?.enabled = true
+    }
+    
+    
+    
+    func shieldUser(){
+        
+        weak var wself = self
+       let shieldApi = NetWorkData()
+        shieldApi.shieldUserApi(timeData.id!) { (result, status) -> (Void) in
+            
+            if status == .NetWorkStatusError
+            {
+               return
+            }
+            if let meg = result as? String
+            {
+               let load = THActivityView(string: meg)
+                load.show()
+                wself?.reloadTimeWall()
+            }
+            
+        }
+       shieldApi.start()
+    }
+    
+    
+    func reloadTimeWall(){
+        
+        let timeLine = self.navigationController?.viewControllers[0].childViewControllers[0] as! TimeLineVC
+        timeLine.fetchTimeLineList()
+        self.navigationController?.popViewControllerAnimated(true)
     }
     
     

@@ -38,14 +38,18 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
         
         table.showsVerticalScrollIndicator = false
         table.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
-        if #available(iOS 8.0, *) {
-            table.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0)
-        } else {
-            // Fallback on earlier versions
-        }
+        table.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0)
         self.view.backgroundColor = table.backgroundColor
         self.timeLineRefresh()
-//        self.fetchTimeLineList()
+        
+        self.registerNotiCenter()
+    }
+    
+    
+    func registerNotiCenter(){
+    
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "fetchTimeLineList", name: Profile.userStatusChanged, object: nil)
+    
     }
     
     
@@ -67,6 +71,7 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
         let index = 0
         net = NetWorkData()
         net.getTimeLineList(index) { (result, status) -> (Void) in
+            
             wself?.refreshV.endRefreshing()
             if wself?.empyView != nil
             {
@@ -231,10 +236,6 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
         if indexPath.row == 0
         {
             let cell = tableView.dequeueReusableCellWithIdentifier("TimeLinePersonCell") as! TimeLinePersonCell
-//            cell.contentView.layer.shadowColor = UIColor.redColor().CGColor
-//            cell.contentView.layer.shadowOffset = CGSizeMake(0, 1)
-//            cell.contentView.layer.shadowOpacity = 1
-//            cell.contentView.clipsToBounds = false
             cell.filPersonInfo(nil, name: element.personName, title: element.personTitle, time: element.time)
             return cell
 
@@ -297,8 +298,8 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        if indexPath.row == 2
-        {
+//        if indexPath.row == 2
+//        {
             let element = dataArr[indexPath.section]
             
             weak var wself = self
@@ -307,7 +308,7 @@ class TimeLineVC: UIViewController,ShareCoverageProtocol,UITableViewDelegate,UIT
             commentInfo.timeData = element
             commentInfo.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(commentInfo, animated: true)
-        }
+//        }
         
     }
     
