@@ -222,11 +222,10 @@
     
     __weak LogViewController* wself = self;
     
-    
-    
 //    NSString* str = [NSString stringWithFormat:@"http://%s/api/app/user/verifysms?eid=1&phone=%@",PORT,_phoneField.text];
-    
-    NSString* str = [Profile globalHttpHead:@"api/app/user/verifysms" parameter:[NSString stringWithFormat:@"phone=%@",_phoneField.text]];
+    NSString* str = [NSString stringWithFormat:@"http://%@/api/app/user/verifysms?chn=ios&eid=%@&phone=%@",[Profile domain],[Profile exhibitor],_phoneField.text];
+
+//    NSString* str = [Profile globalHttpHead:@"api/app/user/verifysms" parameter:[NSString stringWithFormat:@"phone=%@",_phoneField.text]];
     NSURLRequest* url = [NSURLRequest requestWithURL:[NSURL URLWithString:str]];
     AFHTTPRequestOperation * req = [[AFHTTPRequestOperation alloc]initWithRequest:url];
     [req setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -315,9 +314,10 @@
     
     __weak LogViewController* wSelf = self;
     
-//    NSString* str = [NSString stringWithFormat:@"http://%s/api/app/user/login?chn=ios&eid=1&phone=%@&code=%@",PORT,_phoneField.text,_pwField.text];
     
-    NSString* str = [Profile globalHttpHead:@"api/app/user/login" parameter:[NSString stringWithFormat:@"phone=%@&code=%@",_phoneField.text,_pwField.text]];
+    NSString* str = [NSString stringWithFormat:@"http://%@/api/app/user/login?chn=ios&eid=%@&phone=%@&code=%@",[Profile domain],[Profile exhibitor],_phoneField.text,_pwField.text];
+
+//    NSString* str = [Profile globalHttpHead:@"api/app/user/login" parameter:[NSString stringWithFormat:@"phone=%@&code=%@",_phoneField.text,_pwField.text]];
     NSURLRequest* url = [NSURLRequest requestWithURL:[NSURL URLWithString:str]];
     AFHTTPRequestOperation * req = [[AFHTTPRequestOperation alloc]initWithRequest:url];
     [req setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -394,8 +394,10 @@
     
     __weak LogViewController* wself = self;
     
+ 
+    NSString* str = [NSString stringWithFormat:@"http://%@/api/app/user/verifyvoice?chn=ios&eid=%@&phone=%@",[Profile domain],[Profile exhibitor],_phoneField.text];
 
-    NSString* str = [Profile globalHttpHead:@"api/app/user/verifyvoice" parameter:[NSString stringWithFormat:@"phone=%@",_phoneField.text]];
+//    NSString* str = [Profile globalHttpHead:@"api/app/user/verifyvoice" parameter:[NSString stringWithFormat:@"phone=%@",_phoneField.text]];
     NSURLRequest* url = [NSURLRequest requestWithURL:[NSURL URLWithString:str]];
     AFHTTPRequestOperation * req = [[AFHTTPRequestOperation alloc]initWithRequest:url];
     [req setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -412,8 +414,6 @@
             THActivityView* showStr = [[THActivityView alloc]initWithString:dataDic[@"msg"]];
             [showStr show];
         }
-        
-        
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         [loadView removeFromSuperview];

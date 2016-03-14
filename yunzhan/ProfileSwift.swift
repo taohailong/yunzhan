@@ -70,16 +70,27 @@ class Profile:NSObject
     static let qrKey = "zzt"
     
     
-    class func globalHttpHead(path:String,parameter:String?)->String {
+    class func globalHttpHead(path:String,parameter:String?,needToken:Bool = false)->String {
         
+        var url = "http://\(self.domain)/\(path)?eid=\(self.exhibitor)&chn=ios"
+        
+        if needToken == true
+        {
+            let user = UserData.shared
+            if let token = user.token
+            {
+                url = url + "&token=\(token)"
+            }
+        }
         if parameter == nil
         {
-          return "http://\(self.domain)/\(path)?eid=\(self.exhibitor)&chn=ios"
+            return url
         }
         
-        let url = "http://\(self.domain)/\(path)?eid=\(self.exhibitor)&chn=ios&\(parameter!)"
+        url = url + "&\(parameter!)"
         return url.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLFragmentAllowedCharacterSet())!
     }
+    
     
     class func rgb(let r:CGFloat,let g:CGFloat, let b:CGFloat) ->UIColor{
        return UIColor(red: r/255.0, green: g/255.0, blue: b/255.0, alpha: 1.0)

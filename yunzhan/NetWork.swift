@@ -365,8 +365,7 @@ class NetWorkData:NSObject {
     
     func myContactsList(block:NetBlock){
         
-        let user = UserData.shared
-        let url = Profile.globalHttpHead("api/app/personal/listcontact", parameter: "token=\(user.token!)")
+        let url = Profile.globalHttpHead("api/app/personal/listcontact", parameter: nil,needToken: true)
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -434,8 +433,8 @@ class NetWorkData:NSObject {
     
     func delectContact(exhibitorID:String,personID:String,block:NetBlock)
     {
-        let user = UserData.shared
-        let url = Profile.globalHttpHead("api/app/personal/delcontact", parameter: "token=\(user.token!)&id=\(personID)")
+//        let user = UserData.shared
+        let url = Profile.globalHttpHead("api/app/personal/delcontact", parameter: "id=\(personID)",needToken: true)
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -675,49 +674,13 @@ class NetWorkData:NSObject {
     }
     
     
-//    func modifySchedulerContact(schedulerID:String,personID:String,isAdd:Bool,block:NetBlock)
-//    {
-//        let user = UserData.shared
-//        var url = ""
-//        if isAdd == true
-//        {
-//           url = Profile.globalHttpHead("api/app/personal/addscontact", parameter: "token=\(user.token!)&sid=\(schedulerID)&cid=\(personID)")
-//        }
-//        else
-//        {
-//           url = Profile.globalHttpHead("api/app/schedule/delcontact", parameter: "token=\(user.token!)&sid=\(schedulerID)&cid=\(personID)")
-//        }
-//        
-//        
-//        self.getMethodRequest(url) { (result, status) -> (Void) in
-//            
-//            if status == NetStatus.NetWorkStatusError
-//            {
-//                block(result: result, status: status)
-//                return
-//            }
-//            
-//            guard let data = result as? [String:AnyObject],let code = data["code"] as? Int,let msg = data["msg"] else {
-//                return
-//            }
-//            if code == 0
-//            {
-//                block(result: msg, status: status)
-//            }
-//            else
-//            {
-//                block(result: msg, status: .NetWorkStatusError)
-//            }
-//        }
-//    }
-    
+
     
     
     func addMyScheduler(schedulerID:String,block:NetBlock)
     {
-        let user = UserData.shared
 
-        let url = Profile.globalHttpHead("api/app/personal/addshedule", parameter: "token=\(user.token!)&sid=\(schedulerID)")
+        let url = Profile.globalHttpHead("api/app/personal/addshedule", parameter: "sid=\(schedulerID)",needToken: true)
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
