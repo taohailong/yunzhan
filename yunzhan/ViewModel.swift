@@ -89,7 +89,9 @@ extension UITableViewCell
         if type == .Checkmark
         {
             let imageV = UIImageView(frame: CGRectMake(0, 0, 16, 12))
-            imageV.image = UIImage(named: "table_accessory")
+            let image = UIImage(named: "table_accessory")!.imageWithRenderingMode(.AlwaysTemplate)
+            imageV.image = image
+            imageV.tintColor = Profile.NavBarColorGenuine
             self.accessoryView = imageV
         }
         else
