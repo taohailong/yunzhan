@@ -517,8 +517,11 @@ class ViewController: UIViewController,UICollectionViewDelegateFlowLayout,UIColl
     }
     
     func collectionView(link: String, didSelectHeadView indexPath: NSIndexPath) {
-//        print(link)
         
+        if link == ""
+        {
+           return 
+        }
         let comment = CommonWebController(url:link)
         comment.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(comment, animated: true)
