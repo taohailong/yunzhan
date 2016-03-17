@@ -575,7 +575,7 @@ class SchedulerInfoHeadCell: UITableViewCell {
         titleL.font = Profile.font(15)
         titleL.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(titleL)
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[titleL]-15-|", aView: titleL, bView: nil))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[titleL]-0-|", aView: titleL, bView: nil))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-10-[titleL]", aView: titleL, bView: nil))
         
 
