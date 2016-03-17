@@ -33,7 +33,7 @@ class Profile:NSObject
     static var exhibitor = "1"
     #else
     static let domain = "www.zhangzhantong.com"
-    static var exhibitor = "1"
+    static var exhibitor = "2"
     #endif
     static let huanxinKey = "zhangzhantong#zhangzhantong"
     static let huanxinAPN = "normal_product"
