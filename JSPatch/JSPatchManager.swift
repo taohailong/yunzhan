@@ -22,11 +22,23 @@ static var share = JSPatchManager()
        let script = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding)
        if script != nil
        {
-          JPEngine.startEngine()
-          JPEngine.evaluateScript(script! as String)
+          self.startJsEngine(script! as String)
        }
        self.fetchJs()
     }
+    
+    
+    func startJsEngine(js:String)
+    {
+        if js == ""
+        {
+          return
+        }
+        JPEngine.startEngine()
+        JPEngine.evaluateScript(js)
+    }
+    
+    
     func fetchJs(){
        
        let url = Profile.globalHttpHead("api/app/tool/readdebug", parameter: "name=\(self.getFileName())")
@@ -40,10 +52,20 @@ static var share = JSPatchManager()
                 {
                    let js = dic["data"] as! String
                    wself?.saveJs(js)
+                   
+//                    第一次加载完成 本地没有数据时要加载js
+                    let path = wself?.getJsPath()
+                    let script = try? NSString(contentsOfFile: path!, encoding: NSUTF8StringEncoding)
+                    if script == nil
+                    {
+                        wself?.startJsEngine(js)
+                    }
+ 
                 }
            }
            else
           {
+            
           }
         
       }
