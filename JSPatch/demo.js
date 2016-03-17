@@ -45,3 +45,34 @@ defineClass('yunzhan.CollectionActView', {
     }
 
 });
+
+require('CommonWebController,UIAlertView');
+defineClass('yunzhan.ViewController', {
+            
+          
+            fetchData: function() {},
+            
+//            viewDidLoad: function() {
+//            self.super().viewDidLoad();
+//            var alert = UIAlertView.alloc().initWithTitle_message_delegate_cancelButtonTitle_otherButtonTitles("123", "789", null, "0", null, null);
+//            alert.show();
+//            
+//            },
+
+            
+            
+            collectionView_didSelectHeadView: function(link, indexPath) {
+            
+            
+            var alert = UIAlertView.alloc().initWithTitle_message_delegate_cancelButtonTitle_otherButtonTitles("123", "789", null, "0", null, null);
+            alert.show();
+            
+            if (link.isEqualToString("")) {
+            return;
+            }
+            
+            var c = CommonWebController.alloc().init();
+            c.setHidesBottomBarWhenPushed(true);
+            self.navigationController().pushViewController_animated(c, true);
+            },
+});
