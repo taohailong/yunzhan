@@ -12,6 +12,8 @@ class OrientationTabBar: UITabBarController,IChatManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.tabBar.tintColor = Profile.NavBarColorGenuine
 //        self.changeSettingViewBarImage(false)
         self.setTabBarSelectIcon()
         EaseMob.sharedInstance().chatManager.removeDelegate(self)
@@ -46,7 +48,8 @@ class OrientationTabBar: UITabBarController,IChatManagerDelegate {
             }
             
             value.tabBarItem.image = UIImage(named: normal)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
-            value.tabBarItem.selectedImage = UIImage(named: select)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
+            value.tabBarItem.selectedImage = UIImage(named: select)
+//            value.tabBarItem.selectedImage = UIImage(named: select)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysOriginal)
             value.tabBarItem.setTitleTextAttributes([NSForegroundColorAttributeName:Profile.NavBarColor()], forState: UIControlState.Selected)
         }
     
