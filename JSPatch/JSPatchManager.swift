@@ -11,12 +11,13 @@ import UIKit
 class JSPatchManager: NSObject {
 static var share = JSPatchManager()
     
-    private override init() {
+     override init() {
         
     }
     
     func setJSpatch(){
     
+        
        let path = self.getJsPath()
 //        let path = self.getLocalJSFile()
        let script = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding)
@@ -40,12 +41,15 @@ static var share = JSPatchManager()
     
     
     func fetchJs(){
-       
+//       print(NSThread.currentThread())
        let url = Profile.globalHttpHead("api/app/tool/readdebug", parameter: "name=\(self.getFileName())")
        let net = NetWorkData()
-       weak var wself = self
+    
+        let wself:JSPatchManager? = self
        net.getMethodRequest(url) { (result, status) -> (Void) in
-        
+
+           
+//           print(NSThread.currentThread())
             if status != .NetWorkStatusError
             {
                 if let dic = result as? [String:AnyObject]
@@ -128,7 +132,7 @@ static var share = JSPatchManager()
     
     deinit
     {
-    
+       print("deinit")
     }
     
 }

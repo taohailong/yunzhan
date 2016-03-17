@@ -20,7 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate,IChatManager
         UIApplication.sharedApplication().statusBarStyle = UIStatusBarStyle.LightContent
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0
         
-        let js = JSPatchManager.share
+//        let js = JSPatchManager.share
+        let js = JSPatchManager()
         js.setJSpatch()
 //        js.commitJsToServer()
         
@@ -35,18 +36,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate,WXApiDelegate,IChatManager
 //        u.messID = "tfy"
 //        u.password_huanxin = "123456"
         u.logInHuanxin()
-        if #available(iOS 8.0,*)
-        {
+      
+        
 //           let action1 = UIMutableUserNotificationAction()
 //            action1.identifier = ""
             let userSet = UIUserNotificationSettings(forTypes: [.Badge,.Alert,.Sound], categories: nil)
             application.registerUserNotificationSettings(userSet)
             application.registerForRemoteNotifications()
-        }
-        else
-        {
-          application.registerForRemoteNotificationTypes([.Badge,.Alert,.Sound])
-        }
         
         WXApi.registerApp(Profile.wxKey)
         return true

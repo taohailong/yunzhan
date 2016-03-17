@@ -306,14 +306,14 @@ class CollectionActView: UICollectionViewCell {
         
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(titleL, toItem: self.contentView))
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[titleL]", aView: titleL, bView: nil))
-        titleL.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Horizontal)
-        
+//        titleL.setContentHuggingPriority(UILayoutPriorityRequired, forAxis: .Horizontal)
+        titleL.setContentCompressionResistancePriority(UILayoutPriorityRequired, forAxis: .Horizontal)
         
         
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(introduce, toItem: self.contentView))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[titleL]-30-[introduce]-15-|", options: [], metrics: nil, views: ["introduce":introduce,"titleL":titleL]))
         self.backgroundColor = UIColor.whiteColor()
-
+//        introduce.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: .Horizontal)
         
         
         
