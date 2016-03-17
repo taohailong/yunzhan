@@ -21,6 +21,7 @@ static var share = JSPatchManager()
        let path = self.getJsPath()
 //        let path = self.getLocalJSFile()
        let script = try? NSString(contentsOfFile: path, encoding: NSUTF8StringEncoding)
+//        print(script)
        if script != nil
        {
           self.startJsEngine(script! as String)

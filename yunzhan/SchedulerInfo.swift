@@ -566,11 +566,9 @@ class SchedulerInfoHeadCell: UITableViewCell {
         titleL = UILabel()
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-//        self.contentView.addSubview(iconImage)
-//        iconImage.translatesAutoresizingMaskIntoConstraints = false
-//        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("H:|-15-[iconImage]", aView: iconImage, bView: nil))
-//        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:|-10-[iconImage]", aView: iconImage, bView: nil))
         
+        titleL.lineBreakMode = .ByCharWrapping
+        titleL.numberOfLines = 0
         titleL.textColor = Profile.rgb(51, g: 51, b: 51)
         titleL.font = Profile.font(15)
         titleL.translatesAutoresizingMaskIntoConstraints = false
@@ -584,7 +582,7 @@ class SchedulerInfoHeadCell: UITableViewCell {
         timeL.font = Profile.font(13)
         timeL.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(timeL)
-//        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[titleL]-15-[timeL]", options: [], metrics: nil, views: ["titleL":titleL,"timeL":timeL]))
+
         self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[titleL]-13-[timeL]", aView: titleL, bView: timeL))
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(timeL, toItem: titleL))
         
@@ -609,7 +607,7 @@ class SchedulerInfoHeadCell: UITableViewCell {
         companyL.font = timeL.font
         self.contentView.addSubview(companyL)
         self.contentView.addConstraint(NSLayoutConstraint.layoutLeftEqual(companyL, toItem: timeL))
-        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[typeL]-8-[companyL]", aView: typeL, bView: companyL))
+        self.contentView.addConstraints(NSLayoutConstraint.constrainWithFormat("V:[typeL]-8-[companyL]-8-|", aView: typeL, bView: companyL))
         
     }
 

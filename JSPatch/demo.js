@@ -31,3 +31,17 @@ defineClass('yunzhan_external.AboutVC', {
             }
             }
 });
+
+
+defineClass('yunzhan.CollectionActView', {
+
+    fullDataToCell: function(data){
+            
+        require('UILabel,SchedulerData,UILayoutPriorityRequired,UILayoutConstraintAxis')
+            
+        titleL.text = "\(data.date) \(data.time)";
+        introduce.text = "123";
+        titleL.setContentCompressionResistancePriority_forAxis(UILayoutPriorityRequired, UILayoutConstraintAxisHorizontal);
+    }
+
+});

@@ -432,7 +432,7 @@ class SchedulerCell: UITableViewCell {
         if data.title != nil
         {
             let titleAtt = NSMutableAttributedString(string: data.title!, attributes: [NSFontAttributeName:Profile.font(15.0),NSForegroundColorAttributeName:Profile.rgb(51, g: 51, b: 51)])
-            titleAtt.appendAttributedString(NSAttributedString(string: "  类型:\(data.typeName)", attributes: [NSFontAttributeName:Profile.font(10.0),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)]))
+//            titleAtt.appendAttributedString(NSAttributedString(string: "  类型:\(data.typeName)", attributes: [NSFontAttributeName:Profile.font(10.0),NSForegroundColorAttributeName:Profile.rgb(153, g: 153, b: 153)]))
             titleL.attributedText = titleAtt
         }
         else

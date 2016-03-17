@@ -311,9 +311,9 @@ class CollectionActView: UICollectionViewCell {
         
         
         self.contentView.addConstraint(NSLayoutConstraint.layoutVerticalCenter(introduce, toItem: self.contentView))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[titleL]-30-[introduce]-15-|", options: [], metrics: nil, views: ["introduce":introduce,"titleL":titleL]))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-120-[introduce]-15-|", options: [], metrics: nil, views: ["introduce":introduce,"titleL":titleL]))
         self.backgroundColor = UIColor.whiteColor()
-//        introduce.setContentCompressionResistancePriority(UILayoutPriorityDefaultLow, forAxis: .Horizontal)
+
         
         
         
@@ -385,25 +385,9 @@ class CollectionActView: UICollectionViewCell {
     
     func fullDataToCell(data:SchedulerData){
         
-//        if data.type == .PublicMeeting || data.type == .UnPublicMeeting
-//        {
-//            spot.backgroundColor = Profile.rgb(110, g: 233, b: 194)
-//        }
-//        else if data.type == .UnPublicDiscuss || data.type == .PublicDiscuss
-//        {
-//            spot.backgroundColor = Profile.rgb(193, g: 129, b: 220)
-//        }
-//        else
-//        {
-//            spot.backgroundColor = Profile.rgb(254, g: 167, b: 84)
-//        }
-//
-//        
-//        timeL.text = data.time
-//        dateL.text = data.date
         titleL.text = "\(data.date) \(data.time)"
         introduce.text = data.title
-//        address.text = data.address
+//        introduce.text = "12345678912334498758934757328947893274891723489721389478932789"
     }
     
     
