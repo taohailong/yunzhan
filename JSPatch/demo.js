@@ -32,17 +32,15 @@ defineClass('yunzhan_external.AboutVC', {
             }
 });
 
-
+require('UILabel') 
 defineClass('yunzhan.CollectionActView', {
 
-    fullDataToCell: function(data){
-            
-        require('UILabel,SchedulerData,UILayoutPriorityRequired,UILayoutConstraintAxis')
-            
-        titleL.text = "\(data.date) \(data.time)";
-        introduce.text = "123";
-        titleL.setContentCompressionResistancePriority_forAxis(UILayoutPriorityRequired, UILayoutConstraintAxisHorizontal);
-    }
+           
+    layoutSubviews: function() {
+            self.super().layoutSubviews();
+             self.introduce().setText("ddd123456789122332424234723847823974878977");
+//            self.titleL().setContentCompressionResistancePriority_forAxis(1000, 0);
+    },
 
 });
 
@@ -50,16 +48,20 @@ require('CommonWebController,UIAlertView');
 defineClass('yunzhan.ViewController', {
             
           
-            fetchData: function() {},
-            
 //            viewDidLoad: function() {
 //            self.super().viewDidLoad();
 //            var alert = UIAlertView.alloc().initWithTitle_message_delegate_cancelButtonTitle_otherButtonTitles("123", "789", null, "0", null, null);
 //            alert.show();
-//            
+//            self.test();
 //            },
 
             
+            test:function(){
+            
+            var alert = UIAlertView.alloc().initWithTitle_message_delegate_cancelButtonTitle_otherButtonTitles("test", "789", null, "0", null, null);
+            alert.show();
+            
+            },
             
             collectionView_didSelectHeadView: function(link, indexPath) {
             
@@ -68,10 +70,10 @@ defineClass('yunzhan.ViewController', {
             alert.show();
             
             if (link.isEqualToString("")) {
-            return;
+              return;
             }
-            
-            var c = CommonWebController.alloc().init();
+
+            var c = CommonWebController.initWithUrl(link);
             c.setHidesBottomBarWhenPushed(true);
             self.navigationController().pushViewController_animated(c, true);
             },
