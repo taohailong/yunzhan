@@ -7,16 +7,29 @@
 //
 
 import Foundation
-protocol PopViewProtocol {
+@objc protocol PopViewProtocol {
 
     func popViewDidSelect(index:Int)->Void
-    func popViewDismissed()
+    optional func popViewDismissed()
 }
 class PopView:UIView,UITableViewDataSource,UITableViewDelegate,UIGestureRecognizerDelegate {
     var dataArr : [(image:String?,title:String)]!
-    var delegate:PopViewProtocol?
+    var cellTextAlignment = NSTextAlignment.Left
+    var selectIndex:NSInteger = 0
+    var selectCellColor = UIColor.rgb(51, g: 51, b: 51)
+    
+    var delegate:PopViewProtocol? {
+        didSet{
+           
+            if let nav = delegate as? UINavigationController
+            {
+               nav.interactivePopGestureRecognizer?.enabled = false
+            }
+        
+        }
+    }
     var table:UITableView!
-    init(contents: [(image:String?,title:String)],showViewFrame:CGRect) {
+    init(contents: [(image:String?,title:String)],showViewFrame:CGRect,trangleX:CGFloat) {
         
         super.init(frame: CGRectMake(0, 0, Profile.width(), Profile.height()))
         self.backgroundColor = UIColor(white: 0, alpha: 0.5)
@@ -33,8 +46,7 @@ class PopView:UIView,UITableViewDataSource,UITableViewDelegate,UIGestureRecogniz
         
         
         
-        let contentLayer = self.creatSubLayer(showViewFrame, corner: 3, trangleX: CGRectGetWidth(showViewFrame) - 20 , trangleLength: 5)
-//        contentLayer.backgroundColor = UIColor.rgb(243, g: 243, b: 243).CGColor
+        let contentLayer = self.creatSubLayer(showViewFrame, corner: 3, trangleX: trangleX , trangleLength: 5)
         self.layer.addSublayer(contentLayer)
         
         
@@ -51,7 +63,6 @@ class PopView:UIView,UITableViewDataSource,UITableViewDelegate,UIGestureRecogniz
         table.registerClass(UITableViewCell.self , forCellReuseIdentifier: "UITableViewCell")
         self.addSubview(table)
         
-        
     }
 
     
@@ -59,7 +70,11 @@ class PopView:UIView,UITableViewDataSource,UITableViewDelegate,UIGestureRecogniz
     {
        if delegate != nil
        {
-          delegate?.popViewDidSelect(index)
+          if let _ =  delegate?.popViewDidSelect(index)
+          {
+//              delegate?.popViewDidSelect(index)
+          }
+        
        }
        self.disMissPopView()
     }
@@ -74,9 +89,15 @@ class PopView:UIView,UITableViewDataSource,UITableViewDelegate,UIGestureRecogniz
     
     func disMissPopView(){
     
-        if delegate != nil
+        if  let _ =  delegate?.popViewDismissed?()
         {
-            delegate?.popViewDismissed()
+            delegate!.popViewDismissed!()
+            
+            if let nav = delegate as? UINavigationController
+            {
+                nav.interactivePopGestureRecognizer?.enabled = false
+            }
+ 
         }
 
        self.removeFromSuperview()
@@ -158,10 +179,24 @@ class PopView:UIView,UITableViewDataSource,UITableViewDelegate,UIGestureRecogniz
         {
            cell?.imageView?.image = UIImage(named: element.image!)
         }
+        cell?.textLabel?.textAlignment = cellTextAlignment
         cell?.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0)
         cell?.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0)
         cell?.textLabel?.font = Profile.font(13)
         cell?.textLabel?.textColor = UIColor.rgb(51, g: 51, b: 51)
+//        cell?.textLabel?.highlightedTextColor = selectCellColor
+        
+        if selectIndex == indexPath.row
+        {
+           cell?.textLabel?.textColor = selectCellColor
+//           cell?.selected = true
+        }
+        else
+        {
+           cell?.textLabel?.textColor = UIColor.rgb(51, g: 51, b: 51)
+//           cell?.selected = false
+        }
+        
         cell?.textLabel?.text = element.title
         return cell!
     }

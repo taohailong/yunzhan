@@ -9,7 +9,7 @@
 import Foundation
 //typealias ExhibitorData = (urlIcon:String,idNu:String,name:String,address:String)
 
-class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISearchDisplayDelegate {
+class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISearchDisplayDelegate,PopViewProtocol {
     
     var net:NetWorkData!
     var table:UITableView!
@@ -18,6 +18,8 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
     var searchArr:[ExhibitorData]?
     var searchCV:UISearchDisplayController!
     var prefixArr:[String]?
+    var typeArr:[(typeID:String,typeName:String)] = [("0","全部")]
+    var selectType:Int = 0
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
@@ -40,34 +42,104 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
 
         self.creatTable()
         self.setupRefresh()
-        self.creatRightBar()
+        self.creatRightNavBar()
+        self.creatLeftNavBar(false)
     }
     
-    func creatRightBar(){
+    func creatRightNavBar(){
         
         let rightBar = UIBarButtonItem(image: UIImage(named: "global_search"), style: .Plain, target: self, action: "showGlobalSearchVC")
         self.navigationItem.rightBarButtonItem = rightBar
     }
 
+    
+    func creatLeftNavBar(needRotate:Bool){
+    
+        let leftBt = UIButton(type: .Custom)
+        leftBt.titleLabel?.font = Profile.font(15)
+        leftBt.setTitle(self.typeArr[selectType].typeName, forState: .Normal)
+        
+        let title:NSString = leftBt.currentTitle!
+        let sizeTitle = title.sizeWithAttributes([NSFontAttributeName:(leftBt.titleLabel?.font)!])
+        var narrow = UIImage(named: "narrow_white")
+        if needRotate
+        {
+            narrow =  narrow?.rotationImage(.Left)
+        }
+        else
+        {
+            
+        }
+        leftBt.setImage(narrow, forState: .Normal)
+        leftBt.addTarget(self, action: "changeDataType", forControlEvents: .TouchUpInside)
+
+    
+        let sizeImage = leftBt.currentImage!.size
+    
+        leftBt.imageEdgeInsets = UIEdgeInsetsMake(0, sizeTitle.width+5, 0, 0)
+        leftBt.titleEdgeInsets = UIEdgeInsetsMake(0, -10, 0, sizeImage.width)
+        leftBt.frame = CGRectMake(0, 0,15 + sizeTitle.width  , 35)
+        
+        let leftBar = UIBarButtonItem(customView:  leftBt)
+        self.navigationItem.leftBarButtonItem = leftBar
+    
+        if needRotate
+        {
+            self.navigationItem.leftBarButtonItem!.tag = 1
+        }
+        else
+        {
+            self.navigationItem.leftBarButtonItem!.tag = 0
+        }
+        
+    }
+    
+    
+      //    MARK:PopViewDelegate
+    
+    func changeDataType(){
+        
+        self.creatLeftNavBar(true)
+        
+        let contentArr = typeArr.flatMap { (let element:(typeID: String, typeName: String)) -> (image: String?, title: String)? in
+           return (nil,element.typeName)
+        }
+        
+        let popV = PopView(contents: contentArr, showViewFrame: CGRectMake(20, 64, 120, 150), trangleX:20)
+        popV.selectCellColor = Profile.NavBarColorGenuine
+        popV.cellTextAlignment = .Center
+        popV.selectIndex = selectType
+        popV.delegate = self
+        self.tabBarController?.view.addSubview(popV)
+    }
+    
+    
+  
+    func popViewDidSelect(index: Int) {
+        
+         selectType = index
+         self.fetchExhibitorData(self.typeArr[self.selectType].typeID)
+    }
+    
+    
+    func popViewDismissed() {
+        
+        self.creatLeftNavBar(false)
+    }
+    
+    
+    
+    
     func showGlobalSearchVC(){
     
        let search = GlobalSearchVC()
-        
         let nav = UINavigationController(rootViewController: search)
-        
         self.presentViewController(nav, animated: true) { () -> Void in
             
         }
     }
     
     func creatTable(){
-    
-//        let searchBar = UISearchBar(frame: CGRectMake(0,0,Profile.width(),45))
-//        searchBar.translatesAutoresizingMaskIntoConstraints = false
-//        self.view.addSubview(searchBar)
-//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(searchBar))
-//        self.view.addConstraint(NSLayoutConstraint(item: searchBar, attribute: .Top, relatedBy: .Equal, toItem: self.topLayoutGuide, attribute: .Bottom, multiplier: 1.0, constant: 0))
-        
         
         table = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
         table.delegate = self
@@ -78,19 +150,13 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
         table.sectionIndexBackgroundColor = UIColor.clearColor()
         
         self.view.addSubview(table)
-//        self.view.addConstraints(NSLayoutConstraint.layoutHorizontalFull(table))
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-0-[table]-0-|", options: [], metrics: nil, views: ["table":table]))
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-64-[tableView]-49-|", options: [], metrics: nil, views: ["tableView":table]))
         
         
         
-//        self.tableView.tableHeaderView = searchBar
         table.registerClass(TableNoSeparateHeadView.self, forHeaderFooterViewReuseIdentifier: "TableNoSeparateHeadView")
         table.registerClass(ExhibitorCell.self , forCellReuseIdentifier: "ExhibitorCell")
-//        searchCV = UISearchDisplayController(searchBar: searchBar, contentsController: self)
-//        searchCV.searchResultsDelegate = self
-//        searchCV.searchResultsDataSource = self
-//        searchCV.delegate = self
        
     }
     
@@ -102,17 +168,17 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
         refreshHeadV.isManuallyRefreshing = true
         refreshHeadV.addToScrollView(table)
         refreshHeadV.setBeginRefreshBlock { () -> Void in
-           wself?.fetchExhibitorData()
+           wself?.fetchExhibitorData(wself!.typeArr[wself!.selectType].typeID)
         }
     }
     
     
-    func fetchExhibitorData(){
+    func fetchExhibitorData(typeID:String){
 
-//        let loadView = THActivityView(activityViewWithSuperView: self.tableView.superview)
         weak var wself = self
         net = NetWorkData()
-        net.getExhibitorList { (result, status) -> (Void) in
+        net.getExhibitorList(typeID) { (result, status) -> (Void) in
+         
             wself?.refreshHeadV.endRefreshing()
             
             if status == .NetWorkStatusError
@@ -120,9 +186,9 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
                 if result == nil
                 {
                     
-                     let warnV = THActivityView(string: "网络错误")
-                     warnV.show()
-               }
+                    let warnV = THActivityView(string: "网络错误")
+                    warnV.show()
+                }
                 else
                 {
                     if let warnStr = result as? String
@@ -134,15 +200,18 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
                 return
             }
             
-            guard let list = result as? (prefixArr:[String],list:[[ExhibitorData]])
+            guard let list = result as? (prefixArr:[String],list:[[ExhibitorData]],typeArr:[(typeID:String,typeName:String)])
                 else{
-              return
+                    return
             }
             wself?.dataArr = list.list
-//            print(list.list)
+            wself?.typeArr = list.typeArr
             wself?.prefixArr = list.prefixArr
+            wself?.typeArr.insert(("0","全部"), atIndex: 0)
             wself?.table.reloadData()
+            
         }
+
         net.start()
         
     }
@@ -205,18 +274,6 @@ class Exhibitor: UIViewController,UITableViewDelegate,UITableViewDataSource,UISe
         return head
 
     }
-//    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//        
-//        if tableView != table
-//        {
-//          return nil
-//        }
-//        if  dataArr[section].count == 0
-//        {
-//          return nil
-//        }
-//        return prefixArr![section]
-//    }
     
     
    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {

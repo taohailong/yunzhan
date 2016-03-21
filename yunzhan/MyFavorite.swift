@@ -209,10 +209,10 @@ class MyExhibitorList: Exhibitor {
     
     override func setupRefresh(){
     
-     self.fetchExhibitorData()
+     self.fetchExhibitorData("")
     }
     
-   override func fetchExhibitorData(){
+   override func fetchExhibitorData(typeID:String){
     
         let loadView = THActivityView(activityViewWithSuperView: self.view)
         weak var wself = self
@@ -227,7 +227,7 @@ class MyExhibitorList: Exhibitor {
                     let errView = THActivityView(netErrorWithSuperView: wself?.view)
                     weak var werr = errView
                     errView.setErrorBk({ () -> Void in
-                        wself?.fetchExhibitorData()
+                        wself?.fetchExhibitorData("")
                         werr?.removeFromSuperview()
                     })
                 }
@@ -324,7 +324,7 @@ class MyExhibitorList: Exhibitor {
     
         weak var wself = self
         let exhibitorCV = ExhibitorController()
-        exhibitorCV.callBackBlock = { wself?.fetchExhibitorData() }
+        exhibitorCV.callBackBlock = { wself?.fetchExhibitorData("") }
         exhibitorCV.title = cellData.name
         exhibitorCV.id = cellData.id
         exhibitorCV.hidesBottomBarWhenPushed = true

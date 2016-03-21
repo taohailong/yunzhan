@@ -77,7 +77,7 @@ class TimeLineInfoVC: UIViewController,UITableViewDataSource,UITableViewDelegate
     func rightNavBarAction(){
     
         self.navigationController?.interactivePopGestureRecognizer?.enabled = false
-       let popV = PopView(contents: [(image: "warnImage", title: "举报"),(image: "shieldImage", title: "屏蔽用户")], showViewFrame: CGRectMake(Profile.width()-135, 70, 120, 80))
+       let popV = PopView(contents: [(image: "warnImage", title: "举报"),(image: "shieldImage", title: "屏蔽用户")], showViewFrame: CGRectMake(Profile.width()-135, 70, 120, 80), trangleX:100)
         popV.delegate = self
        self.navigationController?.view.addSubview(popV)
     }

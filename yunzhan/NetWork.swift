@@ -796,9 +796,9 @@ class NetWorkData:NSObject {
 // MARK:我的展商 API
     
     
-    func getExhibitorList(block:NetBlock){
+    func getExhibitorList(typeID:String,block:NetBlock){
         
-        let url = Profile.globalHttpHead("api/app/buz/list", parameter: nil)
+        let url = Profile.globalHttpHead("api/app/buz/listv2", parameter: "hid=\(typeID)")
         self.getMethodRequest(url) { (result, status) -> (Void) in
             
             if status == NetStatus.NetWorkStatusError
@@ -807,7 +807,7 @@ class NetWorkData:NSObject {
                 return
             }
             
-            guard let data = result as? [String:AnyObject], let list = data["data"] as? [[String:AnyObject]]
+            guard let data = result as? [String:AnyObject], let dic = data["data"] as? [String:AnyObject], let list = dic["buzList"] as? [[String:AnyObject]],let typeArr = dic["hallList"]  as? [[String:AnyObject]]
                 else
             {
                 return
@@ -852,8 +852,26 @@ class NetWorkData:NSObject {
                 }
             }
             
-            let compound:(prefixArr:[String],list:[[ExhibitorData]]) = (prefixArr,returnArr)
-            //            print(compound)
+           
+            var backType = [(typeID:String,typeName:String)]()
+            for typeDic in typeArr
+            {
+                 var idT = ""
+                 var nameT = ""
+                 if let id = typeDic["id"] as? Int
+                 {
+                    idT = String(id)
+                 }
+                 if let name = typeDic["name"] as?String
+                 {
+                     nameT = name
+                 }
+                 let compose = (idT,nameT)
+                backType.append(compose)
+            }
+            
+            
+            let compound:(prefixArr:[String],list:[[ExhibitorData]],typeArr:[(typeID:String,typeName:String)]) = (prefixArr,returnArr,backType)
             block(result: (compound), status: status)
         }
     }

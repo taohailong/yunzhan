@@ -38,43 +38,35 @@ defineClass('yunzhan.CollectionActView', {
            
     layoutSubviews: function() {
             self.super().layoutSubviews();
-             self.introduce().setText("ddd123456789122332424234723847823974878977");
-//            self.titleL().setContentCompressionResistancePriority_forAxis(1000, 0);
+            self.titleL().setContentCompressionResistancePriority_forAxis(1000, 0);
     },
 
 });
 
-require('CommonWebController,UIAlertView');
-defineClass('yunzhan.ViewController', {
-            
-          
-//            viewDidLoad: function() {
-//            self.super().viewDidLoad();
-//            var alert = UIAlertView.alloc().initWithTitle_message_delegate_cancelButtonTitle_otherButtonTitles("123", "789", null, "0", null, null);
-//            alert.show();
-//            self.test();
-//            },
 
+require('UIPageControl,NSString')
+defineClass('RepeatScrollView', {
             
-            test:function(){
+            tapAction: function() {
             
-            var alert = UIAlertView.alloc().initWithTitle_message_delegate_cancelButtonTitle_otherButtonTitles("test", "789", null, "0", null, null);
-            alert.show();
+            var tapBlock = self.valueForKey("_tapBlock");
+                if (tapBlock) {
             
-            },
+                           var dataSource = self.valueForKey("_dataSource")
+                           var pageControl = self.valueForKey("_pageControl")
+                           var  tapData = dataSource.objectAtIndex(pageControl.currentPage());
             
-            collectionView_didSelectHeadView: function(link, indexPath) {
-            
-            
-            var alert = UIAlertView.alloc().initWithTitle_message_delegate_cancelButtonTitle_otherButtonTitles("123", "789", null, "0", null, null);
-            alert.show();
-            
-            if (link.isEqualToString("")) {
-              return;
+                           var link = tapData.getImageUrl();
+                          if (link.isKindOfClass(NSString.class()))
+                          {
+                           }
+
+                           if (link.length() == 70) {
+//                           console.log('ok'+ link)
+                           return;
+                        }
+                        tapBlock(pageControl.currentPage(), tapData);
             }
-
-            var c = CommonWebController.initWithUrl(link);
-            c.setHidesBottomBarWhenPushed(true);
-            self.navigationController().pushViewController_animated(c, true);
             },
-});
+            });
+
